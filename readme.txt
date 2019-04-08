@@ -1,5 +1,5 @@
 === Visibility Logic for Elementor ===
-Contributors: seventhqueen, kieran_taylor
+Contributors: seventhqueen, kieran_taylor, codezz
 Tags: elementor, elementor restrictions, elementor conditions, elementor widgets, visibility logic,
 Requires at least: 3.0
 Requires PHP: 5.6
@@ -49,3 +49,9 @@ Here is how you will find the Elementor visibility restrict settings:
 
 = 1.0.0 =
 * Initial release
+
+= Be a contributor =
+If you want to contribute, go to our [GitHub Repository](https://github.com/seventhqueen/visibility-logic-elementor).
+
+You can also add a new language via [translate.wordpress.org](https://translate.wordpress.org/projects/wp-plugins/visibility-logic-elementor).
+

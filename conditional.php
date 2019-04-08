@@ -2,7 +2,8 @@
 /**
  * Plugin Name: Visibility Logic for Elementor
  * Description: Hide or show Elementor widgets based on user conditions
- * Plugin URI: https://wordpress.org/plugins/visibility-logic-elementor/
+ * Plugin URI: https://wordpress.org/plugins/visibility-logic-elementor
+ * Author URI: https://seventhqueen.com
  * Author: SeventhQueen
  * Version: 1.0.3
  *
