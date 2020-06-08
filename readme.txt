@@ -1,10 +1,10 @@
 === Visibility Logic for Elementor ===
-Contributors: seventhqueen, kieran_taylor, codezz
-Tags: elementor, elementor restrictions, elementor conditions, elementor widgets, visibility logic,
+Contributors: seventhqueen, kierantaylorio, codezz, rtynio
+Tags: elementor, elementor restrictions, elementor conditions, elementor widgets, visibility logic, widget conditions
 Requires at least: 3.0
 Requires PHP: 5.6
-Tested up to: 5.1.1
-Stable tag: 1.0.3
+Tested up to: 5.4.1
+Stable tag: 1.2.0
 License: GLPv2 or later
 
 Hide or show Elementor widgets based on user role, if logged in or not.
@@ -38,8 +38,16 @@ Here is how you will find the Elementor visibility restrict settings:
 1. Advanced - Visibility control settings - Show for users
 2. Advanced - Visibility control settings - Hide for users
 
-
 == Changelog ==
+
+= 1.2.0 =
+* Fixed the edge case when you combined hidding elements for guests and user role
+
+= 1.1.0 =
+* Made the selectors full width since there was a bug with Select2 control
+
+= 1.0.4 =
+* Made changes to the hiding logic and the element is fully hidden, no extra empty wrapping divs shown
 
 = 1.0.3 =
 * Visibility settings added for Section
