@@ -11,3 +11,53 @@
     font-family: eicons;
     content: '\e8ac';
 }
+
+.elementor-control-stax_visibility_pro_user_meta,
+.elementor-control-stax_visibility_pro_ip_referrer,
+.elementor-control-stax_visibility_pro_browser_type,
+.elementor-control-stax_visibility_pro_date_time,
+.elementor-control-stax_visibility_pro_post_page,
+.elementor-control-stax_visibility_pro_conditional_tags,
+.elementor-control-stax_visibility_pro_fallback {
+    pointer-events: none;
+}
+
+.elementor-control-stax_visibility_pro_user_meta .elementor-panel-heading-toggle,
+.elementor-control-stax_visibility_pro_ip_referrer .elementor-panel-heading-toggle,
+.elementor-control-stax_visibility_pro_browser_type .elementor-panel-heading-toggle,
+.elementor-control-stax_visibility_pro_date_time .elementor-panel-heading-toggle,
+.elementor-control-stax_visibility_pro_post_page .elementor-panel-heading-toggle,
+.elementor-control-stax_visibility_pro_conditional_tags .elementor-panel-heading-toggle,
+.elementor-control-stax_visibility_pro_fallback .elementor-panel-heading-toggle {
+    display: none;
+}
+
+.elementor-control-stax_visibility_pro_user_meta .elementor-panel-heading-title,
+.elementor-control-stax_visibility_pro_ip_referrer .elementor-panel-heading-title,
+.elementor-control-stax_visibility_pro_browser_type .elementor-panel-heading-title,
+.elementor-control-stax_visibility_pro_date_time .elementor-panel-heading-title,
+.elementor-control-stax_visibility_pro_post_page .elementor-panel-heading-title,
+.elementor-control-stax_visibility_pro_conditional_tags .elementor-panel-heading-title,
+.elementor-control-stax_visibility_pro_fallback .elementor-panel-heading-title {
+    position: relative;
+}
+
+.elementor-control-stax_visibility_pro_user_meta .elementor-panel-heading-title:after,
+.elementor-control-stax_visibility_pro_ip_referrer .elementor-panel-heading-title:after,
+.elementor-control-stax_visibility_pro_browser_type .elementor-panel-heading-title:after,
+.elementor-control-stax_visibility_pro_date_time .elementor-panel-heading-title:after,
+.elementor-control-stax_visibility_pro_post_page .elementor-panel-heading-title:after,
+.elementor-control-stax_visibility_pro_conditional_tags .elementor-panel-heading-title:after,
+.elementor-control-stax_visibility_pro_fallback .elementor-panel-heading-title:after {
+    content: 'PRO';
+    position: absolute;
+    top: 11px;
+    right: 0;
+    z-index: 2;
+    color: #ffeaea;
+    background: #2e34c2;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 4px 6px;
+    border-radius: 4px;
+}

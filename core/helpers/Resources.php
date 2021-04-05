@@ -126,40 +126,7 @@ final class Resources extends Singleton {
 		if ( ! defined( 'STAX_VISIBILITY_PRO_PATH' ) ) {
 			$options = array_merge(
 				$options,
-				[
-					'user-meta'        => [
-						'name' => __( 'User Meta', 'visibility-logic-elementor' ),
-						'pro'  => true,
-					],
-					'ip-referrer'      => [
-						'name' => __( 'IP & Referrer', 'visibility-logic-elementor' ),
-						'pro'  => true,
-					],
-					'browser-type'     => [
-						'name' => __( 'Browser Type', 'visibility-logic-elementor' ),
-						'pro'  => true,
-					],
-					'browser-type'     => [
-						'name' => __( 'Browser Type', 'visibility-logic-elementor' ),
-						'pro'  => true,
-					],
-					'date-time'        => [
-						'name' => __( 'Date & Time', 'visibility-logic-elementor' ),
-						'pro'  => true,
-					],
-					'post-page'        => [
-						'name' => __( 'Post & Page', 'visibility-logic-elementor' ),
-						'pro'  => true,
-					],
-					'conditional-tags' => [
-						'name' => __( 'Conditional Tags', 'visibility-logic-elementor' ),
-						'pro'  => true,
-					],
-					'fallback'         => [
-						'name' => __( 'Fallback', 'visibility-logic-elementor' ),
-						'pro'  => true,
-					],
-				]
+				self::get_pro_widget_options()
 			);
 		}
 
@@ -172,5 +139,47 @@ final class Resources extends Singleton {
 		}
 
 		return $options;
+	}
+
+	/**
+	 * Get pro widget options
+	 *
+	 * @return array
+	 */
+	public static function get_pro_widget_options() {
+		return [
+			'user-meta'        => [
+				'name' => __( 'User Meta', 'visibility-logic-elementor' ),
+				'pro'  => true,
+			],
+			'ip-referrer'      => [
+				'name' => __( 'IP & Referrer', 'visibility-logic-elementor' ),
+				'pro'  => true,
+			],
+			'browser-type'     => [
+				'name' => __( 'Browser Type', 'visibility-logic-elementor' ),
+				'pro'  => true,
+			],
+			'browser-type'     => [
+				'name' => __( 'Browser Type', 'visibility-logic-elementor' ),
+				'pro'  => true,
+			],
+			'date-time'        => [
+				'name' => __( 'Date & Time', 'visibility-logic-elementor' ),
+				'pro'  => true,
+			],
+			'post-page'        => [
+				'name' => __( 'Post & Page', 'visibility-logic-elementor' ),
+				'pro'  => true,
+			],
+			'conditional-tags' => [
+				'name' => __( 'Conditional Tags', 'visibility-logic-elementor' ),
+				'pro'  => true,
+			],
+			'fallback'         => [
+				'name' => __( 'Fallback', 'visibility-logic-elementor' ),
+				'pro'  => true,
+			],
+		];
 	}
 }

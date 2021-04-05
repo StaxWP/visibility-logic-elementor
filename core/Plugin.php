@@ -68,6 +68,8 @@ class Plugin extends Singleton {
 
 		if ( file_exists( STAX_VISIBILITY_PATH . 'pro/loader.php' ) ) {
 			require_once STAX_VISIBILITY_PATH . 'pro/loader.php';
+		} else {
+			require_once STAX_VISIBILITY_CORE_SETTINGS_PATH . 'ProVisibility.php';
 		}
 
 		do_action( 'stax/visibility/after/load_settings' );
