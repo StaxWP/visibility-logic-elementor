@@ -1,0 +1,44 @@
+@tailwind base;
+
+@tailwind components;
+
+.stax-visibility-admin-page #contextual-help-link-wrap {
+  display: none !important;
+}
+
+.stax-visibility-admin-page .stax-main ul li {
+  margin-bottom: 0;
+}
+
+.stax-visibility-admin-page .stax-main #go-pro-rocket-icon {
+  width: 100px;
+  transform: rotate(-45deg);
+}
+
+.stax-visibility-admin-page .stax-main .rocket-flame {
+  transform-origin: 15px 37.5px;
+}
+
+.stax-visibility-admin-page .stax-main a:focus {
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+
+.stax-visibility-admin-page .ste-toggle-dot {
+  top: -.25rem;
+  left: -.25rem;
+  transition: all 0.3s ease-in-out;
+}
+
+.stax-visibility-admin-page input:checked~.ste-toggle-dot {
+  transform: translateX(100%);
+  background-color: #48bb78;
+}
+
+.stax-visibility-admin-page .ste-toggle-input {
+  @apply ste-hidden;
+}
+
+
+@tailwind utilities;
+

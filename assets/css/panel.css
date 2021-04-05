@@ -1,0 +1,13 @@
+.elementor-panel .elementor-tab-control-stax-visibility.elementor-active {
+    background-image: linear-gradient(180deg, #262cbd, #3d42cc) !important;
+    border-bottom-color: #262cbd !important;
+}
+
+.elementor-panel .elementor-tab-control-stax-visibility a {
+    color: #fff;
+}
+
+.elementor-panel .elementor-tab-control-stax-visibility a:before {
+    font-family: eicons;
+    content: '\e8ac';
+}

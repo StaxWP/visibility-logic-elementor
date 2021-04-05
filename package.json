@@ -1,0 +1,39 @@
+{
+  "name": "stax-visibility",
+  "version": "1.0.0",
+  "description": "Stax Visibility",
+  "main": "index.js",
+  "scripts": {
+    "build-tw": "npx tailwindcss-cli@latest build ./assets/scss/admin.scss -o ./assets/css/admin.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:StaxWP/visibility-logic-elementor.git"
+  },
+  "author": "SeventhQueen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/StaxWP/visibility-logic-elementor/issues"
+  },
+  "homepage": "https://github.com/StaxWP/visibility-logic-elementor#readme",
+  "browserslist": [
+    ">= 0.5%",
+    "chrome >= 42",
+    "and_chr >= 42",
+    "and_ff >= 38",
+    "android >= 4.4",
+    "edge >= 12",
+    "firefox >= 38",
+    "ie >= 11",
+    "ios_saf >= 9",
+    "safari >= 9",
+    "node 10"
+  ],
+  "dependencies": {
+    "autoprefixer": "^10.2.5",
+    "postcss": "^8.2.9",
+    "postcss-import": "^14.0.1",
+    "tailwindcss": "^2.0.4",
+    "tailwindcss-cli": "^0.1.2"
+  }
+}
