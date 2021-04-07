@@ -40,7 +40,8 @@ class Plugin extends Singleton {
 		require_once STAX_VISIBILITY_CORE_PATH . 'admin/pages/Widgets.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'admin/Settings.php';
 
-		add_action( 'elementor/editor/before_enqueue_scripts', [ $this, 'load_assets' ] );
+		add_action( 'wp_enqueue_scripts', [ $this, 'load_front_assets' ] );
+		add_action( 'elementor/editor/before_enqueue_scripts', [ $this, 'load_panel_assets' ] );
 
 		add_filter( 'elementor/widget/render_content', [ $this, 'content_change' ], 999, 2 );
 		add_filter( 'elementor/section/render_content', [ $this, 'content_change' ], 999, 2 );
@@ -84,13 +85,28 @@ class Plugin extends Singleton {
 	 * @return string
 	 */
 	public function content_change( $content, $widget ) {
-		if ( \Elementor\Plugin::instance()->editor->is_edit_mode() ) {
-			return $content;
-		}
-
 		$settings = $widget->get_settings();
 
-		if ( ! $this->should_render( $settings ) ) {
+		if ( ! $this->should_render( $settings ) && ! \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
+			if ( isset( $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) && (bool) $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) {
+					$fallback_content = '';
+				if ( 'text' === $settings[ self::SECTION_PREFIX . 'fallback_type' ] ) {
+					$fallback_content = esc_html( $settings[ self::SECTION_PREFIX . 'fallback_text' ] );
+				} elseif ( 'template' === $settings[ self::SECTION_PREFIX . 'fallback_type' ] ) {
+					if ( $settings[ self::SECTION_PREFIX . 'fallback_template' ] ) {
+						$fallback_content = do_shortcode( '[elementor-template id="' . $settings[ self::SECTION_PREFIX . 'fallback_template' ] . '"]' );
+					}
+				}
+
+				if ( $fallback_content ) {
+					return $fallback_content;
+				}
+			} elseif ( isset( $settings[ self::SECTION_PREFIX . 'keep_html' ] ) && (bool) $settings[ self::SECTION_PREFIX . 'keep_html' ] ) {
+				$widget->add_render_attribute( '_wrapper', 'class', 'stax-visibility-hidden' );
+
+				return $content;
+			}
+
 			return '';
 		}
 
@@ -108,6 +124,10 @@ class Plugin extends Singleton {
 		$settings = $section->get_settings();
 
 		if ( ! $this->should_render( $settings ) ) {
+			if ( (bool) $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] || (bool) $settings[ self::SECTION_PREFIX . 'keep_html' ] ) {
+				return true;
+			}
+
 			return false;
 		}
 
@@ -121,13 +141,15 @@ class Plugin extends Singleton {
 	 * @return boolean
 	 */
 	private function should_render( $settings ) {
-		$output = true;
-
 		if ( ! (bool) $settings[ self::SECTION_PREFIX . 'enabled' ] ) {
-			return $output;
+			return true;
 		}
 
 		$options = apply_filters( 'stax/visibility/apply_conditions', [], $settings );
+
+		if ( empty( $options ) ) {
+			return true;
+		}
 
 		$should_render = false;
 
@@ -150,20 +172,30 @@ class Plugin extends Singleton {
 		if ( (bool) $settings[ self::SECTION_PREFIX . 'show_hide' ] ) {
 			return $should_render;
 		} else {
-			if ( $should_render ) {
-				return false;
-			}
-
-			return true;
+			return ! $should_render;
 		}
 	}
 
 	/**
-	 * Load assets
+	 * Load front assets
 	 *
 	 * @return void
 	 */
-	public function load_assets() {
+	public function load_front_assets() {
+		wp_enqueue_style(
+			'stax-visibility-front',
+			STAX_VISIBILITY_ASSETS_URL . 'css/visibility.css',
+			[],
+			STAX_VISIBILITY_VERSION
+		);
+	}
+
+	/**
+	 * Load panel assets
+	 *
+	 * @return void
+	 */
+	public function load_panel_assets() {
 		wp_enqueue_style(
 			'stax-visibility-panel',
 			STAX_VISIBILITY_ASSETS_URL . 'css/panel.css',

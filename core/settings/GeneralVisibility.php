@@ -100,15 +100,14 @@ class GeneralVisibility extends Singleton {
 			self::SECTION_PREFIX . 'keep_html',
 			[
 				'label'        => __( 'Keep HTML', 'visibility-logic-elementor' ),
-				'description'  => __( 'If the element is hidden, decide if you still want to render the HTML but hidden.', 'visibility-logic-elementor' ),
+				'description'  => __( 'When the element is hidden, decide if you still want to render the HTML but hidden.', 'visibility-logic-elementor' ),
 				'type'         => Controls_Manager::SWITCHER,
 				'default'      => '',
 				'label_on'     => __( 'Yes', 'visibility-logic-elementor' ),
 				'label_off'    => __( 'No', 'visibility-logic-elementor' ),
 				'return_value' => 'yes',
 				'condition'    => [
-					self::SECTION_PREFIX . 'enabled'    => 'yes',
-					self::SECTION_PREFIX . 'show_hide!' => 'yes',
+					self::SECTION_PREFIX . 'enabled' => 'yes',
 				],
 			]
 		);
