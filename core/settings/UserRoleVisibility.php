@@ -91,55 +91,33 @@ class UserRoleVisibility extends Singleton {
 	 * @return array
 	 */
 	public function apply_conditions( $options, $settings ) {
+		if ( (bool) $settings[ self::SECTION_PREFIX . 'user_role_enabled' ] ) {
+			$options['user_role'] = false;
 
-		return $options;
+			if ( ! empty( $settings[ self::SECTION_PREFIX . 'user_role_conditions' ] ) ) {
+				$user_state = is_user_logged_in();
 
-		if ( (bool) $settings['ecl_enabled'] ) {
-			$user_state = is_user_logged_in();
+				$is_guest     = false;
+				$is_logged_in = false;
+				$has_role     = false;
 
-			if ( ! empty( $settings['ecl_role_visible'] ) ) {
-				if ( in_array( 'ecl-guest', $settings['ecl_role_visible'] ) ) {
-					if ( true === $user_state ) {
-						$options['user_role'] = false;
-					}
-				} elseif ( in_array( 'ecl-user', $settings['ecl_role_visible'] ) ) {
-					if ( false === $user_state ) {
-						$options['user_role'] = false;
-					}
-				} else {
-					if ( false === $user_state ) {
-						$options['user_role'] = false;
-					}
-					$user = wp_get_current_user();
+				if ( in_array( 'ecl-guest', $settings[ self::SECTION_PREFIX . 'user_role_conditions' ] ) ) {
+					$is_guest = ! $user_state;
+				}
 
-					$has_role = false;
-					foreach ( $settings['ecl_role_visible'] as $setting ) {
-						if ( in_array( $setting, (array) $user->roles ) ) {
-							$has_role = true;
-						}
-					}
-					if ( false === $has_role ) {
-						$options['user_role'] = false;
+				if ( in_array( 'ecl-user', $settings[ self::SECTION_PREFIX . 'user_role_conditions' ] ) ) {
+					$is_logged_in = $user_state;
+				}
+
+				$user = wp_get_current_user();
+
+				foreach ( $settings[ self::SECTION_PREFIX . 'user_role_conditions' ] as $setting ) {
+					if ( in_array( $setting, (array) $user->roles ) ) {
+						$has_role = true;
 					}
 				}
-			} elseif ( ! empty( $settings['ecl_role_hidden'] ) ) {
 
-				if ( false === $user_state && in_array( 'ecl-guest', $settings['ecl_role_hidden'], false ) ) {
-					$options['user_role'] = false;
-				} elseif ( true === $user_state && in_array( 'ecl-user', $settings['ecl_role_hidden'], false ) ) {
-					$options['user_role'] = false;
-				} else {
-					if ( false === $user_state ) {
-						return true;
-					}
-					$user = wp_get_current_user();
-
-					foreach ( $settings['ecl_role_hidden'] as $setting ) {
-						if ( in_array( $setting, (array) $user->roles, false ) ) {
-							$options['user_role'] = false;
-						}
-					}
-				}
+				$options['user_role'] = $is_guest || $is_logged_in || $has_role;
 			}
 		}
 
