@@ -3,8 +3,8 @@ Contributors: seventhqueen, kierantaylorio, codezz, rtynio
 Tags: elementor, elementor restrictions, elementor conditions, elementor widgets, visibility logic, widget conditions
 Requires at least: 3.0
 Requires PHP: 5.6
-Tested up to: 5.7
-Stable tag: 1.2.0
+Tested up to: 5.7.1
+Stable tag: 2.0.0
 License: GLPv2 or later
 
 Hide or show Elementor widgets based on user role, if logged in or not.
@@ -44,8 +44,11 @@ Create stunning communities on your site powered by Elementor and BuddyPress
 
 == Changelog ==
 
+= 2.0.0 =
+* Code logic refactoring and introducing Pro features.
+
 = 1.2.0 =
-* Fixed the edge case when you combined hidding elements for guests and user role
+* Fixed the edge case when you combined hiding elements for guests and user role
 
 = 1.1.0 =
 * Made the selectors full width since there was a bug with Select2 control
