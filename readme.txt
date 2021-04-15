@@ -27,6 +27,10 @@ Here is how you will find the Elementor visibility restrict settings:
 Check out [BuddyBuilder plugin](https://staxwp.com/go/buddybuilder).
 Create stunning communities on your site powered by Elementor and BuddyPress
 
+= Privacy Policy =
+We use Appsero SDK to collect some telemetry data upon user's confirmation. This helps us to troubleshoot problems faster & make product improvements.
+
+
 == Installation ==
 
 1. Upload the plugin to your 'wp-content/plugins' directory
