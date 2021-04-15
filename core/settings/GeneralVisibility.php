@@ -56,7 +56,7 @@ class GeneralVisibility extends Singleton {
 			[
 				'label'        => __( 'Enable', 'visibility-logic-elementor' ),
 				'type'         => Controls_Manager::SWITCHER,
-				'default'      => 'yes',
+				'default'      => '',
 				'label_on'     => __( 'Yes', 'visibility-logic-elementor' ),
 				'label_off'    => __( 'No', 'visibility-logic-elementor' ),
 				'return_value' => 'yes',

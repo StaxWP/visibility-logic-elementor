@@ -5,7 +5,7 @@
  * Plugin URI: https://wordpress.org/plugins/visibility-logic-elementor
  * Author URI: https://seventhqueen.com
  * Author: SeventhQueen
- * Version: 1.2.0
+ * Version: 1.3.0
  *
  * Text Domain: visibility-logic-elementor
  */
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-define( 'STAX_VISIBILITY_VERSION', '1.2.0' );
+define( 'STAX_VISIBILITY_VERSION', '1.3.0' );
 
 define( 'STAX_VISIBILITY_FILE', __FILE__ );
 define( 'STAX_VISIBILITY_PLUGIN_BASE', plugin_basename( STAX_VISIBILITY_FILE ) );

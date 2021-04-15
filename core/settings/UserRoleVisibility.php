@@ -22,8 +22,8 @@ class UserRoleVisibility extends Singleton {
 		add_action( 'elementor/element/common/_section_style/after_section_end', [ $this, 'register_section' ] );
 		add_action( 'elementor/element/section/section_advanced/after_section_end', [ $this, 'register_section' ] );
 
-		add_action( 'elementor/element/common/ecl_section/before_section_end', [ $this, 'register_controls' ], 10, 2 );
-		add_action( 'elementor/element/section/ecl_section/before_section_end', [ $this, 'register_controls' ], 10, 2 );
+		add_action( 'elementor/element/common/' . self::SECTION_PREFIX . 'user_role_section/before_section_end', [ $this, 'register_controls' ], 10, 2 );
+		add_action( 'elementor/element/section/' . self::SECTION_PREFIX . 'user_role_section/before_section_end', [ $this, 'register_controls' ], 10, 2 );
 
 		add_filter( 'stax/visibility/apply_conditions', [ $this, 'apply_conditions' ], 10, 2 );
 	}
@@ -36,7 +36,7 @@ class UserRoleVisibility extends Singleton {
 	 */
 	public function register_section( $element ) {
 		$element->start_controls_section(
-			'ecl_section',
+			self::SECTION_PREFIX . 'user_role_section',
 			[
 				'tab'       => self::VISIBILITY_TAB,
 				'label'     => __( 'User Role', 'visibility-logic-elementor' ),
@@ -56,7 +56,7 @@ class UserRoleVisibility extends Singleton {
 	 */
 	public function register_controls( $element, $args ) {
 		$element->add_control(
-			'ecl_enabled',
+			self::SECTION_PREFIX . 'user_role_enabled',
 			[
 				'label'        => __( 'Enable', 'visibility-logic-elementor' ),
 				'type'         => Controls_Manager::SWITCHER,
@@ -68,33 +68,16 @@ class UserRoleVisibility extends Singleton {
 		);
 
 		$element->add_control(
-			'ecl_role_visible',
+			self::SECTION_PREFIX . 'user_role_conditions',
 			[
 				'type'        => Controls_Manager::SELECT2,
-				'label'       => __( 'Visible for:', 'visibility-logic-elementor' ),
+				'label'       => __( 'Roles', 'visibility-logic-elementor' ),
 				'options'     => Resources::get_user_roles(),
 				'default'     => [],
 				'multiple'    => true,
 				'label_block' => true,
 				'condition'   => [
-					'ecl_enabled'     => 'yes',
-					'ecl_role_hidden' => [],
-				],
-			]
-		);
-
-		$element->add_control(
-			'ecl_role_hidden',
-			[
-				'type'        => Controls_Manager::SELECT2,
-				'label'       => __( 'Hidden for:', 'visibility-logic-elementor' ),
-				'options'     => Resources::get_user_roles(),
-				'default'     => [],
-				'multiple'    => true,
-				'label_block' => true,
-				'condition'   => [
-					'ecl_enabled'      => 'yes',
-					'ecl_role_visible' => [],
+					self::SECTION_PREFIX . 'user_role_enabled' => 'yes',
 				],
 			]
 		);
@@ -108,6 +91,9 @@ class UserRoleVisibility extends Singleton {
 	 * @return array
 	 */
 	public function apply_conditions( $options, $settings ) {
+
+		return $options;
+
 		if ( (bool) $settings['ecl_enabled'] ) {
 			$user_state = is_user_logged_in();
 

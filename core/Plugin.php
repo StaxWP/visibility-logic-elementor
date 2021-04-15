@@ -36,6 +36,7 @@ class Plugin extends Singleton {
 			return;
 		}
 
+		require_once STAX_VISIBILITY_CORE_PATH . 'Upgrades.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'admin/pages/Base.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'admin/pages/Widgets.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'admin/Settings.php';
