@@ -3,7 +3,7 @@ Contributors: seventhqueen, kierantaylorio, codezz, rtynio
 Tags: elementor, elementor restrictions, elementor conditions, elementor widgets, visibility logic, widget conditions
 Requires at least: 3.0
 Requires PHP: 5.6
-Tested up to: 5.4.1
+Tested up to: 5.7
 Stable tag: 1.2.0
 License: GLPv2 or later
 
@@ -21,7 +21,11 @@ Here is how you will find the Elementor visibility restrict settings:
 1. Open a page with Elementor
 2. Go and select any widget from the page
 3. Go to Advanced - Visibility control
-4. Here you will find the restriction settings for your element. 
+4. Here you will find the restriction settings for your element.
+
+= More from StaxWP =
+Check out [BuddyBuilder plugin](https://staxwp.com/go/buddybuilder).
+Create stunning communities on your site powered by Elementor and BuddyPress
 
 == Installation ==
 
