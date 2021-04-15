@@ -42,5 +42,27 @@ function ecl_load_plugin_textdomain() {
 	load_plugin_textdomain( 'visibility-logic-elementor' );
 }
 
+require __DIR__ . '/vendor/autoload.php';
 require_once STAX_VISIBILITY_CORE_PATH . 'Singleton.php';
 require_once STAX_VISIBILITY_CORE_PATH . 'Plugin.php';
+
+
+/**
+ * Initialize the plugin tracker
+ *
+ * @return void
+ */
+function appsero_init_tracker_visibility_logic_elementor() {
+
+	if ( ! class_exists( 'Appsero\Client' ) ) {
+		require_once __DIR__ . '/appsero/src/Client.php';
+	}
+
+	$client = new Appsero\Client( 'd40e3204-1270-4588-b9ff-37b420fad6b8', 'Visibility Logic for Elementor', __FILE__ );
+
+	// Active insights
+	$client->insights()->init();
+
+}
+
+appsero_init_tracker_visibility_logic_elementor();

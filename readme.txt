@@ -3,8 +3,8 @@ Contributors: seventhqueen, kierantaylorio, codezz, rtynio
 Tags: elementor, elementor restrictions, elementor conditions, elementor widgets, visibility logic, widget conditions
 Requires at least: 3.0
 Requires PHP: 5.6
-Tested up to: 5.4.1
-Stable tag: 1.2.0
+Tested up to: 5.7.1
+Stable tag: 2.0.0
 License: GLPv2 or later
 
 Hide or show Elementor widgets based on user role, if logged in or not.
@@ -21,7 +21,15 @@ Here is how you will find the Elementor visibility restrict settings:
 1. Open a page with Elementor
 2. Go and select any widget from the page
 3. Go to Advanced - Visibility control
-4. Here you will find the restriction settings for your element. 
+4. Here you will find the restriction settings for your element.
+
+= More from StaxWP =
+Check out [BuddyBuilder plugin](https://staxwp.com/go/buddybuilder).
+Create stunning communities on your site powered by Elementor and BuddyPress
+
+= Privacy Policy =
+We use Appsero SDK to collect some telemetry data upon user's confirmation. This helps us to troubleshoot problems faster & make product improvements.
+
 
 == Installation ==
 
@@ -40,8 +48,11 @@ Here is how you will find the Elementor visibility restrict settings:
 
 == Changelog ==
 
+= 2.0.0 =
+* Code logic refactoring and introducing Pro features.
+
 = 1.2.0 =
-* Fixed the edge case when you combined hidding elements for guests and user role
+* Fixed the edge case when you combined hiding elements for guests and user role
 
 = 1.1.0 =
 * Made the selectors full width since there was a bug with Select2 control
