@@ -1,6 +1,10 @@
 .elementor-panel .elementor-tab-control-stax-visibility.elementor-active {
-    background-image: linear-gradient(180deg, #262cbd, #3d42cc) !important;
-    border-bottom-color: #262cbd !important;
+    background-image: linear-gradient(180deg, #7b5bcf, #7b5bcf) !important;
+    border-bottom-color: #673ab7 !important;
+}
+
+.elementor-panel .elementor-tab-control-stax-visibility.elementor-active a {
+    color: #f4f0ff !important;
 }
 
 .elementor-panel .elementor-tab-control-stax-visibility a {
