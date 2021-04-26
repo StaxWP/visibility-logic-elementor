@@ -7,6 +7,9 @@
  * Author: SeventhQueen
  * Version: 1.3.0
  *
+ * Elementor tested up to: 3.2.1
+ * Elementor Pro tested up to: 3.2.1
+ *
  * Text Domain: visibility-logic-elementor
  */
 
