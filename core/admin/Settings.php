@@ -85,10 +85,9 @@ class Settings {
 	 * Settings template
 	 */
 	public function settings_template() {
-		$site_url      = apply_filters( STAX_VISIBILITY_HOOK_PREFIX . 'admin_site_url', 'https://seventhqueen.com' );
+		$site_url      = apply_filters( STAX_VISIBILITY_HOOK_PREFIX . 'admin_site_url', 'https://staxwp.com/visibility-logic-for-elementor/' );
 		$wrapper_class = apply_filters( STAX_VISIBILITY_HOOK_PREFIX . 'welcome_wrapper_class', [ $this->current_slug ] );
 		$menu          = apply_filters( STAX_VISIBILITY_HOOK_PREFIX . 'admin_menu', [] );
-		$has_pro       = '#';
 
 		if ( ! empty( $menu ) ) {
 			usort(
@@ -105,7 +104,6 @@ class Settings {
 				'site_url'      => $site_url,
 				'wrapper_class' => $wrapper_class,
 				'menu'          => $menu,
-				'has_pro'       => $has_pro,
 			]
 		);
 	}

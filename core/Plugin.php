@@ -60,6 +60,15 @@ class Plugin extends Singleton {
 	}
 
 	/**
+	 * Check if plugin is PRO
+	 *
+	 * @return boolean
+	 */
+	public function has_pro() {
+		return file_exists( STAX_VISIBILITY_PATH . 'pro/loader.php' );
+	}
+
+	/**
 	 * Load visibility settings
 	 *
 	 * @return void
@@ -68,7 +77,7 @@ class Plugin extends Singleton {
 		require_once STAX_VISIBILITY_CORE_SETTINGS_PATH . 'GeneralVisibility.php';
 		require_once STAX_VISIBILITY_CORE_SETTINGS_PATH . 'UserRoleVisibility.php';
 
-		if ( file_exists( STAX_VISIBILITY_PATH . 'pro/loader.php' ) ) {
+		if ( $this->has_pro() ) {
 			require_once STAX_VISIBILITY_PATH . 'pro/loader.php';
 		} else {
 			require_once STAX_VISIBILITY_CORE_SETTINGS_PATH . 'ProVisibility.php';

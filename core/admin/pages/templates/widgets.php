@@ -1,3 +1,12 @@
+<?php
+
+use Stax\VisibilityLogic\Plugin;
+
+$has_pro    = Plugin::instance()->has_pro();
+$item_class = $has_pro ? 'xl:ste-w-1/4' : '';
+
+?>
+
 <h2 class="ste-my-0 ste-leading-none ste-text-2xl ste-text-gray-700 ste-font-bold ste-tracking-wide">
 	<?php esc_html_e( 'Visibility Options', 'visibility-logic-elementor' ); ?>
 </h2>
@@ -10,7 +19,7 @@
 	<form action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="POST">
 		<div class="ste-flex ste-flex-wrap ste--mx-2">
 			<?php foreach ( $widgets as $slug => $widget ) : ?>
-				<div class="ste-my-2 ste-w-full md:ste-w-1/2 lg:ste-w-1/3 xl:ste-w-1/4">
+				<div class="ste-my-2 ste-w-full md:ste-w-1/2 lg:ste-w-1/3 <?php echo esc_attr( $item_class ); ?>">
 					<div class="ste-mx-2">
 						<label for="module-label-<?php echo $slug; ?>"
 							   class="ste-flex ste-justify-between ste-items-center ste-border-2 ste-border-solid ste-border-gray-200 ste-rounded ste-bg-gray-100 ste-p-4 hover:ste-border-gray-300">
