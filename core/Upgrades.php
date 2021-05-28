@@ -256,7 +256,7 @@ class Upgrades extends Singleton {
 				}
 			}
 
-			update_post_meta( $item->post_id, '_elementor_data', json_encode( $data ) );
+			update_post_meta( $item->post_id, '_elementor_data', wp_slash( wp_json_encode( $data ) ) );
 		}
 
 		return true;
