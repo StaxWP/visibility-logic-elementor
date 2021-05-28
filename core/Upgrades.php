@@ -40,7 +40,10 @@ class Upgrades extends Singleton {
 	 * @var array
 	 */
 	private $upgrades = [
-		'1.3.0' => '_upgrade_130',
+		'1.3.0' => [
+			'method'  => '_upgrade_130',
+			'confirm' => true
+		],
 	];
 
 	/**
@@ -68,11 +71,11 @@ class Upgrades extends Singleton {
 				$url = wp_nonce_url( add_query_arg( 'stax_visibility_db_update', '' ), 'action' );
 				?>
 
-				<div class="notice stax-visibility-notice">
-					<div class="stax-visibility-inner-message">
-						<div class="stax-visibility-message-center">
-							<h3><?php _e( 'Database update required', 'visibility-logic-elementor' ); ?></h3>
-							<p>
+                <div class="notice stax-visibility-notice">
+                    <div class="stax-visibility-inner-message">
+                        <div class="stax-visibility-message-center">
+                            <h3><?php _e( 'Database update required', 'visibility-logic-elementor' ); ?></h3>
+                            <p>
 								<?php
 								echo wp_kses_post(
 									sprintf(
@@ -81,41 +84,45 @@ class Upgrades extends Singleton {
 									)
 								);
 								?>
-							</p>
-						</div>
-						<div class="stax-visibility-msg-button-right">
+                            </p>
+                        </div>
+                        <div class="stax-visibility-msg-button-right">
 							<?php echo wp_kses_post( sprintf( __( '<a href="%s">Update now</a>', 'visibility-logic-elementor' ), esc_url( $url ) ) ); ?>
-						</div>
+                        </div>
 
-					</div>
-				</div>
+                    </div>
+                </div>
 
-				<style>
-					.stax-visibility-notice {
-						border-left-color: #262cbd;
-					}
-					.stax-visibility-notice .stax-visibility-inner-message {
-						display: flex;
-						flex-wrap: wrap;
-						justify-items: center;
-						justify-content: space-between;
-					}
-					.stax-visibility-notice .stax-visibility-inner-message h3 {
-						margin: .5em 0;
-					}
-					.stax-visibility-notice .stax-visibility-inner-message .stax-visibility-msg-button-right {
-						display: flex;
-						align-items: center;
-					}
-					.stax-visibility-notice .stax-visibility-inner-message .stax-visibility-msg-button-right a {
-						background-image: linear-gradient(180deg, #262cbd, #3d42cc);
-						color: #fff;
-						border-radius: 4px;
-						padding: 8px 12px;
-						text-decoration: none;
-						display: inline-block;
-					}
-				</style>
+                <style>
+                    .stax-visibility-notice {
+                        border-left-color: #262cbd;
+                    }
+
+                    .stax-visibility-notice .stax-visibility-inner-message {
+                        display: flex;
+                        flex-wrap: wrap;
+                        justify-items: center;
+                        justify-content: space-between;
+                    }
+
+                    .stax-visibility-notice .stax-visibility-inner-message h3 {
+                        margin: .5em 0;
+                    }
+
+                    .stax-visibility-notice .stax-visibility-inner-message .stax-visibility-msg-button-right {
+                        display: flex;
+                        align-items: center;
+                    }
+
+                    .stax-visibility-notice .stax-visibility-inner-message .stax-visibility-msg-button-right a {
+                        background-image: linear-gradient(180deg, #262cbd, #3d42cc);
+                        color: #fff;
+                        border-radius: 4px;
+                        padding: 8px 12px;
+                        text-decoration: none;
+                        display: inline-block;
+                    }
+                </style>
 				<?php
 			}
 		}
@@ -130,7 +137,7 @@ class Upgrades extends Singleton {
 		$old_upgrades    = get_option( $this->option_name ) ?: [ '1.2.0' ];
 		$current_version = $this->version;
 
-		foreach ( $this->upgrades as $version => $method ) {
+		foreach ( $this->upgrades as $version => $upgrade ) {
 			if ( ! isset( $old_upgrades[ $version ] ) && version_compare( $current_version, $version, '>=' ) ) {
 				return true;
 			}
@@ -143,14 +150,24 @@ class Upgrades extends Singleton {
 	 * Handle all the versions upgrades
 	 */
 	public function run() {
+		$updated         = false;
 		$old_upgrades    = get_option( $this->option_name, [] );
 		$errors          = false;
 		$current_version = $this->version;
 
-		foreach ( $this->upgrades as $version => $method ) {
+		foreach ( $this->upgrades as $version => $upgrade ) {
+
+			// run manual updates only when requested
+			if ( isset( $upgrade['confirm'] ) && $upgrade['confirm'] ) {
+				if ( ! isset( $_REQUEST['stax_visibility_db_update'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'action' ) ) {
+					continue;
+				}
+			}
+
 			if ( ! isset( $old_upgrades[ $version ] ) && version_compare( $current_version, $version, '>=' ) ) {
 
 				// Run the upgrade.
+				$method         = $upgrade['method'];
 				$upgrade_result = $this->$method();
 
 				// Early exit the loop if an error occurs.
@@ -160,7 +177,12 @@ class Upgrades extends Singleton {
 					$errors = true;
 					break;
 				}
+
+				$updated = true;
 			}
+		}
+		if ( ! $updated ) {
+			return;
 		}
 
 		// Save successful upgrades.
@@ -175,23 +197,20 @@ class Upgrades extends Singleton {
 	 * Call the upgrade function and conditionally show admin notice
 	 */
 	private function process_update_action() {
-		if ( isset( $_REQUEST['stax_visibility_db_update'] ) ) {
-			if ( wp_verify_nonce( $_REQUEST['_wpnonce'], 'action' ) ) {
-				$this->run();
-			}
 
-			if ( true === $this->updated ) {
-				echo '<div class="notice notice-success">
-            		 <p>' . esc_html__( 'Awesome, database is now at the latest version!', 'visibility-logic-elementor' ) . '</p>
+		$this->run();
+
+		if ( true === $this->updated ) {
+			echo '<div class="notice notice-success">
+            		 <p>' . esc_html__( 'Awesome, Visibility Logic database is now at the latest version!', 'visibility-logic-elementor' ) . '</p>
          		</div>';
-			} else {
-				echo '<div class="notice notice-warning">
+		} else {
+			echo '<div class="notice notice-warning">
             		 <p>' . esc_html__( 'Something went wrong, please check logs.', 'visibility-logic-elementor' ) . '</p>
          		</div>';
-			}
 		}
-	}
 
+	}
 
 	/**
 	 * @return bool
@@ -201,9 +220,7 @@ class Upgrades extends Singleton {
 
 		$r = $wpdb->get_results(
 			$wpdb->prepare(
-				"
-					SELECT * FROM {$wpdb->postmeta} WHERE meta_key = '%s'
-				",
+				"SELECT * FROM {$wpdb->postmeta} WHERE meta_key = '%s'",
 				'_elementor_data',
 			)
 		);
