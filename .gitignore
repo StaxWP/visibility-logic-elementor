@@ -3,3 +3,4 @@
 node_modules/
 *.sass-cache
 composer.lock
+package-lock.json
