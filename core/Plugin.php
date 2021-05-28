@@ -41,7 +41,6 @@ class Plugin extends Singleton {
 		require_once STAX_VISIBILITY_CORE_PATH . 'admin/pages/Widgets.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'admin/Settings.php';
 
-		add_action( 'wp_enqueue_scripts', [ $this, 'load_front_assets' ] );
 		add_action( 'elementor/editor/before_enqueue_scripts', [ $this, 'load_panel_assets' ] );
 
 		add_filter( 'elementor/widget/render_content', [ $this, 'content_change' ], 999, 2 );
@@ -89,7 +88,7 @@ class Plugin extends Singleton {
 	/**
 	 * Render item or not based on conditions
 	 *
-	 * @param string                 $content
+	 * @param string $content
 	 * @param \Elementor\Widget_Base $widget
 	 *
 	 * @return string
@@ -99,7 +98,7 @@ class Plugin extends Singleton {
 
 		if ( ! $this->should_render( $settings ) && ! \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
 			if ( isset( $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) && (bool) $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) {
-					$fallback_content = '';
+				$fallback_content = '';
 				if ( 'text' === $settings[ self::SECTION_PREFIX . 'fallback_type' ] ) {
 					$fallback_content = esc_html( $settings[ self::SECTION_PREFIX . 'fallback_text' ] );
 				} elseif ( 'template' === $settings[ self::SECTION_PREFIX . 'fallback_type' ] ) {
@@ -113,6 +112,7 @@ class Plugin extends Singleton {
 				}
 			} elseif ( isset( $settings[ self::SECTION_PREFIX . 'keep_html' ] ) && (bool) $settings[ self::SECTION_PREFIX . 'keep_html' ] ) {
 				$widget->add_render_attribute( '_wrapper', 'class', 'stax-visibility-hidden' );
+				$widget->add_render_attribute( '_wrapper', 'style', 'display: none' );
 
 				return $content;
 			}
@@ -126,15 +126,19 @@ class Plugin extends Singleton {
 	/**
 	 * Check if item should render
 	 *
-	 * @param bool   $should_render
+	 * @param bool $should_render
 	 * @param object $section
+	 *
 	 * @return boolean
 	 */
 	public function item_should_render( $should_render, $section ) {
 		$settings = $section->get_settings();
 
 		if ( ! $this->should_render( $settings ) ) {
-			if ( (bool) $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] || (bool) $settings[ self::SECTION_PREFIX . 'keep_html' ] ) {
+			if ( isset( $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) &&
+			     (
+				     (bool) $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ||
+				     (bool) $settings[ self::SECTION_PREFIX . 'keep_html' ] ) ) {
 				return true;
 			}
 
@@ -148,6 +152,7 @@ class Plugin extends Singleton {
 	 * Check if conditions are matched
 	 *
 	 * @param array $settings
+	 *
 	 * @return boolean
 	 */
 	private function should_render( $settings ) {
@@ -163,7 +168,9 @@ class Plugin extends Singleton {
 
 		$should_render = false;
 
-		if ( 'all' === $settings[ self::SECTION_PREFIX . 'condition_type' ] ) {
+		$condition_type = isset( $settings[ self::SECTION_PREFIX . 'condition_type' ] ) ? $settings[ self::SECTION_PREFIX . 'condition_type' ] : 'all';
+
+		if ( 'all' === $condition_type ) {
 			$should_render = true;
 
 			foreach ( $options as $status ) {
@@ -171,7 +178,7 @@ class Plugin extends Singleton {
 					$should_render = false;
 				}
 			}
-		} elseif ( 'one' === $settings[ self::SECTION_PREFIX . 'condition_type' ] ) {
+		} elseif ( 'one' === $$condition_type ) {
 			foreach ( $options as $status ) {
 				if ( $status ) {
 					$should_render = true;
@@ -184,20 +191,6 @@ class Plugin extends Singleton {
 		} else {
 			return ! $should_render;
 		}
-	}
-
-	/**
-	 * Load front assets
-	 *
-	 * @return void
-	 */
-	public function load_front_assets() {
-		wp_enqueue_style(
-			'stax-visibility-front',
-			STAX_VISIBILITY_ASSETS_URL . 'css/visibility.css',
-			[],
-			STAX_VISIBILITY_VERSION
-		);
 	}
 
 	/**

@@ -39,7 +39,7 @@ class UserRoleVisibility extends Singleton {
 			self::SECTION_PREFIX . 'user_role_section',
 			[
 				'tab'       => self::VISIBILITY_TAB,
-				'label'     => __( 'User Role', 'visibility-logic-elementor' ),
+				'label'     => __( 'User', 'visibility-logic-elementor' ),
 				'condition' => [
 					self::SECTION_PREFIX . 'enabled' => 'yes',
 				],
