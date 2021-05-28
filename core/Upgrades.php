@@ -216,19 +216,14 @@ class Upgrades extends Singleton {
 				if ( isset( $section_item['settings']['ecl_role_visible'] ) && ! empty( $section_item['settings']['ecl_role_visible'] ) ) {
 					$section_item['settings'][ self::SECTION_PREFIX . 'user_role_conditions' ] = $section_item['settings']['ecl_role_visible'];
 					$section_item['settings'][ self::SECTION_PREFIX . 'show_hide' ]            = 'yes';
-
-					if ( isset( $section_item['ecl_enabled'] ) && $section_item['ecl_enabled'] ) {
-						$section_item['settings'][ self::SECTION_PREFIX . 'enabled' ]           = 'yes';
-						$section_item['settings'][ self::SECTION_PREFIX . 'user_role_enabled' ] = 'yes';
-					}
 				} elseif ( isset( $section_item['settings']['ecl_role_hidden'] ) && ! empty( $section_item['settings']['ecl_role_hidden'] ) ) {
 					$section_item['settings'][ self::SECTION_PREFIX . 'user_role_conditions' ] = $section_item['settings']['ecl_role_hidden'];
 					$section_item['settings'][ self::SECTION_PREFIX . 'show_hide' ]            = '';
+				}
 
-					if ( isset( $section_item['ecl_enabled'] ) && $section_item['ecl_enabled'] ) {
-						$section_item['settings'][ self::SECTION_PREFIX . 'enabled' ]           = 'yes';
-						$section_item['settings'][ self::SECTION_PREFIX . 'user_role_enabled' ] = 'yes';
-					}
+				if ( isset( $section_item['settings']['ecl_enabled'] ) && $section_item['settings']['ecl_enabled'] ) {
+					$section_item['settings'][ self::SECTION_PREFIX . 'enabled' ]           = 'yes';
+					$section_item['settings'][ self::SECTION_PREFIX . 'user_role_enabled' ] = 'yes';
 				}
 
 				// Columns.
@@ -238,19 +233,14 @@ class Upgrades extends Singleton {
 						if ( isset( $widget_item['settings']['ecl_role_visible'] ) && ! empty( $widget_item['settings']['ecl_role_visible'] ) ) {
 							$widget_item['settings'][ self::SECTION_PREFIX . 'user_role_conditions' ] = $widget_item['settings']['ecl_role_visible'];
 							$widget_item['settings'][ self::SECTION_PREFIX . 'show_hide' ]            = 'yes';
-
-							if ( isset( $widget_item['ecl_enabled'] ) && $widget_item['ecl_enabled'] ) {
-								$widget_item['settings'][ self::SECTION_PREFIX . 'enabled' ]           = 'yes';
-								$widget_item['settings'][ self::SECTION_PREFIX . 'user_role_enabled' ] = 'yes';
-							}
 						} elseif ( isset( $widget_item['settings']['ecl_role_hidden'] ) && ! empty( $widget_item['settings']['ecl_role_hidden'] ) ) {
 							$widget_item['settings'][ self::SECTION_PREFIX . 'user_role_conditions' ] = $widget_item['settings']['ecl_role_hidden'];
 							$widget_item['settings'][ self::SECTION_PREFIX . 'show_hide' ]            = '';
+						}
 
-							if ( isset( $widget_item['ecl_enabled'] ) && $widget_item['ecl_enabled'] ) {
-								$widget_item['settings'][ self::SECTION_PREFIX . 'enabled' ]           = 'yes';
-								$widget_item['settings'][ self::SECTION_PREFIX . 'user_role_enabled' ] = 'yes';
-							}
+						if ( isset( $widget_item['settings']['ecl_enabled'] ) && $widget_item['settings']['ecl_enabled'] ) {
+							$widget_item['settings'][ self::SECTION_PREFIX . 'enabled' ]           = 'yes';
+							$widget_item['settings'][ self::SECTION_PREFIX . 'user_role_enabled' ] = 'yes';
 						}
 					}
 				}
