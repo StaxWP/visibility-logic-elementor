@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git+ssh://git@github.com:StaxWP/visibility-logic-elementor.git"
   },
-  "author": "SeventhQueen",
+  "author": "StaxWP",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/StaxWP/visibility-logic-elementor/issues"
@@ -31,6 +31,7 @@
   ],
   "dependencies": {
     "autoprefixer": "^10.2.5",
+    "browserslist": ">=4.16.5",
     "postcss": "^8.2.9",
     "postcss-import": "^14.0.1",
     "tailwindcss": "^2.0.4",
