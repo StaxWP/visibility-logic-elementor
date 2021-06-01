@@ -3,7 +3,7 @@ Contributors: seventhqueen, kierantaylorio, codezz, rtynio
 Tags: elementor, elementor restrictions, elementor conditions, elementor widgets, visibility logic, widget conditions
 Requires at least: 3.0
 Requires PHP: 5.6
-Tested up to: 5.7.1
+Tested up to: 5.7.2
 Stable tag: 2.0.0
 License: GLPv2 or later
 
@@ -14,6 +14,15 @@ Hide or show an Elementor widget based on whether a user is logged in, logged ou
 You can also hide an entire section too or show it just for specific users.
 
 Based on your visibility setting for each widget you can restrict rendering elements on front-end, meaning that you can hide or show any Elementor widget based on the user role(Subscriber, Author, Administrator, etc), if the user is Logged our or if the user is Logged in.
+
+= PRO Features =
+- User Meta content restriction
+- WordPress Conditional Tags restrictions
+- Post & Page, Taxonomy, URL Parameter content restriction
+- IP & Referrer restrictions
+- Restrict content based on Browser
+- Date & Time restrictions for content
+- Fallback - Allows you to show a message instead of hiding the element.
 
 Other restriction options to come. Suggestions are welcomed. 
 
@@ -29,7 +38,6 @@ Create stunning communities on your site powered by Elementor and BuddyPress
 
 = Privacy Policy =
 We use Appsero SDK to collect some telemetry data upon user's confirmation. This helps us to troubleshoot problems faster & make product improvements.
-
 
 == Installation ==
 
