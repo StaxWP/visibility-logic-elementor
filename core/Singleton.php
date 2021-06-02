@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class Singleton
  *
- * @package Dollie\Core
+ * @package Stax\VisibilityLogic
  */
 class Singleton {
 
@@ -38,7 +38,7 @@ class Singleton {
 	 */
 	final public function __clone() {
 		// Cloning instances of the class is forbidden.
-		_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin&#8217; huh?', 'stax-buddy-builder' ), STAX_VISIBILITY_VERSION );
+		_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin&#8217; huh?', 'visibility-logic-elementor' ), STAX_VISIBILITY_VERSION );
 	}
 
 	/**
@@ -49,7 +49,7 @@ class Singleton {
 	 */
 	final public function __wakeup() {
 		// Unserializing instances of the class is forbidden.
-		_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin&#8217; huh?', 'stax-buddy-builder' ), STAX_VISIBILITY_VERSION );
+		_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin&#8217; huh?', 'visibility-logic-elementor' ), STAX_VISIBILITY_VERSION );
 	}
 
 	/**

@@ -14,7 +14,7 @@ final class Notices extends Singleton {
 	public function elementor_notice() {
 		$class = 'notice notice-warning';
 		/* translators: %s: html tags */
-		$message = sprintf( __( '%1$sDollie%2$s requires %1$sElementor%2$s plugin installed & activated.', 'dollie' ), '<strong>', '</strong>' );
+		$message = sprintf( __( '%1$sVisibility Logic %2$s requires %1$sElementor%2$s plugin installed & activated.', 'dollie' ), '<strong>', '</strong>' );
 
 		$plugin = 'elementor/elementor.php';
 
@@ -24,7 +24,7 @@ final class Notices extends Singleton {
 			}
 
 			$action_url   = wp_nonce_url( 'plugins.php?action=activate&amp;plugin=' . $plugin . '&amp;plugin_status=all&amp;paged=1&amp;s', 'activate-plugin_' . $plugin );
-			$button_label = __( 'Activate Elementor', 'dollie' );
+			$button_label = __( 'Activate Elementor', 'visibility-logic-elementor' );
 
 		} else {
 			if ( ! current_user_can( 'install_plugins' ) ) {
@@ -32,7 +32,7 @@ final class Notices extends Singleton {
 			}
 
 			$action_url   = wp_nonce_url( self_admin_url( 'update.php?action=install-plugin&plugin=elementor' ), 'install-plugin_elementor' );
-			$button_label = __( 'Install Elementor', 'dollie' );
+			$button_label = __( 'Install Elementor', 'visibility-logic-elementor' );
 		}
 
 		$button = '<p><a href="' . $action_url . '" class="button-primary">' . $button_label . '</a></p><p></p>';
@@ -59,10 +59,10 @@ final class Notices extends Singleton {
 		$message = sprintf(
 			'<span style="display: block; margin: 0.5em 0.5em 0 0; clear: both;">'
 			/* translators: 1: Plugin name 2: Elementor */
-			. esc_html__( '%1$s requires version %3$s or greater of %2$s plugin.', 'dollie' )
+			. esc_html__( '%1$s requires version %3$s or greater of %2$s plugin.', 'visibility-logic-elementor' )
 			. '</span>',
-			'<strong>' . __( 'Dollie', 'dollie' ) . '</strong>',
-			'<strong>' . __( 'Elementor', 'dollie' ) . '</strong>',
+			'<strong>' . __( 'Visibility Logic', 'visibility-logic-elementor' ) . '</strong>',
+			'<strong>' . __( 'Elementor', 'visibility-logic-elementor' ) . '</strong>',
 			Plugin::$minimum_elementor_version
 		);
 
@@ -73,7 +73,7 @@ final class Notices extends Singleton {
 			'<span style="display: block; margin: 0.5em 0.5em 0 0; clear: both;">' .
 			'<a class="button-primary" href="%1$s">%2$s</a></span>',
 			$update_link,
-			__( 'Update Elementor Now', 'dollie' )
+			__( 'Update Elementor Now', 'visibility-logic-elementor' )
 		);
 
 		printf( '<div class="notice notice-error"><p>%1$s</p></div>', $message );
