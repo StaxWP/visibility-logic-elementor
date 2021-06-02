@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Visibility Logic for Elementor\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-31 07:58+0000\n"
+"POT-Creation-Date: 2021-06-02 17:55+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -15,42 +15,766 @@ msgstr ""
 "X-Generator: Loco https://localise.biz/\n"
 "X-Loco-Version: 2.2.0; wp-5.0.1"
 
-#: Elementor_Visibility_Control.php:54
-msgid "Enable Conditions"
+#. 1: Plugin name 2: Elementor
+#: core/helpers/Notices.php:62
+#, php-format
+msgid "%1$s requires version %3$s or greater of %2$s plugin."
 msgstr ""
 
-#: Elementor_Visibility_Control.php:82
-msgid "Hidden for:"
+#: _pro/settings/ConditionalTagsVisibility.php:127
+msgid "404 Not Found"
+msgstr ""
+
+#: core/Upgrades.php:94
+#, php-format
+msgid "<a href=\"%s\">Update now</a>"
+msgstr ""
+
+#: core/Upgrades.php:86
+msgid ""
+"<strong>STAX Visibility Logic</strong> needs to update your database to the "
+"latest version."
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:135
+msgid "A Woocommerce Page"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:145
+msgid "Account page"
+msgstr ""
+
+#: core/helpers/Notices.php:27
+msgid "Activate Elementor"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:102
+msgid "Active sidebar"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:143
+msgid "Add Payment method"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:132
+msgid "Admin"
+msgstr ""
+
+#: core/settings/GeneralVisibility.php:97
+msgid "All"
+msgstr ""
+
+#: _pro/settings/PostVisibility.php:150
+msgid "And"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:161
+msgid "Archive"
+msgstr ""
+
+#: core/settings/GeneralVisibility.php:98
+msgid "At least one"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:130
+msgid "Attachment"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:169
+msgid "Author"
+msgstr ""
+
+#: core/Upgrades.php:209
+msgid "Awesome, Visibility Logic database is now at the latest version!"
+msgstr ""
+
+#: core/settings/BrowserTypeVisiblity.php:81
+msgid "Browser"
+msgstr ""
+
+#: core/settings/BrowserTypeVisiblity.php:50 core/helpers/Resources.php:136
+msgid "Browser Type"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:141
+msgid "Cart"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:167
+msgid "Category"
+msgstr ""
+
+#: core/Singleton.php:41 core/Singleton.php:52
+msgid "Cheatin&#8217; huh?"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:142
+msgid "Checkout"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:144
+msgid "Checkout Pay"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:106
+msgid "Child theme"
+msgstr ""
+
+#: core/admin/pages/templates/widgets.php:15
+msgid ""
+"Choose which visibility options should be enabled in Elementor for Widgets "
+"and Sections. Disabled options will have no effect in the show/hide logic."
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:80
+msgid "Comments open"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:134
+msgid "Comments Popup"
+msgstr ""
+
+#: _pro/VisibilityPro.php:70 core/helpers/Resources.php:177
+#: _pro/settings/ConditionalTagsVisibility.php:43
+msgid "Conditional Tags"
+msgstr ""
+
+#: core/settings/GeneralVisibility.php:93
+msgid "Conditions Type"
+msgstr ""
+
+#: _pro/settings/FallbackVisibility.php:73
+msgid "Content type"
+msgstr ""
+
+#: _pro/settings/PostVisibility.php:74
+msgid "Custom Post Type"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:107
+msgid "Customize preview"
+msgstr ""
+
+#: core/admin/Settings.php:64
+msgid "Dashboard"
+msgstr ""
+
+#: core/Upgrades.php:81
+msgid "Database update required"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:170
+msgid "Date"
+msgstr ""
+
+#: core/helpers/Resources.php:131
+msgid "Date & Time"
+msgstr ""
+
+#: core/settings/DateTimeVisibility.php:91
+msgid "Date FROM"
+msgstr ""
+
+#: core/settings/DateTimeVisibility.php:77
+msgid "Date FROM/TO"
+msgstr ""
+
+#: core/settings/DateTimeVisibility.php:43
+msgid "Date Time"
+msgstr ""
+
+#: core/settings/DateTimeVisibility.php:103
+msgid "Date TO"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:173
+msgid "Day"
+msgstr ""
+
+#: core/settings/DateTimeVisibility.php:122
+msgid "Days of the WEEK"
+msgstr ""
+
+#: _pro/settings/PostVisibility.php:288
+msgid "Definited value"
+msgstr ""
+
+#: core/settings/GeneralVisibility.php:77
+msgid ""
+"Determine if the element should be hidden or shown when the conditions are "
+"met."
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:101
+msgid "Dynamic sidebar"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:146
+msgid "Edit Account"
+msgstr ""
+
+#: core/helpers/Notices.php:65
+msgid "Elementor"
+msgstr ""
+
+#: core/settings/UserRoleVisibility.php:61
+#: core/settings/UserMetaVisibility.php:62
+#: core/settings/DateTimeVisibility.php:62
+#: core/settings/BrowserTypeVisiblity.php:69
+#: _pro/settings/FallbackVisibility.php:60
+#: _pro/settings/ConditionalTagsVisibility.php:62
+#: _pro/settings/PostVisibility.php:62
+#: _pro/settings/IpReferrerVisibility.php:62
+msgid "Enable"
+msgstr ""
+
+#: core/settings/GeneralVisibility.php:64
+msgid "Enable Visibility Logic"
+msgstr ""
+
+#: _pro/VisibilityPro.php:74 core/helpers/Resources.php:181
+#: _pro/settings/FallbackVisibility.php:41
+msgid "Fallback"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:109
+msgid "Feed"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:125
+msgid "Front Page"
+msgstr ""
+
+#: core/settings/GeneralVisibility.php:47
+msgid "General"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:84
+msgid "Has Excerpt"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:86
+msgid "Has Nav menu"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:85
+msgid "Has Post Thumbnail"
+msgstr ""
+
+#: _pro/settings/PostVisibility.php:224
+msgid "Has Siblings"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:82
+msgid "Has Tags"
+msgstr ""
+
+#: _pro/settings/PostVisibility.php:236
+msgid "Has Term Buddies"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:83
+msgid "Has Terms"
+msgstr ""
+
+#: core/settings/GeneralVisibility.php:81
+msgid "Hide"
 msgstr ""
 
 #. Description of the plugin
-msgid "Hide or show Elementor widgets based on user conditions"
+msgid "Hide or show Elementor widgets based on conditions"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:126
+msgid "Home"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:164
+msgid "Home blog (latest posts)"
+msgstr ""
+
+#: _pro/settings/PostVisibility.php:152
+msgid "How post meta have to satisfy this conditions."
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://staxwp.com"
 msgstr ""
 
 #. URI of the plugin
-msgid "https://wordpress.org/plugins/visibility-logic-elementor/"
+msgid "https://wordpress.org/plugins/visibility-logic-elementor"
 msgstr ""
 
-#: Elementor_Visibility_Control.php:58
+#: core/settings/GeneralVisibility.php:94
+msgid ""
+"If ALL conditions need to be met or JUST ONE in order to trigger the "
+"hide/show action."
+msgstr ""
+
+#: _pro/settings/PostVisibility.php:136
+msgid "If you want limit visualization by specific meta fields value."
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:179
+msgid "In the Loop"
+msgstr ""
+
+#: _pro/settings/FallbackVisibility.php:112
+msgid "Insert here some content showed if the element is not visible"
+msgstr ""
+
+#: core/helpers/Notices.php:35
+msgid "Install Elementor"
+msgstr ""
+
+#: _pro/VisibilityPro.php:62 core/helpers/Resources.php:169
+#: _pro/settings/IpReferrerVisibility.php:43
+msgid "IP & Referrer"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:78
+msgid "Is Hierarchical Post Type"
+msgstr ""
+
+#: _pro/settings/PostVisibility.php:187
+msgid "Is Leaf"
+msgstr ""
+
+#: _pro/settings/PostVisibility.php:199
+msgid "Is Node"
+msgstr ""
+
+#: _pro/settings/PostVisibility.php:163
+msgid "Is Parent"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:79
+msgid "Is Post Type Archive"
+msgstr ""
+
+#: _pro/settings/PostVisibility.php:175
+msgid "Is Root"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:77
+msgid "Is Sticky"
+msgstr ""
+
+#: _pro/settings/PostVisibility.php:284
+msgid "Isset"
+msgstr ""
+
+#: core/settings/GeneralVisibility.php:110
+msgid "Keep HTML/Hide by CSS"
+msgstr ""
+
+#: _pro/settings/IpReferrerVisibility.php:76
+msgid ""
+"List of IPs who will be able to view this element.<br>Separate IPs by comma. "
+"(ex. \"1.1.1.1, 8.8.8.8, 4.4.4.4\")"
+msgstr ""
+
+#: _pro/settings/IpReferrerVisibility.php:89
+msgid ""
+"List of referral websites (one per line). If empty this element will be "
+"visible for all external site."
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:147
+msgid "Lost password"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:178
+msgid "Main Query"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:105
+msgid "Main site"
+msgstr ""
+
+#: _pro/settings/PostVisibility.php:133
+msgid "Meta"
+msgstr ""
+
+#: _pro/settings/PostVisibility.php:147
+msgid "Meta conditions"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:93
+msgid "Meta empty"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:97
+msgid "Meta not empty"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:89
+msgid "Meta Status"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:117
+msgid "Meta Value"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:172
+msgid "Month"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:108
+msgid "Multi author"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:104
+msgid "Multisite"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:175
+msgid "New Day"
+msgstr ""
+
+#: core/settings/UserRoleVisibility.php:65
+#: core/settings/UserMetaVisibility.php:66
+#: core/settings/DateTimeVisibility.php:66
+#: core/settings/GeneralVisibility.php:68
+#: core/settings/GeneralVisibility.php:115
+#: core/settings/BrowserTypeVisiblity.php:73
+#: _pro/settings/FallbackVisibility.php:65
+#: _pro/settings/ConditionalTagsVisibility.php:66
+#: _pro/settings/PostVisibility.php:66
+#: _pro/settings/IpReferrerVisibility.php:66
 msgid "No"
 msgstr ""
 
-#. Author of the plugin
-msgid "SeventhQueen"
+#: _pro/settings/PostVisibility.php:211
+msgid "Node level"
 msgstr ""
 
-#: Elementor_Visibility_Control.php:34
-msgid "Visibility control"
+#: _pro/Helpers.php:332
+msgid "None"
+msgstr ""
+
+#: _pro/settings/PostVisibility.php:280
+msgid "Not isset"
+msgstr ""
+
+#: _pro/settings/PostVisibility.php:151
+msgid "Or"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:149
+msgid "Order complete"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:148
+msgid "Order summary"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:122
+#: _pro/settings/ConditionalTagsVisibility.php:129
+msgid "Page"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:133
+msgid "Page Template"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:177
+msgid "Paged"
+msgstr ""
+
+#: _pro/settings/PostVisibility.php:276
+msgid "Parameter Status"
+msgstr ""
+
+#: _pro/settings/PostVisibility.php:304
+msgid "Parameter Value"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:81
+msgid "Pings open"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:74
+msgid "Post"
+msgstr ""
+
+#: _pro/VisibilityPro.php:66 core/helpers/Resources.php:173
+msgid "Post & Page"
+msgstr ""
+
+#: _pro/settings/PostVisibility.php:43 _pro/settings/PostVisibility.php:87
+msgid "Post/Page"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:165
+msgid "Posts page"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:131
+msgid "Preview"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:137
+msgid "Product"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:139
+msgid "Product Category"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:140
+msgid "Product Tag"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:138
+msgid "Product Taxonomy"
+msgstr ""
+
+#: _pro/settings/IpReferrerVisibility.php:86
+msgid "Referral sites"
+msgstr ""
+
+#: _pro/settings/IpReferrerVisibility.php:74
+msgid "Remote IP"
+msgstr ""
+
+#: _pro/settings/FallbackVisibility.php:95
+msgid "Render Template"
+msgstr ""
+
+#: core/settings/UserRoleVisibility.php:74
+msgid "Roles"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:103
+msgid "RTL"
+msgstr ""
+
+#: core/admin/pages/templates/widgets.php:49
+msgid "Save"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:176
+msgid "Search"
+msgstr ""
+
+#: core/settings/DateTimeVisibility.php:125
+msgid "Select days in the week."
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:75
+msgid "Select Meta:"
+msgstr ""
+
+#: core/settings/DateTimeVisibility.php:75
+msgid "Select Type:"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:136
+msgid "Shop"
+msgstr ""
+
+#: core/settings/GeneralVisibility.php:82
+msgid "Show"
+msgstr ""
+
+#: _pro/settings/FallbackVisibility.php:98
+msgid "Show an Elementor template when the element is hidden."
+msgstr ""
+
+#: _pro/settings/FallbackVisibility.php:63
+msgid "Show something when the element is hidden."
+msgstr ""
+
+#: core/settings/GeneralVisibility.php:76
+msgid "Show/Hide action"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:128
+msgid "Single"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:98
+msgid "Site"
+msgstr ""
+
+#: core/Upgrades.php:215
+msgid "Something went wrong, please check logs."
+msgstr ""
+
+#: _pro/settings/PostVisibility.php:251
+msgid "Specific a Term for current post has friends."
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:101
+msgid "Specific meta value"
+msgstr ""
+
+#: core/Plugin.php:55
+msgid "Stax Visibility"
+msgstr ""
+
+#: core/admin/Settings.php:49
+msgid "STAX Visibility - Dashboard"
+msgstr ""
+
+#. Author of the plugin
+msgid "StaxWP"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:168
+msgid "Tag"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:166
+#: _pro/settings/PostVisibility.php:102
+msgid "Taxonomy"
+msgstr ""
+
+#: _pro/settings/FallbackVisibility.php:81
+msgid "Template"
+msgstr ""
+
+#: _pro/settings/PostVisibility.php:117
+msgid "Terms"
+msgstr ""
+
+#: _pro/settings/PostVisibility.php:248
+msgid "Terms where find Buddies"
+msgstr ""
+
+#: _pro/settings/FallbackVisibility.php:77
+msgid "Text"
+msgstr ""
+
+#: _pro/settings/FallbackVisibility.php:109
+msgid "Text Fallback"
+msgstr ""
+
+#: _pro/settings/PostVisibility.php:306
+msgid "The specific value of the parameter"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:119
+msgid "The specific value of the User Meta"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:174
+msgid "Time"
+msgstr ""
+
+#: core/settings/DateTimeVisibility.php:137
+msgid "Time FROM"
+msgstr ""
+
+#: core/settings/DateTimeVisibility.php:78
+msgid "Time FROM/TO"
+msgstr ""
+
+#: core/settings/DateTimeVisibility.php:150
+msgid "Time TO"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:110
+msgid "Trackback"
+msgstr ""
+
+#: core/settings/BrowserTypeVisiblity.php:94
+msgid "Trigger visibility for a specific browsers."
+msgstr ""
+
+#: _pro/settings/PostVisibility.php:238
+msgid "Triggered for post grouped in taxonomies with other posts."
+msgstr ""
+
+#: _pro/settings/PostVisibility.php:177
+msgid "Triggered for post of first level (without parent)."
+msgstr ""
+
+#: _pro/settings/PostVisibility.php:201
+msgid "Triggered for post of intermedial level (with parent and child)."
+msgstr ""
+
+#: _pro/settings/PostVisibility.php:189
+msgid "Triggered for post of last level (without children)."
+msgstr ""
+
+#: _pro/settings/PostVisibility.php:165
+msgid "Triggered for post with children."
+msgstr ""
+
+#: _pro/settings/PostVisibility.php:226
+msgid "Triggered for post with siblings."
+msgstr ""
+
+#: core/helpers/Notices.php:76
+msgid "Update Elementor Now"
+msgstr ""
+
+#: core/settings/UserRoleVisibility.php:42
+msgid "User"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:43 core/helpers/Resources.php:126
+msgid "User Meta"
+msgstr ""
+
+#: core/helpers/Resources.php:121
+msgid "User Role"
+msgstr ""
+
+#: core/admin/layout.php:29
+#, php-format
+msgid "Version %s"
+msgstr ""
+
+#: core/admin/Settings.php:50 core/helpers/Notices.php:64
+msgid "Visibility Logic"
 msgstr ""
 
 #. Name of the plugin
 msgid "Visibility Logic for Elementor"
 msgstr ""
 
-#: Elementor_Visibility_Control.php:67
-msgid "Visible for:"
+#: core/admin/pages/templates/widgets.php:11
+msgid "Visibility Options"
 msgstr ""
 
-#: Elementor_Visibility_Control.php:57
+#: core/settings/DateTimeVisibility.php:79
+msgid "Week Days"
+msgstr ""
+
+#: core/settings/GeneralVisibility.php:111
+msgid ""
+"When the element is hidden, decide if you still want to render the HTML in "
+"the page but hidden using CSS."
+msgstr ""
+
+#: core/admin/pages/Widgets.php:79
+msgid "Widgets"
+msgstr ""
+
+#: _pro/settings/PostVisibility.php:264
+msgid "With Parameter"
+msgstr ""
+
+#: _pro/settings/PostVisibility.php:266
+msgid "Write here the name of the parameter passed in GET or POST method"
+msgstr ""
+
+#: _pro/settings/ConditionalTagsVisibility.php:171
+msgid "Year"
+msgstr ""
+
+#: core/settings/UserRoleVisibility.php:64
+#: core/settings/UserMetaVisibility.php:65
+#: core/settings/DateTimeVisibility.php:65
+#: core/settings/GeneralVisibility.php:67
+#: core/settings/GeneralVisibility.php:114
+#: core/settings/BrowserTypeVisiblity.php:72
+#: _pro/settings/FallbackVisibility.php:64
+#: _pro/settings/ConditionalTagsVisibility.php:65
+#: _pro/settings/PostVisibility.php:65
+#: _pro/settings/IpReferrerVisibility.php:65
 msgid "Yes"
 msgstr ""
