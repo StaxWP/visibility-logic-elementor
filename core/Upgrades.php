@@ -189,9 +189,7 @@ class Upgrades extends Singleton {
 			return;
 		}
 
-		if ( false === $errors ) {
-			$this->updated = true;
-		}
+		$this->updated = false === $errors ;
 
 		// Save successful upgrades.
 		update_option( $this->option_name, $old_upgrades );
