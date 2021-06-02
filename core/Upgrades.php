@@ -75,11 +75,11 @@ class Upgrades extends Singleton {
 				$url = wp_nonce_url( add_query_arg( 'stax_visibility_db_update', '' ), 'action' );
 				?>
 
-				<div class="notice stax-visibility-notice">
-					<div class="stax-visibility-inner-message">
-						<div class="stax-visibility-message-center">
-							<h3><?php _e( 'Database update required', 'visibility-logic-elementor' ); ?></h3>
-							<p>
+                <div class="notice stax-visibility-notice">
+                    <div class="stax-visibility-inner-message">
+                        <div class="stax-visibility-message-center">
+                            <h3><?php _e( 'Database update required', 'visibility-logic-elementor' ); ?></h3>
+                            <p>
 								<?php
 								echo wp_kses_post(
 									sprintf(
@@ -88,45 +88,45 @@ class Upgrades extends Singleton {
 									)
 								);
 								?>
-							</p>
-						</div>
-						<div class="stax-visibility-msg-button-right">
+                            </p>
+                        </div>
+                        <div class="stax-visibility-msg-button-right">
 							<?php echo wp_kses_post( sprintf( __( '<a href="%s">Update now</a>', 'visibility-logic-elementor' ), esc_url( $url ) ) ); ?>
-						</div>
+                        </div>
 
-					</div>
-				</div>
+                    </div>
+                </div>
 
-				<style>
-					.stax-visibility-notice {
-						border-left-color: #262cbd;
-					}
+                <style>
+                    .stax-visibility-notice {
+                        border-left-color: #262cbd;
+                    }
 
-					.stax-visibility-notice .stax-visibility-inner-message {
-						display: flex;
-						flex-wrap: wrap;
-						justify-items: center;
-						justify-content: space-between;
-					}
+                    .stax-visibility-notice .stax-visibility-inner-message {
+                        display: flex;
+                        flex-wrap: wrap;
+                        justify-items: center;
+                        justify-content: space-between;
+                    }
 
-					.stax-visibility-notice .stax-visibility-inner-message h3 {
-						margin: .5em 0;
-					}
+                    .stax-visibility-notice .stax-visibility-inner-message h3 {
+                        margin: .5em 0;
+                    }
 
-					.stax-visibility-notice .stax-visibility-inner-message .stax-visibility-msg-button-right {
-						display: flex;
-						align-items: center;
-					}
+                    .stax-visibility-notice .stax-visibility-inner-message .stax-visibility-msg-button-right {
+                        display: flex;
+                        align-items: center;
+                    }
 
-					.stax-visibility-notice .stax-visibility-inner-message .stax-visibility-msg-button-right a {
-						background-image: linear-gradient(180deg, #262cbd, #3d42cc);
-						color: #fff;
-						border-radius: 4px;
-						padding: 8px 12px;
-						text-decoration: none;
-						display: inline-block;
-					}
-				</style>
+                    .stax-visibility-notice .stax-visibility-inner-message .stax-visibility-msg-button-right a {
+                        background-image: linear-gradient(180deg, #262cbd, #3d42cc);
+                        color: #fff;
+                        border-radius: 4px;
+                        padding: 8px 12px;
+                        text-decoration: none;
+                        display: inline-block;
+                    }
+                </style>
 				<?php
 			}
 		}
@@ -189,7 +189,7 @@ class Upgrades extends Singleton {
 			return;
 		}
 
-		$this->updated = false === $errors ;
+		$this->updated = false === $errors;
 
 		// Save successful upgrades.
 		update_option( $this->option_name, $old_upgrades );
@@ -205,15 +205,15 @@ class Upgrades extends Singleton {
 
 		if ( true === $this->updated ) {
 			echo '<div class="notice notice-success">' .
-				 '<p>' .
-				 esc_html__( 'Awesome, Visibility Logic database is now at the latest version!', 'visibility-logic-elementor' ) .
-				 '</p>
+			     '<p>' .
+			     esc_html__( 'Awesome, Visibility Logic database is now at the latest version!', 'visibility-logic-elementor' ) .
+			     '</p>
          		</div>';
 		} elseif ( false === $this->updated ) {
 			echo '<div class="notice notice-warning">' .
-				 '<p>' .
-				 esc_html__( 'Something went wrong, please check logs.', 'visibility-logic-elementor' ) .
-				 '</p>
+			     '<p>' .
+			     esc_html__( 'Something went wrong, please check logs.', 'visibility-logic-elementor' ) .
+			     '</p>
          		</div>';
 		}
 
@@ -253,6 +253,7 @@ class Upgrades extends Singleton {
 	 * Recursieve function for upgrade 130
 	 *
 	 * @param array $item
+	 *
 	 * @return array
 	 */
 	private function _upgrade_130_recursive( $item ) {
@@ -284,6 +285,13 @@ class Upgrades extends Singleton {
 	 * @return bool
 	 */
 	private function _upgrade_203() {
+
+	    // Run only if 1.3.0 migration already ran
+		$old_upgrades = get_option( $this->option_name, [] );
+		if ( ! isset( $old_upgrades['1.3.0'] ) ) {
+			return true;
+		}
+
 		global $wpdb;
 
 		$r = $wpdb->get_results(
