@@ -7,7 +7,7 @@
  * Author: StaxWP
  * Version: 2.1.0
  *
- * Elementor tested up to: 3.2.2
+ * Elementor tested up to: 3.2.4
  * Elementor Pro tested up to: 3.2.2
  *
  * Text Domain: visibility-logic-elementor
