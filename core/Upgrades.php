@@ -286,36 +286,12 @@ class Upgrades extends Singleton {
 	 * @return bool
 	 */
 	private function _upgrade_203() {
-		global $wpdb;
-
-		$r = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT * FROM {$wpdb->postmeta} WHERE meta_key = '%s'",
-				'_elementor_data'
-			)
-		);
-
-		foreach ( $r as $item ) {
-			$data = @json_decode( $item->meta_value, true );
-
-			if ( ! is_array( $data ) || empty( $data ) ) {
-				continue;
-			}
-
-			foreach ( $data as &$section_item ) {
-				foreach ( $section_item['elements'] as &$column_item ) {
-					foreach ( $column_item['elements'] as &$column_element ) {
-						if ( 'section' === $column_element['elType'] ) {
-							$column_element = $this->_upgrade_130_recursive( $column_element );
-						}
-					}
-				}
-			}
-
-			update_post_meta( $item->post_id, '_elementor_data', wp_slash( wp_json_encode( $data ) ) );
+		$old_upgrades = get_option( $this->option_name, [] );
+		if ( ! isset( $old_upgrades['1.3.0'] ) ) {
+			return true;
 		}
 
-		return true;
+		return $this->_upgrade_130();
 	}
 
 }
