@@ -120,19 +120,24 @@ final class Resources extends Singleton {
 			'user-role' => [
 				'name' => __( 'User Role', 'visibility-logic-elementor' ),
 				'pro'  => false,
+				'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'UserRoleVisibility.php'
 			],
 			'user-meta'        => [
 				'name'  => __( 'User Meta', 'visibility-logic-elementor' ),
 				'pro'  => false,
-			],
-			'browser-type'     => [
-				'name'  => __( 'Browser Type', 'visibility-logic-elementor' ),
-				'pro'  => false,
+				'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'UserMetaVisibility.php'
 			],
 			'date-time'        => [
 				'name'  => __( 'Date & Time', 'visibility-logic-elementor' ),
 				'pro'  => false,
+				'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'DateTimeVisibility.php'
 			],
+			'browser-type'     => [
+				'name'  => __( 'Browser Type', 'visibility-logic-elementor' ),
+				'pro'  => false,
+				'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'BrowserTypeVisiblity.php'
+			],
+
 		];
 
 		if ( ! defined( 'STAX_VISIBILITY_PRO_PATH' ) ) {

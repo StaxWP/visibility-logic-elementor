@@ -1,5 +1,5 @@
 === Visibility Logic for Elementor ===
-Contributors: staxwp, seventhqueen, kierantaylorio, codezz, rtynio
+Contributors: staxwp, seventhqueen, kierantaylorio, codezz, rtynio, geowrge
 Tags: elementor, elementor restrictions, elementor conditions, elementor widgets, visibility logic, widget conditions
 Requires at least: 3.0
 Requires PHP: 5.6
