@@ -75,6 +75,9 @@ class Plugin extends Singleton {
 	public function load_settings() {
 		require_once STAX_VISIBILITY_CORE_SETTINGS_PATH . 'GeneralVisibility.php';
 		require_once STAX_VISIBILITY_CORE_SETTINGS_PATH . 'UserRoleVisibility.php';
+		require_once STAX_VISIBILITY_CORE_SETTINGS_PATH . 'UserMetaVisibility.php';
+		require_once STAX_VISIBILITY_CORE_SETTINGS_PATH . 'DateTimeVisibility.php';
+		require_once STAX_VISIBILITY_CORE_SETTINGS_PATH . 'BrowserTypeVisiblity.php';
 
 		if ( $this->has_pro() ) {
 			require_once STAX_VISIBILITY_PATH . 'pro/loader.php';

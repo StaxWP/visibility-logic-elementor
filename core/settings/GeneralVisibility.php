@@ -87,25 +87,22 @@ class GeneralVisibility extends Singleton {
 			]
 		);
 
-		if ( Plugin::instance()->has_pro() ) {
-
-			$element->add_control(
-				self::SECTION_PREFIX . 'condition_type',
-				[
-					'label'       => __( 'Conditions Type', 'visibility-logic-elementor' ),
-					'description' => __( 'If ALL conditions need to be met or JUST ONE in order to trigger the hide/show action.', 'visibility-logic-elementor' ),
-					'type'        => Controls_Manager::SELECT,
-					'options'     => [
-						'all' => __( 'All', 'visibility-logic-elementor' ),
-						'one' => __( 'At least one', 'visibility-logic-elementor' ),
-					],
-					'default'     => 'all',
-					'condition'   => [
-						self::SECTION_PREFIX . 'enabled' => 'yes',
-					],
-				]
-			);
-		}
+		$element->add_control(
+			self::SECTION_PREFIX . 'condition_type',
+			[
+				'label'       => __( 'Conditions Type', 'visibility-logic-elementor' ),
+				'description' => __( 'If ALL conditions need to be met or JUST ONE in order to trigger the hide/show action.', 'visibility-logic-elementor' ),
+				'type'        => Controls_Manager::SELECT,
+				'options'     => [
+					'all' => __( 'All', 'visibility-logic-elementor' ),
+					'one' => __( 'At least one', 'visibility-logic-elementor' ),
+				],
+				'default'     => 'all',
+				'condition'   => [
+					self::SECTION_PREFIX . 'enabled' => 'yes',
+				],
+			]
+		);
 
 		$element->add_control(
 			self::SECTION_PREFIX . 'keep_html',

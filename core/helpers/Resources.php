@@ -121,6 +121,18 @@ final class Resources extends Singleton {
 				'name' => __( 'User Role', 'visibility-logic-elementor' ),
 				'pro'  => false,
 			],
+			'user-meta'        => [
+				'name'  => __( 'User Meta', 'visibility-logic-elementor' ),
+				'pro'  => false,
+			],
+			'browser-type'     => [
+				'name'  => __( 'Browser Type', 'visibility-logic-elementor' ),
+				'pro'  => false,
+			],
+			'date-time'        => [
+				'name'  => __( 'Date & Time', 'visibility-logic-elementor' ),
+				'pro'  => false,
+			],
 		];
 
 		if ( ! defined( 'STAX_VISIBILITY_PRO_PATH' ) ) {
@@ -148,24 +160,8 @@ final class Resources extends Singleton {
 	 */
 	public static function get_pro_widget_options() {
 		return [
-			'user-meta'        => [
-				'name' => __( 'User Meta', 'visibility-logic-elementor' ),
-				'pro'  => true,
-			],
 			'ip-referrer'      => [
 				'name' => __( 'IP & Referrer', 'visibility-logic-elementor' ),
-				'pro'  => true,
-			],
-			'browser-type'     => [
-				'name' => __( 'Browser Type', 'visibility-logic-elementor' ),
-				'pro'  => true,
-			],
-			'browser-type'     => [
-				'name' => __( 'Browser Type', 'visibility-logic-elementor' ),
-				'pro'  => true,
-			],
-			'date-time'        => [
-				'name' => __( 'Date & Time', 'visibility-logic-elementor' ),
 				'pro'  => true,
 			],
 			'post-page'        => [
@@ -181,5 +177,88 @@ final class Resources extends Singleton {
 				'pro'  => true,
 			],
 		];
+	}
+
+	/**
+	 * Get user metas
+	 *
+	 * @param boolean $grouped
+	 * @return array
+	 */
+	public static function get_user_metas( $grouped = false ) {
+		global $wp_meta_keys;
+		global $wpdb;
+
+		$user_metas         = [];
+		$user_metas_grouped = [];
+
+		$query   = 'SELECT DISTINCT meta_key FROM ' . $wpdb->prefix . 'usermeta ORDER BY meta_key';
+		$results = $wpdb->get_results( $query );
+
+		if ( ! empty( $results ) ) {
+			$metas = [];
+			foreach ( $results as $key => $user ) {
+				$metas[ $user->meta_key ] = $user->meta_key;
+			}
+
+			$manual_metas = $metas;
+			foreach ( $manual_metas as $meta ) {
+				if ( substr( $meta, 0, 1 ) == '_' ) {
+					$meta = $tmp = substr( $meta, 1 );
+					if ( in_array( $tmp, $manual_metas ) ) {
+						continue;
+					}
+				}
+				if ( ! isset( $post_metas[ $meta ] ) ) {
+					$user_metas[ $meta ]                   = $meta;
+					$user_metas_grouped['NATIVE'][ $meta ] = $meta;
+				}
+			}
+		}
+
+		if ( $grouped ) {
+			return $user_metas_grouped;
+		}
+
+		return $user_metas;
+	}
+
+	/**
+	 * Get borwser type
+	 *
+	 * @return string
+	 */
+	public static function get_browser_type() {
+		global $is_lynx, $is_gecko, $is_IE, $is_opera, $is_NS4, $is_safari, $is_chrome, $is_iphone, $is_android;
+
+		$android = stripos( $_SERVER['HTTP_USER_AGENT'], 'Android' );
+
+		if ( $is_lynx ) {
+			return 'is_lynx';
+		} elseif ( $is_gecko ) {
+			return 'is_gecko';
+		} elseif ( $is_opera ) {
+			return 'is_opera';
+		} elseif ( $is_NS4 ) {
+			return 'is_ns4';
+		} elseif ( $is_safari ) {
+			return 'is_safari';
+		} elseif ( $is_chrome ) {
+			return 'is_chrome';
+		} elseif ( $is_IE ) {
+			return 'is_ie';
+		} else {
+			return 'is_unknown';
+		}
+
+		if ( $is_iphone ) {
+			return 'is_ios';
+		}
+
+		if ( $android ) {
+			return 'is_android';
+		}
+
+		return 'is_unknown';
 	}
 }
