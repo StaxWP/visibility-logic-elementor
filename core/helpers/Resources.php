@@ -113,34 +113,35 @@ final class Resources extends Singleton {
 	/**
 	 * Get all visibility options
 	 *
+	 * @param boolean $with_pro
 	 * @return array
 	 */
-	public static function get_all_widget_options() {
+	public static function get_all_widget_options( $with_pro = true ) {
 		$options = [
-			'user-role' => [
-				'name' => __( 'User Role', 'visibility-logic-elementor' ),
-				'pro'  => false,
-				'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'UserRoleVisibility.php'
+			'user-role'    => [
+				'name'  => __( 'User Role', 'visibility-logic-elementor' ),
+				'pro'   => false,
+				'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'UserRoleVisibility.php',
 			],
-			'user-meta'        => [
+			'user-meta'    => [
 				'name'  => __( 'User Meta', 'visibility-logic-elementor' ),
-				'pro'  => false,
-				'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'UserMetaVisibility.php'
+				'pro'   => false,
+				'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'UserMetaVisibility.php',
 			],
-			'date-time'        => [
+			'date-time'    => [
 				'name'  => __( 'Date & Time', 'visibility-logic-elementor' ),
-				'pro'  => false,
-				'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'DateTimeVisibility.php'
+				'pro'   => false,
+				'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'DateTimeVisibility.php',
 			],
-			'browser-type'     => [
+			'browser-type' => [
 				'name'  => __( 'Browser Type', 'visibility-logic-elementor' ),
-				'pro'  => false,
-				'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'BrowserTypeVisiblity.php'
+				'pro'   => false,
+				'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'BrowserTypeVisiblity.php',
 			],
 
 		];
 
-		if ( ! defined( 'STAX_VISIBILITY_PRO_PATH' ) ) {
+		if ( ! defined( 'STAX_VISIBILITY_PRO_PATH' ) && $with_pro ) {
 			$options = array_merge(
 				$options,
 				self::get_pro_widget_options()

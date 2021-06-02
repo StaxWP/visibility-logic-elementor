@@ -36,7 +36,7 @@ class Widgets extends Base {
 
 		$disabled_options = [];
 
-		$widgets = Resources::get_all_widget_options();
+		$widgets = Resources::get_all_widget_options( Plugin::instance()->has_pro() );
 
 		foreach ( $widgets as $slug => $widget ) {
 			$disabled = true;
