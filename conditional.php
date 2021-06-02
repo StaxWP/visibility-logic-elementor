@@ -5,7 +5,7 @@
  * Plugin URI: https://wordpress.org/plugins/visibility-logic-elementor
  * Author URI: https://staxwp.com
  * Author: StaxWP
- * Version: 2.0.2
+ * Version: 2.0.3
  *
  * Elementor tested up to: 3.2.2
  * Elementor Pro tested up to: 3.2.2
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-define( 'STAX_VISIBILITY_VERSION', '2.0.2' );
+define( 'STAX_VISIBILITY_VERSION', '2.0.3' );
 
 define( 'STAX_VISIBILITY_FILE', __FILE__ );
 define( 'STAX_VISIBILITY_PLUGIN_BASE', plugin_basename( STAX_VISIBILITY_FILE ) );
@@ -63,7 +63,7 @@ function appsero_init_tracker_visibility_logic_elementor() {
 
 	$client = new Appsero\Client( 'd40e3204-1270-4588-b9ff-37b420fad6b8', 'Visibility Logic for Elementor', __FILE__ );
 
-	// Active insights
+	// Active insights.
 	$client->insights()->init();
 
 }
