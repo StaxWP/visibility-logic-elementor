@@ -42,7 +42,7 @@ class Upgrades extends Singleton {
 	private $upgrades = [
 		'1.3.0' => [
 			'method'  => '_upgrade_130',
-			'confirm' => true
+			'confirm' => false
 		],
 	];
 
