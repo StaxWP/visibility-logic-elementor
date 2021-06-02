@@ -32,7 +32,7 @@ class Upgrades extends Singleton {
 	 *
 	 * @var bool
 	 */
-	private $updated = false;
+	private $updated = null;
 
 	/**
 	 * Upgrade versions and method callbacks
@@ -71,7 +71,7 @@ class Upgrades extends Singleton {
 
 			$this->process_update_action();
 
-			if ( ! $this->updated ) {
+			if ( $this->updated === null ) {
 				$url = wp_nonce_url( add_query_arg( 'stax_visibility_db_update', '' ), 'action' );
 				?>
 
@@ -177,12 +177,12 @@ class Upgrades extends Singleton {
 				// Early exit the loop if an error occurs.
 				if ( true === $upgrade_result ) {
 					$old_upgrades[ $version ] = true;
+					$updated                  = true;
 				} else {
 					$errors = true;
 					break;
 				}
 
-				$updated = true;
 			}
 		}
 
@@ -190,12 +190,13 @@ class Upgrades extends Singleton {
 			return;
 		}
 
-		// Save successful upgrades.
-		update_option( $this->option_name, $old_upgrades );
-
 		if ( false === $errors ) {
 			$this->updated = true;
 		}
+
+		// Save successful upgrades.
+		update_option( $this->option_name, $old_upgrades );
+
 	}
 
 	/**
@@ -206,12 +207,16 @@ class Upgrades extends Singleton {
 		$this->run();
 
 		if ( true === $this->updated ) {
-			echo '<div class="notice notice-success">
-            		 <p>' . esc_html__( 'Awesome, Visibility Logic database is now at the latest version!', 'visibility-logic-elementor' ) . '</p>
+			echo '<div class="notice notice-success">' .
+			     '<p>' .
+			     esc_html__( 'Awesome, Visibility Logic database is now at the latest version!', 'visibility-logic-elementor' ) .
+			     '</p>
          		</div>';
-		} else {
-			echo '<div class="notice notice-warning">
-            		 <p>' . esc_html__( 'Something went wrong, please check logs.', 'visibility-logic-elementor' ) . '</p>
+		} elseif ( false === $this->updated ) {
+			echo '<div class="notice notice-warning">' .
+			     '<p>' .
+			     esc_html__( 'Something went wrong, please check logs.', 'visibility-logic-elementor' ) .
+			     '</p>
          		</div>';
 		}
 
