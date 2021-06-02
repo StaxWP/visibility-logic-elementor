@@ -1,10 +1,10 @@
 === Visibility Logic for Elementor ===
-Contributors: seventhqueen, kierantaylorio, codezz, rtynio
+Contributors: staxwp, seventhqueen, kierantaylorio, codezz, rtynio
 Tags: elementor, elementor restrictions, elementor conditions, elementor widgets, visibility logic, widget conditions
 Requires at least: 3.0
 Requires PHP: 5.6
 Tested up to: 5.7.2
-Stable tag: 2.0.0
+Stable tag: 2.0.1
 License: GLPv2 or later
 
 Hide or show Elementor widgets based on user role, if logged in or not.
@@ -55,6 +55,9 @@ We use Appsero SDK to collect some telemetry data upon user's confirmation. This
 2. Advanced - Visibility control settings - Hide for users
 
 == Changelog ==
+
+= 2.0.1 =
+* Fix PHP version compatibility in Updates logic
 
 = 2.0.0 =
 * Code logic refactoring and introducing Pro features.

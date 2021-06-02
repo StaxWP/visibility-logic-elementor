@@ -221,7 +221,7 @@ class Upgrades extends Singleton {
 		$r = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT * FROM {$wpdb->postmeta} WHERE meta_key = '%s'",
-				'_elementor_data',
+				'_elementor_data'
 			)
 		);
 
