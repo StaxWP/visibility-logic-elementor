@@ -80,7 +80,8 @@ class Plugin extends Singleton {
 		$widgets = Resources::get_all_widget_options();
 
 		foreach ( $widgets as $slug => $option ) {
-			if ( isset( $option['status'] ) && $option['status'] && isset( $option['class'] ) && file_exists( $option['class'] )) {
+			if ( isset( $option['status'], $option['class'], $option['pro'] ) &&
+			     $option['status'] && file_exists( $option['class'] ) && $option['pro'] === false ) {
 				require_once $option['class'];
 			}
 		}
