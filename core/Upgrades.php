@@ -182,7 +182,6 @@ class Upgrades extends Singleton {
 					$errors = true;
 					break;
 				}
-
 			}
 		}
 
@@ -208,15 +207,15 @@ class Upgrades extends Singleton {
 
 		if ( true === $this->updated ) {
 			echo '<div class="notice notice-success">' .
-			     '<p>' .
-			     esc_html__( 'Awesome, Visibility Logic database is now at the latest version!', 'visibility-logic-elementor' ) .
-			     '</p>
+				 '<p>' .
+				 esc_html__( 'Awesome, Visibility Logic database is now at the latest version!', 'visibility-logic-elementor' ) .
+				 '</p>
          		</div>';
 		} elseif ( false === $this->updated ) {
 			echo '<div class="notice notice-warning">' .
-			     '<p>' .
-			     esc_html__( 'Something went wrong, please check logs.', 'visibility-logic-elementor' ) .
-			     '</p>
+				 '<p>' .
+				 esc_html__( 'Something went wrong, please check logs.', 'visibility-logic-elementor' ) .
+				 '</p>
          		</div>';
 		}
 
