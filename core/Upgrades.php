@@ -42,7 +42,7 @@ class Upgrades extends Singleton {
 	private $upgrades = [
 		'1.3.0' => [
 			'method'  => '_upgrade_130',
-			'confirm' => false
+			'confirm' => false,
 		],
 	];
 
@@ -71,11 +71,11 @@ class Upgrades extends Singleton {
 				$url = wp_nonce_url( add_query_arg( 'stax_visibility_db_update', '' ), 'action' );
 				?>
 
-                <div class="notice stax-visibility-notice">
-                    <div class="stax-visibility-inner-message">
-                        <div class="stax-visibility-message-center">
-                            <h3><?php _e( 'Database update required', 'visibility-logic-elementor' ); ?></h3>
-                            <p>
+				<div class="notice stax-visibility-notice">
+					<div class="stax-visibility-inner-message">
+						<div class="stax-visibility-message-center">
+							<h3><?php _e( 'Database update required', 'visibility-logic-elementor' ); ?></h3>
+							<p>
 								<?php
 								echo wp_kses_post(
 									sprintf(
@@ -84,45 +84,45 @@ class Upgrades extends Singleton {
 									)
 								);
 								?>
-                            </p>
-                        </div>
-                        <div class="stax-visibility-msg-button-right">
+							</p>
+						</div>
+						<div class="stax-visibility-msg-button-right">
 							<?php echo wp_kses_post( sprintf( __( '<a href="%s">Update now</a>', 'visibility-logic-elementor' ), esc_url( $url ) ) ); ?>
-                        </div>
+						</div>
 
-                    </div>
-                </div>
+					</div>
+				</div>
 
-                <style>
-                    .stax-visibility-notice {
-                        border-left-color: #262cbd;
-                    }
+				<style>
+					.stax-visibility-notice {
+						border-left-color: #262cbd;
+					}
 
-                    .stax-visibility-notice .stax-visibility-inner-message {
-                        display: flex;
-                        flex-wrap: wrap;
-                        justify-items: center;
-                        justify-content: space-between;
-                    }
+					.stax-visibility-notice .stax-visibility-inner-message {
+						display: flex;
+						flex-wrap: wrap;
+						justify-items: center;
+						justify-content: space-between;
+					}
 
-                    .stax-visibility-notice .stax-visibility-inner-message h3 {
-                        margin: .5em 0;
-                    }
+					.stax-visibility-notice .stax-visibility-inner-message h3 {
+						margin: .5em 0;
+					}
 
-                    .stax-visibility-notice .stax-visibility-inner-message .stax-visibility-msg-button-right {
-                        display: flex;
-                        align-items: center;
-                    }
+					.stax-visibility-notice .stax-visibility-inner-message .stax-visibility-msg-button-right {
+						display: flex;
+						align-items: center;
+					}
 
-                    .stax-visibility-notice .stax-visibility-inner-message .stax-visibility-msg-button-right a {
-                        background-image: linear-gradient(180deg, #262cbd, #3d42cc);
-                        color: #fff;
-                        border-radius: 4px;
-                        padding: 8px 12px;
-                        text-decoration: none;
-                        display: inline-block;
-                    }
-                </style>
+					.stax-visibility-notice .stax-visibility-inner-message .stax-visibility-msg-button-right a {
+						background-image: linear-gradient(180deg, #262cbd, #3d42cc);
+						color: #fff;
+						border-radius: 4px;
+						padding: 8px 12px;
+						text-decoration: none;
+						display: inline-block;
+					}
+				</style>
 				<?php
 			}
 		}
@@ -157,7 +157,7 @@ class Upgrades extends Singleton {
 
 		foreach ( $this->upgrades as $version => $upgrade ) {
 
-			// run manual updates only when requested
+			// Run manual updates only when requested.
 			if ( isset( $upgrade['confirm'] ) && $upgrade['confirm'] ) {
 				if ( ! isset( $_REQUEST['stax_visibility_db_update'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'action' ) ) {
 					continue;
@@ -181,6 +181,7 @@ class Upgrades extends Singleton {
 				$updated = true;
 			}
 		}
+
 		if ( ! $updated ) {
 			return;
 		}
@@ -226,47 +227,51 @@ class Upgrades extends Singleton {
 		);
 
 		foreach ( $r as $item ) {
-			$data = json_decode( $item->meta_value, true );
+			$data = @json_decode( $item->meta_value, true );
 
-			foreach ( $data as &$section_item ) {
-				// Section.
-				if ( isset( $section_item['settings']['ecl_role_visible'] ) && ! empty( $section_item['settings']['ecl_role_visible'] ) ) {
-					$section_item['settings'][ self::SECTION_PREFIX . 'user_role_conditions' ] = $section_item['settings']['ecl_role_visible'];
-					$section_item['settings'][ self::SECTION_PREFIX . 'show_hide' ]            = 'yes';
-				} elseif ( isset( $section_item['settings']['ecl_role_hidden'] ) && ! empty( $section_item['settings']['ecl_role_hidden'] ) ) {
-					$section_item['settings'][ self::SECTION_PREFIX . 'user_role_conditions' ] = $section_item['settings']['ecl_role_hidden'];
-					$section_item['settings'][ self::SECTION_PREFIX . 'show_hide' ]            = '';
-				}
+			if ( ! is_array( $data ) || empty( $data ) ) {
+				continue;
+			}
 
-				if ( isset( $section_item['settings']['ecl_enabled'] ) && $section_item['settings']['ecl_enabled'] ) {
-					$section_item['settings'][ self::SECTION_PREFIX . 'enabled' ]           = 'yes';
-					$section_item['settings'][ self::SECTION_PREFIX . 'user_role_enabled' ] = 'yes';
-				}
-
-				// Columns.
-				foreach ( $section_item ['elements'] as &$column_item ) {
-					// Elements.
-					foreach ( $column_item['elements'] as &$widget_item ) {
-						if ( isset( $widget_item['settings']['ecl_role_visible'] ) && ! empty( $widget_item['settings']['ecl_role_visible'] ) ) {
-							$widget_item['settings'][ self::SECTION_PREFIX . 'user_role_conditions' ] = $widget_item['settings']['ecl_role_visible'];
-							$widget_item['settings'][ self::SECTION_PREFIX . 'show_hide' ]            = 'yes';
-						} elseif ( isset( $widget_item['settings']['ecl_role_hidden'] ) && ! empty( $widget_item['settings']['ecl_role_hidden'] ) ) {
-							$widget_item['settings'][ self::SECTION_PREFIX . 'user_role_conditions' ] = $widget_item['settings']['ecl_role_hidden'];
-							$widget_item['settings'][ self::SECTION_PREFIX . 'show_hide' ]            = '';
-						}
-
-						if ( isset( $widget_item['settings']['ecl_enabled'] ) && $widget_item['settings']['ecl_enabled'] ) {
-							$widget_item['settings'][ self::SECTION_PREFIX . 'enabled' ]           = 'yes';
-							$widget_item['settings'][ self::SECTION_PREFIX . 'user_role_enabled' ] = 'yes';
-						}
-					}
-				}
+			foreach ( $data as &$data_item ) {
+				$data_item = $this->_upgrade_130_recursive( $data_item );
 			}
 
 			update_post_meta( $item->post_id, '_elementor_data', wp_slash( wp_json_encode( $data ) ) );
 		}
 
 		return true;
+	}
+
+	/**
+	 * Recursieve function for upgrade 130
+	 *
+	 * @param array $item
+	 * @return array
+	 */
+	private function _upgrade_130_recursive( $item ) {
+		if ( 'column' !== $item['elType'] ) {
+			if ( isset( $item['settings']['ecl_role_visible'] ) && ! empty( $item['settings']['ecl_role_visible'] ) ) {
+				$item['settings'][ self::SECTION_PREFIX . 'user_role_conditions' ] = $item['settings']['ecl_role_visible'];
+				$item['settings'][ self::SECTION_PREFIX . 'show_hide' ]            = 'yes';
+			} elseif ( isset( $item['settings']['ecl_role_hidden'] ) && ! empty( $item['settings']['ecl_role_hidden'] ) ) {
+				$item['settings'][ self::SECTION_PREFIX . 'user_role_conditions' ] = $item['settings']['ecl_role_hidden'];
+				$item['settings'][ self::SECTION_PREFIX . 'show_hide' ]            = '';
+			}
+
+			if ( isset( $item['settings']['ecl_enabled'] ) && $item['settings']['ecl_enabled'] ) {
+				$item['settings'][ self::SECTION_PREFIX . 'enabled' ]           = 'yes';
+				$item['settings'][ self::SECTION_PREFIX . 'user_role_enabled' ] = 'yes';
+			}
+		}
+
+		if ( isset( $item['elements'] ) && ! empty( $item['elements'] ) ) {
+			foreach ( $item['elements'] as &$sub_item ) {
+				$sub_item = $this->_upgrade_130_recursive( $sub_item );
+			}
+		}
+
+		return $item;
 	}
 }
 
