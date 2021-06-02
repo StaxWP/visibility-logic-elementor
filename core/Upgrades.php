@@ -189,9 +189,7 @@ class Upgrades extends Singleton {
 			return;
 		}
 
-		if ( false === $errors ) {
-			$this->updated = true;
-		}
+		$this->updated = false === $errors;
 
 		// Save successful upgrades.
 		update_option( $this->option_name, $old_upgrades );
@@ -255,6 +253,7 @@ class Upgrades extends Singleton {
 	 * Recursieve function for upgrade 130
 	 *
 	 * @param array $item
+	 *
 	 * @return array
 	 */
 	private function _upgrade_130_recursive( $item ) {

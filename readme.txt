@@ -4,7 +4,7 @@ Tags: elementor, elementor restrictions, elementor conditions, elementor widgets
 Requires at least: 3.0
 Requires PHP: 5.6
 Tested up to: 5.7.2
-Stable tag: 2.0.2
+Stable tag: 2.0.3
 License: GLPv2 or later
 
 Hide or show Elementor widgets based on user role, if logged in or not.
@@ -56,6 +56,8 @@ We use Appsero SDK to collect some telemetry data upon user's confirmation. This
 
 == Changelog ==
 
+= 2.0.3 =
+* Old settings migration logic update for inner elements.
 
 = 2.0.2 =
 * Make the settings migration automatic on plugin update.
