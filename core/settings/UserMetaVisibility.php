@@ -150,7 +150,7 @@ class UserMetaVisibility extends Singleton {
 		);
 
 		$element->add_control(
-			self::SECTION_PREFIX . 'user_meta_notice',
+			self::SECTION_PREFIX . 'user_meta_notice_array',
 			[
 				'type'      => Controls_Manager::RAW_HTML,
 				'raw'       => __( 'Type in comma separated strings.', 'visibility-logic-elementor' ),
@@ -158,6 +158,21 @@ class UserMetaVisibility extends Singleton {
 					self::SECTION_PREFIX . 'user_meta_status' => [
 						'specific_value_multiple',
 						'is_array_and_contains',
+					],
+				],
+			]
+		);
+
+		$element->add_control(
+			self::SECTION_PREFIX . 'user_meta_notice_numeric',
+			[
+				'type'      => Controls_Manager::RAW_HTML,
+				'raw'       => __( 'The values of the selected metas and also the the values of the conditions must be numeric.', 'visibility-logic-elementor' ),
+				'condition' => [
+					self::SECTION_PREFIX . 'user_meta_status' => [
+						'is_between',
+						'less_than',
+						'greater_than',
 					],
 				],
 			]
