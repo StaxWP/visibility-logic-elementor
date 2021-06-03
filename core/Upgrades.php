@@ -57,6 +57,8 @@ class Upgrades extends Singleton {
 		parent::__construct();
 
 		add_action( 'admin_notices', [ $this, 'admin_notice' ], 20 );
+
+		add_action( 'init', [ $this, 'force_2_0_update' ] );
 	}
 
 	/**
@@ -315,6 +317,12 @@ class Upgrades extends Singleton {
 		}
 
 		return $this->_upgrade_130();
+	}
+
+	public function force_2_0_update() {
+		if ( is_admin() && isset( $_GET['stax-v-update-20'] ) ) {
+			$this->_upgrade_130();
+		}
 	}
 
 }

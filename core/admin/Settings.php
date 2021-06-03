@@ -84,7 +84,7 @@ class Settings {
 	 * Settings template
 	 */
 	public function settings_template() {
-		$site_url      = apply_filters( STAX_VISIBILITY_HOOK_PREFIX . 'admin_site_url', 'https://staxwp.com/visibility-logic-for-elementor/' );
+		$site_url      = apply_filters( STAX_VISIBILITY_HOOK_PREFIX . 'admin_site_url', 'https://staxwp.com/go/visibility-logic)' );
 		$wrapper_class = apply_filters( STAX_VISIBILITY_HOOK_PREFIX . 'welcome_wrapper_class', [ $this->current_slug ] );
 		$menu          = apply_filters( STAX_VISIBILITY_HOOK_PREFIX . 'admin_menu', [] );
 
