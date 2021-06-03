@@ -23,7 +23,7 @@ $item_class = $has_pro ? 'xl:ste-w-1/4' : '';
 					<div class="ste-mx-2">
 						<label for="module-label-<?php echo $slug; ?>"
 							   class="ste-flex ste-justify-between ste-items-center ste-border-2 ste-border-solid ste-border-gray-200 ste-rounded ste-bg-gray-100 ste-p-4 hover:ste-border-gray-300">
-							<span class="ste-font-small ste-text-gray-600 ste-text-lg"><?php echo $widget['name']; ?></span>
+							<span class="ste-font-small ste-text-gray-600 ste-text-sm"><?php echo $widget['name']; ?></span>
 							<div class="ste-relative">
 								<?php if ( isset( $widget['pro'] ) && $widget['pro'] ) : ?>
 									<span class="ste-font-bold ste-text-xs ste-px-2 ste-py-1 ste-rounded ste-text-white ste-bg-red-600 ste-leading-none">PRO</span>

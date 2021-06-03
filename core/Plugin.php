@@ -55,6 +55,8 @@ class Plugin extends Singleton {
 			__( 'Stax Visibility', 'visibility-logic-elementor' )
 		);
 
+		add_action( 'wp_footer', [ $this, 'editor_show_visibility_icon' ] );
+
 		$this->load_settings();
 	}
 
@@ -215,6 +217,30 @@ class Plugin extends Singleton {
 			[],
 			STAX_VISIBILITY_VERSION
 		);
+	}
+
+	/**
+	 * Show icon in editor for widgets with setting enabled
+	 *
+	 */
+	public function editor_show_visibility_icon() {
+		if ( ! class_exists( 'Elementor\Plugin' ) || ! \Elementor\Plugin::$instance->preview->is_preview_mode() ) {
+			return;
+		}
+		?>
+        <style>
+            body.elementor-editor-active .elementor-element.stax-condition-yes::after {
+                content: '\e8ed';
+                color: #6E49CB;
+                display: inline-block;
+                font-family: eicons;
+                font-size: 15px;
+                position: absolute;
+                top: 0;
+                right: 5px;
+            }
+        </style>
+		<?php
 	}
 }
 
