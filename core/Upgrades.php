@@ -227,8 +227,9 @@ class Upgrades extends Singleton {
 
 		$posts = get_posts(
 			[
-				'post_type'  => 'any',
-				'meta_query' => [
+				'post_type'      => 'any',
+				'posts_per_page' => -1,
+				'meta_query'     => [
 					'relation' => 'AND',
 					[
 						'key'     => '_elementor_data',
@@ -239,7 +240,6 @@ class Upgrades extends Singleton {
 		);
 
 		foreach ( $posts as $post ) {
-
 			$meta = get_post_meta( $post->ID, '_elementor_data', true );
 			$data = @json_decode( $meta, true );
 
