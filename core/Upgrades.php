@@ -225,20 +225,20 @@ class Upgrades extends Singleton {
 	private function _upgrade_130() {
 		global $wpdb;
 
-		$posts = get_posts([
-			'post_type' => 'any',
-			'meta_query'     => array(
+		$posts = get_posts( [
+			'post_type'  => 'any',
+			'meta_query' => array(
 				'relation' => 'AND',
 				array(
 					'key'     => '_elementor_data',
 					'compare' => 'EXISTS',
 				),
 			),
-        ]);
+		] );
 
 		foreach ( $posts as $post ) {
 
-		    $meta = get_post_meta( $post->ID, '_elementor_data', true );
+			$meta = get_post_meta( $post->ID, '_elementor_data', true );
 			$data = @json_decode( $meta, true );
 
 			if ( ! is_array( $data ) || empty( $data ) ) {
