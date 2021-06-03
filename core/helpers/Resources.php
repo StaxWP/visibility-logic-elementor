@@ -37,32 +37,6 @@ final class Resources extends Singleton {
 	}
 
 	/**
-	 * Get user roles
-	 *
-	 * @return void
-	 */
-	public static function get_user_roles() {
-		global $wp_roles;
-
-		if ( ! isset( $wp_roles ) ) {
-			$wp_roles = new \WP_Roles();
-		}
-		$all_roles      = $wp_roles->roles;
-		$editable_roles = apply_filters( 'editable_roles', $all_roles );
-
-		$data = [
-			'ecl-guest' => 'Guests',
-			'ecl-user'  => 'Logged in users',
-		];
-
-		foreach ( $editable_roles as $k => $role ) {
-			$data[ $k ] = $role['name'];
-		}
-
-		return $data;
-	}
-
-	/**
 	 * Load template
 	 *
 	 * @param $name
@@ -141,7 +115,7 @@ final class Resources extends Singleton {
 
 		];
 
-		if ( ! defined( 'STAX_VISIBILITY_PRO_PATH' ) && $with_pro ) {
+		if ( $with_pro ) {
 			$options = array_merge(
 				$options,
 				self::get_pro_widget_options()
@@ -186,13 +160,38 @@ final class Resources extends Singleton {
 	}
 
 	/**
+	 * Get user roles
+	 *
+	 * @return void
+	 */
+	public static function get_user_roles() {
+		global $wp_roles;
+
+		if ( ! isset( $wp_roles ) ) {
+			$wp_roles = new \WP_Roles();
+		}
+		$all_roles      = $wp_roles->roles;
+		$editable_roles = apply_filters( 'editable_roles', $all_roles );
+
+		$data = [
+			'ecl-guest' => 'Guests',
+			'ecl-user'  => 'Logged in users',
+		];
+
+		foreach ( $editable_roles as $k => $role ) {
+			$data[ $k ] = $role['name'];
+		}
+
+		return $data;
+	}
+
+	/**
 	 * Get user metas
 	 *
 	 * @param boolean $grouped
 	 * @return array
 	 */
 	public static function get_user_metas( $grouped = false ) {
-		global $wp_meta_keys;
 		global $wpdb;
 
 		$user_metas         = [];

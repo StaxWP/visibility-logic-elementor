@@ -14,7 +14,7 @@ final class Notices extends Singleton {
 	public function elementor_notice() {
 		$class = 'notice notice-warning';
 		/* translators: %s: html tags */
-		$message = sprintf( __( '%1$sVisibility Logic %2$s requires %1$sElementor%2$s plugin installed & activated.', 'dollie' ), '<strong>', '</strong>' );
+		$message = sprintf( __( '%1$sVisibility Logic %2$s requires %1$sElementor%2$s plugin installed & activated.', 'visibility-logic-elementor' ), '<strong>', '</strong>' );
 
 		$plugin = 'elementor/elementor.php';
 

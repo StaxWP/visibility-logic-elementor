@@ -20,6 +20,8 @@ class Plugin extends Singleton {
 	 * Plugin constructor
 	 */
 	public function __construct() {
+		do_action( 'stax/visibility/pre_init' );
+
 		require_once STAX_VISIBILITY_CORE_HELPERS_PATH . 'Resources.php';
 		require_once STAX_VISIBILITY_CORE_HELPERS_PATH . 'Notices.php';
 
@@ -56,6 +58,8 @@ class Plugin extends Singleton {
 		);
 
 		$this->load_settings();
+
+		do_action( 'stax/visibility/after_init' );
 	}
 
 	/**
@@ -64,7 +68,7 @@ class Plugin extends Singleton {
 	 * @return boolean
 	 */
 	public function has_pro() {
-		return file_exists( STAX_VISIBILITY_PATH . 'pro/loader.php' );
+		return defined( 'STAX_VISIBILITY_PRO_VERSION' );
 	}
 
 	/**
@@ -73,7 +77,6 @@ class Plugin extends Singleton {
 	 * @return void
 	 */
 	public function load_settings() {
-
 		require_once STAX_VISIBILITY_CORE_SETTINGS_PATH . 'GeneralVisibility.php';
 
 		// Load active options.
@@ -81,15 +84,9 @@ class Plugin extends Singleton {
 
 		foreach ( $widgets as $slug => $option ) {
 			if ( isset( $option['status'], $option['class'], $option['pro'] ) &&
-			     $option['status'] && file_exists( $option['class'] ) && $option['pro'] === false ) {
+				 $option['status'] && file_exists( $option['class'] ) && $option['pro'] === false ) {
 				require_once $option['class'];
 			}
-		}
-
-		if ( $this->has_pro() ) {
-			require_once STAX_VISIBILITY_PATH . 'pro/loader.php';
-		} else {
-			require_once STAX_VISIBILITY_CORE_SETTINGS_PATH . 'ProVisibility.php';
 		}
 
 		do_action( 'stax/visibility/after/load_settings' );
@@ -98,7 +95,7 @@ class Plugin extends Singleton {
 	/**
 	 * Render item or not based on conditions
 	 *
-	 * @param string $content
+	 * @param string                 $content
 	 * @param \Elementor\Widget_Base $widget
 	 *
 	 * @return string
@@ -136,7 +133,7 @@ class Plugin extends Singleton {
 	/**
 	 * Check if item should render
 	 *
-	 * @param bool $should_render
+	 * @param bool   $should_render
 	 * @param object $section
 	 *
 	 * @return boolean
@@ -146,9 +143,9 @@ class Plugin extends Singleton {
 
 		if ( ! $this->should_render( $settings ) ) {
 			if ( isset( $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) &&
-			     (
-				     (bool) $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ||
-				     (bool) $settings[ self::SECTION_PREFIX . 'keep_html' ] ) ) {
+				 (
+					 (bool) $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ||
+					 (bool) $settings[ self::SECTION_PREFIX . 'keep_html' ] ) ) {
 				return true;
 			}
 
