@@ -225,15 +225,21 @@ class Upgrades extends Singleton {
 	private function _upgrade_130() {
 		global $wpdb;
 
-		$r = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT * FROM {$wpdb->postmeta} WHERE meta_key = '%s'",
-				'_elementor_data'
-			)
-		);
+		$posts = get_posts([
+			'post_type' => 'any',
+			'meta_query'     => array(
+				'relation' => 'AND',
+				array(
+					'key'     => '_elementor_data',
+					'compare' => 'EXISTS',
+				),
+			),
+        ]);
 
-		foreach ( $r as $item ) {
-			$data = @json_decode( $item->meta_value, true );
+		foreach ( $posts as $post ) {
+
+		    $meta = get_post_meta( $post->ID, '_elementor_data', true );
+			$data = @json_decode( $meta, true );
 
 			if ( ! is_array( $data ) || empty( $data ) ) {
 				continue;
@@ -243,7 +249,7 @@ class Upgrades extends Singleton {
 				$data_item = $this->_upgrade_130_recursive( $data_item );
 			}
 
-			update_post_meta( $item->post_id, '_elementor_data', wp_slash( wp_json_encode( $data ) ) );
+			update_post_meta( $post->ID, '_elementor_data', wp_slash( wp_json_encode( $data ) ) );
 		}
 
 		return true;
