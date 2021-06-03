@@ -93,7 +93,7 @@ class UserMetaVisibility extends Singleton {
 					'none'                    => __( 'None', 'visibility-logic-elementor' ),
 					'empty'                   => __( 'Empty', 'visibility-logic-elementor' ),
 					'not_empty'               => __( 'Not empty', 'visibility-logic-elementor' ),
-					'specific_value'          => __( 'Equal to', 'visibility-logic-elementor' ),
+					'specific_value'          => __( 'Is equal to', 'visibility-logic-elementor' ),
 					'specific_value_multiple' => __( 'Is equal to one of', 'visibility-logic-elementor' ),
 					'not_specific_value'      => __( 'Not equal to', 'visibility-logic-elementor' ),
 					'contain'                 => __( 'Contains', 'visibility-logic-elementor' ),
