@@ -72,7 +72,7 @@ class UserMetaVisibility extends Singleton {
 			self::SECTION_PREFIX . 'user_meta_options',
 			[
 				'type'        => Controls_Manager::SELECT2,
-				'label'       => __( 'Select Meta:', 'visibility-logic-elementor' ),
+				'label'       => __( 'Select Meta', 'visibility-logic-elementor' ),
 				'options'     => Resources::get_user_metas(),
 				'default'     => [],
 				'multiple'    => true,
@@ -86,27 +86,29 @@ class UserMetaVisibility extends Singleton {
 		$element->add_control(
 			self::SECTION_PREFIX . 'user_meta_status',
 			[
-				'label'     => __( 'Meta Status', 'visibility-logic-elementor' ),
-				'type'      => Controls_Manager::CHOOSE,
-				'options'   => [
-					'empty'          => [
-						'title' => __( 'Meta empty', 'visibility-logic-elementor' ),
-						'icon'  => 'fa fa-circle-o',
-					],
-					'not_empty'      => [
-						'title' => __( 'Meta not empty', 'visibility-logic-elementor' ),
-						'icon'  => 'fa fa-dot-circle-o',
-					],
-					'specific_value' => [
-						'title' => __( 'Specific meta value', 'visibility-logic-elementor' ),
-						'icon'  => 'fa fa-circle',
-					],
+				'type'        => Controls_Manager::SELECT2,
+				'label'       => __( 'Meta Condition', 'visibility-logic-elementor' ),
+				'description' => __( 'The condition is applied on all the selected metas. Ex: If 2 metas are selected and the condition is set to "Equal to", the specific value of the condition will have to be met by both metas.', 'visibility-logic-elementor' ),
+				'options'     => [
+					'none'                    => __( 'None', 'visibility-logic-elementor' ),
+					'empty'                   => __( 'Empty', 'visibility-logic-elementor' ),
+					'not_empty'               => __( 'Not empty', 'visibility-logic-elementor' ),
+					'specific_value'          => __( 'Equal to', 'visibility-logic-elementor' ),
+					'specific_value_multiple' => __( 'Is equal to one of', 'visibility-logic-elementor' ),
+					'not_specific_value'      => __( 'Not equal to', 'visibility-logic-elementor' ),
+					'contain'                 => __( 'Contains', 'visibility-logic-elementor' ),
+					'not_contain'             => __( 'Does not contain', 'visibility-logic-elementor' ),
+					'is_between'              => __( 'Between', 'visibility-logic-elementor' ),
+					'less_than'               => __( 'Less than', 'visibility-logic-elementor' ),
+					'greater_than'            => __( 'Greater than', 'visibility-logic-elementor' ),
+					'is_array'                => __( 'Is array', 'visibility-logic-elementor' ),
+					'is_array_and_contains'   => __( 'Is array and contains', 'visibility-logic-elementor' ),
 				],
-				'default'   => 'exists',
-				'toggle'    => false,
-				'condition' => [
+				'default'     => 'none',
+				'label_block' => true,
+				'condition'   => [
 					self::SECTION_PREFIX . 'user_meta_enabled' => 'yes',
-					self::SECTION_PREFIX . 'user_meta_options!' => '',
+					self::SECTION_PREFIX . 'user_meta_options!' => [],
 				],
 			]
 		);
@@ -114,13 +116,49 @@ class UserMetaVisibility extends Singleton {
 		$element->add_control(
 			self::SECTION_PREFIX . 'user_meta_value',
 			[
-				'label'       => __( 'Meta Value', 'visibility-logic-elementor' ),
-				'type'        => Controls_Manager::TEXT,
-				'description' => __( 'The specific value of the User Meta', 'visibility-logic-elementor' ),
+				'label'       => __( 'Condition Value', 'visibility-logic-elementor' ),
+				'type'        => Controls_Manager::TEXTAREA,
+				'label_block' => true,
 				'condition'   => [
 					self::SECTION_PREFIX . 'user_meta_enabled' => 'yes',
-					self::SECTION_PREFIX . 'user_meta_options!' => '',
-					self::SECTION_PREFIX . 'user_meta_status' => 'specific_value',
+					self::SECTION_PREFIX . 'user_meta_status' => [
+						'specific_value',
+						'specific_value_multiple',
+						'not_specific_value',
+						'contain',
+						'not_contain',
+						'is_between',
+						'less_than',
+						'greater_than',
+						'is_array_and_contains',
+					],
+				],
+			]
+		);
+
+		$element->add_control(
+			self::SECTION_PREFIX . 'user_meta_value_2',
+			[
+				'label'       => __( 'Condition Value 2', 'visibility-logic-elementor' ),
+				'type'        => Controls_Manager::TEXTAREA,
+				'label_block' => true,
+				'condition'   => [
+					self::SECTION_PREFIX . 'user_meta_enabled' => 'yes',
+					self::SECTION_PREFIX . 'user_meta_status' => 'is_between',
+				],
+			]
+		);
+
+		$element->add_control(
+			self::SECTION_PREFIX . 'user_meta_notice',
+			[
+				'type'      => Controls_Manager::RAW_HTML,
+				'raw'       => __( 'Type in comma separated strings.', 'visibility-logic-elementor' ),
+				'condition' => [
+					self::SECTION_PREFIX . 'user_meta_status' => [
+						'specific_value_multiple',
+						'is_array_and_contains',
+					],
 				],
 			]
 		);
@@ -145,18 +183,96 @@ class UserMetaVisibility extends Singleton {
 			foreach ( $settings[ self::SECTION_PREFIX . 'user_meta_options' ] as $meta ) {
 				$user_meta = get_user_meta( $current_user->ID, $meta, true );
 
-				if ( 'empty' === $meta_check_type ) {
-					if ( ! empty( $user_meta ) ) {
-						$meta_is_consistent = false;
-					}
-				} elseif ( 'not_empty' === $meta_check_type ) {
-					if ( empty( $user_meta ) ) {
-						$meta_is_consistent = false;
-					}
-				} elseif ( 'specific_value' === $meta_check_type ) {
-					if ( $user_meta !== $meta_check_value ) {
-						$meta_is_consistent = false;
-					}
+				switch ( $meta_check_type ) {
+					case 'empty':
+						if ( ! empty( $user_meta ) ) {
+							$meta_is_consistent = false;
+						}
+						break;
+					case 'not_empty':
+						if ( empty( $user_meta ) ) {
+							$meta_is_consistent = false;
+						}
+						break;
+					case 'specific_value':
+						if ( $user_meta !== $meta_check_value ) {
+							$meta_is_consistent = false;
+						}
+						break;
+					case 'specific_value_multiple':
+						$values = explode( ',', $meta_check_value );
+
+						$value_found = false;
+
+						foreach ( $values as $item ) {
+							if ( $item === $user_meta ) {
+								$value_found = true;
+							}
+						}
+
+						$meta_is_consistent = $value_found;
+						break;
+					case 'not_specific_value':
+						if ( $user_meta === $meta_check_value ) {
+							$meta_is_consistent = false;
+						}
+						break;
+					case 'contain':
+						if ( strpos( $user_meta, $meta_check_value ) === false ) {
+							$meta_is_consistent = false;
+						}
+						break;
+					case 'not_contain':
+						if ( strpos( $user_meta, $meta_check_value ) !== false ) {
+							$meta_is_consistent = false;
+						}
+						break;
+					case 'is_between':
+						$meta_check_value_2 = $settings[ self::SECTION_PREFIX . 'user_meta_value_2' ];
+
+						if ( ! is_numeric( $user_meta ) || ! is_numeric( $meta_check_value ) || ! is_numeric( $meta_check_value_2 ) ) {
+							$meta_is_consistent = false;
+						}
+
+						if ( (int) $meta_check_value > (int) $user_meta || (int) $user_meta > (int) $meta_check_value_2 ) {
+							$meta_is_consistent = false;
+						}
+						break;
+					case 'less_than':
+						if ( ! is_numeric( $user_meta ) || ! is_numeric( $meta_check_value ) ) {
+							$meta_is_consistent = false;
+						}
+
+						if ( (int) $user_meta > (int) $meta_check_value ) {
+							$meta_is_consistent = false;
+						}
+						break;
+					case 'greater_than':
+						if ( ! is_numeric( $user_meta ) || ! is_numeric( $meta_check_value ) ) {
+							$meta_is_consistent = false;
+						}
+
+						if ( (int) $user_meta < (int) $meta_check_value ) {
+							$meta_is_consistent = false;
+						}
+						break;
+					case 'is_array':
+						if ( ! is_array( $user_meta ) ) {
+							$meta_is_consistent = false;
+						}
+						break;
+					case 'is_array_and_contains':
+						if ( ! is_array( $user_meta ) ) {
+							$meta_is_consistent = false;
+						}
+
+						$values = explode( ',', $meta_check_value );
+
+						if ( empty( array_intersect( $user_meta, $values ) ) ) {
+							$meta_is_consistent = false;
+						}
+						break;
+					default:
 				}
 			}
 
