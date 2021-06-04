@@ -61,9 +61,9 @@ We use Appsero SDK to collect some telemetry data upon user's confirmation. This
 == Changelog ==
 
 = 2.1.2 =
-* Add icon next to Widgets and Sections with conditions enabled in Elementor editor
+* Added more User meta conditional operators
+* Added icon next to Widgets and Sections with conditions enabled in Elementor editor
 * Admin settings page improvements
-* Extra check for plugin class on load
 
 = 2.1.1 =
 * Update migration logic to be less memory demanding
