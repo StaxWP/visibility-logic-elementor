@@ -88,7 +88,7 @@ class UserMetaVisibility extends Singleton {
 			[
 				'type'        => Controls_Manager::SELECT2,
 				'label'       => __( 'Meta Condition', 'visibility-logic-elementor' ),
-				'description' => __( 'The condition is applied on all the selected metas. Ex: If 2 metas are selected and the condition is set to "Equal to", the specific value of the condition will have to be met by both metas.', 'visibility-logic-elementor' ),
+				'description' => __( 'Select the condition for the User Meta value', 'visibility-logic-elementor' ),
 				'options'     => [
 					'none'                    => __( 'None', 'visibility-logic-elementor' ),
 					'empty'                   => __( 'Empty', 'visibility-logic-elementor' ),
@@ -155,6 +155,7 @@ class UserMetaVisibility extends Singleton {
 				'type'      => Controls_Manager::RAW_HTML,
 				'raw'       => __( 'Type in comma separated strings.', 'visibility-logic-elementor' ),
 				'condition' => [
+					self::SECTION_PREFIX . 'user_meta_enabled' => 'yes',
 					self::SECTION_PREFIX . 'user_meta_status' => [
 						'specific_value_multiple',
 						'is_array_and_contains',
@@ -167,8 +168,9 @@ class UserMetaVisibility extends Singleton {
 			self::SECTION_PREFIX . 'user_meta_notice_numeric',
 			[
 				'type'      => Controls_Manager::RAW_HTML,
-				'raw'       => __( 'The values of the selected metas and also the the values of the conditions must be numeric.', 'visibility-logic-elementor' ),
+				'raw'       => __( 'The value of the selected meta and also the the values of the conditions must be numeric.', 'visibility-logic-elementor' ),
 				'condition' => [
+					self::SECTION_PREFIX . 'user_meta_enabled' => 'yes',
 					self::SECTION_PREFIX . 'user_meta_status' => [
 						'is_between',
 						'less_than',

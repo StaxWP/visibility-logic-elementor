@@ -203,9 +203,9 @@ class Plugin extends Singleton {
 
 		if ( (bool) $settings[ self::SECTION_PREFIX . 'show_hide' ] ) {
 			return $should_render;
-		} else {
-			return ! $should_render;
 		}
+
+		return ! $should_render;
 	}
 
 	/**

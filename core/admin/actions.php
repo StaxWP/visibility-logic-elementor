@@ -52,7 +52,7 @@ $options_class = 'lg:ste-w-3/4';
                             PRO version
                         </h2>
 
-						<?php if ( class_exists( '\Stax\VisibilityLogic\Pro\VisibilityPro' ) && \Stax\VisibilityLogic\Pro\VisibilityPro::instance()->is_license_active() ): ?>
+						<?php if ( class_exists( '\Stax\VisibilityLogicPro\Plugin' ) && \Stax\VisibilityLogicPro\Plugin::instance()->is_license_active() ): ?>
                             Thank you for your purchase and your support!
                             <br><br>
                             <a href="<?php echo esc_url( admin_url( 'options-general.php?page=stax_wc_visibility_logic_activation' ) ); ?>"
