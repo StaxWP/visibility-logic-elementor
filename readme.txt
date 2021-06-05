@@ -7,13 +7,16 @@ Tested up to: 5.7.2
 Stable tag: 2.1.3
 License: GLPv2 or later
 
-Hide or show Elementor widgets based on user role, if logged in or not.
+Hide or show Elementor widgets based on user role, user meta, if logged in or not.
 
 == Description ==
-Hide or show an Elementor widget based on whether a user is logged in, logged out (guest) or a specific role.
+Hide or show an Elementor widget based on whether a user is logged in, logged out (guest), has specific role, based on user meta, at specific dates or by the browser used.
+
 You can also hide an entire section too or show it just for specific users.
 
 Based on your visibility setting for each widget you can restrict rendering elements on front-end, meaning that you can hide or show any Elementor widget based on the user role(Subscriber, Author, Administrator, etc), if the user is Logged our or if the user is Logged in.
+
+Note: Updating from older version 1.2.0 to 2.1.3 is safe and it will keep your initial settings. You can still access them from the Stax Visibility tab when editing an Elementor widget or section.
 
 = NEW Free Features =
 - User Meta content restriction
