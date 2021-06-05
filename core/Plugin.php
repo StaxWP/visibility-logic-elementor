@@ -79,6 +79,7 @@ class Plugin extends Singleton {
 	 * @return void
 	 */
 	public function load_settings() {
+		require_once STAX_VISIBILITY_CORE_SETTINGS_PATH . 'OldVersionFallback.php';
 		require_once STAX_VISIBILITY_CORE_SETTINGS_PATH . 'GeneralVisibility.php';
 
 		// Load active options.
@@ -89,6 +90,10 @@ class Plugin extends Singleton {
 				 $option['status'] && file_exists( $option['class'] ) && $option['pro'] === false ) {
 				require_once $option['class'];
 			}
+		}
+
+		if ( ! $this->has_pro() ) {
+			require_once STAX_VISIBILITY_CORE_SETTINGS_PATH . 'ProVisibility.php';
 		}
 
 		do_action( 'stax/visibility/after/load_settings' );
@@ -106,24 +111,26 @@ class Plugin extends Singleton {
 		$settings = $widget->get_settings();
 
 		if ( ! $this->should_render( $settings ) && ! \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
-			if ( isset( $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) && (bool) $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) {
-				$fallback_content = '';
-				if ( 'text' === $settings[ self::SECTION_PREFIX . 'fallback_type' ] ) {
-					$fallback_content = esc_html( $settings[ self::SECTION_PREFIX . 'fallback_text' ] );
-				} elseif ( 'template' === $settings[ self::SECTION_PREFIX . 'fallback_type' ] ) {
-					if ( $settings[ self::SECTION_PREFIX . 'fallback_template' ] ) {
-						$fallback_content = do_shortcode( '[elementor-template id="' . $settings[ self::SECTION_PREFIX . 'fallback_template' ] . '"]' );
+			if ( (bool) $settings[ self::SECTION_PREFIX . 'enabled' ] ) {
+				if ( isset( $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) && (bool) $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) {
+					$fallback_content = '';
+					if ( 'text' === $settings[ self::SECTION_PREFIX . 'fallback_type' ] ) {
+						$fallback_content = esc_html( $settings[ self::SECTION_PREFIX . 'fallback_text' ] );
+					} elseif ( 'template' === $settings[ self::SECTION_PREFIX . 'fallback_type' ] ) {
+						if ( $settings[ self::SECTION_PREFIX . 'fallback_template' ] ) {
+							$fallback_content = do_shortcode( '[elementor-template id="' . $settings[ self::SECTION_PREFIX . 'fallback_template' ] . '"]' );
+						}
 					}
-				}
 
-				if ( $fallback_content ) {
-					return $fallback_content;
-				}
-			} elseif ( isset( $settings[ self::SECTION_PREFIX . 'keep_html' ] ) && (bool) $settings[ self::SECTION_PREFIX . 'keep_html' ] ) {
-				$widget->add_render_attribute( '_wrapper', 'class', 'stax-visibility-hidden' );
-				$widget->add_render_attribute( '_wrapper', 'style', 'display: none' );
+					if ( $fallback_content ) {
+						return $fallback_content;
+					}
+				} elseif ( isset( $settings[ self::SECTION_PREFIX . 'keep_html' ] ) && (bool) $settings[ self::SECTION_PREFIX . 'keep_html' ] ) {
+					$widget->add_render_attribute( '_wrapper', 'class', 'stax-visibility-hidden' );
+					$widget->add_render_attribute( '_wrapper', 'style', 'display: none' );
 
-				return $content;
+					return $content;
+				}
 			}
 
 			return '';
@@ -145,9 +152,8 @@ class Plugin extends Singleton {
 
 		if ( ! $this->should_render( $settings ) ) {
 			if ( isset( $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) &&
-				 (
-					 (bool) $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ||
-					 (bool) $settings[ self::SECTION_PREFIX . 'keep_html' ] ) ) {
+				( (bool) $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ||
+				(bool) $settings[ self::SECTION_PREFIX . 'keep_html' ] ) ) {
 				return true;
 			}
 
@@ -166,7 +172,7 @@ class Plugin extends Singleton {
 	 */
 	private function should_render( $settings ) {
 		if ( ! (bool) $settings[ self::SECTION_PREFIX . 'enabled' ] ) {
-			return true;
+			return $this->version_fallback_render( $settings );
 		}
 
 		$options = apply_filters( 'stax/visibility/apply_conditions', [], $settings );
@@ -203,6 +209,66 @@ class Plugin extends Singleton {
 	}
 
 	/**
+	 * Version fallback render
+	 *
+	 * @param array $settings
+	 * @return boolean
+	 */
+	private function version_fallback_render( $settings ) {
+		$user_state = is_user_logged_in();
+
+		if ( 'yes' === $settings['ecl_enabled'] ) {
+
+			if ( ! empty( $settings['ecl_role_visible'] ) ) {
+				if ( in_array( 'ecl-guest', $settings['ecl_role_visible'] ) ) {
+					if ( true === $user_state ) {
+						return false;
+					}
+				} elseif ( in_array( 'ecl-user', $settings['ecl_role_visible'] ) ) {
+					if ( false === $user_state ) {
+						return false;
+					}
+				} else {
+					if ( false === $user_state ) {
+						return false;
+					}
+					$user = wp_get_current_user();
+
+					$has_role = false;
+					foreach ( $settings['ecl_role_visible'] as $setting ) {
+						if ( in_array( $setting, (array) $user->roles ) ) {
+							$has_role = true;
+						}
+					}
+					if ( false === $has_role ) {
+						return false;
+					}
+				}
+			} elseif ( ! empty( $settings['ecl_role_hidden'] ) ) {
+
+				if ( false === $user_state && in_array( 'ecl-guest', $settings['ecl_role_hidden'], false ) ) {
+					return false;
+				} elseif ( true === $user_state && in_array( 'ecl-user', $settings['ecl_role_hidden'], false ) ) {
+					return false;
+				} else {
+					if ( false === $user_state ) {
+						return true;
+					}
+					$user = wp_get_current_user();
+
+					foreach ( $settings['ecl_role_hidden'] as $setting ) {
+						if ( in_array( $setting, (array) $user->roles, false ) ) {
+							return false;
+						}
+					}
+				}
+			}
+		}
+
+		return true;
+	}
+
+	/**
 	 * Load panel assets
 	 *
 	 * @return void
@@ -218,25 +284,24 @@ class Plugin extends Singleton {
 
 	/**
 	 * Show icon in editor for widgets with setting enabled
-	 *
 	 */
 	public function editor_show_visibility_icon() {
 		if ( ! class_exists( 'Elementor\Plugin' ) || ! \Elementor\Plugin::$instance->preview->is_preview_mode() ) {
 			return;
 		}
 		?>
-        <style>
-            body.elementor-editor-active .elementor-element.stax-condition-yes::after {
-                content: '\e8ed';
-                color: #6E49CB;
-                display: inline-block;
-                font-family: eicons;
-                font-size: 15px;
-                position: absolute;
-                top: 0;
-                right: 5px;
-            }
-        </style>
+		<style>
+			body.elementor-editor-active .elementor-element.stax-condition-yes::after {
+				content: '\e8ed';
+				color: #6E49CB;
+				display: inline-block;
+				font-family: eicons;
+				font-size: 15px;
+				position: absolute;
+				top: 0;
+				right: 5px;
+			}
+		</style>
 		<?php
 	}
 }

@@ -65,3 +65,23 @@
     padding: 4px 6px;
     border-radius: 4px;
 }
+
+.elementor-control-old_version_note .elementor-control-content {
+    padding: 10px;
+    background: #2d2d2d;
+    border-radius: 4px;
+}
+
+.elementor-control-old_version_note .elementor-control-title {
+    font-weight: 900;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    color: #ff2b2b;
+}
+
+.elementor-control-old_version_note .visibility-old-version-notice {
+    font-size: 12px;
+    line-height: 14px;
+    font-weight: 300;
+    color: #fff;
+}

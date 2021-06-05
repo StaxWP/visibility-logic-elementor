@@ -14,7 +14,7 @@ use Elementor\Controls_Manager;
 class GeneralVisibility extends Singleton {
 
 	/**
-	 * UserRoleVisibility constructor
+	 * GeneralVisibility constructor
 	 */
 	public function __construct() {
 		parent::__construct();
@@ -22,14 +22,24 @@ class GeneralVisibility extends Singleton {
 		add_action( 'elementor/element/common/_section_style/after_section_end', [ $this, 'register_section' ] );
 		add_action( 'elementor/element/section/section_advanced/after_section_end', [ $this, 'register_section' ] );
 
-		add_action( 'elementor/element/common/' . self::SECTION_PREFIX . 'general_section/before_section_end', [
-			$this,
-			'register_controls'
-		], 10, 2 );
-		add_action( 'elementor/element/section/' . self::SECTION_PREFIX . 'general_section/before_section_end', [
-			$this,
-			'register_controls'
-		], 10, 2 );
+		add_action(
+			'elementor/element/common/' . self::SECTION_PREFIX . 'general_section/before_section_end',
+			[
+				$this,
+				'register_controls',
+			],
+			10,
+			2
+		);
+		add_action(
+			'elementor/element/section/' . self::SECTION_PREFIX . 'general_section/before_section_end',
+			[
+				$this,
+				'register_controls',
+			],
+			10,
+			2
+		);
 	}
 
 	/**
@@ -120,6 +130,7 @@ class GeneralVisibility extends Singleton {
 				],
 			]
 		);
+
 	}
 
 }
