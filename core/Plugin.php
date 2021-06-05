@@ -215,6 +215,10 @@ class Plugin extends Singleton {
 	 * @return boolean
 	 */
 	private function version_fallback_render( $settings ) {
+		if ( ! isset( $settings['ecl_enabled'] ) ) {
+			return true;
+		}
+
 		$user_state = is_user_logged_in();
 
 		if ( 'yes' === $settings['ecl_enabled'] ) {

@@ -40,14 +40,14 @@ class Upgrades extends Singleton {
 	 * @var array
 	 */
 	private $upgrades = [
-		'1.3.0' => [
-			'method'  => '_upgrade_130',
-			'confirm' => false,
-		],
-		'2.0.3' => [
-			'method'  => '_upgrade_203',
-			'confirm' => false,
-		],
+		// '1.3.0' => [
+		// 'method'  => '_upgrade_130',
+		// 'confirm' => false,
+		// ],
+		// '2.0.3' => [
+		// 'method'  => '_upgrade_203',
+		// 'confirm' => false,
+		// ],
 	];
 
 	/**
@@ -58,7 +58,7 @@ class Upgrades extends Singleton {
 
 		add_action( 'admin_notices', [ $this, 'admin_notice' ], 20 );
 
-		add_action( 'init', [ $this, 'force_2_0_update' ] );
+		// add_action( 'init', [ $this, 'force_2_0_update' ] );
 	}
 
 	/**

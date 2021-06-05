@@ -50,18 +50,64 @@ class OldVersionFallback extends Singleton {
 	 * @return void
 	 */
 	public function register_section( $element ) {
-		$element->start_controls_section(
-			self::SECTION_PREFIX . 'old_version_section',
-			[
-				'tab'       => self::VISIBILITY_TAB,
-				'label'     => __( 'Old Version (Deprecated)', 'visibility-logic-elementor' ),
-				'condition' => [
-					self::SECTION_PREFIX . 'enabled' => '',
-				],
-			]
-		);
+		$meta = get_post_meta( get_the_ID(), '_elementor_data', true );
+		$data = $meta ? @json_decode( $meta, true ) : null;
 
-		$element->end_controls_section();
+		$has_old_data = false;
+
+		if ( null !== $data ) {
+			foreach ( $data as $data_item ) {
+				$item_data    = $this->check_for_old_data( $data_item, $has_old_data );
+				$has_old_data = $item_data['has_old_data'];
+			}
+		}
+
+		if ( $has_old_data ) {
+			$element->start_controls_section(
+				self::SECTION_PREFIX . 'old_version_section',
+				[
+					'tab'       => self::VISIBILITY_TAB,
+					'label'     => __( 'Old Version (Deprecated)', 'visibility-logic-elementor' ),
+					'condition' => [
+						self::SECTION_PREFIX . 'enabled' => '',
+					],
+				]
+			);
+
+			$element->end_controls_section();
+		}
+
+	}
+
+	/**
+	 * Check for old data
+	 *
+	 * @param array $item
+	 * @param bool  $has_old_data
+	 * @return array
+	 */
+	private function check_for_old_data( $item, $has_old_data ) {
+		if ( 'column' !== $item['elType'] ) {
+			if ( isset( $item['settings']['ecl_enabled'] ) ||
+				isset( $item['settings']['ecl_role_visible'] ) ||
+				isset( $item['settings']['ecl_role_hidden'] ) ) {
+				$has_old_data = true;
+			}
+		}
+
+		if ( isset( $item['elements'] ) && ! empty( $item['elements'] ) ) {
+			foreach ( $item['elements'] as &$sub_item ) {
+				$sub_item_data = $this->check_for_old_data( $sub_item, $has_old_data );
+
+				$sub_item     = $sub_item_data['item'];
+				$has_old_data = $sub_item_data['has_old_data'];
+			}
+		}
+
+		return [
+			'item'         => $item,
+			'has_old_data' => $has_old_data,
+		];
 	}
 
 	/**
