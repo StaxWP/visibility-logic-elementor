@@ -43,7 +43,7 @@ class Plugin extends Singleton {
 		require_once STAX_VISIBILITY_CORE_PATH . 'admin/pages/Widgets.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'admin/Settings.php';
 
-		add_action( 'elementor/editor/before_enqueue_scripts', [ $this, 'load_panel_assets' ] );
+		add_action( 'elementor/init', [ $this, 'load_elementor_modules' ] );
 
 		add_filter( 'elementor/widget/render_content', [ $this, 'content_change' ], 999, 2 );
 		add_filter( 'elementor/section/render_content', [ $this, 'content_change' ], 999, 2 );
@@ -62,6 +62,31 @@ class Plugin extends Singleton {
 		$this->load_settings();
 
 		do_action( 'stax/visibility/after_init' );
+	}
+
+	/**
+	 * Load Elementor modules
+	 *
+	 * @return void
+	 */
+	public function load_elementor_modules() {
+		// Traits.
+		require_once STAX_VISIBILITY_CORE_PATH . 'helpers/traits/Meta_Trait.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'helpers/traits/Wp_Trait.php';
+
+		// Query helpers.
+		require_once STAX_VISIBILITY_CORE_PATH . 'helpers/Ajax.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'helpers/FunctionCaller.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'helpers/controls/Query.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'helpers/Controls.php';
+
+		new Ajax();
+
+		add_action( 'elementor/controls/controls_registered', [ new Controls(), 'on_controls_registered' ] );
+		require_once STAX_VISIBILITY_CORE_PATH . 'helpers/modules/QueryControl.php';
+
+		add_action( 'elementor/editor/before_enqueue_scripts', [ $this, 'before_load_panel_assets' ] );
+		add_action( 'elementor/editor/after_enqueue_scripts', [ $this, 'after_load_panel_assets' ] );
 	}
 
 	/**
@@ -273,16 +298,47 @@ class Plugin extends Singleton {
 	}
 
 	/**
-	 * Load panel assets
+	 * Bbefore load panel assets
 	 *
 	 * @return void
 	 */
-	public function load_panel_assets() {
+	public function before_load_panel_assets() {
 		wp_enqueue_style(
 			'stax-visibility-panel',
 			STAX_VISIBILITY_ASSETS_URL . 'css/panel.css',
 			[],
 			STAX_VISIBILITY_VERSION
+		);
+	}
+
+	/**
+	 * After load panel assets
+	 *
+	 * @return void
+	 */
+	public function after_load_panel_assets() {
+		wp_enqueue_script(
+			'stax-visibility-script-editor',
+			STAX_VISIBILITY_ASSETS_URL . 'js/editor.js',
+			[],
+			STAX_VISIBILITY_VERSION,
+			false
+		);
+
+		// Enqueue Select2 assets.
+		wp_enqueue_style(
+			'stax-visibility-select2',
+			STAX_VISIBILITY_ASSETS_URL . 'libs/select2/select2.min.css',
+			[],
+			STAX_VISIBILITY_VERSION
+		);
+
+		wp_enqueue_script(
+			'stax-visibility-select2',
+			STAX_VISIBILITY_ASSETS_URL . 'libs/select2/select2.full.min.js',
+			[ 'jquery' ],
+			STAX_VISIBILITY_VERSION,
+			true
 		);
 	}
 

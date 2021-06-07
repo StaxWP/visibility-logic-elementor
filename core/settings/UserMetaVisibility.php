@@ -68,15 +68,31 @@ class UserMetaVisibility extends Singleton {
 			]
 		);
 
+		// $element->add_control(
+		// self::SECTION_PREFIX . 'user_meta_options',
+		// [
+		// 'type'        => Controls_Manager::SELECT2,
+		// 'label'       => __( 'Select Meta', 'visibility-logic-elementor' ),
+		// 'options'     => Resources::get_user_metas(),
+		// 'default'     => [],
+		// 'multiple'    => true,
+		// 'label_block' => true,
+		// 'condition'   => [
+		// self::SECTION_PREFIX . 'user_meta_enabled' => 'yes',
+		// ],
+		// ]
+		// );
+
 		$element->add_control(
 			self::SECTION_PREFIX . 'user_meta_options',
 			[
-				'type'        => Controls_Manager::SELECT2,
-				'label'       => __( 'Select Meta', 'visibility-logic-elementor' ),
-				'options'     => Resources::get_user_metas(),
-				'default'     => [],
-				'multiple'    => true,
+				'type'        => 'stax_query',
+				'label'       => __( 'Meta Name', 'visibility-logic-elementor' ),
+				'query_type'  => 'fields',
+				'object_type' => 'user',
+				'placeholder' => __( 'Meta key or Name', 'visibility-logic-elementor' ),
 				'label_block' => true,
+				'multiple'    => true,
 				'condition'   => [
 					self::SECTION_PREFIX . 'user_meta_enabled' => 'yes',
 				],
@@ -108,7 +124,7 @@ class UserMetaVisibility extends Singleton {
 				'label_block' => true,
 				'condition'   => [
 					self::SECTION_PREFIX . 'user_meta_enabled' => 'yes',
-					self::SECTION_PREFIX . 'user_meta_options!' => [],
+					self::SECTION_PREFIX . 'user_meta_options!' => '',
 				],
 			]
 		);

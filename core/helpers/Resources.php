@@ -186,49 +186,6 @@ final class Resources extends Singleton {
 	}
 
 	/**
-	 * Get user metas
-	 *
-	 * @param boolean $grouped
-	 * @return array
-	 */
-	public static function get_user_metas( $grouped = false ) {
-		global $wpdb;
-
-		$user_metas         = [];
-		$user_metas_grouped = [];
-
-		$query   = 'SELECT DISTINCT meta_key FROM ' . $wpdb->prefix . 'usermeta ORDER BY meta_key';
-		$results = $wpdb->get_results( $query );
-
-		if ( ! empty( $results ) ) {
-			$metas = [];
-			foreach ( $results as $key => $user ) {
-				$metas[ $user->meta_key ] = $user->meta_key;
-			}
-
-			$manual_metas = $metas;
-			foreach ( $manual_metas as $meta ) {
-				if ( substr( $meta, 0, 1 ) == '_' ) {
-					$meta = $tmp = substr( $meta, 1 );
-					if ( in_array( $tmp, $manual_metas ) ) {
-						continue;
-					}
-				}
-				if ( ! isset( $post_metas[ $meta ] ) ) {
-					$user_metas[ $meta ]                   = $meta;
-					$user_metas_grouped['NATIVE'][ $meta ] = $meta;
-				}
-			}
-		}
-
-		if ( $grouped ) {
-			return $user_metas_grouped;
-		}
-
-		return $user_metas;
-	}
-
-	/**
 	 * Get borwser type
 	 *
 	 * @return string
