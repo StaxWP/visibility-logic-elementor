@@ -104,7 +104,7 @@ class UserMetaVisibility extends Singleton {
 			[
 				'type'        => Controls_Manager::SELECT2,
 				'label'       => __( 'Meta Condition', 'visibility-logic-elementor' ),
-				'description' => __( 'Select the condition for the User Meta value', 'visibility-logic-elementor' ),
+				'description' => __( 'Select the condition that must be met by the meta', 'visibility-logic-elementor' ),
 				'options'     => [
 					'none'                    => __( 'None', 'visibility-logic-elementor' ),
 					'empty'                   => __( 'Empty', 'visibility-logic-elementor' ),
@@ -191,6 +191,20 @@ class UserMetaVisibility extends Singleton {
 						'is_between',
 						'less_than',
 						'greater_than',
+					],
+				],
+			]
+		);
+
+		$element->add_control(
+			self::SECTION_PREFIX . 'user_meta_notice_none',
+			[
+				'type'      => Controls_Manager::RAW_HTML,
+				'raw'       => __( 'Setting the condition to "None" will have to effect.', 'visibility-logic-elementor' ),
+				'condition' => [
+					self::SECTION_PREFIX . 'user_meta_enabled' => 'yes',
+					self::SECTION_PREFIX . 'user_meta_status' => [
+						'none',
 					],
 				],
 			]
