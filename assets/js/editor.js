@@ -95,7 +95,7 @@ var STAXVisibilityEditor = STAXVisibilityEditor || {};
           this.$el
             .find(".elementor-control-title")
             .after(
-              '<span class="elementor-control-spinner dce-control-spinner">&nbsp;<i class="fa fa-spinner fa-spin"></i>&nbsp;</span>'
+              '<span class="elementor-control-spinner stax-control-spinner">&nbsp;<i class="fa fa-spinner fa-spin"></i>&nbsp;</span>'
             );
         },
         onReady: function onReady() {
@@ -135,8 +135,6 @@ var STAXVisibilityEditor = STAXVisibilityEditor || {};
         "change",
         ".elementor-control-type-stax_query select",
         function () {
-          var eid = dce_get_element_id_from_cid(dce_model_cid);
-          var iFrameDOM = jQuery("iframe#elementor-preview-iframe").contents();
           STAXVisibilityEditor.fn.update_query_btn(this);
         }
       );
@@ -146,7 +144,7 @@ var STAXVisibilityEditor = STAXVisibilityEditor || {};
       var query_type = $(item).attr("data-query_type");
       var object_type = $(item).attr("data-object_type");
 
-      $(item).siblings(".dce-elementor-control-quick-edit").remove();
+      $(item).siblings(".stax-elementor-control-quick-edit").remove();
 
       if (
         $(item).val() &&
@@ -191,9 +189,9 @@ var STAXVisibilityEditor = STAXVisibilityEditor || {};
           $(item)
             .parent()
             .append(
-              '<div class="elementor-control-unit-1 tooltip-target dce-elementor-control-quick-edit" data-tooltip="Quick EDIT"><a href="' +
+              '<div class="elementor-control-unit-1 tooltip-target stax-elementor-control-quick-edit" data-tooltip="Quick EDIT"><a href="' +
                 edit_link +
-                '" target="_blank" class="dce-quick-edit-btn"><i class="eicon-pencil"></i></a></div>'
+                '" target="_blank" class="stax-quick-edit-btn"><i class="eicon-pencil"></i></a></div>'
             );
         }
       } else {
@@ -230,9 +228,9 @@ var STAXVisibilityEditor = STAXVisibilityEditor || {};
           $(item)
             .parent()
             .prepend(
-              '<div class="elementor-control-unit-1 tooltip-target dce-elementor-control-quick-edit" data-tooltip="Add NEW"><a href="' +
+              '<div class="elementor-control-unit-1 tooltip-target stax-elementor-control-quick-edit" data-tooltip="Add NEW"><a href="' +
                 new_link +
-                '" target="_blank" class="dce-quick-edit-btn"><i class="eicon-plus"></i></a></div>'
+                '" target="_blank" class="stax-quick-edit-btn"><i class="eicon-plus"></i></a></div>'
             );
         }
       }
