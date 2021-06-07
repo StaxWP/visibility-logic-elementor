@@ -168,9 +168,10 @@ class UserMetaVisibility extends Singleton {
 		$element->add_control(
 			self::SECTION_PREFIX . 'user_meta_notice_array',
 			[
-				'type'      => Controls_Manager::RAW_HTML,
-				'raw'       => __( 'Type in comma separated strings.', 'visibility-logic-elementor' ),
-				'condition' => [
+				'type'            => Controls_Manager::RAW_HTML,
+				'raw'             => __( 'Type in comma separated strings.', 'visibility-logic-elementor' ),
+				'content_classes' => 'stax-generic-notice',
+				'condition'       => [
 					self::SECTION_PREFIX . 'user_meta_enabled' => 'yes',
 					self::SECTION_PREFIX . 'user_meta_status' => [
 						'specific_value_multiple',
@@ -183,9 +184,10 @@ class UserMetaVisibility extends Singleton {
 		$element->add_control(
 			self::SECTION_PREFIX . 'user_meta_notice_numeric',
 			[
-				'type'      => Controls_Manager::RAW_HTML,
-				'raw'       => __( 'The value of the selected meta and also the the values of the conditions must be numeric.', 'visibility-logic-elementor' ),
-				'condition' => [
+				'type'            => Controls_Manager::RAW_HTML,
+				'raw'             => __( 'The value of the selected meta and also the the values of the conditions must be numeric.', 'visibility-logic-elementor' ),
+				'content_classes' => 'stax-generic-notice',
+				'condition'       => [
 					self::SECTION_PREFIX . 'user_meta_enabled' => 'yes',
 					self::SECTION_PREFIX . 'user_meta_status' => [
 						'is_between',
@@ -199,9 +201,10 @@ class UserMetaVisibility extends Singleton {
 		$element->add_control(
 			self::SECTION_PREFIX . 'user_meta_notice_none',
 			[
-				'type'      => Controls_Manager::RAW_HTML,
-				'raw'       => __( 'Setting the condition to "None" will have to effect.', 'visibility-logic-elementor' ),
-				'condition' => [
+				'type'            => Controls_Manager::RAW_HTML,
+				'raw'             => __( 'Setting the condition to "None" will have to effect.', 'visibility-logic-elementor' ),
+				'content_classes' => 'stax-generic-notice',
+				'condition'       => [
 					self::SECTION_PREFIX . 'user_meta_enabled' => 'yes',
 					self::SECTION_PREFIX . 'user_meta_status' => [
 						'none',

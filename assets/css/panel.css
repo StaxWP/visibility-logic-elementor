@@ -86,6 +86,13 @@
     color: #fff;
 }
 
+.elementor-control .stax-generic-notice {
+    font-size: 12px;
+    line-height: 14px;
+    font-weight: 300;
+    color: #fff;
+}
+
 .elementor-control-type-stax_query .select2-search--inline input {
     padding: 0 5px !important;
 }
