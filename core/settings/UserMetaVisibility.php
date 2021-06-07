@@ -124,7 +124,7 @@ class UserMetaVisibility extends Singleton {
 				'label_block' => true,
 				'condition'   => [
 					self::SECTION_PREFIX . 'user_meta_enabled' => 'yes',
-					self::SECTION_PREFIX . 'user_meta_options!' => '',
+					self::SECTION_PREFIX . 'user_meta_options!' => [],
 				],
 			]
 		);
