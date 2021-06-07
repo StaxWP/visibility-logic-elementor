@@ -4,16 +4,19 @@ Tags: elementor, elementor restrictions, elementor conditions, elementor widgets
 Requires at least: 3.0
 Requires PHP: 5.6
 Tested up to: 5.7.2
-Stable tag: 2.1.2
+Stable tag: 2.1.3
 License: GLPv2 or later
 
-Hide or show Elementor widgets based on user role, if logged in or not.
+Hide or show Elementor widgets based on user role, user meta, if logged in or not.
 
 == Description ==
-Hide or show an Elementor widget based on whether a user is logged in, logged out (guest) or a specific role.
+Hide or show an Elementor widget based on whether a user is logged in, logged out (guest), has specific role, based on user meta, at specific dates or by the browser used.
+
 You can also hide an entire section too or show it just for specific users.
 
 Based on your visibility setting for each widget you can restrict rendering elements on front-end, meaning that you can hide or show any Elementor widget based on the user role(Subscriber, Author, Administrator, etc), if the user is Logged our or if the user is Logged in.
+
+Note: Updating from older version 1.2.0 to 2.1.3 is safe and it will keep your initial settings. You can still access them from the Stax Visibility tab when editing an Elementor widget or section.
 
 = NEW Free Features =
 - User Meta content restriction
@@ -59,6 +62,9 @@ We use Appsero SDK to collect some telemetry data upon user's confirmation. This
 2. Advanced - Visibility control settings - Hide for users
 
 == Changelog ==
+
+= 2.1.3 =
+* Moving from version 1.2.0 is won't change anything on your site. We added safe fallback settings for older setting from v1. Old settings are now being taken into consideration and are available in the Widget settings. You can switch to nee new settings if you like or just leave those in place.
 
 = 2.1.2 =
 * Added more User meta conditional operators
