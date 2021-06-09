@@ -124,7 +124,7 @@ class UserMetaVisibility extends Singleton {
 				'label_block' => true,
 				'condition'   => [
 					self::SECTION_PREFIX . 'user_meta_enabled' => 'yes',
-					self::SECTION_PREFIX . 'user_meta_options!' => [],
+					self::SECTION_PREFIX . 'user_meta_options!' => '',
 				],
 			]
 		);
@@ -230,99 +230,101 @@ class UserMetaVisibility extends Singleton {
 
 			$meta_is_consistent = true;
 
-			foreach ( $settings[ self::SECTION_PREFIX . 'user_meta_options' ] as $meta ) {
-				$user_meta = get_user_meta( $current_user->ID, $meta, true );
+			if ( is_array( $settings[ self::SECTION_PREFIX . 'user_meta_options' ] ) ) {
+				foreach ( $settings[ self::SECTION_PREFIX . 'user_meta_options' ] as $meta ) {
+					$user_meta = get_user_meta( $current_user->ID, $meta, true );
 
-				switch ( $meta_check_type ) {
-					case 'empty':
-						if ( ! empty( $user_meta ) ) {
-							$meta_is_consistent = false;
-						}
-						break;
-					case 'not_empty':
-						if ( empty( $user_meta ) ) {
-							$meta_is_consistent = false;
-						}
-						break;
-					case 'specific_value':
-						if ( $user_meta !== $meta_check_value ) {
-							$meta_is_consistent = false;
-						}
-						break;
-					case 'specific_value_multiple':
-						$values = explode( ',', $meta_check_value );
-
-						$value_found = false;
-
-						foreach ( $values as $item ) {
-							if ( $item === $user_meta ) {
-								$value_found = true;
+					switch ( $meta_check_type ) {
+						case 'empty':
+							if ( ! empty( $user_meta ) ) {
+								$meta_is_consistent = false;
 							}
-						}
+							break;
+						case 'not_empty':
+							if ( empty( $user_meta ) ) {
+								$meta_is_consistent = false;
+							}
+							break;
+						case 'specific_value':
+							if ( $user_meta !== $meta_check_value ) {
+								$meta_is_consistent = false;
+							}
+							break;
+						case 'specific_value_multiple':
+							$values = explode( ',', $meta_check_value );
 
-						$meta_is_consistent = $value_found;
-						break;
-					case 'not_specific_value':
-						if ( $user_meta === $meta_check_value ) {
-							$meta_is_consistent = false;
-						}
-						break;
-					case 'contain':
-						if ( strpos( $user_meta, $meta_check_value ) === false ) {
-							$meta_is_consistent = false;
-						}
-						break;
-					case 'not_contain':
-						if ( strpos( $user_meta, $meta_check_value ) !== false ) {
-							$meta_is_consistent = false;
-						}
-						break;
-					case 'is_between':
-						$meta_check_value_2 = $settings[ self::SECTION_PREFIX . 'user_meta_value_2' ];
+							$value_found = false;
 
-						if ( ! is_numeric( $user_meta ) || ! is_numeric( $meta_check_value ) || ! is_numeric( $meta_check_value_2 ) ) {
-							$meta_is_consistent = false;
-						}
+							foreach ( $values as $item ) {
+								if ( $item === $user_meta ) {
+									$value_found = true;
+								}
+							}
 
-						if ( (int) $meta_check_value > (int) $user_meta || (int) $user_meta > (int) $meta_check_value_2 ) {
-							$meta_is_consistent = false;
-						}
-						break;
-					case 'less_than':
-						if ( ! is_numeric( $user_meta ) || ! is_numeric( $meta_check_value ) ) {
-							$meta_is_consistent = false;
-						}
+							$meta_is_consistent = $value_found;
+							break;
+						case 'not_specific_value':
+							if ( $user_meta === $meta_check_value ) {
+								$meta_is_consistent = false;
+							}
+							break;
+						case 'contain':
+							if ( strpos( $user_meta, $meta_check_value ) === false ) {
+								$meta_is_consistent = false;
+							}
+							break;
+						case 'not_contain':
+							if ( strpos( $user_meta, $meta_check_value ) !== false ) {
+								$meta_is_consistent = false;
+							}
+							break;
+						case 'is_between':
+							$meta_check_value_2 = $settings[ self::SECTION_PREFIX . 'user_meta_value_2' ];
 
-						if ( (int) $user_meta > (int) $meta_check_value ) {
-							$meta_is_consistent = false;
-						}
-						break;
-					case 'greater_than':
-						if ( ! is_numeric( $user_meta ) || ! is_numeric( $meta_check_value ) ) {
-							$meta_is_consistent = false;
-						}
+							if ( ! is_numeric( $user_meta ) || ! is_numeric( $meta_check_value ) || ! is_numeric( $meta_check_value_2 ) ) {
+								$meta_is_consistent = false;
+							}
 
-						if ( (int) $user_meta < (int) $meta_check_value ) {
-							$meta_is_consistent = false;
-						}
-						break;
-					case 'is_array':
-						if ( ! is_array( $user_meta ) ) {
-							$meta_is_consistent = false;
-						}
-						break;
-					case 'is_array_and_contains':
-						if ( ! is_array( $user_meta ) ) {
-							$meta_is_consistent = false;
-						}
+							if ( (int) $meta_check_value > (int) $user_meta || (int) $user_meta > (int) $meta_check_value_2 ) {
+								$meta_is_consistent = false;
+							}
+							break;
+						case 'less_than':
+							if ( ! is_numeric( $user_meta ) || ! is_numeric( $meta_check_value ) ) {
+								$meta_is_consistent = false;
+							}
 
-						$values = explode( ',', $meta_check_value );
+							if ( (int) $user_meta > (int) $meta_check_value ) {
+								$meta_is_consistent = false;
+							}
+							break;
+						case 'greater_than':
+							if ( ! is_numeric( $user_meta ) || ! is_numeric( $meta_check_value ) ) {
+								$meta_is_consistent = false;
+							}
 
-						if ( empty( array_intersect( $user_meta, $values ) ) ) {
-							$meta_is_consistent = false;
-						}
-						break;
-					default:
+							if ( (int) $user_meta < (int) $meta_check_value ) {
+								$meta_is_consistent = false;
+							}
+							break;
+						case 'is_array':
+							if ( ! is_array( $user_meta ) ) {
+								$meta_is_consistent = false;
+							}
+							break;
+						case 'is_array_and_contains':
+							if ( ! is_array( $user_meta ) ) {
+								$meta_is_consistent = false;
+							}
+
+							$values = explode( ',', $meta_check_value );
+
+							if ( empty( array_intersect( $user_meta, $values ) ) ) {
+								$meta_is_consistent = false;
+							}
+							break;
+						default:
+					}
 				}
 			}
 
