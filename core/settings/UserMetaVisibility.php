@@ -68,21 +68,6 @@ class UserMetaVisibility extends Singleton {
 			]
 		);
 
-		// $element->add_control(
-		// self::SECTION_PREFIX . 'user_meta_options',
-		// [
-		// 'type'        => Controls_Manager::SELECT2,
-		// 'label'       => __( 'Select Meta', 'visibility-logic-elementor' ),
-		// 'options'     => Resources::get_user_metas(),
-		// 'default'     => [],
-		// 'multiple'    => true,
-		// 'label_block' => true,
-		// 'condition'   => [
-		// self::SECTION_PREFIX . 'user_meta_enabled' => 'yes',
-		// ],
-		// ]
-		// );
-
 		$element->add_control(
 			self::SECTION_PREFIX . 'user_meta_options',
 			[
@@ -137,6 +122,7 @@ class UserMetaVisibility extends Singleton {
 				'label_block' => true,
 				'condition'   => [
 					self::SECTION_PREFIX . 'user_meta_enabled' => 'yes',
+					self::SECTION_PREFIX . 'user_meta_options!' => '',
 					self::SECTION_PREFIX . 'user_meta_status' => [
 						'specific_value',
 						'specific_value_multiple',
@@ -160,6 +146,7 @@ class UserMetaVisibility extends Singleton {
 				'label_block' => true,
 				'condition'   => [
 					self::SECTION_PREFIX . 'user_meta_enabled' => 'yes',
+					self::SECTION_PREFIX . 'user_meta_options!' => '',
 					self::SECTION_PREFIX . 'user_meta_status' => 'is_between',
 				],
 			]
@@ -173,6 +160,7 @@ class UserMetaVisibility extends Singleton {
 				'content_classes' => 'stax-generic-notice',
 				'condition'       => [
 					self::SECTION_PREFIX . 'user_meta_enabled' => 'yes',
+					self::SECTION_PREFIX . 'user_meta_options!' => '',
 					self::SECTION_PREFIX . 'user_meta_status' => [
 						'specific_value_multiple',
 						'is_array_and_contains',
@@ -189,6 +177,7 @@ class UserMetaVisibility extends Singleton {
 				'content_classes' => 'stax-generic-notice',
 				'condition'       => [
 					self::SECTION_PREFIX . 'user_meta_enabled' => 'yes',
+					self::SECTION_PREFIX . 'user_meta_options!' => '',
 					self::SECTION_PREFIX . 'user_meta_status' => [
 						'is_between',
 						'less_than',
@@ -202,10 +191,11 @@ class UserMetaVisibility extends Singleton {
 			self::SECTION_PREFIX . 'user_meta_notice_none',
 			[
 				'type'            => Controls_Manager::RAW_HTML,
-				'raw'             => __( 'Setting the condition to "None" will have to effect.', 'visibility-logic-elementor' ),
+				'raw'             => __( 'Setting the condition to "None" will have no effect.', 'visibility-logic-elementor' ),
 				'content_classes' => 'stax-generic-notice',
 				'condition'       => [
 					self::SECTION_PREFIX . 'user_meta_enabled' => 'yes',
+					self::SECTION_PREFIX . 'user_meta_options!' => '',
 					self::SECTION_PREFIX . 'user_meta_status' => [
 						'none',
 					],
@@ -225,12 +215,12 @@ class UserMetaVisibility extends Singleton {
 		if ( (bool) $settings[ self::SECTION_PREFIX . 'user_meta_enabled' ] ) {
 			$current_user = wp_get_current_user();
 
-			$meta_check_type  = $settings[ self::SECTION_PREFIX . 'user_meta_status' ];
-			$meta_check_value = $settings[ self::SECTION_PREFIX . 'user_meta_value' ];
-
 			$meta_is_consistent = true;
 
 			if ( is_array( $settings[ self::SECTION_PREFIX . 'user_meta_options' ] ) ) {
+				$meta_check_type  = $settings[ self::SECTION_PREFIX . 'user_meta_status' ];
+				$meta_check_value = $settings[ self::SECTION_PREFIX . 'user_meta_value' ];
+
 				foreach ( $settings[ self::SECTION_PREFIX . 'user_meta_options' ] as $meta ) {
 					$user_meta = get_user_meta( $current_user->ID, $meta, true );
 

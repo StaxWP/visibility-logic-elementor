@@ -2,11 +2,12 @@
 
 namespace Stax\VisibilityLogic\Modules;
 
-use Elementor\Core\Base\Module;
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
+
+use Stax\VisibilityLogic\Plugin;
+use Elementor\Core\Base\Module;
 
 class QueryControl extends Module {
 
@@ -73,6 +74,7 @@ class QueryControl extends Module {
 	 */
 	public function ajax_call_control_value_titles( $request ) {
 		$results = call_user_func( [ $this, 'get_value_titles_for_' . $request['query_type'] ], $request );
+
 		return $results;
 	}
 
@@ -89,9 +91,15 @@ class QueryControl extends Module {
 		} else {
 			$object_types = [ $data['object_type'] ];
 		}
+
 		foreach ( $object_types as $object_type ) {
 			$function = 'get_' . $object_type . '_fields';
-			$fields   = \Stax\VisibilityLogic\FunctionCaller::{$function}( $data['q'] );
+
+			if ( 'post' === $object_type && Plugin::instance()->has_pro() ) {
+				$fields = \Stax\VisibilityLogicPro\FunctionCaller::{$function}( $data['q'] );
+			} else {
+				$fields = \Stax\VisibilityLogic\FunctionCaller::{$function}( $data['q'] );
+			}
 
 			if ( ! empty( $fields ) ) {
 				foreach ( $fields as $field_key => $field_name ) {
@@ -102,6 +110,7 @@ class QueryControl extends Module {
 				}
 			}
 		}
+
 		return $results;
 	}
 
@@ -115,6 +124,7 @@ class QueryControl extends Module {
 		$ids      = (array) $request['id'];
 		$results  = [];
 		$function = 'get_' . $request['object_type'] . '_metas';
+
 		foreach ( $ids as $aid ) {
 			$fields = \Stax\VisibilityLogic\FunctionCaller::{$function}( false, $aid );
 			foreach ( $fields as $field_key => $field_name ) {
@@ -123,6 +133,7 @@ class QueryControl extends Module {
 				}
 			}
 		}
+
 		return $results;
 	}
 
@@ -135,15 +146,22 @@ class QueryControl extends Module {
 	protected function get_value_titles_for_fields( $request ) {
 		$ids     = (array) $request['id'];
 		$results = [];
+
 		if ( 'any' === $request['object_type'] ) {
 			$object_types = [ 'post', 'user', 'term' ];
 		} else {
 			$object_types = [ $request['object_type'] ];
 		}
+
 		foreach ( $object_types as $object_type ) {
 			$function = 'get_' . $object_type . '_fields';
-			foreach ( $ids as $aid ) {
-				$fields = \Stax\VisibilityLogic\FunctionCaller::{$function}( $aid );
+			foreach ( $ids as $id ) {
+				if ( 'post' === $object_type && Plugin::instance()->has_pro() ) {
+					$fields = \Stax\VisibilityLogicPro\FunctionCaller::{$function}( $id );
+				} else {
+					$fields = \Stax\VisibilityLogic\FunctionCaller::{$function}( $id );
+				}
+
 				if ( ! empty( $fields ) ) {
 					foreach ( $fields as $field_key => $field_name ) {
 						if ( in_array( $field_key, $ids ) ) {
@@ -153,7 +171,64 @@ class QueryControl extends Module {
 				}
 			}
 		}
+
 		return $results;
+	}
+
+	/**
+	 * Get values for posts
+	 *
+	 * @param [type] $request
+	 * @return array
+	 */
+	protected function get_value_titles_for_posts( $request ) {
+		if ( Plugin::instance()->has_pro() ) {
+			return \Stax\VisibilityLogicPro\FunctionCaller::get_value_titles_for_posts( $request );
+		}
+
+		return [];
+	}
+
+	/**
+	 * Get values for terms
+	 *
+	 * @param [type] $request
+	 * @return array
+	 */
+	protected function get_value_titles_for_terms( $request ) {
+		if ( Plugin::instance()->has_pro() ) {
+			return \Stax\VisibilityLogicPro\FunctionCaller::get_value_titles_for_terms( $request );
+		}
+
+		return [];
+	}
+
+	/**
+	 * Get posts
+	 *
+	 * @param array $data
+	 * @return array
+	 */
+	protected function get_posts( $data ) {
+		if ( Plugin::instance()->has_pro() ) {
+			return \Stax\VisibilityLogicPro\FunctionCaller::get_posts( $data );
+		}
+
+		return [];
+	}
+
+	/**
+	 * Get post terms
+	 *
+	 * @param array $data
+	 * @return array
+	 */
+	protected function get_terms( $data ) {
+		if ( Plugin::instance()->has_pro() ) {
+			return \Stax\VisibilityLogicPro\FunctionCaller::get_terms( $data );
+		}
+
+		return [];
 	}
 
 }

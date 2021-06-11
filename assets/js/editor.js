@@ -111,8 +111,6 @@ var STAXVisibilityEditor = STAXVisibilityEditor || {};
             if (objectType) {
               $(this.ui.select).attr("data-object_type", objectType);
             }
-
-            STAXVisibilityEditor.fn.update_query_btn(this.ui.select);
           }
 
           if (!this.isTitlesReceived) {
@@ -130,110 +128,6 @@ var STAXVisibilityEditor = STAXVisibilityEditor || {};
 
       // Add Control Handlers
       elementor.addControlView("stax_query", ControlQuery);
-
-      $(document).on(
-        "change",
-        ".elementor-control-type-stax_query select",
-        function () {
-          STAXVisibilityEditor.fn.update_query_btn(this);
-        }
-      );
-    },
-
-    update_query_btn: function (item) {
-      var query_type = $(item).attr("data-query_type");
-      var object_type = $(item).attr("data-object_type");
-
-      $(item).siblings(".stax-elementor-control-quick-edit").remove();
-
-      if (
-        $(item).val() &&
-        (!$.isArray($(item).val()) ||
-          ($.isArray($(item).val()) && $(item).val().length == 1))
-      ) {
-        var edit_link = "#";
-
-        switch (query_type) {
-          case "posts":
-            if (!object_type || object_type != "type") {
-              edit_link =
-                ElementorConfig.home_url +
-                "/wp-admin/post.php?post=" +
-                $(item).val();
-              if (object_type == "elementor_library") {
-                edit_link += "&action=elementor";
-              } else {
-                edit_link += "&action=edit";
-              }
-            }
-            break;
-          case "users":
-            if (!object_type || object_type != "role") {
-              edit_link =
-                ElementorConfig.home_url +
-                "/wp-admin/user-edit.php?user_id=" +
-                $(item).val();
-            }
-            break;
-          case "terms":
-            if (object_type) {
-              edit_link =
-                ElementorConfig.home_url +
-                "/wp-admin/term.php?tag_ID=" +
-                $(item).val();
-              edit_link += "&taxonomy=" + object_type;
-            }
-            break;
-        }
-        if (edit_link != "#") {
-          $(item)
-            .parent()
-            .append(
-              '<div class="elementor-control-unit-1 tooltip-target stax-elementor-control-quick-edit" data-tooltip="Quick EDIT"><a href="' +
-                edit_link +
-                '" target="_blank" class="stax-quick-edit-btn"><i class="eicon-pencil"></i></a></div>'
-            );
-        }
-      } else {
-        var new_link = "#";
-        switch (query_type) {
-          case "posts":
-            if (!object_type || object_type != "type") {
-              new_link = ElementorConfig.home_url + "/wp-admin/post-new.php";
-              if (object_type) {
-                new_link += "?post_type=" + object_type;
-                if (object_type == "elementor_library") {
-                  new_link =
-                    ElementorConfig.home_url +
-                    "/wp-admin/edit.php?post_type=" +
-                    object_type +
-                    "#add_new";
-                }
-              }
-            }
-            break;
-          case "users":
-            if (!object_type || object_type != "role") {
-              new_link = ElementorConfig.home_url + "/wp-admin/user-new.php";
-            }
-            break;
-          case "terms":
-            new_link = ElementorConfig.home_url + "/wp-admin/edit-tags.php";
-            if (object_type) {
-              edit_link += "&taxonomy=" + object_type;
-            }
-            break;
-        }
-        if (new_link != "#") {
-          $(item)
-            .parent()
-            .prepend(
-              '<div class="elementor-control-unit-1 tooltip-target stax-elementor-control-quick-edit" data-tooltip="Add NEW"><a href="' +
-                new_link +
-                '" target="_blank" class="stax-quick-edit-btn"><i class="eicon-plus"></i></a></div>'
-            );
-        }
-      }
     },
   };
 
