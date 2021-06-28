@@ -140,7 +140,7 @@ class Plugin extends Singleton {
 				if ( isset( $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) && (bool) $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) {
 					$fallback_content = '';
 					if ( 'text' === $settings[ self::SECTION_PREFIX . 'fallback_type' ] ) {
-						$fallback_content = esc_html( $settings[ self::SECTION_PREFIX . 'fallback_text' ] );
+						$fallback_content = wp_kses_post( $settings[ self::SECTION_PREFIX . 'fallback_text' ] );
 					} elseif ( 'template' === $settings[ self::SECTION_PREFIX . 'fallback_type' ] ) {
 						if ( $settings[ self::SECTION_PREFIX . 'fallback_template' ] ) {
 							$fallback_content = do_shortcode( '[elementor-template id="' . $settings[ self::SECTION_PREFIX . 'fallback_template' ] . '"]' );
