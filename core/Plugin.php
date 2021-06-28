@@ -95,7 +95,8 @@ class Plugin extends Singleton {
 	 * @return boolean
 	 */
 	public function has_pro() {
-		return defined( 'STAX_VISIBILITY_PRO_VERSION' );
+		return defined( 'STAX_VISIBILITY_PRO_VERSION' )
+               || in_array( 'visibility-logic-elementor-pro/conditional.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) );
 	}
 
 	/**
@@ -112,7 +113,7 @@ class Plugin extends Singleton {
 
 		foreach ( $widgets as $slug => $option ) {
 			if ( isset( $option['status'], $option['class'], $option['pro'] ) &&
-				 $option['status'] && file_exists( $option['class'] ) && $option['pro'] === false ) {
+			     $option['status'] && file_exists( $option['class'] ) && $option['pro'] === false ) {
 				require_once $option['class'];
 			}
 		}
@@ -127,7 +128,7 @@ class Plugin extends Singleton {
 	/**
 	 * Render item or not based on conditions
 	 *
-	 * @param string                 $content
+	 * @param string $content
 	 * @param \Elementor\Widget_Base $widget
 	 *
 	 * @return string
@@ -167,7 +168,7 @@ class Plugin extends Singleton {
 	/**
 	 * Check if item should render
 	 *
-	 * @param bool   $should_render
+	 * @param bool $should_render
 	 * @param object $section
 	 *
 	 * @return boolean
@@ -177,8 +178,8 @@ class Plugin extends Singleton {
 
 		if ( ! $this->should_render( $settings ) ) {
 			if ( isset( $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) &&
-				( (bool) $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ||
-				(bool) $settings[ self::SECTION_PREFIX . 'keep_html' ] ) ) {
+			     ( (bool) $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ||
+			       (bool) $settings[ self::SECTION_PREFIX . 'keep_html' ] ) ) {
 				return true;
 			}
 
@@ -237,6 +238,7 @@ class Plugin extends Singleton {
 	 * Version fallback render
 	 *
 	 * @param array $settings
+	 *
 	 * @return boolean
 	 */
 	private function version_fallback_render( $settings ) {
@@ -350,18 +352,18 @@ class Plugin extends Singleton {
 			return;
 		}
 		?>
-		<style>
-			body.elementor-editor-active .elementor-element.stax-condition-yes::after {
-				content: '\e8ed';
-				color: #6E49CB;
-				display: inline-block;
-				font-family: eicons;
-				font-size: 15px;
-				position: absolute;
-				top: 0;
-				right: 5px;
-			}
-		</style>
+        <style>
+            body.elementor-editor-active .elementor-element.stax-condition-yes::after {
+                content: '\e8ed';
+                color: #6E49CB;
+                display: inline-block;
+                font-family: eicons;
+                font-size: 15px;
+                position: absolute;
+                top: 0;
+                right: 5px;
+            }
+        </style>
 		<?php
 	}
 }

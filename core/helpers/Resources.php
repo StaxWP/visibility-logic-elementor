@@ -148,6 +148,10 @@ final class Resources extends Singleton {
 				'name' => __( 'Post & Page', 'visibility-logic-elementor' ),
 				'pro'  => true,
 			],
+			'archive'        => [
+				'name' => __( 'Archives', 'visibility-logic-elementor' ),
+				'pro'  => true,
+			],
 			'conditional-tags' => [
 				'name' => __( 'Conditional Tags', 'visibility-logic-elementor' ),
 				'pro'  => true,

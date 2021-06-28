@@ -4,7 +4,7 @@ Tags: elementor, elementor restrictions, elementor conditions, elementor widgets
 Requires at least: 3.0
 Requires PHP: 5.6
 Tested up to: 5.7.2
-Stable tag: 2.1.3
+Stable tag: 2.1.4
 License: GLPv2 or later
 
 Hide or show Elementor widgets based on user role, user meta, if logged in or not.
@@ -25,6 +25,7 @@ Note: Updating from older version 1.2.0 to 2.1.3 is safe and it will keep your i
 
 = PRO Features =
 - Post & Page, Taxonomy, URL Parameter content restriction
+- Archive restrictions based on Post types and taxonomies
 - IP & Referrer restrictions
 - WordPress Conditional Tags restrictions
 - Fallback - Allows you to show a message instead of hiding the element.
@@ -62,6 +63,10 @@ We use Appsero SDK to collect some telemetry data upon user's confirmation. This
 2. Advanced - Visibility control settings - Hide for users
 
 == Changelog ==
+
+= 2.1.4 =
+* Improvement: Added AJAX control for User meta select to improve editor speed
+* Fix Fallback text so it shows correct escaped HTML
 
 = 2.1.3 =
 * Moving from version 1.2.0 is won't change anything on your site. We added safe fallback settings for older setting from v1. Old settings are now being taken into consideration and are available in the Widget settings. You can switch to nee new settings if you like or just leave those in place.
