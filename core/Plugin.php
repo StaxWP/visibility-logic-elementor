@@ -217,12 +217,14 @@ class Plugin extends Singleton {
 			foreach ( $options as $status ) {
 				if ( ! $status ) {
 					$should_render = false;
+					break;
 				}
 			}
-		} elseif ( 'one' === $$condition_type ) {
+		} elseif ( 'one' === $condition_type ) {
 			foreach ( $options as $status ) {
 				if ( $status ) {
 					$should_render = true;
+					break;
 				}
 			}
 		}
