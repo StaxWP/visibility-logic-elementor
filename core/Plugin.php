@@ -46,7 +46,7 @@ class Plugin extends Singleton {
 		add_action( 'elementor/init', [ $this, 'load_elementor_modules' ] );
 
 		add_filter( 'elementor/widget/render_content', [ $this, 'content_change' ], 999, 2 );
-		add_filter( 'elementor/section/render_content', [ $this, 'content_change' ], 999, 2 );
+		add_filter( 'elementor/frontend/section/before_render', [ $this, 'section_content_change' ], 999 );
 
 		add_filter( 'elementor/frontend/section/should_render', [ $this, 'item_should_render' ], 99999, 2 );
 		add_filter( 'elementor/frontend/widget/should_render', [ $this, 'item_should_render' ], 99999, 2 );
@@ -133,6 +133,17 @@ class Plugin extends Singleton {
 	 *
 	 * @return string
 	 */
+	public function section_content_change( $widget ) {
+	    $this->content_change( '', $widget );
+	}
+	/**
+	 * Render item or not based on conditions
+	 *
+	 * @param string $content
+	 * @param \Elementor\Widget_Base $widget
+	 *
+	 * @return string
+	 */
 	public function content_change( $content, $widget ) {
 		$settings = $widget->get_settings();
 
@@ -152,6 +163,7 @@ class Plugin extends Singleton {
 						return $fallback_content;
 					}
 				} elseif ( isset( $settings[ self::SECTION_PREFIX . 'keep_html' ] ) && (bool) $settings[ self::SECTION_PREFIX . 'keep_html' ] ) {
+
 					$widget->add_render_attribute( '_wrapper', 'class', 'stax-visibility-hidden' );
 					$widget->add_render_attribute( '_wrapper', 'style', 'display: none' );
 
