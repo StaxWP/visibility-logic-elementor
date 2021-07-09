@@ -48,9 +48,9 @@ class Plugin extends Singleton {
 		add_filter( 'elementor/widget/render_content', [ $this, 'content_change' ], 999, 2 );
 		add_filter( 'elementor/section/render_content', [ $this, 'content_change' ], 999, 2 );
 
-		add_filter( 'elementor/frontend/section/should_render', [ $this, 'item_should_render' ], 10, 2 );
-		add_filter( 'elementor/frontend/widget/should_render', [ $this, 'item_should_render' ], 10, 2 );
-		add_filter( 'elementor/frontend/repeater/should_render', [ $this, 'item_should_render' ], 10, 2 );
+		add_filter( 'elementor/frontend/section/should_render', [ $this, 'item_should_render' ], 99999, 2 );
+		add_filter( 'elementor/frontend/widget/should_render', [ $this, 'item_should_render' ], 99999, 2 );
+		add_filter( 'elementor/frontend/repeater/should_render', [ $this, 'item_should_render' ], 99999, 2 );
 
 		\Elementor\Controls_Manager::add_tab(
 			'stax-visibility',
@@ -96,7 +96,7 @@ class Plugin extends Singleton {
 	 */
 	public function has_pro() {
 		return defined( 'STAX_VISIBILITY_PRO_VERSION' )
-               || in_array( 'visibility-logic-elementor-pro/conditional.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) );
+		       || in_array( 'visibility-logic-elementor-pro/conditional.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) );
 	}
 
 	/**
@@ -177,9 +177,13 @@ class Plugin extends Singleton {
 		$settings = $section->get_settings();
 
 		if ( ! $this->should_render( $settings ) ) {
+
+			if ( (bool) $settings[ self::SECTION_PREFIX . 'keep_html' ] ) {
+				return true;
+			}
+
 			if ( isset( $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) &&
-			     ( (bool) $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ||
-			       (bool) $settings[ self::SECTION_PREFIX . 'keep_html' ] ) ) {
+			     (bool) $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) {
 				return true;
 			}
 
