@@ -65,6 +65,7 @@ We use Appsero SDK to collect some telemetry data upon user's confirmation. This
 == Changelog ==
 
 = 2.1.6 =
+* Fix Section restriction when used with Hide HTML option
 * Fix integration with Paid Memberships Pro plugin for section restrictions
 
 = 2.1.5 =

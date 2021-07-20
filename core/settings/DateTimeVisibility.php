@@ -65,6 +65,7 @@ class DateTimeVisibility extends Singleton {
 				'label_on'     => __( 'Yes', 'visibility-logic-elementor' ),
 				'label_off'    => __( 'No', 'visibility-logic-elementor' ),
 				'return_value' => 'yes',
+				'render_type' => 'ui',
 			]
 		);
 
@@ -82,6 +83,7 @@ class DateTimeVisibility extends Singleton {
 				'condition' => [
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
 				],
+				'render_type' => 'ui',
 			]
 		);
 
@@ -94,6 +96,7 @@ class DateTimeVisibility extends Singleton {
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
 					self::SECTION_PREFIX . 'date_time_type' => 'date',
 				],
+				'render_type' => 'ui',
 			]
 		);
 
@@ -106,6 +109,7 @@ class DateTimeVisibility extends Singleton {
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
 					self::SECTION_PREFIX . 'date_time_type' => 'date',
 				],
+				'render_type' => 'ui',
 			]
 		);
 
@@ -128,6 +132,7 @@ class DateTimeVisibility extends Singleton {
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
 					self::SECTION_PREFIX . 'date_time_type' => 'week_days',
 				],
+				'render_type' => 'ui',
 			]
 		);
 
@@ -154,6 +159,17 @@ class DateTimeVisibility extends Singleton {
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
 					self::SECTION_PREFIX . 'date_time_type' => 'time',
 				],
+				'render_type' => 'ui',
+			]
+		);
+
+		$element->add_control(
+			self::SECTION_PREFIX . 'date_info',
+			[
+				'label'           => __( 'Current Server Time(gnerated at page load)', 'visibility-logic-elementor' ),
+				'type'            => Controls_Manager::RAW_HTML,
+				'raw'             => __( 'Use dates based on server time:', 'visibility-logic-elementor') .
+				                     '<br><strong>' . __( date( 'Y-m-d H:i',  current_time( 'timestamp' ) ), 'visibility-logic-elementor' ) . '</strong>',
 			]
 		);
 	}
