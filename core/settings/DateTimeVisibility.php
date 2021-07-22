@@ -166,10 +166,13 @@ class DateTimeVisibility extends Singleton {
 		$element->add_control(
 			self::SECTION_PREFIX . 'date_info',
 			[
-				'label'           => __( 'Current Server Time(gnerated at page load)', 'visibility-logic-elementor' ),
+				'label'           => __( 'Current Server Time(at page load)', 'visibility-logic-elementor' ),
 				'type'            => Controls_Manager::RAW_HTML,
 				'raw'             => __( 'Use dates based on server time:', 'visibility-logic-elementor') .
-				                     '<br><strong>' . __( date( 'Y-m-d H:i',  current_time( 'timestamp' ) ), 'visibility-logic-elementor' ) . '</strong>',
+				                     '<br><strong>' . date( 'Y-m-d H:i',  current_time( 'timestamp' ) ) . '</strong>',
+				'condition' => [
+					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
+				],
 			]
 		);
 	}
