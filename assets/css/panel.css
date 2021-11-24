@@ -21,6 +21,7 @@
 .elementor-control-stax_visibility_pro_browser_type,
 .elementor-control-stax_visibility_pro_date_time,
 .elementor-control-stax_visibility_pro_post_page,
+.elementor-control-stax_visibility_pro_archive,
 .elementor-control-stax_visibility_pro_conditional_tags,
 .elementor-control-stax_visibility_pro_fallback {
     pointer-events: none;
@@ -31,6 +32,7 @@
 .elementor-control-stax_visibility_pro_browser_type .elementor-panel-heading-toggle,
 .elementor-control-stax_visibility_pro_date_time .elementor-panel-heading-toggle,
 .elementor-control-stax_visibility_pro_post_page .elementor-panel-heading-toggle,
+.elementor-control-stax_visibility_pro_archive .elementor-panel-heading-toggle,
 .elementor-control-stax_visibility_pro_conditional_tags .elementor-panel-heading-toggle,
 .elementor-control-stax_visibility_pro_fallback .elementor-panel-heading-toggle {
     display: none;
@@ -41,6 +43,7 @@
 .elementor-control-stax_visibility_pro_browser_type .elementor-panel-heading-title,
 .elementor-control-stax_visibility_pro_date_time .elementor-panel-heading-title,
 .elementor-control-stax_visibility_pro_post_page .elementor-panel-heading-title,
+.elementor-control-stax_visibility_pro_archive .elementor-panel-heading-title,
 .elementor-control-stax_visibility_pro_conditional_tags .elementor-panel-heading-title,
 .elementor-control-stax_visibility_pro_fallback .elementor-panel-heading-title {
     position: relative;
@@ -51,6 +54,7 @@
 .elementor-control-stax_visibility_pro_browser_type .elementor-panel-heading-title:after,
 .elementor-control-stax_visibility_pro_date_time .elementor-panel-heading-title:after,
 .elementor-control-stax_visibility_pro_post_page .elementor-panel-heading-title:after,
+.elementor-control-stax_visibility_pro_archive .elementor-panel-heading-title:after,
 .elementor-control-stax_visibility_pro_conditional_tags .elementor-panel-heading-title:after,
 .elementor-control-stax_visibility_pro_fallback .elementor-panel-heading-title:after {
     content: 'PRO';
