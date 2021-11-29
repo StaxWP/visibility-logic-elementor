@@ -140,23 +140,27 @@ final class Resources extends Singleton {
 	 */
 	public static function get_pro_widget_options() {
 		return [
-			'ip-referrer'      => [
+			'ip-referrer'        => [
 				'name' => __( 'IP & Referrer', 'visibility-logic-elementor' ),
 				'pro'  => true,
 			],
-			'post-page'        => [
+			'post-page'          => [
 				'name' => __( 'Post & Page', 'visibility-logic-elementor' ),
 				'pro'  => true,
 			],
-			'archive'          => [
+			'archive'            => [
 				'name' => __( 'Archives', 'visibility-logic-elementor' ),
 				'pro'  => true,
 			],
-			'conditional-tags' => [
+			'conditional-tags'   => [
 				'name' => __( 'Conditional Tags', 'visibility-logic-elementor' ),
 				'pro'  => true,
 			],
-			'fallback'         => [
+			'dynamic-conditions' => [
+				'name' => __( 'Dynamic Conditions', 'visibility-logic-elementor' ),
+				'pro'  => true,
+			],
+			'fallback'           => [
 				'name' => __( 'Fallback', 'visibility-logic-elementor' ),
 				'pro'  => true,
 			],
