@@ -14,7 +14,21 @@ module.exports = {
         xl: "1280px",
       },
     },
-    extend: {},
+    extend: {
+      colors: {
+        ash: {
+          100: "#FCFCFC",
+          200: "#F8F8F8",
+          300: "#F4F4F4",
+          400: "#EBEBEB",
+          500: "#E3E3E3",
+          600: "#CCCCCC",
+          700: "#888888",
+          800: "#666666",
+          900: "#444444",
+        },
+      },
+    },
   },
   variants: {},
   plugins: [],

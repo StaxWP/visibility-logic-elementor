@@ -25,12 +25,12 @@
 }
 
 .stax-visibility-admin-page .ste-toggle-dot {
-  top: -.25rem;
-  left: -.25rem;
+  top: -0.25rem;
+  left: -0.25rem;
   transition: all 0.3s ease-in-out;
 }
 
-.stax-visibility-admin-page input:checked~.ste-toggle-dot {
+.stax-visibility-admin-page input:checked ~ .ste-toggle-dot {
   transform: translateX(100%);
   background-color: #48bb78;
 }
@@ -39,6 +39,4 @@
   @apply ste-hidden;
 }
 
-
 @tailwind utilities;
-
