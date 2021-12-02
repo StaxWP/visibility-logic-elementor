@@ -156,3 +156,33 @@
     font-size: 12px;
     color: #e52600;
 }
+
+.elementor-control .stx-plugin-requirement {
+    padding: 6px;
+    border-radius: 4px;
+    line-height: 18px;
+    text-align: center;
+}
+
+.elementor-control-stax_visibility_dynamic_conditions_tag .elementor-control-media__tools {
+    bottom: 0 !important;
+}
+  
+.elementor-control-stax_visibility_dynamic_conditions_tag .elementor-control-media__tool,
+.elementor-control-stax_visibility_dynamic_conditions_tag .elementor-control-media-upload-button {
+    display: none;
+}
+
+.elementor-control-stax_visibility_dynamic_conditions_tag .elementor-control-media__tools>:not(:first-child) {
+    margin: 0;
+}
+
+.elementor-control-stax_visibility_dynamic_conditions_tag .elementor-control-media__content {
+    height: 27px;
+    padding-bottom: 0 !important;
+}
+
+.elementor-control-stax_visibility_dynamic_conditions_tag .elementor-control-dynamic-switcher {
+    width: 100%;
+}
+  
