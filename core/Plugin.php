@@ -96,7 +96,7 @@ class Plugin extends Singleton {
 	 */
 	public function has_pro() {
 		return defined( 'STAX_VISIBILITY_PRO_VERSION' )
-		       || in_array( 'visibility-logic-elementor-pro/conditional.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) );
+			   || in_array( 'visibility-logic-elementor-pro/conditional.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) );
 	}
 
 	/**
@@ -113,7 +113,7 @@ class Plugin extends Singleton {
 
 		foreach ( $widgets as $slug => $option ) {
 			if ( isset( $option['status'], $option['class'], $option['pro'] ) &&
-			     $option['status'] && file_exists( $option['class'] ) && $option['pro'] === false ) {
+				 $option['status'] && file_exists( $option['class'] ) && $option['pro'] === false ) {
 				require_once $option['class'];
 			}
 		}
@@ -128,24 +128,28 @@ class Plugin extends Singleton {
 	/**
 	 * Render item or not based on conditions
 	 *
-	 * @param string $content
+	 * @param string                 $content
 	 * @param \Elementor\Widget_Base $widget
 	 *
 	 * @return string
 	 */
 	public function section_content_change( $widget ) {
-	    $this->content_change( '', $widget );
+		$this->content_change( '', $widget );
 	}
 	/**
 	 * Render item or not based on conditions
 	 *
-	 * @param string $content
+	 * @param string                 $content
 	 * @param \Elementor\Widget_Base $widget
 	 *
 	 * @return string
 	 */
 	public function content_change( $content, $widget ) {
-		$settings = $widget->get_settings();
+		$settings                = $widget->get_settings();
+		$settings['_id']         = $widget->get_id();
+		$settings['_type']       = $widget->get_type();
+		$settings['_name']       = $widget->get_name();
+		$settings['__dynamic__'] = $widget->get_settings_for_display( '__dynamic__' );
 
 		if ( ! $this->should_render( $settings ) && ! \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
 			if ( (bool) $settings[ self::SECTION_PREFIX . 'enabled' ] ) {
@@ -180,13 +184,17 @@ class Plugin extends Singleton {
 	/**
 	 * Check if item should render
 	 *
-	 * @param bool $should_render
+	 * @param bool   $should_render
 	 * @param object $section
 	 *
 	 * @return boolean
 	 */
 	public function item_should_render( $should_render, $section ) {
-		$settings = $section->get_settings();
+		$settings                = $section->get_settings();
+		$settings['_id']         = $section->get_id();
+		$settings['_type']       = $section->get_type();
+		$settings['_name']       = $section->get_name();
+		$settings['__dynamic__'] = $section->get_settings_for_display( '__dynamic__' );
 
 		if ( ! $this->should_render( $settings ) ) {
 
@@ -195,7 +203,7 @@ class Plugin extends Singleton {
 			}
 
 			if ( isset( $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) &&
-			     (bool) $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) {
+				 (bool) $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) {
 				return true;
 			}
 
@@ -370,18 +378,18 @@ class Plugin extends Singleton {
 			return;
 		}
 		?>
-        <style>
-            body.elementor-editor-active .elementor-element.stax-condition-yes::after {
-                content: '\e8ed';
-                color: #6E49CB;
-                display: inline-block;
-                font-family: eicons;
-                font-size: 15px;
-                position: absolute;
-                top: 0;
-                right: 5px;
-            }
-        </style>
+		<style>
+			body.elementor-editor-active .elementor-element.stax-condition-yes::after {
+				content: '\e8ed';
+				color: #6E49CB;
+				display: inline-block;
+				font-family: eicons;
+				font-size: 15px;
+				position: absolute;
+				top: 0;
+				right: 5px;
+			}
+		</style>
 		<?php
 	}
 }
