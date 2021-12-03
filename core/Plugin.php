@@ -145,13 +145,9 @@ class Plugin extends Singleton {
 	 * @return string
 	 */
 	public function content_change( $content, $widget ) {
-		$settings                = $widget->get_settings();
-		$settings['_id']         = $widget->get_id();
-		$settings['_type']       = $widget->get_type();
-		$settings['_name']       = $widget->get_name();
-		$settings['__dynamic__'] = $widget->get_settings_for_display( '__dynamic__' );
+		if ( ! $this->should_render( $widget ) && ! \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
+			$settings = $widget->get_settings();
 
-		if ( ! $this->should_render( $settings ) && ! \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
 			if ( (bool) $settings[ self::SECTION_PREFIX . 'enabled' ] ) {
 				if ( isset( $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) && (bool) $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) {
 					$fallback_content = '';
@@ -190,13 +186,8 @@ class Plugin extends Singleton {
 	 * @return boolean
 	 */
 	public function item_should_render( $should_render, $section ) {
-		$settings                = $section->get_settings();
-		$settings['_id']         = $section->get_id();
-		$settings['_type']       = $section->get_type();
-		$settings['_name']       = $section->get_name();
-		$settings['__dynamic__'] = $section->get_settings_for_display( '__dynamic__' );
-
-		if ( ! $this->should_render( $settings ) ) {
+		if ( ! $this->should_render( $section ) ) {
+			$settings = $section->get_settings();
 
 			if ( (bool) $settings[ self::SECTION_PREFIX . 'keep_html' ] ) {
 				return true;
@@ -216,16 +207,18 @@ class Plugin extends Singleton {
 	/**
 	 * Check if conditions are matched
 	 *
-	 * @param array $settings
+	 * @param \Elementor\Element_Base $settings
 	 *
 	 * @return boolean
 	 */
-	private function should_render( $settings ) {
+	private function should_render( \Elementor\Element_Base $item ) {
+		$settings = $item->get_settings();
+
 		if ( ! (bool) $settings[ self::SECTION_PREFIX . 'enabled' ] ) {
 			return $this->version_fallback_render( $settings );
 		}
 
-		$options = apply_filters( 'stax/visibility/apply_conditions', [], $settings );
+		$options = apply_filters( 'stax/visibility/apply_conditions', [], $item );
 
 		if ( empty( $options ) ) {
 			return true;

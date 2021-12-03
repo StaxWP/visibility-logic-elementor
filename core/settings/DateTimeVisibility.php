@@ -65,22 +65,22 @@ class DateTimeVisibility extends Singleton {
 				'label_on'     => __( 'Yes', 'visibility-logic-elementor' ),
 				'label_off'    => __( 'No', 'visibility-logic-elementor' ),
 				'return_value' => 'yes',
-				'render_type' => 'ui',
+				'render_type'  => 'ui',
 			]
 		);
 
 		$element->add_control(
 			self::SECTION_PREFIX . 'date_time_type',
 			[
-				'type'      => Controls_Manager::SELECT,
-				'label'     => __( 'Select Type:', 'visibility-logic-elementor' ),
-				'options'   => [
+				'type'        => Controls_Manager::SELECT,
+				'label'       => __( 'Select Type:', 'visibility-logic-elementor' ),
+				'options'     => [
 					'date'      => __( 'Date FROM/TO', 'visibility-logic-elementor' ),
 					'time'      => __( 'Time FROM/TO', 'visibility-logic-elementor' ),
 					'week_days' => __( 'Week Days', 'visibility-logic-elementor' ),
 				],
-				'default'   => 'date',
-				'condition' => [
+				'default'     => 'date',
+				'condition'   => [
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
 				],
 				'render_type' => 'ui',
@@ -90,9 +90,9 @@ class DateTimeVisibility extends Singleton {
 		$element->add_control(
 			self::SECTION_PREFIX . 'date_from',
 			[
-				'label'     => __( 'Date FROM', 'visibility-logic-elementor' ),
-				'type'      => Controls_Manager::DATE_TIME,
-				'condition' => [
+				'label'       => __( 'Date FROM', 'visibility-logic-elementor' ),
+				'type'        => Controls_Manager::DATE_TIME,
+				'condition'   => [
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
 					self::SECTION_PREFIX . 'date_time_type' => 'date',
 				],
@@ -103,9 +103,9 @@ class DateTimeVisibility extends Singleton {
 		$element->add_control(
 			self::SECTION_PREFIX . 'date_to',
 			[
-				'label'     => __( 'Date TO', 'visibility-logic-elementor' ),
-				'type'      => Controls_Manager::DATE_TIME,
-				'condition' => [
+				'label'       => __( 'Date TO', 'visibility-logic-elementor' ),
+				'type'        => Controls_Manager::DATE_TIME,
+				'condition'   => [
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
 					self::SECTION_PREFIX . 'date_time_type' => 'date',
 				],
@@ -166,10 +166,10 @@ class DateTimeVisibility extends Singleton {
 		$element->add_control(
 			self::SECTION_PREFIX . 'date_info',
 			[
-				'label'           => __( 'Current Server Time(at page load)', 'visibility-logic-elementor' ),
-				'type'            => Controls_Manager::RAW_HTML,
-				'raw'             => __( 'Use dates based on server time:', 'visibility-logic-elementor') .
-				                     '<br><strong>' . date( 'Y-m-d H:i',  current_time( 'timestamp' ) ) . '</strong>',
+				'label'     => __( 'Current Server Time(at page load)', 'visibility-logic-elementor' ),
+				'type'      => Controls_Manager::RAW_HTML,
+				'raw'       => __( 'Use dates based on server time:', 'visibility-logic-elementor' ) .
+									 '<br><strong>' . date( 'Y-m-d H:i', current_time( 'timestamp' ) ) . '</strong>',
 				'condition' => [
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
 				],
@@ -180,11 +180,14 @@ class DateTimeVisibility extends Singleton {
 	/**
 	 * Apply conditions
 	 *
-	 * @param array $options
-	 * @param array $settings
+	 * @param array                   $options
+	 * @param \Elementor\Element_Base $item
+	 *
 	 * @return array
 	 */
-	public function apply_conditions( $options, $settings ) {
+	public function apply_conditions( $options, $item ) {
+		$settings = $item->get_settings_for_display();
+
 		if ( (bool) $settings[ self::SECTION_PREFIX . 'date_time_enabled' ] ) {
 			$options['date_time'] = false;
 

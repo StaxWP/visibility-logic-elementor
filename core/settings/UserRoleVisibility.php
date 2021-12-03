@@ -86,11 +86,14 @@ class UserRoleVisibility extends Singleton {
 	/**
 	 * Apply conditions
 	 *
-	 * @param array $options
-	 * @param array $settings
+	 * @param array                   $options
+	 * @param \Elementor\Element_Base $item
+	 *
 	 * @return array
 	 */
-	public function apply_conditions( $options, $settings ) {
+	public function apply_conditions( $options, $item ) {
+		$settings = $item->get_settings_for_display();
+
 		if ( (bool) $settings[ self::SECTION_PREFIX . 'user_role_enabled' ] ) {
 			$options['user_role'] = false;
 
