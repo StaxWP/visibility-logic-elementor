@@ -65,6 +65,7 @@ class UserMetaVisibility extends Singleton {
 				'label_on'     => __( 'Yes', 'visibility-logic-elementor' ),
 				'label_off'    => __( 'No', 'visibility-logic-elementor' ),
 				'return_value' => 'yes',
+				'prefix_class' => 'stax-user_meta_enabled-',
 			]
 		);
 

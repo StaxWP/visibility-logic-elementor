@@ -4,11 +4,11 @@ var STAXVisibilityEditor = STAXVisibilityEditor || {};
   // USE STRICT
   "use strict";
 
-  STAXVisibilityEditor.fn = {
-    init: function () {
-      STAXVisibilityEditor.fn.initSelect2();
-    },
+  STAXVisibilityEditor.vars = {
+    checkCounter: 0,
+  };
 
+  STAXVisibilityEditor.fn = {
     initSelect2: function () {
       var ControlQuery = elementor.modules.controls.Select2.extend({
         cache: null,
@@ -129,9 +129,125 @@ var STAXVisibilityEditor = STAXVisibilityEditor || {};
       // Add Control Handlers
       elementor.addControlView("stax_query", ControlQuery);
     },
+
+    initStateDisplay: function () {
+      $(document).on(
+        "click",
+        ".elementor-control-type-switcher .elementor-switch",
+        function () {
+          setTimeout(function () {
+            STAXVisibilityEditor.fn.checkState();
+          }, 100);
+        }
+      );
+
+      $(document).on("DOMSubtreeModified", "#elementor-controls", function () {
+        if (STAXVisibilityEditor.vars.checkCounter < 1) {
+          setTimeout(function () {
+            STAXVisibilityEditor.fn.checkState();
+          }, 100);
+
+          STAXVisibilityEditor.vars.checkCounter = 1;
+        }
+      });
+    },
+
+    checkState: function () {
+      let options = [
+        {
+          name: "user_role",
+          status: "inactive",
+        },
+        {
+          name: "user_meta",
+          status: "inactive",
+        },
+        {
+          name: "date_time",
+          status: "inactive",
+        },
+        {
+          name: "browser_type",
+          status: "inactive",
+        },
+        {
+          name: "ip_referrer",
+          status: "inactive",
+        },
+        {
+          name: "post",
+          status: "inactive",
+        },
+        {
+          name: "archive",
+          status: "inactive",
+        },
+        {
+          name: "conditional_tags",
+          status: "inactive",
+        },
+        {
+          name: "dynamic_conditions",
+          status: "inactive",
+        },
+        {
+          name: "fallback",
+          status: "inactive",
+        },
+      ];
+
+      let currentElement = elementor.getCurrentElement();
+
+      if (currentElement) {
+        $.each(options, function (i, item) {
+          if (
+            currentElement.$el.hasClass("stax-" + item.name + "_enabled-yes")
+          ) {
+            item.status = "active";
+          } else {
+            item.status = "inactive";
+          }
+
+          if (
+            currentElement.$el.hasClass("stax-" + item.name + "_enabled-error")
+          ) {
+            item.status = "error";
+          }
+        });
+
+        $("#elementor-controls .elementor-control-type-section").each(function (
+          index,
+          item
+        ) {
+          $(item)
+            .removeClass("stax-status-active")
+            .removeClass("stax-status-inactive")
+            .removeClass("stax-status-error");
+
+          let _this = $(item);
+
+          $.each(options, function (i, optionItem) {
+            if (
+              _this.hasClass(
+                "elementor-control-stax_visibility_" +
+                  optionItem.name +
+                  "_section"
+              )
+            ) {
+              _this.addClass("stax-status-" + optionItem.status);
+            }
+          });
+        });
+      }
+
+      STAXVisibilityEditor.vars.checkCounter = 0;
+    },
   };
 
   $(window).on("elementor:init", function () {
-    STAXVisibilityEditor.fn.init();
+    STAXVisibilityEditor.fn.initSelect2();
+    STAXVisibilityEditor.fn.initStateDisplay();
   });
+
+  $(document).on("ready", function () {});
 })(jQuery);

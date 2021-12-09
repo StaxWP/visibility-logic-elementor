@@ -66,6 +66,7 @@ class DateTimeVisibility extends Singleton {
 				'label_off'    => __( 'No', 'visibility-logic-elementor' ),
 				'return_value' => 'yes',
 				'render_type'  => 'ui',
+				'prefix_class' => 'stax-date_time_enabled-',
 			]
 		);
 

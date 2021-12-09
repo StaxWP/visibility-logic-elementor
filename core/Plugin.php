@@ -48,6 +48,17 @@ class Plugin extends Singleton {
 		add_filter( 'elementor/widget/render_content', [ $this, 'content_change' ], 999, 2 );
 		add_filter( 'elementor/frontend/section/before_render', [ $this, 'section_content_change' ], 999 );
 
+		add_action(
+			'elementor/element/print_template',
+			function( $template, $widget ) {
+				var_dump( $widget->get_settings() );
+
+				return $template;
+			},
+			10,
+			2
+		);
+
 		add_filter( 'elementor/frontend/section/should_render', [ $this, 'item_should_render' ], 99999, 2 );
 		add_filter( 'elementor/frontend/widget/should_render', [ $this, 'item_should_render' ], 99999, 2 );
 		add_filter( 'elementor/frontend/repeater/should_render', [ $this, 'item_should_render' ], 99999, 2 );
@@ -211,7 +222,7 @@ class Plugin extends Singleton {
 	 *
 	 * @return boolean
 	 */
-	private function should_render( \Elementor\Element_Base $item ) {
+	private function should_render( $item ) {
 		$settings = $item->get_settings();
 
 		if ( ! (bool) $settings[ self::SECTION_PREFIX . 'enabled' ] ) {

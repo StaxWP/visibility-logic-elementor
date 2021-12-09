@@ -48,7 +48,10 @@
 .elementor-control-stax_visibility_pro_archive .elementor-panel-heading-title,
 .elementor-control-stax_visibility_pro_conditional_tags .elementor-panel-heading-title,
 .elementor-control-stax_visibility_pro_dynamic_conditions .elementor-panel-heading-title,
-.elementor-control-stax_visibility_pro_fallback .elementor-panel-heading-title {
+.elementor-control-stax_visibility_pro_fallback .elementor-panel-heading-title,
+.stax-status-active .elementor-panel-heading-title,
+.stax-status-inactive .elementor-panel-heading-title,
+.stax-status-error .elementor-panel-heading-title {
     position: relative;
 }
 
@@ -61,17 +64,41 @@
 .elementor-control-stax_visibility_pro_conditional_tags .elementor-panel-heading-title:after,
 .elementor-control-stax_visibility_pro_dynamic_conditions .elementor-panel-heading-title:after,
 .elementor-control-stax_visibility_pro_fallback .elementor-panel-heading-title:after {
-    content: 'PRO';
+    font-family: eicons;
+    content: '\e893';
+    position: absolute;
+    top: 12px;
+    right: 0;
+    z-index: 2;
+    color: #7b5bcf;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.stax-status-active .elementor-panel-heading-title:after,
+.stax-status-inactive .elementor-panel-heading-title:after,
+.stax-status-error .elementor-panel-heading-title:after {
+    font-family: eicons;
     position: absolute;
     top: 11px;
     right: 0;
     z-index: 2;
-    color: #ffeaea;
-    background: #2e34c2;
-    font-size: 10px;
-    font-weight: 500;
-    padding: 4px 6px;
-    border-radius: 4px;
+    font-size: 16px;
+}
+
+.stax-status-active .elementor-panel-heading-title:after {
+    content: '\e90d';
+    color: #229b12;
+}
+
+.stax-status-inactive .elementor-panel-heading-title:after {
+    content: '\e93a';
+    color: #f39316;
+}
+
+.stax-status-error .elementor-panel-heading-title:after {
+    content: '\e946';
+    color: #e32525;
 }
 
 .elementor-control-old_version_note .elementor-control-content {
