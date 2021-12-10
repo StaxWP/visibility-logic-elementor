@@ -73,6 +73,8 @@
     color: #7b5bcf;
     font-size: 16px;
     font-weight: 500;
+    background: #fff;
+    border-radius: 30px;
 }
 
 .stax-status-active .elementor-panel-heading-title:after,
