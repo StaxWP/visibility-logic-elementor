@@ -51,7 +51,12 @@ class OldVersionFallback extends Singleton {
 	 */
 	public function register_section( $element ) {
 		$meta = get_post_meta( get_the_ID(), '_elementor_data', true );
-		$data = $meta ? @json_decode( $meta, true ) : null;
+
+		if ( is_array( $meta ) ) {
+			$data = $meta;
+		} else {
+			$data = $meta ? @json_decode( $meta, true ) : null;
+		}
 
 		$has_old_data = false;
 
@@ -83,14 +88,15 @@ class OldVersionFallback extends Singleton {
 	 * Check for old data
 	 *
 	 * @param array $item
-	 * @param bool  $has_old_data
+	 * @param bool $has_old_data
+	 *
 	 * @return array
 	 */
 	private function check_for_old_data( $item, $has_old_data ) {
 		if ( 'column' !== $item['elType'] ) {
 			if ( isset( $item['settings']['ecl_enabled'] ) ||
-				isset( $item['settings']['ecl_role_visible'] ) ||
-				isset( $item['settings']['ecl_role_hidden'] ) ) {
+			     isset( $item['settings']['ecl_role_visible'] ) ||
+			     isset( $item['settings']['ecl_role_hidden'] ) ) {
 				$has_old_data = true;
 			}
 		}
