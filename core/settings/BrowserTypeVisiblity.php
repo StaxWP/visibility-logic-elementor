@@ -42,7 +42,7 @@ class BrowserTypeVisiblity extends Singleton {
 			2
 		);
 
-		add_filter( 'stax/visibility/apply_conditions', [ $this, 'apply_conditions' ], 10, 2 );
+		add_filter( 'stax/visibility/apply_conditions', [ $this, 'apply_conditions' ], 10, 3 );
 	}
 
 	/**
@@ -115,11 +115,12 @@ class BrowserTypeVisiblity extends Singleton {
 	 * Apply conditions
 	 *
 	 * @param array                   $options
+	 * @param array                   $settings
 	 * @param \Elementor\Element_Base $item
 	 *
 	 * @return array
 	 */
-	public function apply_conditions( $options, $item ) {
+	public function apply_conditions( $options, $settings, $item ) {
 		$settings = $item->get_settings_for_display();
 
 		if ( (bool) $settings[ self::SECTION_PREFIX . 'browser_type_enabled' ] ) {
