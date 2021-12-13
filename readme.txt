@@ -64,6 +64,9 @@ We use Appsero SDK to collect some telemetry data upon user's confirmation. This
 
 == Changelog ==
 
+= 2.2.1 =
+* Added extra compatibility with Visibility Logic Pro older versions
+
 = 2.2.0 =
 * Added Enabled/Disabled icons on all sections to inside Stax Visibility tab to see at a glance which options are in use.
 * Added Dynamic conditions based on all Elementor Pro Dynamic tags (in PRO version)
