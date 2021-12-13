@@ -229,7 +229,7 @@ class Plugin extends Singleton {
 			return $this->version_fallback_render( $settings );
 		}
 
-		$options = apply_filters( 'stax/visibility/apply_conditions', [], $item );
+		$options = apply_filters( 'stax/visibility/apply_conditions', [], $settings, $item );
 
 		if ( empty( $options ) ) {
 			return true;
