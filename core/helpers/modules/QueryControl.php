@@ -118,7 +118,7 @@ class QueryControl extends Module {
 	 * Get value for metas
 	 *
 	 * @param [type] $request
-	 * @return void
+	 * @return array
 	 */
 	protected function get_value_titles_for_metas( $request ) {
 		$ids      = (array) $request['id'];
@@ -141,7 +141,7 @@ class QueryControl extends Module {
 	 * Get value for fields
 	 *
 	 * @param [type] $request
-	 * @return void
+	 * @return array
 	 */
 	protected function get_value_titles_for_fields( $request ) {
 		$ids     = (array) $request['id'];

@@ -4,7 +4,7 @@ Tags: elementor, elementor restrictions, elementor conditions, elementor widgets
 Requires at least: 5.0
 Requires PHP: 5.6
 Tested up to: 5.8.2
-Stable tag: 2.2.0
+Stable tag: 2.2.1
 License: GLPv2 or later
 
 Hide or show Elementor widgets based on user role, user meta, if logged in or not.
