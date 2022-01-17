@@ -159,6 +159,10 @@ class Plugin extends Singleton {
 	 * @return string
 	 */
 	public function content_change( $content, $widget ) {
+		if ( ! $this->should_render( $widget ) ) {
+			$this->initiated_widgets[] = $widget->get_group_name();
+		}
+
 		if ( ! $this->should_render( $widget ) && ! \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
 			$settings = $widget->get_settings();
 
@@ -188,6 +192,29 @@ class Plugin extends Singleton {
 			return '';
 		}
 
+		if ( ! in_array( $widget->get_name(), [ 'section', 'columns' ] ) &&
+			in_array( 'pro-elements', $widget->get_categories() ) ) {
+			$needs_print = false;
+
+			foreach ( $this->initiated_widgets as $k => $initiated_widget ) {
+				if ( $initiated_widget === $widget->get_name() ) {
+					$needs_print = true;
+					unset( $this->initiated_widgets[ $k ] );
+				}
+			}
+
+			if ( $needs_print ) {
+				$config = $widget->get_css_config();
+
+				if ( file_exists( $config['file_path'] ) ) {
+					$css_manager = new \Elementor\Core\Page_Assets\Data_Managers\Widgets_Css();
+					$css         = $css_manager->get_asset_data_from_config( $config );
+
+					$content .= $css;
+				}
+			}
+		}
+
 		return $content;
 	}
 
@@ -201,8 +228,6 @@ class Plugin extends Singleton {
 	 */
 	public function item_should_render( $should_render, $section ) {
 		if ( ! $this->should_render( $section ) ) {
-			$this->initiated_widgets[] = $section->get_group_name();
-
 			$settings = $section->get_settings();
 
 			if ( (bool) $settings[ self::SECTION_PREFIX . 'keep_html' ] ) {
@@ -215,29 +240,6 @@ class Plugin extends Singleton {
 			}
 
 			return false;
-		}
-
-		if ( ! in_array( $section->get_name(), [ 'section', 'columns' ] ) &&
-			in_array( 'pro-elements', $section->get_categories() ) ) {
-			$needs_print = false;
-
-			foreach ( $this->initiated_widgets as $k => $initiated_widget ) {
-				if ( $initiated_widget === $section->get_name() ) {
-					$needs_print = true;
-					unset( $this->initiated_widgets[ $k ] );
-				}
-			}
-
-			if ( $needs_print ) {
-				$config = $section->get_css_config();
-
-				if ( file_exists( $config['file_path'] ) ) {
-					$css_manager = new \Elementor\Core\Page_Assets\Data_Managers\Widgets_Css();
-					$css         = $css_manager->get_asset_data_from_config( $config );
-
-					echo $css;
-				}
-			}
 		}
 
 		return $should_render;
