@@ -17,6 +17,11 @@ class Plugin extends Singleton {
 	public static $minimum_elementor_version = '2.0.0';
 
 	/**
+	 * @var array
+	 */
+	public $initiated_widgets = [];
+
+	/**
 	 * Plugin constructor
 	 */
 	public function __construct() {
@@ -51,8 +56,6 @@ class Plugin extends Singleton {
 		add_action(
 			'elementor/element/print_template',
 			function( $template, $widget ) {
-				var_dump( $widget->get_settings() );
-
 				return $template;
 			},
 			10,
@@ -198,6 +201,8 @@ class Plugin extends Singleton {
 	 */
 	public function item_should_render( $should_render, $section ) {
 		if ( ! $this->should_render( $section ) ) {
+			$this->initiated_widgets[] = $section->get_group_name();
+
 			$settings = $section->get_settings();
 
 			if ( (bool) $settings[ self::SECTION_PREFIX . 'keep_html' ] ) {
@@ -210,6 +215,29 @@ class Plugin extends Singleton {
 			}
 
 			return false;
+		}
+
+		if ( ! in_array( $section->get_name(), [ 'section', 'columns' ] ) &&
+			in_array( 'pro-elements', $section->get_categories() ) ) {
+			$needs_print = false;
+
+			foreach ( $this->initiated_widgets as $k => $initiated_widget ) {
+				if ( $initiated_widget === $section->get_name() ) {
+					$needs_print = true;
+					unset( $this->initiated_widgets[ $k ] );
+				}
+			}
+
+			if ( $needs_print ) {
+				$config = $section->get_css_config();
+
+				if ( file_exists( $config['file_path'] ) ) {
+					$css_manager = new \Elementor\Core\Page_Assets\Data_Managers\Widgets_Css();
+					$css         = $css_manager->get_asset_data_from_config( $config );
+
+					echo $css;
+				}
+			}
 		}
 
 		return $should_render;
