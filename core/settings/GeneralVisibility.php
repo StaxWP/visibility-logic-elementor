@@ -67,7 +67,6 @@ class GeneralVisibility extends Singleton {
 	 * @param $args
 	 */
 	public function register_controls( $element, $args ) {
-
 		$element->add_control(
 			self::SECTION_PREFIX . 'enabled',
 			[
@@ -80,6 +79,25 @@ class GeneralVisibility extends Singleton {
 				'prefix_class' => 'stax-condition-',
 			]
 		);
+
+		if ( 'section' === $element->get_type() ) {
+			$element->add_control(
+				self::SECTION_PREFIX . 'hide_when_empty',
+				[
+					'label'        => __( 'Hide when empty', 'visibility-logic-elementor' ),
+					'description'  => __( 'This will hide the entire section if all the widgets inside it are hidden because of Visiblity conditions. Please note that this won\'t apply if any of the widgets inside the section is hidden via CSS.', 'visibility-logic-elementor' ),
+					'type'         => Controls_Manager::SWITCHER,
+					'default'      => '',
+					'label_on'     => __( 'Yes', 'visibility-logic-elementor' ),
+					'label_off'    => __( 'No', 'visibility-logic-elementor' ),
+					'return_value' => 'yes',
+					'separator'    => 'before',
+					'condition'    => [
+						self::SECTION_PREFIX . 'enabled' => '',
+					],
+				]
+			);
+		}
 
 		$element->add_control(
 			self::SECTION_PREFIX . 'show_hide',

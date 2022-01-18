@@ -110,7 +110,7 @@ class Plugin extends Singleton {
 	 */
 	public function has_pro() {
 		return defined( 'STAX_VISIBILITY_PRO_VERSION' )
-			   || in_array( 'visibility-logic-elementor-pro/conditional.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) );
+		   || in_array( 'visibility-logic-elementor-pro/conditional.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) );
 	}
 
 	/**
@@ -127,7 +127,7 @@ class Plugin extends Singleton {
 
 		foreach ( $widgets as $slug => $option ) {
 			if ( isset( $option['status'], $option['class'], $option['pro'] ) &&
-				 $option['status'] && file_exists( $option['class'] ) && $option['pro'] === false ) {
+			 $option['status'] && file_exists( $option['class'] ) && $option['pro'] === false ) {
 				require_once $option['class'];
 			}
 		}
@@ -221,27 +221,74 @@ class Plugin extends Singleton {
 	 * Check if item should render
 	 *
 	 * @param bool   $should_render
-	 * @param object $section
+	 * @param object $widget
 	 *
 	 * @return boolean
 	 */
-	public function item_should_render( $should_render, $section ) {
-		if ( ! $this->should_render( $section ) ) {
-			$settings = $section->get_settings();
+	public function item_should_render( $should_render, $widget ) {
+		$settings = $widget->get_settings();
 
+		if ( ! $this->should_render( $widget ) ) {
 			if ( (bool) $settings[ self::SECTION_PREFIX . 'keep_html' ] ) {
 				return true;
 			}
 
 			if ( isset( $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) &&
-				 (bool) $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) {
+			 (bool) $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) {
 				return true;
 			}
 
 			return false;
 		}
 
+		// Hide section if needed
+		if ( 'section' === $widget->get_name() &&
+			! (bool) $settings[ self::SECTION_PREFIX . 'enabled' ] &&
+			isset( $settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) &&
+			(bool) $settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) {
+
+			$should_render = ! empty( $this->check_items_recursively( $widget ) );
+		}
+
 		return $should_render;
+	}
+
+	/**
+	 * Check item recursively
+	 *
+	 * @param object $item
+	 * @return array
+	 */
+	private function check_items_recursively( $item ) {
+		$elements = [];
+
+		foreach ( $item->get_children() as $column ) {
+			foreach ( $column->get_children() as $widget ) {
+				$widget_settings = $widget->get_settings();
+
+				if ( $this->should_render( $widget ) ) {
+					if ( 'section' === $widget->get_name() &&
+						! (bool) $widget_settings[ self::SECTION_PREFIX . 'enabled' ] &&
+						isset( $widget_settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) &&
+						(bool) $widget_settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) {
+						$elements = array_merge( $elements, $this->check_items_recursively( $widget ) );
+					} else {
+						$elements[] = $widget->get_name();
+					}
+				} elseif ( ! $this->should_render( $widget ) && (bool) $widget_settings[ self::SECTION_PREFIX . 'keep_html' ] ) {
+					if ( 'section' === $widget->get_name() &&
+						! (bool) $widget_settings[ self::SECTION_PREFIX . 'enabled' ] &&
+						isset( $widget_settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) &&
+						(bool) $widget_settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) {
+						$elements = array_merge( $elements, $this->check_items_recursively( $widget ) );
+					} else {
+						$elements[] = $widget->get_name();
+					}
+				}
+			}
+		}
+
+		return $elements;
 	}
 
 	/**
