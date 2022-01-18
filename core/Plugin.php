@@ -192,12 +192,11 @@ class Plugin extends Singleton {
 			return '';
 		}
 
-		if ( ! in_array( $widget->get_name(), [ 'section', 'columns' ] ) &&
-			in_array( 'pro-elements', $widget->get_categories() ) ) {
+		if ( ! in_array( $widget->get_name(), [ 'section', 'column' ] ) ) {
 			$needs_print = false;
 
 			foreach ( $this->initiated_widgets as $k => $initiated_widget ) {
-				if ( $initiated_widget === $widget->get_name() ) {
+				if ( $initiated_widget === $widget->get_group_name() ) {
 					$needs_print = true;
 					unset( $this->initiated_widgets[ $k ] );
 				}
