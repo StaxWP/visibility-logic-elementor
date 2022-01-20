@@ -160,7 +160,7 @@ class Plugin extends Singleton {
 	 */
 	public function content_change( $content, $widget ) {
 		if ( ! $this->should_render( $widget ) ) {
-			$this->initiated_widgets[] = $widget->get_group_name();
+			$this->initiated_widgets[] = method_exists( $widget, 'get_group_name' ) ? $widget->get_group_name() : $widget->get_name();
 		}
 
 		if ( ! $this->should_render( $widget ) && ! \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
@@ -193,23 +193,25 @@ class Plugin extends Singleton {
 		}
 
 		if ( ! in_array( $widget->get_name(), [ 'section', 'column' ] ) ) {
-			$needs_print = false;
+			if ( method_exists( $widget, 'get_css_config' ) && method_exists( $widget, 'get_group_name' ) ) {
+				$needs_print = false;
 
-			foreach ( $this->initiated_widgets as $k => $initiated_widget ) {
-				if ( $initiated_widget === $widget->get_group_name() ) {
-					$needs_print = true;
-					unset( $this->initiated_widgets[ $k ] );
+				foreach ( $this->initiated_widgets as $k => $initiated_widget ) {
+					if ( $initiated_widget === $widget->get_group_name() ) {
+						$needs_print = true;
+						unset( $this->initiated_widgets[ $k ] );
+					}
 				}
-			}
 
-			if ( $needs_print ) {
-				$config = $widget->get_css_config();
+				if ( $needs_print ) {
+					$config = $widget->get_css_config();
 
-				if ( file_exists( $config['file_path'] ) ) {
-					$css_manager = new \Elementor\Core\Page_Assets\Data_Managers\Widgets_Css();
-					$css         = $css_manager->get_asset_data_from_config( $config );
+					if ( file_exists( $config['file_path'] ) ) {
+						$css_manager = new \Elementor\Core\Page_Assets\Data_Managers\Widgets_Css();
+						$css         = $css_manager->get_asset_data_from_config( $config );
 
-					$content .= $css;
+						$content .= $css;
+					}
 				}
 			}
 		}
