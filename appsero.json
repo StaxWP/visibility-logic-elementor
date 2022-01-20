@@ -1,0 +1,15 @@
+{
+    "exclude": [
+        ".gitignore",
+        "assets/scss",
+        "node_modules",
+        "appsero.json",
+        "composer.json",
+        "composer.lock",
+        "package.json",
+        "package-lock.json",
+        "postcss.config.js",
+        "README.md",
+        "tailwind.config.js"
+    ]
+}
