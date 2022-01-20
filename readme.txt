@@ -3,8 +3,8 @@ Contributors: staxwp, seventhqueen, kierantaylorio, codezz, rtynio, geowrge
 Tags: elementor, elementor restrictions, elementor conditions, elementor widgets, visibility logic, widget conditions
 Requires at least: 5.0
 Requires PHP: 5.6
-Tested up to: 5.8.2
-Stable tag: 2.2.1
+Tested up to: 5.8.3
+Stable tag: 2.2.2
 License: GLPv2 or later
 
 Hide or show Elementor widgets based on user role, user meta, if logged in or not.
@@ -59,10 +59,18 @@ We use Appsero SDK to collect some telemetry data upon user's confirmation. This
 
 == Screenshots ==
 
-1. Advanced - Visibility control settings - Show for users
-2. Advanced - Visibility control settings - Hide for users
+1. Visibility Logic for Elementor - Enable conditions for widget.
+2. Visibility Logic for Elementor - Restrict widget/section by user role.
+3. Visibility Logic for Elementor - Restrict widget/section by user meta.
+4. Visibility Logic for Elementor - Restrict widget/section by date and time. Show content at a certain date.
+5. Visibility Logic for Elementor - Restrict widget/section by browser used.
+6. Visibility Logic for Elementor - Admin Panel
 
 == Changelog ==
+
+= 2.2.2 =
+* New Section option: Hide section when all the widgets inside it are hidden
+* Fix printed styles for hidden elements of the same type.
 
 = 2.2.1 =
 * Added extra compatibility with Visibility Logic Pro older versions
