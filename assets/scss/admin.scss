@@ -39,4 +39,9 @@
   @apply ste-hidden;
 }
 
+.ste-pro-icon:before {
+  font-size: 18px;
+  @apply ste-text-orange-600;
+}
+
 @tailwind utilities;

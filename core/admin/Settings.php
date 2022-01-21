@@ -49,7 +49,7 @@ class Settings {
 			__( 'STAX Visibility - Dashboard', 'visibility-logic-elementor' ),
 			__( 'Visibility Logic', 'visibility-logic-elementor' ),
 			'manage_options',
-			'stax-visibility-widgets',
+			'stax-visibility-options',
 			[ $this, 'settings_template' ]
 		);
 	}

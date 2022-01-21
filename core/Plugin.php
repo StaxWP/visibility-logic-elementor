@@ -45,7 +45,7 @@ class Plugin extends Singleton {
 
 		require_once STAX_VISIBILITY_CORE_PATH . 'Upgrades.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'admin/pages/Base.php';
-		require_once STAX_VISIBILITY_CORE_PATH . 'admin/pages/Widgets.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'admin/pages/Options.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'admin/Settings.php';
 
 		add_action( 'elementor/init', [ $this, 'load_elementor_modules' ] );

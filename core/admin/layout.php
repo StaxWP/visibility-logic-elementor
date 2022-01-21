@@ -1,7 +1,15 @@
+<?php
+
+use Stax\VisibilityLogic\Plugin;
+
+$has_pro = Plugin::instance()->has_pro();
+
+?>
+
 <div class="ste-m-0 stax-main <?php echo esc_attr( implode( ' ', $wrapper_class ) ); ?>">
-	<div class="ste-pt-10 ste-mt-5 ste-mb-10">
-		<div class="ste-container ste-mx-auto">
-			<div class="ste-flex ste-justify-between ste-items-center">
+	<div class="ste-pt-10 ste-mt-5 ste-mb-2">
+		<div class="ste-container ste-mx-auto ste-bg-white ste-rounded ste-shadow-lg ste-overflow-hidden">
+			<div class="ste-flex ste-justify-between ste-items-center ste-p-10">
 				<a href="<?php echo esc_url( $site_url ); ?>" target="_blank" rel="noopener"
 				   class="ste-text-base ste-flex ste-items-center ste-content-center ste-no-underline">
 					<span class="ste-inline-block ste-w-32">
@@ -14,6 +22,18 @@
 					<div class="ste-font-medium ste-text-lg ste-text-gray-600">Visibility Logic for Elementor</div>
 				</div>
 			</div>
+			<ul class="ste-flex ste-overflow-hidden ste-bg-gradient-to-r ste-from-blue-500 ste-to-indigo-500 ste-m-0">
+				<?php foreach ( $menu as $item ) : ?>
+					<?php
+						$active_class = $item['query'] === $_GET['page'] ? 'ste-bg-blue-700' : '';
+					?>
+					<li class="ste-flex ste-mb-0">
+						<a href="<?php echo esc_url( $item['link'] ); ?>" class="ste-no-underline ste-text-white ste-font-medium ste-py-4 ste-px-6 ste-leading-normal focus:ste-shadow-none hover:ste-bg-blue-700 hover:ste-text-white <?php echo esc_attr( $active_class ); ?>">
+							<?php echo $item['name']; ?>
+						</a>
+					</li>
+				<?php endforeach; ?>
+			</ul>
 		</div>
 	</div>
 
@@ -25,7 +45,7 @@
 
 	<div class="ste-container ste-mx-auto ste-my-10">
 		<div class="ste-flex ste-justify-center">
-			<div class="ste-text-gray-400 ste-text-sm ste-font-medium ste-uppercase">
+			<div class="ste-text-gray-400 ste-text-sm  ">
 				<?php printf( __( 'Version %s', 'visibility-logic-elementor' ), STAX_VISIBILITY_VERSION ); ?>
 			</div>
 		</div>
