@@ -4,7 +4,7 @@ Tags: elementor, elementor restrictions, elementor conditions, elementor widgets
 Requires at least: 5.0
 Requires PHP: 5.6
 Tested up to: 5.8.3
-Stable tag: 2.2.2
+Stable tag: 2.2.3
 License: GLPv2 or later
 
 Hide or show Elementor widgets based on user role, user meta, if logged in or not.
@@ -22,12 +22,14 @@ Note: Updating from older version 1.2.0 to 2.1.3 is safe and it will keep your i
 - User Meta content restriction
 - Restrict content based on User Browser(Chrome, Mozilla, Safari, etc)
 - Date & Time restrictions for content
+- Hide a whole section if all widgets inside it are hidden using visibility settings
 
 = PRO Features =
 - Post & Page, Taxonomy, URL Parameter content restriction
 - Archive restrictions based on Post types and taxonomies
 - IP & Referrer restrictions
 - WordPress Conditional Tags restrictions
+- Dynamic conditions - Restrict Elementor widgets and sections based on all Elementor Pro Dynamic tags.
 - Fallback - Allows you to show a message instead of hiding the element.
 
 Find more about our [Pro version](https://staxwp.com/go/visibility-logic).
@@ -53,8 +55,8 @@ We use Appsero SDK to collect some telemetry data upon user's confirmation. This
 2. Activate the plugin
 3. Edit a page using Elementor
 4. Select an existing element or add a new one.
-5. Go to Advanced - Visibility control
-6. Enable conditions and set your restrictions for the Elementor widget
+5. Go to Stax Visibility tab.
+6. Enable conditions and set your restrictions for the Elementor widget or section.
 7. That is it :)
 
 == Screenshots ==
@@ -67,6 +69,9 @@ We use Appsero SDK to collect some telemetry data upon user's confirmation. This
 6. Visibility Logic for Elementor - Admin Panel
 
 == Changelog ==
+
+= 2.2.3 =
+* Fix error when using Elementor version older than 3.3.0
 
 = 2.2.2 =
 * New Section option: Hide section when all the widgets inside it are hidden
