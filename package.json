@@ -4,7 +4,7 @@
   "description": "Stax Visibility",
   "main": "index.js",
   "scripts": {
-    "build-tw": "npx tailwindcss ./assets/scss/admin.scss -o ./assets/css/admin.css --minify"
+    "build:admin:css": "npx tailwindcss ./assets/scss/admin.scss -o ./assets/css/admin.css --minify"
   },
   "repository": {
     "type": "git",

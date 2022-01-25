@@ -1,13 +1,5 @@
-<?php
-
-use Stax\VisibilityLogic\Plugin;
-
-$has_pro = Plugin::instance()->has_pro();
-
-?>
-
 <div class="ste-m-0 stax-main <?php echo esc_attr( implode( ' ', $wrapper_class ) ); ?>">
-	<div class="ste-pt-10 ste-mt-5 ste-mb-2">
+	<div class="ste-mt-5 ste-mb-4">
 		<div class="ste-container ste-mx-auto ste-bg-white ste-rounded ste-shadow-lg ste-overflow-hidden">
 			<div class="ste-flex ste-justify-between ste-items-center ste-p-10">
 				<a href="<?php echo esc_url( $site_url ); ?>" target="_blank" rel="noopener"
@@ -45,7 +37,7 @@ $has_pro = Plugin::instance()->has_pro();
 
 	<div class="ste-container ste-mx-auto ste-my-10">
 		<div class="ste-flex ste-justify-center">
-			<div class="ste-text-gray-400 ste-text-sm  ">
+			<div class="ste-text-gray-400 ste-text-sm">
 				<?php printf( __( 'Version %s', 'visibility-logic-elementor' ), STAX_VISIBILITY_VERSION ); ?>
 			</div>
 		</div>
