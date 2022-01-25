@@ -43,11 +43,11 @@ Here is how you will find the Elementor visibility restrict settings:
 4. Here you will find the restriction settings for your element.
 
 = More from StaxWP =
-- [BuddyBuilder - BuddyPress Builder for Elementor](https://staxwp.com/go/buddybuilder).
+- [BuddyBuilder - BuddyPress Builder for Elementor - Plugin](https://staxwp.com/go/buddybuilder)
 Create stunning communities on your site powered by Elementor and BuddyPress
-- [Elementor Addons, Widgets & Enhancements](https://staxwp.com/go/addons-for-elementor)
+- [Elementor Addons, Widgets & Enhancements - Plugin](https://staxwp.com/go/addons-for-elementor)
 Powerfull Elementor widgets to help you build stunning pages
-- [Woo Addons for Elementor](https://staxwp.com/go/woo-addons-for-elementor/)
+- [Woo Addons for Elementor - Plugin](https://staxwp.com/go/woo-addons-for-elementor/)
 Elementor enhancements for Woocommerce to help you build stunning pages
 
 = Privacy Policy =
