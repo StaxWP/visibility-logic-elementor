@@ -48,7 +48,7 @@ Create stunning communities on your site powered by Elementor and BuddyPress
 - [Elementor Addons, Widgets & Enhancements - Plugin](https://staxwp.com/go/addons-for-elementor)
 Powerfull Elementor widgets to help you build stunning pages
 - [Woo Addons for Elementor - Plugin](https://staxwp.com/go/woo-addons-for-elementor/)
-Elementor enhancements for Woocommerce to help you build stunning pages
+Elementor enhancements for Woocommerce to help you build awesome e-commerce sites
 
 = Privacy Policy =
 We use Appsero SDK to collect some telemetry data upon user's confirmation. This helps us to troubleshoot problems faster & make product improvements.
