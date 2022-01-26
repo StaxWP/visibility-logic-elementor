@@ -166,11 +166,22 @@ class DateTimeVisibility extends Singleton {
 		);
 
 		$element->add_control(
+			self::SECTION_PREFIX . 'date_info_wdt',
+			[
+				'type'      => Controls_Manager::RAW_HTML,
+				'raw'       => __( 'When picking time that extends over midnight, the condition will be applied just for the selected days. Example: Wednesday 23:00 - 01:00 doesn\'t mean that the condition will extend from 23:00 Wednesday till 01:00 Thursday. It will get applied only for Wednesday 00:00 - 01:00 and 23:00 - 24:00.', 'visibility-logic-elementor' ),
+				'condition' => [
+					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
+					self::SECTION_PREFIX . 'date_time_type' => 'week_days_time',
+				],
+			]
+		);
+
+		$element->add_control(
 			self::SECTION_PREFIX . 'date_info',
 			[
-				'label'     => __( 'Current Server Time(at page load)', 'visibility-logic-elementor' ),
 				'type'      => Controls_Manager::RAW_HTML,
-				'raw'       => __( 'Use dates based on server time:', 'visibility-logic-elementor' ) .
+				'raw'       => __( 'Use timestamps based on server time:', 'visibility-logic-elementor' ) .
 									 '<br><strong>' . date( 'Y-m-d H:i', current_time( 'timestamp' ) ) . '</strong>',
 				'condition' => [
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
@@ -218,21 +229,32 @@ class DateTimeVisibility extends Singleton {
 					$time_from = $settings[ self::SECTION_PREFIX . 'time_from' ];
 					$time_to   = $settings[ self::SECTION_PREFIX . 'time_to' ];
 
-					if ( '00:00' === $time_to ) {
-						$time_to = '24:00';
-					}
-
-					$current_time = current_time( 'H:i' );
+					$current_time = strtotime( current_time( 'H:i' ) );
 
 					if ( $time_from && $time_to ) {
-						if ( $current_time >= $time_from && $current_time <= $time_to ) {
-							$options['date_time'] = true;
+						if ( $time_from > $time_to ) {
+							$time_from = strtotime( $time_from );
+							$time_to   = strtotime( $time_to );
+
+							if ( $current_time >= $time_from && $current_time <= strtotime( '24:00' ) ||
+								$current_time >= strtotime( '00:00' ) && $current_time <= $time_to ) {
+								$$options['date_time'] = true;
+							}
+						} else {
+							$time_from = strtotime( $time_from );
+							$time_to   = strtotime( $time_to );
+
+							if ( $current_time >= $time_from && $current_time <= $time_to ) {
+								$options['date_time'] = true;
+							}
 						}
 					} elseif ( $time_from && ! $time_to ) {
+						$time_from = strtotime( $time_from );
 						if ( $current_time >= $time_from ) {
 							$options['date_time'] = true;
 						}
 					} elseif ( ! $time_from && $time_to ) {
+						$time_to = strtotime( $time_to );
 						if ( $current_time <= $time_to ) {
 							$options['date_time'] = true;
 						}
@@ -250,27 +272,38 @@ class DateTimeVisibility extends Singleton {
 					$time_from = $settings[ self::SECTION_PREFIX . 'time_from' ];
 					$time_to   = $settings[ self::SECTION_PREFIX . 'time_to' ];
 
-					if ( '00:00' === $time_to ) {
-						$time_to = '24:00';
-					}
-
-					$current_time = current_time( 'H:i' );
+					$current_time = strtotime( current_time( 'H:i' ) );
 
 					if ( $time_from && $time_to ) {
-						if ( $current_time >= $time_from && $current_time <= $time_to ) {
-							$timeMatched = true;
+						if ( $time_from > $time_to ) {
+							$time_from = strtotime( $time_from );
+							$time_to   = strtotime( $time_to );
+
+							if ( $current_time >= $time_from && $current_time <= strtotime( '24:00' ) ||
+								$current_time >= strtotime( '00:00' ) && $current_time <= $time_to ) {
+								$timeMatched = true;
+							}
+						} else {
+							$time_from = strtotime( $time_from );
+							$time_to   = strtotime( $time_to );
+
+							if ( $current_time >= $time_from && $current_time <= $time_to ) {
+								$timeMatched = true;
+							}
 						}
 					} elseif ( $time_from && ! $time_to ) {
+						$time_from = strtotime( $time_from );
 						if ( $current_time >= $time_from ) {
 							$timeMatched = true;
 						}
 					} elseif ( ! $time_from && $time_to ) {
+						$time_to = strtotime( $time_to );
 						if ( $current_time <= $time_to ) {
 							$timeMatched = true;
 						}
 					}
 
-					if ( is_array( $settings[ self::SECTION_PREFIX . 'time_week' ] ) && ! empty( $settings[ self::SECTION_PREFIX . 'time_week' ] ) && in_array( current_time( 'w' ), $settings[ self::SECTION_PREFIX . 'time_week' ] ) ) {
+					if ( is_array( $settings[ self::SECTION_PREFIX . 'time_week' ] ) && ! empty( $settings[ self::SECTION_PREFIX . 'time_week' ] ) && in_array( '4', $settings[ self::SECTION_PREFIX . 'time_week' ] ) ) {
 						$dayMatched = true;
 					}
 
