@@ -74,7 +74,7 @@ We use Appsero SDK to collect some telemetry data upon user's confirmation. This
 
 = 2.2.4 =
 * Added new variation for Date & Time option - Weeks Days + Time
-* Fixed a bug on Date & Time option where server time was not fetch correctly
+* Fixed a bug on Date & Time option where server time was not fetch correctly. fixed date-time condition over midnight
 * Tested on WP 5.9
 * Improved admin UI
 
