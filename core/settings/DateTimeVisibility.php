@@ -76,9 +76,10 @@ class DateTimeVisibility extends Singleton {
 				'type'        => Controls_Manager::SELECT,
 				'label'       => __( 'Select Type:', 'visibility-logic-elementor' ),
 				'options'     => [
-					'date'      => __( 'Date FROM/TO', 'visibility-logic-elementor' ),
-					'time'      => __( 'Time FROM/TO', 'visibility-logic-elementor' ),
-					'week_days' => __( 'Week Days', 'visibility-logic-elementor' ),
+					'date'           => __( 'Date FROM/TO', 'visibility-logic-elementor' ),
+					'time'           => __( 'Time FROM/TO', 'visibility-logic-elementor' ),
+					'week_days'      => __( 'Week Days', 'visibility-logic-elementor' ),
+					'week_days_time' => __( 'Week Days + Time FROM/TO', 'visibility-logic-elementor' ),
 				],
 				'default'     => 'date',
 				'condition'   => [
@@ -131,7 +132,7 @@ class DateTimeVisibility extends Singleton {
 				'multiple'    => true,
 				'condition'   => [
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
-					self::SECTION_PREFIX . 'date_time_type' => 'week_days',
+					self::SECTION_PREFIX . 'date_time_type' => [ 'week_days', 'week_days_time' ],
 				],
 				'render_type' => 'ui',
 			]
@@ -145,7 +146,7 @@ class DateTimeVisibility extends Singleton {
 				'placeholder' => 'HH:mm',
 				'condition'   => [
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
-					self::SECTION_PREFIX . 'date_time_type' => 'time',
+					self::SECTION_PREFIX . 'date_time_type' => [ 'time', 'week_days_time' ],
 				],
 			]
 		);
@@ -158,7 +159,7 @@ class DateTimeVisibility extends Singleton {
 				'placeholder' => 'HH:mm',
 				'condition'   => [
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
-					self::SECTION_PREFIX . 'date_time_type' => 'time',
+					self::SECTION_PREFIX . 'date_time_type' => [ 'time', 'week_days_time' ],
 				],
 				'render_type' => 'ui',
 			]
@@ -193,51 +194,89 @@ class DateTimeVisibility extends Singleton {
 		if ( (bool) $settings[ self::SECTION_PREFIX . 'date_time_enabled' ] ) {
 			$options['date_time'] = false;
 
-			if ( 'date' === $settings[ self::SECTION_PREFIX . 'date_time_type' ] ) {
-				$date_from    = $settings[ self::SECTION_PREFIX . 'date_from' ];
-				$date_to      = $settings[ self::SECTION_PREFIX . 'date_to' ];
-				$current_date = current_time( 'timestamp' );
+			switch ( $settings[ self::SECTION_PREFIX . 'date_time_type' ] ) {
+				case 'date':
+					$date_from    = $settings[ self::SECTION_PREFIX . 'date_from' ];
+					$date_to      = $settings[ self::SECTION_PREFIX . 'date_to' ];
+					$current_date = current_time( 'timestamp' );
 
-				if ( $date_from && $date_to ) {
-					if ( $current_date >= strtotime( $date_from ) && $current_date <= strtotime( $date_to ) ) {
-						$options['date_time'] = true;
+					if ( $date_from && $date_to ) {
+						if ( $current_date >= strtotime( $date_from ) && $current_date <= strtotime( $date_to ) ) {
+							$options['date_time'] = true;
+						}
+					} elseif ( $date_from && ! $date_to ) {
+						if ( $current_date >= strtotime( $date_from ) ) {
+							$options['date_time'] = true;
+						}
+					} elseif ( ! $date_from && $date_to ) {
+						if ( $current_date <= strtotime( $date_to ) ) {
+							$options['date_time'] = true;
+						}
 					}
-				} elseif ( $date_from && ! $date_to ) {
-					if ( $current_date >= strtotime( $date_from ) ) {
-						$options['date_time'] = true;
-					}
-				} elseif ( ! $date_from && $date_to ) {
-					if ( $current_date <= strtotime( $date_to ) ) {
-						$options['date_time'] = true;
-					}
-				}
-			} elseif ( 'time' === $settings[ self::SECTION_PREFIX . 'date_time_type' ] ) {
-				$time_from = $settings[ self::SECTION_PREFIX . 'time_from' ];
-				$time_to   = $settings[ self::SECTION_PREFIX . 'time_to' ];
+					break;
+				case 'time';
+					$time_from = $settings[ self::SECTION_PREFIX . 'time_from' ];
+					$time_to   = $settings[ self::SECTION_PREFIX . 'time_to' ];
 
-				if ( '00:00' === $time_to ) {
-					$time_to = '24:00';
-				}
+					if ( '00:00' === $time_to ) {
+						$time_to = '24:00';
+					}
 
-				$current_time = current_time( 'H:m' );
+					$current_time = current_time( 'H:i' );
 
-				if ( $time_from && $time_to ) {
-					if ( $current_time >= $time_from && $current_time <= $time_to ) {
+					if ( $time_from && $time_to ) {
+						if ( $current_time >= $time_from && $current_time <= $time_to ) {
+							$options['date_time'] = true;
+						}
+					} elseif ( $time_from && ! $time_to ) {
+						if ( $current_time >= $time_from ) {
+							$options['date_time'] = true;
+						}
+					} elseif ( ! $time_from && $time_to ) {
+						if ( $current_time <= $time_to ) {
+							$options['date_time'] = true;
+						}
+					}
+					break;
+				case 'week_days':
+					if ( is_array( $settings[ self::SECTION_PREFIX . 'time_week' ] ) && in_array( current_time( 'w' ), $settings[ self::SECTION_PREFIX . 'time_week' ] ) ) {
 						$options['date_time'] = true;
 					}
-				} elseif ( $time_from && ! $time_to ) {
-					if ( $current_time >= $time_from ) {
-						$options['date_time'] = true;
+					break;
+				case 'week_days_time':
+					$timeMatched = false;
+					$dayMatched  = false;
+
+					$time_from = $settings[ self::SECTION_PREFIX . 'time_from' ];
+					$time_to   = $settings[ self::SECTION_PREFIX . 'time_to' ];
+
+					if ( '00:00' === $time_to ) {
+						$time_to = '24:00';
 					}
-				} elseif ( ! $time_from && $time_to ) {
-					if ( $current_time <= $time_to ) {
-						$options['date_time'] = true;
+
+					$current_time = current_time( 'H:i' );
+
+					if ( $time_from && $time_to ) {
+						if ( $current_time >= $time_from && $current_time <= $time_to ) {
+							$timeMatched = true;
+						}
+					} elseif ( $time_from && ! $time_to ) {
+						if ( $current_time >= $time_from ) {
+							$timeMatched = true;
+						}
+					} elseif ( ! $time_from && $time_to ) {
+						if ( $current_time <= $time_to ) {
+							$timeMatched = true;
+						}
 					}
-				}
-			} elseif ( 'week_days' === $settings[ self::SECTION_PREFIX . 'date_time_type' ] && $settings[ self::SECTION_PREFIX . 'time_week' ] ) {
-				if ( in_array( current_time( 'w' ), $settings[ self::SECTION_PREFIX . 'time_week' ] ) ) {
-					$options['date_time'] = true;
-				}
+
+					if ( is_array( $settings[ self::SECTION_PREFIX . 'time_week' ] ) && ! empty( $settings[ self::SECTION_PREFIX . 'time_week' ] ) && in_array( current_time( 'w' ), $settings[ self::SECTION_PREFIX . 'time_week' ] ) ) {
+						$dayMatched = true;
+					}
+
+					$options['date_time'] = $timeMatched && $dayMatched;
+					break;
+				default:
 			}
 		}
 
