@@ -7,22 +7,20 @@ Tested up to: 5.9
 Stable tag: 2.2.4
 License: GLPv2 or later
 
-Hide or show Elementor widgets based on user role, user meta, if logged in or not.
+Show/hide Elementor widgets or sections based on user role, user meta, user logged in or not and many more.
 
 == Description ==
-Hide or show an Elementor widget based on whether a user is logged in, logged out (guest), has specific role, based on user meta, at specific dates or by the browser used.
+Show or hide Elementor widgets or sections based on various conditions like: User is logged in, User has a specific meta, The day is Wednesday, The time is between X and Y, The user is using Firefox browser, and many more.
 
-You can also hide an entire section too or show it just for specific users.
-
-Based on your visibility setting for each widget you can restrict rendering elements on front-end, meaning that you can hide or show any Elementor widget based on the user role(Subscriber, Author, Administrator, etc), if the user is Logged our or if the user is Logged in.
+The visibility settings will only affect widgets' rendering in the frontend. While you are inside Elementor editor you will be able to see all of them.
 
 Note: Updating from older version 1.2.0 to 2.1.3 is safe and it will keep your initial settings. You can still access them from the Stax Visibility tab when editing an Elementor widget or section.
 
-= NEW Free Features =
+= Free Features =
 - User Meta content restriction
-- Restrict content based on User Browser(Chrome, Mozilla, Safari, etc)
+- Restrict content based on User Browser (Chrome, Mozilla, Safari, etc)
 - Date & Time restrictions for content
-- Hide a whole section if all widgets inside it are hidden using visibility settings
+- Hide a whole section if all widgets inside it are hidden using visibility settings (Works with nested sections too)
 
 = PRO Features =
 - Post & Page, Taxonomy, URL Parameter content restriction
