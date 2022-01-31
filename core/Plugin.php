@@ -22,6 +22,11 @@ class Plugin extends Singleton {
 	public $initiated_widgets = [];
 
 	/**
+	 * @var array
+	 */
+	public $excluded_widgets = [];
+
+	/**
 	 * Plugin constructor
 	 */
 	public function __construct() {
@@ -160,7 +165,14 @@ class Plugin extends Singleton {
 	 */
 	public function content_change( $content, $widget ) {
 		if ( ! $this->should_render( $widget ) ) {
-			$this->initiated_widgets[] = method_exists( $widget, 'get_group_name' ) ? $widget->get_group_name() : $widget->get_name();
+			if ( 'section' === $widget->get_name() ) {
+				$not_rendered_widgets = $this->get_section_widgets_recursively( $widget );
+
+				$this->initiated_widgets = array_merge( $this->initiated_widgets, $not_rendered_widgets );
+				$this->excluded_widgets  = array_merge( $this->excluded_widgets, array_keys( $not_rendered_widgets ) );
+			} else {
+				$this->initiated_widgets[] = method_exists( $widget, 'get_group_name' ) ? $widget->get_group_name() : $widget->get_name();
+			}
 		}
 
 		if ( ! $this->should_render( $widget ) && ! \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
@@ -197,7 +209,7 @@ class Plugin extends Singleton {
 				$needs_print = false;
 
 				foreach ( $this->initiated_widgets as $k => $initiated_widget ) {
-					if ( $initiated_widget === $widget->get_group_name() ) {
+					if ( $initiated_widget === $widget->get_group_name() && ! in_array( $widget->get_id(), $this->excluded_widgets ) ) {
 						$needs_print = true;
 						unset( $this->initiated_widgets[ $k ] );
 					}
@@ -249,19 +261,41 @@ class Plugin extends Singleton {
 			isset( $settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) &&
 			(bool) $settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) {
 
-			$should_render = ! empty( $this->check_items_recursively( $widget ) );
+			$should_render = ! empty( $this->check_for_empty_sections_recursively( $widget ) );
 		}
 
 		return $should_render;
 	}
 
 	/**
-	 * Check item recursively
+	 * Get section's widgets recursively
 	 *
 	 * @param object $item
 	 * @return array
 	 */
-	private function check_items_recursively( $item ) {
+	private function get_section_widgets_recursively( $item ) {
+		$elements = [];
+
+		foreach ( $item->get_children() as $column ) {
+			foreach ( $column->get_children() as $widget ) {
+				if ( 'section' === $widget->get_name() ) {
+					$elements = array_merge( $elements, $this->get_section_widgets_recursively( $widget ) );
+				} else {
+					$elements[ $widget->get_id() ] = method_exists( $widget, 'get_group_name' ) ? $widget->get_group_name() : $widget->get_name();
+				}
+			}
+		}
+
+		return $elements;
+	}
+
+	/**
+	 * Check for empty section recursively
+	 *
+	 * @param object $item
+	 * @return array
+	 */
+	private function check_for_empty_sections_recursively( $item ) {
 		$elements = [];
 
 		foreach ( $item->get_children() as $column ) {
@@ -273,7 +307,7 @@ class Plugin extends Singleton {
 						! (bool) $widget_settings[ self::SECTION_PREFIX . 'enabled' ] &&
 						isset( $widget_settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) &&
 						(bool) $widget_settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) {
-						$elements = array_merge( $elements, $this->check_items_recursively( $widget ) );
+						$elements = array_merge( $elements, $this->check_for_empty_sections_recursively( $widget ) );
 					} else {
 						$elements[] = $widget->get_name();
 					}
@@ -282,7 +316,7 @@ class Plugin extends Singleton {
 						! (bool) $widget_settings[ self::SECTION_PREFIX . 'enabled' ] &&
 						isset( $widget_settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) &&
 						(bool) $widget_settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) {
-						$elements = array_merge( $elements, $this->check_items_recursively( $widget ) );
+						$elements = array_merge( $elements, $this->check_for_empty_sections_recursively( $widget ) );
 					} else {
 						$elements[] = $widget->get_name();
 					}
