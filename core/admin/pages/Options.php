@@ -39,13 +39,7 @@ class Options extends Base {
 		$options = Resources::get_all_widget_options( Plugin::instance()->has_pro() );
 
 		foreach ( $options as $slug => $option ) {
-			$disabled = true;
-
-			if ( isset( $_POST[ $slug ] ) ) {
-				$disabled = false;
-			}
-
-			if ( $disabled ) {
+			if ( ! isset( $_POST[ $slug ] ) ) {
 				$disabled_options[ $slug ] = true;
 			}
 		}

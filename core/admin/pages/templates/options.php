@@ -19,14 +19,20 @@ $item_class = $has_pro ? 'xl:ste-w-1/4' : '';
 	<form action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="POST">
 		<div class="ste-flex ste-flex-wrap ste--mx-2">
 			<?php foreach ( $options as $slug => $option ) : ?>
+				<?php
+
+				$toggle_class = isset( $option['require'] ) ? 'ste-hidden' : '';
+				$label_for    = isset( $option['require'] ) ? '' : 'module-label-' . $slug;
+
+				?>
 				<div class="ste-my-2 ste-w-full md:ste-w-1/2 lg:ste-w-1/3 <?php echo esc_attr( $item_class ); ?>">
 					<div class="ste-mx-2">
-						<label for="module-label-<?php echo $slug; ?>" class="ste-block ste-rounded ste-bg-gradient-to-r ste-from-ash-300 ste-to-ash-200 ste-p-4">
+						<label for="<?php echo esc_attr( $label_for ); ?>" class="ste-block ste-rounded ste-bg-gradient-to-r ste-from-ash-300 ste-to-ash-200 ste-p-4">
 							<div class="ste-flex ste-justify-between ste-items-center">
 								<span class="ste-font-medium ste-text-gray-600 ste-text-sm">
 									<?php echo $option['name']; ?>
 								</span>
-								<div class="ste-relative ste-leading-none">
+								<div class="ste-relative ste-leading-none <?php echo esc_attr( $toggle_class ); ?>">
 									<?php if ( isset( $option['pro'] ) && $option['pro'] ) : ?>
 										<i class="eicon-pro-icon ste-pro-icon"></i>
 									<?php else : ?>
