@@ -160,6 +160,14 @@ final class Resources extends Singleton {
 				'name' => __( 'Dynamic Conditions', 'visibility-logic-elementor' ),
 				'pro'  => true,
 			],
+			'woocommerce-users'  => [
+				'name' => __( 'WooCommerce Users', 'visibility-logic-elementor' ),
+				'pro'  => true,
+			],
+			'edd-users'          => [
+				'name' => __( 'EDD Users', 'visibility-logic-elementor' ),
+				'pro'  => true,
+			],
 			'fallback'           => [
 				'name' => __( 'Fallback', 'visibility-logic-elementor' ),
 				'pro'  => true,
