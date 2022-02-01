@@ -469,6 +469,26 @@ class Plugin extends Singleton {
 			false
 		);
 
+		$widgets    = Resources::get_all_widget_options();
+		$js_widgets = [];
+
+		foreach ( $widgets as $type => $data ) {
+			if ( 'post-page' === $type ) {
+				$type = 'post';
+			}
+
+			$js_widgets[] = [
+				'name'   => str_replace( '-', '_', $type ),
+				'status' => 'inactive',
+			];
+		}
+
+		wp_localize_script(
+			'stax-visibility-script-editor',
+			'visibility_widgets',
+			$js_widgets
+		);
+
 		// Enqueue Select2 assets.
 		wp_enqueue_style(
 			'stax-visibility-select2',

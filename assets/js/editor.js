@@ -153,48 +153,11 @@ var STAXVisibilityEditor = STAXVisibilityEditor || {};
     },
 
     checkState: function () {
-      let options = [
-        {
-          name: "user_role",
-          status: "inactive",
-        },
-        {
-          name: "user_meta",
-          status: "inactive",
-        },
-        {
-          name: "date_time",
-          status: "inactive",
-        },
-        {
-          name: "browser_type",
-          status: "inactive",
-        },
-        {
-          name: "ip_referrer",
-          status: "inactive",
-        },
-        {
-          name: "post",
-          status: "inactive",
-        },
-        {
-          name: "archive",
-          status: "inactive",
-        },
-        {
-          name: "conditional_tags",
-          status: "inactive",
-        },
-        {
-          name: "dynamic_conditions",
-          status: "inactive",
-        },
-        {
-          name: "fallback",
-          status: "inactive",
-        },
-      ];
+      let options = window.visibility_widgets;
+
+      if (options === undefined) {
+        return;
+      }
 
       let currentElement = elementor.getCurrentElement();
 
