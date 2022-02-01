@@ -24,6 +24,8 @@
 .elementor-control-stax_visibility_pro_archive,
 .elementor-control-stax_visibility_pro_conditional_tags,
 .elementor-control-stax_visibility_pro_dynamic_conditions,
+.elementor-control-stax_visibility_pro_woocommerce_users,
+.elementor-control-stax_visibility_pro_edd_users,
 .elementor-control-stax_visibility_pro_fallback {
     pointer-events: none;
 }
@@ -36,6 +38,8 @@
 .elementor-control-stax_visibility_pro_archive .elementor-panel-heading-toggle,
 .elementor-control-stax_visibility_pro_conditional_tags .elementor-panel-heading-toggle,
 .elementor-control-stax_visibility_pro_dynamic_conditions .elementor-panel-heading-toggle,
+.elementor-control-stax_visibility_pro_woocommerce_users .elementor-panel-heading-toggle,
+.elementor-control-stax_visibility_pro_edd_users .elementor-panel-heading-toggle,
 .elementor-control-stax_visibility_pro_fallback .elementor-panel-heading-toggle {
     display: none;
 }
@@ -48,6 +52,8 @@
 .elementor-control-stax_visibility_pro_archive .elementor-panel-heading-title,
 .elementor-control-stax_visibility_pro_conditional_tags .elementor-panel-heading-title,
 .elementor-control-stax_visibility_pro_dynamic_conditions .elementor-panel-heading-title,
+.elementor-control-stax_visibility_pro_woocommerce_users .elementor-panel-heading-title,
+.elementor-control-stax_visibility_pro_edd_users .elementor-panel-heading-title,
 .elementor-control-stax_visibility_pro_fallback .elementor-panel-heading-title,
 .stax-status-active .elementor-panel-heading-title,
 .stax-status-inactive .elementor-panel-heading-title,
@@ -63,6 +69,8 @@
 .elementor-control-stax_visibility_pro_archive .elementor-panel-heading-title:after,
 .elementor-control-stax_visibility_pro_conditional_tags .elementor-panel-heading-title:after,
 .elementor-control-stax_visibility_pro_dynamic_conditions .elementor-panel-heading-title:after,
+.elementor-control-stax_visibility_pro_woocommerce_users .elementor-panel-heading-title:after,
+.elementor-control-stax_visibility_pro_edd_users .elementor-panel-heading-title:after,
 .elementor-control-stax_visibility_pro_fallback .elementor-panel-heading-title:after {
     font-family: eicons;
     content: '\e893';
