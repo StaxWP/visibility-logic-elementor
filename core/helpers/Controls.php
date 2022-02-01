@@ -71,7 +71,7 @@ class Controls {
 
 		foreach ( $this->controls as $key => $name ) {
 			$class = self::$namespace . $name;
-			$controls_manager->register_control( $key, new $class() );
+			$controls_manager->register( new $class(), $key );
 		}
 
 	}
