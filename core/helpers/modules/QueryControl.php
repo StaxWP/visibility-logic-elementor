@@ -231,4 +231,116 @@ class QueryControl extends Module {
 		return [];
 	}
 
+	/**
+	 * Get values for products variations
+	 *
+	 * @param [type] $request
+	 * @return array
+	 */
+	protected function get_value_titles_for_products_variations( $request ) {
+		if ( Plugin::instance()->has_pro() ) {
+			return \Stax\VisibilityLogicPro\FunctionCaller::get_value_titles_for_products_variations( $request );
+		}
+
+		return [];
+	}
+
+	/**
+	 * Get products variations
+	 *
+	 * @param array $data
+	 * @return array
+	 */
+	protected function get_products_variations( $data ) {
+		if ( Plugin::instance()->has_pro() ) {
+			return \Stax\VisibilityLogicPro\FunctionCaller::get_products_variations( $data );
+		}
+
+		return [];
+	}
+
+	/**
+	 * Get values for products
+	 *
+	 * @param [type] $request
+	 * @return array
+	 */
+	protected function get_value_titles_for_products( $request ) {
+		if ( Plugin::instance()->has_pro() ) {
+			return \Stax\VisibilityLogicPro\FunctionCaller::get_value_titles_for_products( $request );
+		}
+
+		return [];
+	}
+
+	/**
+	 * Get products
+	 *
+	 * @param array $data
+	 * @return array
+	 */
+	protected function get_products( $data ) {
+		if ( Plugin::instance()->has_pro() ) {
+			return \Stax\VisibilityLogicPro\FunctionCaller::get_products( $data );
+		}
+
+		return [];
+	}
+
+	/**
+	 * Get values for subscriptions
+	 *
+	 * @param [type] $request
+	 * @return array
+	 */
+	protected function get_value_titles_for_subscriptions( $request ) {
+		if ( Plugin::instance()->has_pro() ) {
+			return \Stax\VisibilityLogicPro\FunctionCaller::get_value_titles_for_subscriptions( $request );
+		}
+
+		return [];
+	}
+
+	/**
+	 * Get subscriptions
+	 *
+	 * @param array $data
+	 * @return array
+	 */
+	protected function get_subscriptions( $data ) {
+		if ( Plugin::instance()->has_pro() ) {
+			return \Stax\VisibilityLogicPro\FunctionCaller::get_subscriptions( $data );
+		}
+
+		return [];
+	}
+
+	/**
+	 * Get values for edd products
+	 *
+	 * @param [type] $request
+	 * @return array
+	 */
+	protected function get_value_titles_for_edd_products( $request ) {
+		if ( Plugin::instance()->has_pro() ) {
+			return \Stax\VisibilityLogicPro\FunctionCaller::get_value_titles_for_edd_products( $request );
+		}
+
+		return [];
+	}
+
+	/**
+	 * Get edd products
+	 *
+	 * @param array $data
+	 * @return array
+	 */
+	protected function get_edd_products( $data ) {
+		if ( Plugin::instance()->has_pro() ) {
+			return \Stax\VisibilityLogicPro\FunctionCaller::get_edd_products( $data );
+		}
+
+		return [];
+	}
+
 }
