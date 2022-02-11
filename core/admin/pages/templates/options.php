@@ -48,9 +48,9 @@ $item_class = $has_pro ? 'xl:ste-w-1/4' : '';
 									<?php echo $option['description']; ?>
 								</div>
 							<?php endif; ?>
-							<?php if ( isset( $option['require'] ) && $option['require']['text'] ) : ?>
+							<?php if ( isset( $option['require'] ) && isset( $option['require']['text'] ) && isset( $option['require']['text']['plugins'] ) ) : ?>
 								<div class="ste-text-xs ste-mt-2">
-									<?php echo $option['require']['text']; ?>
+									<?php echo $option['require']['text']['plugins']; ?>
 								</div>
 							<?php endif; ?>
 						</label>
