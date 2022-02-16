@@ -18,15 +18,18 @@ trait Wp_Trait {
 	 * @return array
 	 */
 	public static function get_user_fields( $meta = false, $group = false, $info = true ) {
-		$user_fields_key = [];
+		$user_fields_key = array();
 		$user_tmp        = wp_get_current_user();
 		if ( $user_tmp ) {
 			$user_prop = get_object_vars( $user_tmp );
 			if ( ! empty( $user_prop['data'] ) ) {
 				$user_prop_all = (array) $user_prop['data'];
-				$user_prop     = [];
+				$user_prop     = array();
 				if ( ! empty( $meta ) && is_string( $meta ) ) {
 					foreach ( $user_prop_all as $key => $value ) {
+						if ( is_array( $value ) ) {
+							continue;
+						}
 						$pos_key  = stripos( $value, $meta );
 						$pos_name = stripos( $key, $meta );
 						if ( false === $pos_key && false === $pos_name ) {
@@ -68,7 +71,7 @@ trait Wp_Trait {
 			}
 
 			if ( $group ) {
-				$user_fields_key = array_merge( [ 'USER' => $user_fields_key['USER'] ], $user_fields_key );
+				$user_fields_key = array_merge( array( 'USER' => $user_fields_key['USER'] ), $user_fields_key );
 			}
 		}
 

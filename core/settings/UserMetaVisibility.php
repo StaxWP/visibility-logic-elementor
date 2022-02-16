@@ -229,6 +229,13 @@ class UserMetaVisibility extends Singleton {
 				foreach ( $settings[ self::SECTION_PREFIX . 'user_meta_options' ] as $meta ) {
 					$user_meta = get_user_meta( $current_user->ID, $meta, true );
 
+
+					if ( isset( $current_user->{$meta} ) ) {
+						$user_meta = $current_user->{$meta};
+					} else {
+						$user_meta = get_user_meta( $current_user->ID, $meta, true );
+					}
+
 					switch ( $meta_check_type ) {
 						case 'empty':
 							if ( ! empty( $user_meta ) ) {
