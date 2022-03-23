@@ -513,9 +513,10 @@ class Plugin extends Singleton {
 		if ( ! class_exists( 'Elementor\Plugin' ) || ! \Elementor\Plugin::$instance->preview->is_preview_mode() ) {
 			return;
 		}
+
 		?>
 		<style>
-			body.elementor-editor-active .elementor-element.stax-condition-yes::after {
+			body.elementor-editor-active .elementor-element.stax-condition-yes::before {
 				content: '\e8ed';
 				color: #6E49CB;
 				display: inline-block;
