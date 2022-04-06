@@ -266,8 +266,8 @@ class DateTimeVisibility extends Singleton {
 					}
 					break;
 				case 'week_days_time':
-					$timeMatched = false;
-					$dayMatched  = false;
+					$time_matched = false;
+					$day_matched  = false;
 
 					$time_from = $settings[ self::SECTION_PREFIX . 'time_from' ];
 					$time_to   = $settings[ self::SECTION_PREFIX . 'time_to' ];
@@ -281,33 +281,35 @@ class DateTimeVisibility extends Singleton {
 
 							if ( $current_time >= $time_from && $current_time <= strtotime( '24:00' ) ||
 								$current_time >= strtotime( '00:00' ) && $current_time <= $time_to ) {
-								$timeMatched = true;
+								$time_matched = true;
 							}
 						} else {
 							$time_from = strtotime( $time_from );
 							$time_to   = strtotime( $time_to );
 
 							if ( $current_time >= $time_from && $current_time <= $time_to ) {
-								$timeMatched = true;
+								$time_matched = true;
 							}
 						}
 					} elseif ( $time_from && ! $time_to ) {
 						$time_from = strtotime( $time_from );
 						if ( $current_time >= $time_from ) {
-							$timeMatched = true;
+							$time_matched = true;
 						}
 					} elseif ( ! $time_from && $time_to ) {
 						$time_to = strtotime( $time_to );
 						if ( $current_time <= $time_to ) {
-							$timeMatched = true;
+							$time_matched = true;
 						}
 					}
 
-					if ( is_array( $settings[ self::SECTION_PREFIX . 'time_week' ] ) && ! empty( $settings[ self::SECTION_PREFIX . 'time_week' ] ) && in_array( '4', $settings[ self::SECTION_PREFIX . 'time_week' ] ) ) {
-						$dayMatched = true;
+					if ( is_array( $settings[ self::SECTION_PREFIX . 'time_week' ] ) &&
+						! empty( $settings[ self::SECTION_PREFIX . 'time_week' ] ) &&
+						in_array( current_time( 'w' ), $settings[ self::SECTION_PREFIX . 'time_week' ] ) ) {
+						$day_matched = true;
 					}
 
-					$options['date_time'] = $timeMatched && $dayMatched;
+					$options['date_time'] = $time_matched && $day_matched;
 					break;
 				default:
 			}
