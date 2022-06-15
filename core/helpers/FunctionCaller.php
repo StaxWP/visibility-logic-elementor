@@ -7,8 +7,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class FunctionCaller {
-
 	use Meta_Trait;
 	use Wp_Trait;
-
 }

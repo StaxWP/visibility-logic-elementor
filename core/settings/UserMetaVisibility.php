@@ -20,11 +20,18 @@ class UserMetaVisibility extends Singleton {
 	public function __construct() {
 		parent::__construct();
 
-		add_action( 'elementor/element/common/_section_style/after_section_end', [ $this, 'register_section' ] );
-		add_action( 'elementor/element/section/section_advanced/after_section_end', [ $this, 'register_section' ] );
-
-		add_action( 'elementor/element/common/' . self::SECTION_PREFIX . 'user_meta_section/before_section_end', [ $this, 'register_controls' ], 10, 2 );
-		add_action( 'elementor/element/section/' . self::SECTION_PREFIX . 'user_meta_section/before_section_end', [ $this, 'register_controls' ], 10, 2 );
+		foreach ( $this->elements as $element ) {
+			add_action( "elementor/element/{$element['name']}/{$element['section_id']}/after_section_end", [ $this, 'register_section' ] );
+			add_action(
+				"elementor/element/{$element['name']}/{$element['prefix']}user_meta_section/before_section_end",
+				[
+					$this,
+					'register_controls',
+				],
+				10,
+				2
+			);
+		}
 
 		add_filter( 'stax/visibility/apply_conditions', [ $this, 'apply_conditions' ], 10, 3 );
 	}
@@ -228,7 +235,6 @@ class UserMetaVisibility extends Singleton {
 
 				foreach ( $settings[ self::SECTION_PREFIX . 'user_meta_options' ] as $meta ) {
 					$user_meta = get_user_meta( $current_user->ID, $meta, true );
-
 
 					if ( isset( $current_user->{$meta} ) ) {
 						$user_meta = $current_user->{$meta};

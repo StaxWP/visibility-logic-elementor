@@ -57,6 +57,7 @@ class Plugin extends Singleton {
 
 		add_filter( 'elementor/widget/render_content', [ $this, 'content_change' ], 999, 2 );
 		add_filter( 'elementor/frontend/section/before_render', [ $this, 'section_content_change' ], 999 );
+		add_filter( 'elementor/frontend/container/before_render', [ $this, 'section_content_change' ], 999 );
 
 		add_action(
 			'elementor/element/print_template',
@@ -68,6 +69,7 @@ class Plugin extends Singleton {
 		);
 
 		add_filter( 'elementor/frontend/section/should_render', [ $this, 'item_should_render' ], 99999, 2 );
+		add_filter( 'elementor/frontend/container/should_render', [ $this, 'item_should_render' ], 99999, 2 );
 		add_filter( 'elementor/frontend/widget/should_render', [ $this, 'item_should_render' ], 99999, 2 );
 		add_filter( 'elementor/frontend/repeater/should_render', [ $this, 'item_should_render' ], 99999, 2 );
 
@@ -115,7 +117,7 @@ class Plugin extends Singleton {
 	 */
 	public function has_pro() {
 		return defined( 'STAX_VISIBILITY_PRO_VERSION' )
-		       || in_array( 'visibility-logic-elementor-pro/conditional.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) );
+			   || in_array( 'visibility-logic-elementor-pro/conditional.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) );
 	}
 
 	/**
@@ -132,7 +134,7 @@ class Plugin extends Singleton {
 
 		foreach ( $widgets as $slug => $option ) {
 			if ( isset( $option['status'], $option['class'], $option['pro'] ) &&
-			     $option['status'] && file_exists( $option['class'] ) && $option['pro'] === false ) {
+				 $option['status'] && file_exists( $option['class'] ) && $option['pro'] === false ) {
 				require_once $option['class'];
 			}
 		}
@@ -147,7 +149,7 @@ class Plugin extends Singleton {
 	/**
 	 * Render item or not based on conditions
 	 *
-	 * @param string $content
+	 * @param string                 $content
 	 * @param \Elementor\Widget_Base $widget
 	 *
 	 * @return string
@@ -159,14 +161,14 @@ class Plugin extends Singleton {
 	/**
 	 * Render item or not based on conditions
 	 *
-	 * @param string $content
+	 * @param string                 $content
 	 * @param \Elementor\Widget_Base $widget
 	 *
 	 * @return string
 	 */
 	public function content_change( $content, $widget ) {
 		if ( ! $this->should_render( $widget ) ) {
-			if ( 'section' === $widget->get_name() ) {
+			if ( 'section' === $widget->get_name() || 'container' === $widget->get_name() ) {
 				$not_rendered_widgets = $this->get_section_widgets_recursively( $widget );
 
 				$this->initiated_widgets = array_merge( $this->initiated_widgets, $not_rendered_widgets );
@@ -205,7 +207,7 @@ class Plugin extends Singleton {
 			return '';
 		}
 
-		if ( ! in_array( $widget->get_name(), [ 'section', 'column' ] ) ) {
+		if ( ! in_array( $widget->get_name(), [ 'section', 'container', 'column' ] ) ) {
 			if ( method_exists( $widget, 'get_css_config' ) && method_exists( $widget, 'get_group_name' ) ) {
 				$needs_print = false;
 
@@ -235,7 +237,7 @@ class Plugin extends Singleton {
 	/**
 	 * Check if item should render
 	 *
-	 * @param bool $should_render
+	 * @param bool   $should_render
 	 * @param object $widget
 	 *
 	 * @return boolean
@@ -249,7 +251,7 @@ class Plugin extends Singleton {
 			}
 
 			if ( isset( $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) &&
-			     (bool) $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) {
+				 (bool) $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) {
 				return true;
 			}
 
@@ -257,10 +259,10 @@ class Plugin extends Singleton {
 		}
 
 		// Hide section if needed
-		if ( 'section' === $widget->get_name() &&
-		     ! (bool) $settings[ self::SECTION_PREFIX . 'enabled' ] &&
-		     isset( $settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) &&
-		     (bool) $settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) {
+		if ( ( 'section' === $widget->get_name() || 'container' === $widget->get_name() ) &&
+			 ! (bool) $settings[ self::SECTION_PREFIX . 'enabled' ] &&
+			 isset( $settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) &&
+			 (bool) $settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) {
 
 			$should_render = ! empty( $this->check_for_empty_sections_recursively( $widget ) );
 		}
@@ -280,7 +282,7 @@ class Plugin extends Singleton {
 
 		foreach ( $item->get_children() as $column ) {
 			foreach ( $column->get_children() as $widget ) {
-				if ( 'section' === $widget->get_name() ) {
+				if ( 'section' === $widget->get_name() || 'container' === $widget->get_name() ) {
 					$elements = array_merge( $elements, $this->get_section_widgets_recursively( $widget ) );
 				} else {
 					$elements[ $widget->get_id() ] = method_exists( $widget, 'get_group_name' ) ? $widget->get_group_name() : $widget->get_name();
@@ -306,19 +308,19 @@ class Plugin extends Singleton {
 				$widget_settings = $widget->get_settings();
 
 				if ( $this->should_render( $widget ) ) {
-					if ( 'section' === $widget->get_name() &&
-					     ! (bool) $widget_settings[ self::SECTION_PREFIX . 'enabled' ] &&
-					     isset( $widget_settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) &&
-					     (bool) $widget_settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) {
+					if ( ( 'section' === $widget->get_name() || 'container' === $widget->get_name() ) &&
+						 ! (bool) $widget_settings[ self::SECTION_PREFIX . 'enabled' ] &&
+						 isset( $widget_settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) &&
+						 (bool) $widget_settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) {
 						$elements = array_merge( $elements, $this->check_for_empty_sections_recursively( $widget ) );
 					} else {
 						$elements[] = $widget->get_name();
 					}
 				} elseif ( ! $this->should_render( $widget ) && (bool) $widget_settings[ self::SECTION_PREFIX . 'keep_html' ] ) {
-					if ( 'section' === $widget->get_name() &&
-					     ! (bool) $widget_settings[ self::SECTION_PREFIX . 'enabled' ] &&
-					     isset( $widget_settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) &&
-					     (bool) $widget_settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) {
+					if ( ( 'section' === $widget->get_name() || 'container' === $widget->get_name() ) &&
+						 ! (bool) $widget_settings[ self::SECTION_PREFIX . 'enabled' ] &&
+						 isset( $widget_settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) &&
+						 (bool) $widget_settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) {
 						$elements = array_merge( $elements, $this->check_for_empty_sections_recursively( $widget ) );
 					} else {
 						$elements[] = $widget->get_name();
@@ -518,18 +520,18 @@ class Plugin extends Singleton {
 		}
 
 		?>
-        <style>
-            body.elementor-editor-active .elementor-element.stax-condition-yes::before {
-                content: '\e8ed';
-                color: #6E49CB;
-                display: inline-block;
-                font-family: eicons;
-                font-size: 15px;
-                position: absolute;
-                top: 0;
-                right: 5px;
-            }
-        </style>
+		<style>
+			body.elementor-editor-active .elementor-element.stax-condition-yes::before {
+				content: '\e8ed';
+				color: #6E49CB;
+				display: inline-block;
+				font-family: eicons;
+				font-size: 15px;
+				position: absolute;
+				top: 0;
+				right: 5px;
+			}
+		</style>
 		<?php
 	}
 }

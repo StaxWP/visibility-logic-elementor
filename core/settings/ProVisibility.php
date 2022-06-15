@@ -19,8 +19,9 @@ class ProVisibility extends Singleton {
 	public function __construct() {
 		parent::__construct();
 
-		add_action( 'elementor/element/common/_section_style/after_section_end', [ $this, 'register_section' ] );
-		add_action( 'elementor/element/section/section_advanced/after_section_end', [ $this, 'register_section' ] );
+		foreach ( $this->elements as $element ) {
+			add_action( "elementor/element/{$element['name']}/{$element['section_id']}/after_section_end", [ $this, 'register_section' ] );
+		}
 	}
 
 	/**

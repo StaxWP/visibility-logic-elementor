@@ -73,7 +73,6 @@ class Controls {
 			$class = self::$namespace . $name;
 			$controls_manager->register_control( $key, new $class() );
 		}
-
 	}
 
 }

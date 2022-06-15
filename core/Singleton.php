@@ -18,6 +18,24 @@ class Singleton {
 	 */
 	public static $instances = [];
 
+	public $elements = [
+		[
+			'name'       => 'common',
+			'section_id' => '_section_style',
+			'prefix'     => self::SECTION_PREFIX,
+		],
+		[
+			'name'       => 'section',
+			'section_id' => 'section_advanced',
+			'prefix'     => self::SECTION_PREFIX,
+		],
+		[
+			'name'       => 'container',
+			'section_id' => 'section_layout',
+			'prefix'     => self::SECTION_PREFIX,
+		],
+	];
+
 	const VISIBILITY_TAB = 'stax-visibility';
 	const SECTION_PREFIX = 'stax_visibility_';
 

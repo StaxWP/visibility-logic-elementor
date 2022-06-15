@@ -19,27 +19,18 @@ class OldVersionFallback extends Singleton {
 	public function __construct() {
 		parent::__construct();
 
-		add_action( 'elementor/element/common/_section_style/after_section_end', [ $this, 'register_section' ] );
-		add_action( 'elementor/element/section/section_advanced/after_section_end', [ $this, 'register_section' ] );
-
-		add_action(
-			'elementor/element/common/' . self::SECTION_PREFIX . 'old_version_section/before_section_end',
-			[
-				$this,
-				'register_controls',
-			],
-			10,
-			2
-		);
-		add_action(
-			'elementor/element/section/' . self::SECTION_PREFIX . 'old_version_section/before_section_end',
-			[
-				$this,
-				'register_controls',
-			],
-			10,
-			2
-		);
+		foreach ( $this->elements as $element ) {
+			add_action( "elementor/element/{$element['name']}/{$element['section_id']}/after_section_end", [ $this, 'register_section' ] );
+			add_action(
+				"elementor/element/{$element['name']}/{$element['prefix']}old_version_section/before_section_end",
+				[
+					$this,
+					'register_controls',
+				],
+				10,
+				2
+			);
+		}
 	}
 
 	/**
@@ -88,15 +79,15 @@ class OldVersionFallback extends Singleton {
 	 * Check for old data
 	 *
 	 * @param array $item
-	 * @param bool $has_old_data
+	 * @param bool  $has_old_data
 	 *
 	 * @return array
 	 */
 	private function check_for_old_data( $item, $has_old_data ) {
 		if ( 'column' !== $item['elType'] ) {
 			if ( isset( $item['settings']['ecl_enabled'] ) ||
-			     isset( $item['settings']['ecl_role_visible'] ) ||
-			     isset( $item['settings']['ecl_role_hidden'] ) ) {
+				 isset( $item['settings']['ecl_role_visible'] ) ||
+				 isset( $item['settings']['ecl_role_hidden'] ) ) {
 				$has_old_data = true;
 			}
 		}
