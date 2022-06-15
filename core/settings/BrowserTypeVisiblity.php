@@ -20,18 +20,7 @@ class BrowserTypeVisiblity extends Singleton {
 	public function __construct() {
 		parent::__construct();
 
-		foreach ( $this->elements as $element ) {
-			add_action( "elementor/element/{$element['name']}/{$element['section_id']}/after_section_end", [ $this, 'register_section' ] );
-			add_action(
-				"elementor/element/{$element['name']}/{$element['prefix']}browser_type_section/before_section_end",
-				[
-					$this,
-					'register_controls',
-				],
-				10,
-				2
-			);
-		}
+		$this->register_elementor_settings( 'browser_type_section' );
 
 		add_filter( 'stax/visibility/apply_conditions', [ $this, 'apply_conditions' ], 10, 3 );
 	}

@@ -19,18 +19,7 @@ class OldVersionFallback extends Singleton {
 	public function __construct() {
 		parent::__construct();
 
-		foreach ( $this->elements as $element ) {
-			add_action( "elementor/element/{$element['name']}/{$element['section_id']}/after_section_end", [ $this, 'register_section' ] );
-			add_action(
-				"elementor/element/{$element['name']}/{$element['prefix']}old_version_section/before_section_end",
-				[
-					$this,
-					'register_controls',
-				],
-				10,
-				2
-			);
-		}
+		$this->register_elementor_settings( 'old_version_section' );
 	}
 
 	/**

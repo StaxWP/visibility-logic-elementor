@@ -20,18 +20,7 @@ class UserMetaVisibility extends Singleton {
 	public function __construct() {
 		parent::__construct();
 
-		foreach ( $this->elements as $element ) {
-			add_action( "elementor/element/{$element['name']}/{$element['section_id']}/after_section_end", [ $this, 'register_section' ] );
-			add_action(
-				"elementor/element/{$element['name']}/{$element['prefix']}user_meta_section/before_section_end",
-				[
-					$this,
-					'register_controls',
-				],
-				10,
-				2
-			);
-		}
+		$this->register_elementor_settings( 'user_meta_section' );
 
 		add_filter( 'stax/visibility/apply_conditions', [ $this, 'apply_conditions' ], 10, 3 );
 	}
