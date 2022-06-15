@@ -71,7 +71,7 @@ class GeneralVisibility extends Singleton {
 			]
 		);
 
-		if ( 'section' === $element->get_type() ) {
+		if ( 'section' === $element->get_type() || 'container' === $element->get_type() ) {
 			$element->add_control(
 				self::SECTION_PREFIX . 'hide_when_empty',
 				[
