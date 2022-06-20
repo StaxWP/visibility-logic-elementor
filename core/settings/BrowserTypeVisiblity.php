@@ -103,21 +103,20 @@ class BrowserTypeVisiblity extends Singleton {
 	public function apply_conditions( $options, $settings, $item ) {
 		$settings = $item->get_settings_for_display();
 
-		if ( (bool) $settings[ self::SECTION_PREFIX . 'browser_type_enabled' ] ) {
-			$browser_found = false;
-
-			if ( empty( $settings[ self::SECTION_PREFIX . 'browsers' ] ) ) {
-				return $options;
-			}
-
-			foreach ( $settings[ self::SECTION_PREFIX . 'browsers' ] as $browser_type ) {
-				if ( Resources::get_browser_type() === $browser_type ) {
-					$browser_found = true;
-				}
-			}
-
-			$options['browser_type'] = $browser_found;
+		if ( ! (bool) $settings[ self::SECTION_PREFIX . 'browser_type_enabled' ] || empty( $settings[ self::SECTION_PREFIX . 'browsers' ] ) ) {
+			return $options;
 		}
+
+		$browser_found = false;
+
+		foreach ( $settings[ self::SECTION_PREFIX . 'browsers' ] as $browser_type ) {
+			if ( Resources::get_browser_type() === $browser_type ) {
+				$browser_found = true;
+				break;
+			}
+		}
+
+		$options['browser_type'] = $browser_found;
 
 		return $options;
 	}

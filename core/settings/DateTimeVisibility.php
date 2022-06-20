@@ -198,117 +198,118 @@ class DateTimeVisibility extends Singleton {
 	public function apply_conditions( $options, $settings, $item ) {
 		$settings = $item->get_settings_for_display();
 
-		if ( (bool) $settings[ self::SECTION_PREFIX . 'date_time_enabled' ] ) {
-			$options['date_time'] = false;
+		if ( ! (bool) $settings[ self::SECTION_PREFIX . 'date_time_enabled' ] ) {
+			return $options;
+		}
 
-			switch ( $settings[ self::SECTION_PREFIX . 'date_time_type' ] ) {
-				case 'date':
-					$date_from    = $settings[ self::SECTION_PREFIX . 'date_from' ];
-					$date_to      = $settings[ self::SECTION_PREFIX . 'date_to' ];
-					$current_date = current_time( 'timestamp' );
+		switch ( $settings[ self::SECTION_PREFIX . 'date_time_type' ] ) {
+			case 'date':
+				$date_from    = $settings[ self::SECTION_PREFIX . 'date_from' ];
+				$date_to      = $settings[ self::SECTION_PREFIX . 'date_to' ];
+				$current_date = current_time( 'timestamp' );
 
-					if ( $date_from && $date_to ) {
-						if ( $current_date >= strtotime( $date_from ) && $current_date <= strtotime( $date_to ) ) {
-							$options['date_time'] = true;
-						}
-					} elseif ( $date_from && ! $date_to ) {
-						if ( $current_date >= strtotime( $date_from ) ) {
-							$options['date_time'] = true;
-						}
-					} elseif ( ! $date_from && $date_to ) {
-						if ( $current_date <= strtotime( $date_to ) ) {
-							$options['date_time'] = true;
-						}
-					}
-					break;
-				case 'time';
-					$time_from = $settings[ self::SECTION_PREFIX . 'time_from' ];
-					$time_to   = $settings[ self::SECTION_PREFIX . 'time_to' ];
-
-					$current_time = strtotime( current_time( 'H:i' ) );
-
-					if ( $time_from && $time_to ) {
-						if ( $time_from > $time_to ) {
-							$time_from = strtotime( $time_from );
-							$time_to   = strtotime( $time_to );
-
-							if ( $current_time >= $time_from && $current_time <= strtotime( '24:00' ) ||
-								$current_time >= strtotime( '00:00' ) && $current_time <= $time_to ) {
-								$$options['date_time'] = true;
-							}
-						} else {
-							$time_from = strtotime( $time_from );
-							$time_to   = strtotime( $time_to );
-
-							if ( $current_time >= $time_from && $current_time <= $time_to ) {
-								$options['date_time'] = true;
-							}
-						}
-					} elseif ( $time_from && ! $time_to ) {
-						$time_from = strtotime( $time_from );
-						if ( $current_time >= $time_from ) {
-							$options['date_time'] = true;
-						}
-					} elseif ( ! $time_from && $time_to ) {
-						$time_to = strtotime( $time_to );
-						if ( $current_time <= $time_to ) {
-							$options['date_time'] = true;
-						}
-					}
-					break;
-				case 'week_days':
-					if ( is_array( $settings[ self::SECTION_PREFIX . 'time_week' ] ) && in_array( current_time( 'w' ), $settings[ self::SECTION_PREFIX . 'time_week' ] ) ) {
+				if ( $date_from && $date_to ) {
+					if ( $current_date >= strtotime( $date_from ) && $current_date <= strtotime( $date_to ) ) {
 						$options['date_time'] = true;
 					}
-					break;
-				case 'week_days_time':
-					$time_matched = false;
-					$day_matched  = false;
+				} elseif ( $date_from && ! $date_to ) {
+					if ( $current_date >= strtotime( $date_from ) ) {
+						$options['date_time'] = true;
+					}
+				} elseif ( ! $date_from && $date_to ) {
+					if ( $current_date <= strtotime( $date_to ) ) {
+						$options['date_time'] = true;
+					}
+				}
+				break;
+			case 'time';
+				$time_from = $settings[ self::SECTION_PREFIX . 'time_from' ];
+				$time_to   = $settings[ self::SECTION_PREFIX . 'time_to' ];
 
-					$time_from = $settings[ self::SECTION_PREFIX . 'time_from' ];
-					$time_to   = $settings[ self::SECTION_PREFIX . 'time_to' ];
+				$current_time = strtotime( current_time( 'H:i' ) );
 
-					$current_time = strtotime( current_time( 'H:i' ) );
-
-					if ( $time_from && $time_to ) {
-						if ( $time_from > $time_to ) {
-							$time_from = strtotime( $time_from );
-							$time_to   = strtotime( $time_to );
-
-							if ( $current_time >= $time_from && $current_time <= strtotime( '24:00' ) ||
-								$current_time >= strtotime( '00:00' ) && $current_time <= $time_to ) {
-								$time_matched = true;
-							}
-						} else {
-							$time_from = strtotime( $time_from );
-							$time_to   = strtotime( $time_to );
-
-							if ( $current_time >= $time_from && $current_time <= $time_to ) {
-								$time_matched = true;
-							}
-						}
-					} elseif ( $time_from && ! $time_to ) {
+				if ( $time_from && $time_to ) {
+					if ( $time_from > $time_to ) {
 						$time_from = strtotime( $time_from );
-						if ( $current_time >= $time_from ) {
+						$time_to   = strtotime( $time_to );
+
+						if ( $current_time >= $time_from && $current_time <= strtotime( '24:00' ) ||
+							$current_time >= strtotime( '00:00' ) && $current_time <= $time_to ) {
+							$$options['date_time'] = true;
+						}
+					} else {
+						$time_from = strtotime( $time_from );
+						$time_to   = strtotime( $time_to );
+
+						if ( $current_time >= $time_from && $current_time <= $time_to ) {
+							$options['date_time'] = true;
+						}
+					}
+				} elseif ( $time_from && ! $time_to ) {
+					$time_from = strtotime( $time_from );
+					if ( $current_time >= $time_from ) {
+						$options['date_time'] = true;
+					}
+				} elseif ( ! $time_from && $time_to ) {
+					$time_to = strtotime( $time_to );
+					if ( $current_time <= $time_to ) {
+						$options['date_time'] = true;
+					}
+				}
+				break;
+			case 'week_days':
+				if ( is_array( $settings[ self::SECTION_PREFIX . 'time_week' ] ) && in_array( current_time( 'w' ), $settings[ self::SECTION_PREFIX . 'time_week' ] ) ) {
+					$options['date_time'] = true;
+				}
+				break;
+			case 'week_days_time':
+				$time_matched = false;
+				$day_matched  = false;
+
+				$time_from = $settings[ self::SECTION_PREFIX . 'time_from' ];
+				$time_to   = $settings[ self::SECTION_PREFIX . 'time_to' ];
+
+				$current_time = strtotime( current_time( 'H:i' ) );
+
+				if ( $time_from && $time_to ) {
+					if ( $time_from > $time_to ) {
+						$time_from = strtotime( $time_from );
+						$time_to   = strtotime( $time_to );
+
+						if ( $current_time >= $time_from && $current_time <= strtotime( '24:00' ) ||
+							$current_time >= strtotime( '00:00' ) && $current_time <= $time_to ) {
 							$time_matched = true;
 						}
-					} elseif ( ! $time_from && $time_to ) {
-						$time_to = strtotime( $time_to );
-						if ( $current_time <= $time_to ) {
+					} else {
+						$time_from = strtotime( $time_from );
+						$time_to   = strtotime( $time_to );
+
+						if ( $current_time >= $time_from && $current_time <= $time_to ) {
 							$time_matched = true;
 						}
 					}
-
-					if ( is_array( $settings[ self::SECTION_PREFIX . 'time_week' ] ) &&
-						! empty( $settings[ self::SECTION_PREFIX . 'time_week' ] ) &&
-						in_array( current_time( 'w' ), $settings[ self::SECTION_PREFIX . 'time_week' ] ) ) {
-						$day_matched = true;
+				} elseif ( $time_from && ! $time_to ) {
+					$time_from = strtotime( $time_from );
+					if ( $current_time >= $time_from ) {
+						$time_matched = true;
 					}
+				} elseif ( ! $time_from && $time_to ) {
+					$time_to = strtotime( $time_to );
+					if ( $current_time <= $time_to ) {
+						$time_matched = true;
+					}
+				}
 
-					$options['date_time'] = $time_matched && $day_matched;
-					break;
-				default:
-			}
+				if ( is_array( $settings[ self::SECTION_PREFIX . 'time_week' ] ) &&
+					! empty( $settings[ self::SECTION_PREFIX . 'time_week' ] ) &&
+					in_array( current_time( 'w' ), $settings[ self::SECTION_PREFIX . 'time_week' ] ) ) {
+					$day_matched = true;
+				}
+
+				$options['date_time'] = $time_matched && $day_matched;
+				break;
+			default:
+				$options['date_time'] = false;
 		}
 
 		return $options;

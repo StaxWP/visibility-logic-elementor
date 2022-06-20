@@ -92,35 +92,32 @@ class UserRoleVisibility extends Singleton {
 	public function apply_conditions( $options, $settings, $item ) {
 		$settings = $item->get_settings_for_display();
 
-		if ( (bool) $settings[ self::SECTION_PREFIX . 'user_role_enabled' ] ) {
-			$options['user_role'] = false;
+		if ( ! (bool) $settings[ self::SECTION_PREFIX . 'user_role_enabled' ] || empty( $settings[ self::SECTION_PREFIX . 'user_role_conditions' ] ) ) {
+			return $options;
+		}
 
-			if ( ! empty( $settings[ self::SECTION_PREFIX . 'user_role_conditions' ] ) ) {
-				$user_state = is_user_logged_in();
+		$user = wp_get_current_user();
 
-				$is_guest     = false;
-				$is_logged_in = false;
-				$has_role     = false;
+		$is_guest     = false;
+		$is_logged_in = false;
+		$has_role     = false;
 
-				if ( in_array( 'ecl-guest', $settings[ self::SECTION_PREFIX . 'user_role_conditions' ] ) ) {
-					$is_guest = ! $user_state;
-				}
+		if ( in_array( 'ecl-guest', $settings[ self::SECTION_PREFIX . 'user_role_conditions' ] ) ) {
+			$is_guest = ! $user->ID;
+		}
 
-				if ( in_array( 'ecl-user', $settings[ self::SECTION_PREFIX . 'user_role_conditions' ] ) ) {
-					$is_logged_in = $user_state;
-				}
+		if ( in_array( 'ecl-user', $settings[ self::SECTION_PREFIX . 'user_role_conditions' ] ) ) {
+			$is_logged_in = $user->ID;
+		}
 
-				$user = wp_get_current_user();
-
-				foreach ( $settings[ self::SECTION_PREFIX . 'user_role_conditions' ] as $setting ) {
-					if ( in_array( $setting, (array) $user->roles ) ) {
-						$has_role = true;
-					}
-				}
-
-				$options['user_role'] = $is_guest || $is_logged_in || $has_role;
+		foreach ( $settings[ self::SECTION_PREFIX . 'user_role_conditions' ] as $setting ) {
+			if ( in_array( $setting, (array) $user->roles ) ) {
+				$has_role = true;
+				break;
 			}
 		}
+
+		$options['user_role'] = $is_guest || $is_logged_in || $has_role;
 
 		return $options;
 	}
