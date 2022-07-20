@@ -3,7 +3,7 @@ Contributors: staxwp, seventhqueen, kierantaylorio, codezz, rtynio, geowrge
 Tags: elementor, elementor restrictions, elementor conditions, elementor widgets, visibility logic, widget conditions
 Requires at least: 5.0
 Requires PHP: 5.6
-Tested up to: 5.9
+Tested up to: 6.0
 Stable tag: 2.3.1
 License: GLPv2 or later
 
