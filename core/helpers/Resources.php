@@ -144,6 +144,10 @@ final class Resources extends Singleton {
 				'name' => __( 'IP & Referrer', 'visibility-logic-elementor' ),
 				'pro'  => true,
 			],
+			'geo-location'       => [
+				'name' => __( 'Geo Location', 'visibility-logic-elementor' ),
+				'pro'  => true,
+			],
 			'advanced-user-meta' => [
 				'name' => __( 'Advanced User Meta', 'visibility-logic-elementor' ),
 				'pro'  => true,

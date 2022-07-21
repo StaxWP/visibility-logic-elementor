@@ -19,6 +19,7 @@
 .elementor-control-stax_visibility_pro_user_meta,
 .elementor-control-stax_visibility_pro_advanced_user_meta,
 .elementor-control-stax_visibility_pro_ip_referrer,
+.elementor-control-stax_visibility_pro_geo_location,
 .elementor-control-stax_visibility_pro_browser_type,
 .elementor-control-stax_visibility_pro_date_time,
 .elementor-control-stax_visibility_pro_post_page,
@@ -36,6 +37,8 @@
 .elementor-control-stax_visibility_pro_advanced_user_meta
   .elementor-panel-heading-toggle,
 .elementor-control-stax_visibility_pro_ip_referrer
+  .elementor-panel-heading-toggle,
+.elementor-control-stax_visibility_pro_geo_location
   .elementor-panel-heading-toggle,
 .elementor-control-stax_visibility_pro_browser_type
   .elementor-panel-heading-toggle,
@@ -62,6 +65,8 @@
   .elementor-panel-heading-title,
 .elementor-control-stax_visibility_pro_ip_referrer
   .elementor-panel-heading-title,
+.elementor-control-stax_visibility_pro_geo_location
+  .elementor-panel-heading-title,
 .elementor-control-stax_visibility_pro_browser_type
   .elementor-panel-heading-title,
 .elementor-control-stax_visibility_pro_date_time .elementor-panel-heading-title,
@@ -86,6 +91,8 @@
 .elementor-control-stax_visibility_pro_advanced_user_meta
   .elementor-panel-heading-title:after,
 .elementor-control-stax_visibility_pro_ip_referrer
+  .elementor-panel-heading-title:after,
+.elementor-control-stax_visibility_pro_geo_location
   .elementor-panel-heading-title:after,
 .elementor-control-stax_visibility_pro_browser_type
   .elementor-panel-heading-title:after,
