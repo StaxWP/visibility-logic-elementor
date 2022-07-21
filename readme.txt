@@ -20,15 +20,19 @@ Note: Updating from older version 1.2.0 to 2.1.3 is safe and it will keep your i
 - User Meta content restriction
 - Restrict content based on User Browser (Chrome, Mozilla, Safari, etc)
 - Date & Time restrictions for content
-- Hide a whole section if all widgets inside it are hidden using visibility settings (Works with nested sections too)
+- Hide a whole section if all widgets inside it are hidden using visibility settings (Works with nested sections/containers too)
 
 = PRO Features =
-- Post & Page, Taxonomy, URL Parameter content restriction
-- Archive restrictions based on Post types and taxonomies
-- IP & Referrer restrictions
-- WordPress Conditional Tags restrictions
+- Advanced User Meta - Support for multiple user meta conditions with And/Or condition.
+- Post & Page, Taxonomy, URL Parameter content restriction.
+- Archive restrictions based on Post types and taxonomies.
+- IP & Referrer restrictions.
+- Geo Location - Use MaxMind to dynamically display elements based on user's country.
+- WordPress Conditional Tags restrictions.
 - Dynamic conditions - Restrict Elementor widgets and sections based on all Elementor Pro Dynamic tags.
-- Fallback - Allows you to show a message instead of hiding the element.
+- WooCommerce Users - Restrict based on user's order/subscription
+- Easy Digital Downloads Users - Restrict based on user's order/subscription
+- Fallback - Allows you to replace a hidden element with a text message or an Elementor template.
 
 Find more about our [Pro version](https://staxwp.com/go/visibility-logic).
 
