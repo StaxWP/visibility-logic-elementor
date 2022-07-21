@@ -316,6 +316,62 @@ class QueryControl extends Module {
 	}
 
 	/**
+	 * Get values for geo location country
+	 *
+	 * @param [type] $request
+	 * @return array
+	 */
+	protected function get_value_titles_for_geo_location_country( $request ) {
+		if ( Plugin::instance()->has_pro() ) {
+			return \Stax\VisibilityLogicPro\FunctionCaller::get_value_titles_for_geo_location_country( $request );
+		}
+
+		return [];
+	}
+
+	/**
+	 * Get values for geo location country
+	 *
+	 * @param array $data
+	 * @return array
+	 */
+	protected function get_geo_location_country( $data ) {
+		if ( Plugin::instance()->has_pro() ) {
+			return \Stax\VisibilityLogicPro\FunctionCaller::get_geo_location_country( $data );
+		}
+
+		return [];
+	}
+
+	/**
+	 * Get values for geo location city
+	 *
+	 * @param [type] $request
+	 * @return array
+	 */
+	protected function get_value_titles_for_geo_location_city( $request ) {
+		if ( Plugin::instance()->has_pro() ) {
+			return \Stax\VisibilityLogicPro\FunctionCaller::get_value_titles_for_geo_location_city( $request );
+		}
+
+		return [];
+	}
+
+	/**
+	 * Get geo location city
+	 *
+	 * @param array $data
+	 * @return array
+	 */
+	protected function get_geo_location_city( $data ) {
+		if ( Plugin::instance()->has_pro() ) {
+			return \Stax\VisibilityLogicPro\FunctionCaller::get_geo_location_city( $data );
+		}
+
+		return [];
+	}
+
+	/**
 	 * Get values for edd products
 	 *
 	 * @param [type] $request
