@@ -11,7 +11,7 @@ $item_class = $has_pro ? 'xl:ste-w-1/4' : '';
 	<?php esc_html_e( 'Options', 'visibility-logic-elementor' ); ?>
 </h2>
 
-<div class="ste-text-sm ste-text-gray-7700 ste-mt-2">
+<div class="ste-text-sm ste-text-gray-700 ste-mt-2">
 	<?php esc_html_e( 'Choose which Visibility Options should be enabled in Elementor for Widgets and Sections. Disabled options will have no effect in the show/hide logic.', 'visibility-logic-elementor' ); ?>
 </div>
 
