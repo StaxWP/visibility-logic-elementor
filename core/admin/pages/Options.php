@@ -31,7 +31,7 @@ class Options extends Base {
 	 */
 	public function toggle_option() {
 		if ( ! isset( $_POST['action'] ) || 'stax_visibility_options_activation' !== $_POST['action'] ) {
-			wp_redirect( admin_url( 'admin.php?page=' . STAX_VISIBILITY_SLUG_PREFIX . $this->current_slug ) );
+			wp_redirect( admin_url( 'options-general.php?page=' . STAX_VISIBILITY_SLUG_PREFIX . $this->current_slug ) );
 		}
 
 		$disabled_options = [];
@@ -46,7 +46,7 @@ class Options extends Base {
 
 		update_option( '_stax_visibility_disabled_options', $disabled_options );
 
-		wp_redirect( admin_url( 'admin.php?page=' . STAX_VISIBILITY_SLUG_PREFIX . $this->current_slug ) );
+		wp_redirect( admin_url( 'options-general.php?page=' . STAX_VISIBILITY_SLUG_PREFIX . $this->current_slug ) );
 		exit();
 	}
 
@@ -71,7 +71,7 @@ class Options extends Base {
 	public function add_menu_item( $menu ) {
 		$menu[] = [
 			'name'     => __( 'Options', 'visibility-logic-elementor' ),
-			'link'     => admin_url( 'admin.php?page=' . STAX_VISIBILITY_SLUG_PREFIX . $this->current_slug ),
+			'link'     => admin_url( 'options-general.php?page=' . STAX_VISIBILITY_SLUG_PREFIX . $this->current_slug ),
 			'query'    => STAX_VISIBILITY_SLUG_PREFIX . $this->current_slug,
 			'priority' => 2,
 		];
