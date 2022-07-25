@@ -2,7 +2,7 @@
 Contributors: staxwp, seventhqueen, kierantaylorio, codezz, rtynio, geowrge
 Tags: elementor, elementor restrictions, elementor conditions, elementor widgets, visibility logic, widget conditions
 Requires at least: 5.0
-Requires PHP: 5.6
+Requires PHP: 7.0
 Tested up to: 6.0
 Stable tag: 2.3.1
 License: GLPv2 or later
@@ -13,8 +13,6 @@ Show/hide Elementor widgets or sections based on user role, user meta, user logg
 Show or hide Elementor widgets or sections based on various conditions like: User is logged in, User has a specific meta, The day is Wednesday, The time is between X and Y, The user is using Firefox browser, and many more.
 
 The visibility settings will only affect widgets' rendering in the frontend. While you are inside Elementor editor you will be able to see all of them.
-
-Note: Updating from older version 1.2.0 to 2.1.3 is safe and it will keep your initial settings. You can still access them from the Stax Visibility tab when editing an Elementor widget or section.
 
 = Free Features =
 - User Meta content restriction
