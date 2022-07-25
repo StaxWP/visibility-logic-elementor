@@ -54,28 +54,30 @@ class UserRoleVisibility extends Singleton {
 		$element->add_control(
 			self::SECTION_PREFIX . 'user_role_enabled',
 			[
-				'label'        => __( 'Enable', 'visibility-logic-elementor' ),
-				'type'         => Controls_Manager::SWITCHER,
-				'default'      => '',
-				'label_on'     => __( 'Yes', 'visibility-logic-elementor' ),
-				'label_off'    => __( 'No', 'visibility-logic-elementor' ),
-				'return_value' => 'yes',
-				'prefix_class' => 'stax-user_role_enabled-',
+				'label'          => __( 'Enable', 'visibility-logic-elementor' ),
+				'type'           => Controls_Manager::SWITCHER,
+				'default'        => '',
+				'label_on'       => __( 'Yes', 'visibility-logic-elementor' ),
+				'label_off'      => __( 'No', 'visibility-logic-elementor' ),
+				'return_value'   => 'yes',
+				'prefix_class'   => 'stax-user_role_enabled-',
+				'style_transfer' => false,
 			]
 		);
 
 		$element->add_control(
 			self::SECTION_PREFIX . 'user_role_conditions',
 			[
-				'type'        => Controls_Manager::SELECT2,
-				'label'       => __( 'Roles', 'visibility-logic-elementor' ),
-				'options'     => Resources::get_user_roles(),
-				'default'     => [],
-				'multiple'    => true,
-				'label_block' => true,
-				'condition'   => [
+				'type'           => Controls_Manager::SELECT2,
+				'label'          => __( 'Roles', 'visibility-logic-elementor' ),
+				'options'        => Resources::get_user_roles(),
+				'default'        => [],
+				'multiple'       => true,
+				'label_block'    => true,
+				'condition'      => [
 					self::SECTION_PREFIX . 'user_role_enabled' => 'yes',
 				],
+				'style_transfer' => false,
 			]
 		);
 	}

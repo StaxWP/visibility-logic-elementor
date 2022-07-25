@@ -55,39 +55,41 @@ class UserMetaVisibility extends Singleton {
 		$element->add_control(
 			self::SECTION_PREFIX . 'user_meta_enabled',
 			[
-				'label'        => __( 'Enable', 'visibility-logic-elementor' ),
-				'type'         => Controls_Manager::SWITCHER,
-				'default'      => '',
-				'label_on'     => __( 'Yes', 'visibility-logic-elementor' ),
-				'label_off'    => __( 'No', 'visibility-logic-elementor' ),
-				'return_value' => 'yes',
-				'prefix_class' => 'stax-user_meta_enabled-',
+				'label'          => __( 'Enable', 'visibility-logic-elementor' ),
+				'type'           => Controls_Manager::SWITCHER,
+				'default'        => '',
+				'label_on'       => __( 'Yes', 'visibility-logic-elementor' ),
+				'label_off'      => __( 'No', 'visibility-logic-elementor' ),
+				'return_value'   => 'yes',
+				'prefix_class'   => 'stax-user_meta_enabled-',
+				'style_transfer' => false,
 			]
 		);
 
 		$element->add_control(
 			self::SECTION_PREFIX . 'user_meta_options',
 			[
-				'type'        => 'stax_query',
-				'label'       => __( 'Meta Name', 'visibility-logic-elementor' ),
-				'query_type'  => 'fields',
-				'object_type' => 'user',
-				'placeholder' => __( 'Meta key or Name', 'visibility-logic-elementor' ),
-				'label_block' => true,
-				'multiple'    => true,
-				'condition'   => [
+				'type'           => 'stax_query',
+				'label'          => __( 'Meta Name', 'visibility-logic-elementor' ),
+				'query_type'     => 'fields',
+				'object_type'    => 'user',
+				'placeholder'    => __( 'Meta key or Name', 'visibility-logic-elementor' ),
+				'label_block'    => true,
+				'multiple'       => true,
+				'condition'      => [
 					self::SECTION_PREFIX . 'user_meta_enabled' => 'yes',
 				],
+				'style_transfer' => false,
 			]
 		);
 
 		$element->add_control(
 			self::SECTION_PREFIX . 'user_meta_status',
 			[
-				'type'        => Controls_Manager::SELECT2,
-				'label'       => __( 'Meta Condition', 'visibility-logic-elementor' ),
-				'description' => __( 'Select the condition that must be met by the meta', 'visibility-logic-elementor' ),
-				'options'     => [
+				'type'           => Controls_Manager::SELECT2,
+				'label'          => __( 'Meta Condition', 'visibility-logic-elementor' ),
+				'description'    => __( 'Select the condition that must be met by the meta', 'visibility-logic-elementor' ),
+				'options'        => [
 					'none'                    => __( 'None', 'visibility-logic-elementor' ),
 					'empty'                   => __( 'Empty', 'visibility-logic-elementor' ),
 					'not_empty'               => __( 'Not empty', 'visibility-logic-elementor' ),
@@ -102,22 +104,23 @@ class UserMetaVisibility extends Singleton {
 					'is_array'                => __( 'Is array', 'visibility-logic-elementor' ),
 					'is_array_and_contains'   => __( 'Is array and contains', 'visibility-logic-elementor' ),
 				],
-				'default'     => 'none',
-				'label_block' => true,
-				'condition'   => [
+				'default'        => 'none',
+				'label_block'    => true,
+				'condition'      => [
 					self::SECTION_PREFIX . 'user_meta_enabled' => 'yes',
 					self::SECTION_PREFIX . 'user_meta_options!' => '',
 				],
+				'style_transfer' => false,
 			]
 		);
 
 		$element->add_control(
 			self::SECTION_PREFIX . 'user_meta_value',
 			[
-				'label'       => __( 'Condition Value', 'visibility-logic-elementor' ),
-				'type'        => Controls_Manager::TEXTAREA,
-				'label_block' => true,
-				'condition'   => [
+				'label'          => __( 'Condition Value', 'visibility-logic-elementor' ),
+				'type'           => Controls_Manager::TEXTAREA,
+				'label_block'    => true,
+				'condition'      => [
 					self::SECTION_PREFIX . 'user_meta_enabled' => 'yes',
 					self::SECTION_PREFIX . 'user_meta_options!' => '',
 					self::SECTION_PREFIX . 'user_meta_status' => [
@@ -132,20 +135,22 @@ class UserMetaVisibility extends Singleton {
 						'is_array_and_contains',
 					],
 				],
+				'style_transfer' => false,
 			]
 		);
 
 		$element->add_control(
 			self::SECTION_PREFIX . 'user_meta_value_2',
 			[
-				'label'       => __( 'Condition Value 2', 'visibility-logic-elementor' ),
-				'type'        => Controls_Manager::TEXTAREA,
-				'label_block' => true,
-				'condition'   => [
+				'label'          => __( 'Condition Value 2', 'visibility-logic-elementor' ),
+				'type'           => Controls_Manager::TEXTAREA,
+				'label_block'    => true,
+				'condition'      => [
 					self::SECTION_PREFIX . 'user_meta_enabled' => 'yes',
 					self::SECTION_PREFIX . 'user_meta_options!' => '',
 					self::SECTION_PREFIX . 'user_meta_status' => 'is_between',
 				],
+				'style_transfer' => false,
 			]
 		);
 
@@ -163,6 +168,7 @@ class UserMetaVisibility extends Singleton {
 						'is_array_and_contains',
 					],
 				],
+				'style_transfer'  => false,
 			]
 		);
 
@@ -181,6 +187,7 @@ class UserMetaVisibility extends Singleton {
 						'greater_than',
 					],
 				],
+				'style_transfer'  => false,
 			]
 		);
 
@@ -197,6 +204,7 @@ class UserMetaVisibility extends Singleton {
 						'none',
 					],
 				],
+				'style_transfer'  => false,
 			]
 		);
 	}

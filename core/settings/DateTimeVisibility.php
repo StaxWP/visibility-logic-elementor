@@ -55,59 +55,63 @@ class DateTimeVisibility extends Singleton {
 		$element->add_control(
 			self::SECTION_PREFIX . 'date_time_enabled',
 			[
-				'label'        => __( 'Enable', 'visibility-logic-elementor' ),
-				'type'         => Controls_Manager::SWITCHER,
-				'default'      => '',
-				'label_on'     => __( 'Yes', 'visibility-logic-elementor' ),
-				'label_off'    => __( 'No', 'visibility-logic-elementor' ),
-				'return_value' => 'yes',
-				'render_type'  => 'ui',
-				'prefix_class' => 'stax-date_time_enabled-',
+				'label'          => __( 'Enable', 'visibility-logic-elementor' ),
+				'type'           => Controls_Manager::SWITCHER,
+				'default'        => '',
+				'label_on'       => __( 'Yes', 'visibility-logic-elementor' ),
+				'label_off'      => __( 'No', 'visibility-logic-elementor' ),
+				'return_value'   => 'yes',
+				'render_type'    => 'ui',
+				'prefix_class'   => 'stax-date_time_enabled-',
+				'style_transfer' => false,
 			]
 		);
 
 		$element->add_control(
 			self::SECTION_PREFIX . 'date_time_type',
 			[
-				'type'        => Controls_Manager::SELECT,
-				'label'       => __( 'Select Type:', 'visibility-logic-elementor' ),
-				'options'     => [
+				'type'           => Controls_Manager::SELECT,
+				'label'          => __( 'Select Type:', 'visibility-logic-elementor' ),
+				'options'        => [
 					'date'           => __( 'Date FROM/TO', 'visibility-logic-elementor' ),
 					'time'           => __( 'Time FROM/TO', 'visibility-logic-elementor' ),
 					'week_days'      => __( 'Week Days', 'visibility-logic-elementor' ),
 					'week_days_time' => __( 'Week Days + Time FROM/TO', 'visibility-logic-elementor' ),
 				],
-				'default'     => 'date',
-				'condition'   => [
+				'default'        => 'date',
+				'condition'      => [
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
 				],
-				'render_type' => 'ui',
+				'render_type'    => 'ui',
+				'style_transfer' => false,
 			]
 		);
 
 		$element->add_control(
 			self::SECTION_PREFIX . 'date_from',
 			[
-				'label'       => __( 'Date FROM', 'visibility-logic-elementor' ),
-				'type'        => Controls_Manager::DATE_TIME,
-				'condition'   => [
+				'label'          => __( 'Date FROM', 'visibility-logic-elementor' ),
+				'type'           => Controls_Manager::DATE_TIME,
+				'condition'      => [
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
 					self::SECTION_PREFIX . 'date_time_type' => 'date',
 				],
-				'render_type' => 'ui',
+				'render_type'    => 'ui',
+				'style_transfer' => false,
 			]
 		);
 
 		$element->add_control(
 			self::SECTION_PREFIX . 'date_to',
 			[
-				'label'       => __( 'Date TO', 'visibility-logic-elementor' ),
-				'type'        => Controls_Manager::DATE_TIME,
-				'condition'   => [
+				'label'          => __( 'Date TO', 'visibility-logic-elementor' ),
+				'type'           => Controls_Manager::DATE_TIME,
+				'condition'      => [
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
 					self::SECTION_PREFIX . 'date_time_type' => 'date',
 				],
-				'render_type' => 'ui',
+				'render_type'    => 'ui',
+				'style_transfer' => false,
 			]
 		);
 
@@ -121,67 +125,72 @@ class DateTimeVisibility extends Singleton {
 		$element->add_control(
 			self::SECTION_PREFIX . 'time_week',
 			[
-				'label'       => __( 'Days of the WEEK', 'visibility-logic-elementor' ),
-				'type'        => Controls_Manager::SELECT2,
-				'options'     => $week,
-				'description' => __( 'Select days in the week.', 'visibility-logic-elementor' ),
-				'multiple'    => true,
-				'condition'   => [
+				'label'          => __( 'Days of the WEEK', 'visibility-logic-elementor' ),
+				'type'           => Controls_Manager::SELECT2,
+				'options'        => $week,
+				'description'    => __( 'Select days in the week.', 'visibility-logic-elementor' ),
+				'multiple'       => true,
+				'condition'      => [
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
 					self::SECTION_PREFIX . 'date_time_type' => [ 'week_days', 'week_days_time' ],
 				],
-				'render_type' => 'ui',
+				'render_type'    => 'ui',
+				'style_transfer' => false,
 			]
 		);
 
 		$element->add_control(
 			self::SECTION_PREFIX . 'time_from',
 			[
-				'label'       => __( 'Time FROM', 'visibility-logic-elementor' ),
-				'type'        => Controls_Manager::TEXT,
-				'placeholder' => 'HH:mm',
-				'condition'   => [
+				'label'          => __( 'Time FROM', 'visibility-logic-elementor' ),
+				'type'           => Controls_Manager::TEXT,
+				'placeholder'    => 'HH:mm',
+				'condition'      => [
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
 					self::SECTION_PREFIX . 'date_time_type' => [ 'time', 'week_days_time' ],
 				],
+				'style_transfer' => false,
 			]
 		);
 
 		$element->add_control(
 			self::SECTION_PREFIX . 'time_to',
 			[
-				'label'       => __( 'Time TO', 'visibility-logic-elementor' ),
-				'type'        => Controls_Manager::TEXT,
-				'placeholder' => 'HH:mm',
-				'condition'   => [
+				'label'          => __( 'Time TO', 'visibility-logic-elementor' ),
+				'type'           => Controls_Manager::TEXT,
+				'placeholder'    => 'HH:mm',
+				'condition'      => [
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
 					self::SECTION_PREFIX . 'date_time_type' => [ 'time', 'week_days_time' ],
 				],
-				'render_type' => 'ui',
+				'render_type'    => 'ui',
+				'style_transfer' => false,
 			]
 		);
 
 		$element->add_control(
 			self::SECTION_PREFIX . 'date_info_wdt',
 			[
-				'type'      => Controls_Manager::RAW_HTML,
-				'raw'       => __( 'When picking time that extends over midnight, the condition will be applied just for the selected days. Example: Wednesday 23:00 - 01:00 doesn\'t mean that the condition will extend from 23:00 Wednesday till 01:00 Thursday. It will get applied only for Wednesday 00:00 - 01:00 and 23:00 - 24:00.', 'visibility-logic-elementor' ),
-				'condition' => [
+				'type'           => Controls_Manager::RAW_HTML,
+				'raw'            => __( 'When picking time that extends over midnight, the condition will be applied just for the selected days. Example: Wednesday 23:00 - 01:00 doesn\'t mean that the condition will extend from 23:00 Wednesday till 01:00 Thursday. It will get applied only for Wednesday 00:00 - 01:00 and 23:00 - 24:00.', 'visibility-logic-elementor' ),
+				'condition'      => [
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
 					self::SECTION_PREFIX . 'date_time_type' => 'week_days_time',
 				],
+				'style_transfer' => false,
 			]
 		);
 
 		$element->add_control(
 			self::SECTION_PREFIX . 'date_info',
 			[
-				'type'      => Controls_Manager::RAW_HTML,
-				'raw'       => __( 'Use timestamps based on server time:', 'visibility-logic-elementor' ) .
+				'type'           => Controls_Manager::RAW_HTML,
+				'raw'            => __( 'Use timestamps based on server time:', 'visibility-logic-elementor' ) .
 									 '<br><strong>' . date( 'Y-m-d H:i', current_time( 'timestamp' ) ) . '</strong>',
-				'condition' => [
+				'condition'      => [
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
 				],
+				'style_transfer' => false,
 			]
 		);
 	}

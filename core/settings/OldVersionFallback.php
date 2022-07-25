@@ -61,7 +61,6 @@ class OldVersionFallback extends Singleton {
 
 			$element->end_controls_section();
 		}
-
 	}
 
 	/**
@@ -105,44 +104,47 @@ class OldVersionFallback extends Singleton {
 		$element->add_control(
 			'ecl_enabled',
 			[
-				'label'        => __( 'Enable Conditions', 'visibility-logic-elementor' ),
-				'type'         => Controls_Manager::SWITCHER,
-				'default'      => '',
-				'label_on'     => __( 'Yes', 'visibility-logic-elementor' ),
-				'label_off'    => __( 'No', 'visibility-logic-elementor' ),
-				'return_value' => 'yes',
+				'label'          => __( 'Enable Conditions', 'visibility-logic-elementor' ),
+				'type'           => Controls_Manager::SWITCHER,
+				'default'        => '',
+				'label_on'       => __( 'Yes', 'visibility-logic-elementor' ),
+				'label_off'      => __( 'No', 'visibility-logic-elementor' ),
+				'return_value'   => 'yes',
+				'style_transfer' => false,
 			]
 		);
 
 		$element->add_control(
 			'ecl_role_visible',
 			[
-				'type'        => Controls_Manager::SELECT2,
-				'label'       => __( 'Visible for:', 'visibility-logic-elementor' ),
-				'options'     => Resources::get_user_roles(),
-				'default'     => [],
-				'multiple'    => true,
-				'label_block' => true,
-				'condition'   => [
+				'type'           => Controls_Manager::SELECT2,
+				'label'          => __( 'Visible for:', 'visibility-logic-elementor' ),
+				'options'        => Resources::get_user_roles(),
+				'default'        => [],
+				'multiple'       => true,
+				'label_block'    => true,
+				'condition'      => [
 					'ecl_enabled'     => 'yes',
 					'ecl_role_hidden' => [],
 				],
+				'style_transfer' => false,
 			]
 		);
 
 		$element->add_control(
 			'ecl_role_hidden',
 			[
-				'type'        => Controls_Manager::SELECT2,
-				'label'       => __( 'Hidden for:', 'visibility-logic-elementor' ),
-				'options'     => Resources::get_user_roles(),
-				'default'     => [],
-				'multiple'    => true,
-				'label_block' => true,
-				'condition'   => [
+				'type'           => Controls_Manager::SELECT2,
+				'label'          => __( 'Hidden for:', 'visibility-logic-elementor' ),
+				'options'        => Resources::get_user_roles(),
+				'default'        => [],
+				'multiple'       => true,
+				'label_block'    => true,
+				'condition'      => [
 					'ecl_enabled'      => 'yes',
 					'ecl_role_visible' => [],
 				],
+				'style_transfer' => false,
 			]
 		);
 
@@ -153,6 +155,7 @@ class OldVersionFallback extends Singleton {
 				'type'            => Controls_Manager::RAW_HTML,
 				'raw'             => __( 'This is a backwards compatibility for version 1.2.0. If you want to use the new version please enable the option in General tab.', 'visibility-logic-elementor' ),
 				'content_classes' => 'visibility-old-version-notice',
+				'style_transfer'  => false,
 			]
 		);
 	}

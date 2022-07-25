@@ -56,22 +56,23 @@ class BrowserTypeVisiblity extends Singleton {
 		$element->add_control(
 			self::SECTION_PREFIX . 'browser_type_enabled',
 			[
-				'label'        => __( 'Enable', 'visibility-logic-elementor' ),
-				'type'         => Controls_Manager::SWITCHER,
-				'default'      => '',
-				'label_on'     => __( 'Yes', 'visibility-logic-elementor' ),
-				'label_off'    => __( 'No', 'visibility-logic-elementor' ),
-				'return_value' => 'yes',
-				'prefix_class' => 'stax-browser_type_enabled-',
+				'label'          => __( 'Enable', 'visibility-logic-elementor' ),
+				'type'           => Controls_Manager::SWITCHER,
+				'default'        => '',
+				'label_on'       => __( 'Yes', 'visibility-logic-elementor' ),
+				'label_off'      => __( 'No', 'visibility-logic-elementor' ),
+				'return_value'   => 'yes',
+				'prefix_class'   => 'stax-browser_type_enabled-',
+				'style_transfer' => false,
 			]
 		);
 
 		$element->add_control(
 			self::SECTION_PREFIX . 'browsers',
 			[
-				'label'       => __( 'Browser', 'visibility-logic-elementor' ),
-				'type'        => Controls_Manager::SELECT2,
-				'options'     => [
+				'label'          => __( 'Browser', 'visibility-logic-elementor' ),
+				'type'           => Controls_Manager::SELECT2,
+				'options'        => [
 					'is_chrome' => 'Google Chrome',
 					'is_gecko'  => 'FireFox',
 					'is_safari' => 'Safari',
@@ -82,11 +83,12 @@ class BrowserTypeVisiblity extends Singleton {
 					'is_lynx'   => 'Lynx',
 					'is_iphone' => 'iPhone Safari',
 				],
-				'description' => __( 'Trigger visibility for a specific browsers.', 'visibility-logic-elementor' ),
-				'multiple'    => true,
-				'condition'   => [
+				'description'    => __( 'Trigger visibility for a specific browsers.', 'visibility-logic-elementor' ),
+				'multiple'       => true,
+				'condition'      => [
 					self::SECTION_PREFIX . 'browser_type_enabled' => 'yes',
 				],
+				'style_transfer' => false,
 			]
 		);
 	}
