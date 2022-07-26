@@ -50,6 +50,6 @@
             "install-path": "../appsero/client"
         }
     ],
-    "dev": true,
+    "dev": false,
     "dev-package-names": []
 }

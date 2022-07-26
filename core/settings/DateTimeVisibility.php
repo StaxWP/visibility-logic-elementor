@@ -242,8 +242,8 @@ class DateTimeVisibility extends Singleton {
 						$time_from = strtotime( $time_from );
 						$time_to   = strtotime( $time_to );
 
-						if ( $current_time >= $time_from && $current_time <= strtotime( '24:00' ) ||
-							$current_time >= strtotime( '00:00' ) && $current_time <= $time_to ) {
+						if ( ( $current_time >= $time_from && $current_time <= strtotime( '24:00' ) ) ||
+						     ( $current_time >= strtotime( '00:00' ) && $current_time <= $time_to ) ) {
 							$$options['date_time'] = true;
 						}
 					} else {
@@ -285,8 +285,8 @@ class DateTimeVisibility extends Singleton {
 						$time_from = strtotime( $time_from );
 						$time_to   = strtotime( $time_to );
 
-						if ( $current_time >= $time_from && $current_time <= strtotime( '24:00' ) ||
-							$current_time >= strtotime( '00:00' ) && $current_time <= $time_to ) {
+						if ( ( $current_time >= $time_from && $current_time <= strtotime( '24:00' ) ) ||
+						     ( $current_time >= strtotime( '00:00' ) && $current_time <= $time_to ) ) {
 							$time_matched = true;
 						}
 					} else {
