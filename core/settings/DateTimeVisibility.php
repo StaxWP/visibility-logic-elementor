@@ -211,6 +211,8 @@ class DateTimeVisibility extends Singleton {
 			return $options;
 		}
 
+		$options['date_time'] = false;
+
 		switch ( $settings[ self::SECTION_PREFIX . 'date_time_type' ] ) {
 			case 'date':
 				$date_from    = $settings[ self::SECTION_PREFIX . 'date_from' ];
@@ -243,8 +245,8 @@ class DateTimeVisibility extends Singleton {
 						$time_to   = strtotime( $time_to );
 
 						if ( ( $current_time >= $time_from && $current_time <= strtotime( '24:00' ) ) ||
-						     ( $current_time >= strtotime( '00:00' ) && $current_time <= $time_to ) ) {
-							$$options['date_time'] = true;
+							 ( $current_time >= strtotime( '00:00' ) && $current_time <= $time_to ) ) {
+							$options['date_time'] = true;
 						}
 					} else {
 						$time_from = strtotime( $time_from );
@@ -286,7 +288,7 @@ class DateTimeVisibility extends Singleton {
 						$time_to   = strtotime( $time_to );
 
 						if ( ( $current_time >= $time_from && $current_time <= strtotime( '24:00' ) ) ||
-						     ( $current_time >= strtotime( '00:00' ) && $current_time <= $time_to ) ) {
+							 ( $current_time >= strtotime( '00:00' ) && $current_time <= $time_to ) ) {
 							$time_matched = true;
 						}
 					} else {
