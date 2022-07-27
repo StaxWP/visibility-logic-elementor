@@ -4,7 +4,7 @@ Tags: elementor, elementor restrictions, elementor conditions, elementor widgets
 Requires at least: 5.0
 Requires PHP: 7.0
 Tested up to: 6.0
-Stable tag: 2.3.1
+Stable tag: 2.3.2
 License: GLPv2 or later
 
 Show/hide Elementor widgets or sections based on user role, user meta, user logged in or not and many more.
@@ -12,25 +12,27 @@ Show/hide Elementor widgets or sections based on user role, user meta, user logg
 == Description ==
 Show or hide Elementor widgets or sections based on various conditions like: User is logged in, User has a specific meta, The day is Wednesday, The time is between X and Y, The user is using Firefox browser, and many more.
 
-The visibility settings will only affect widgets' rendering in the frontend. While you are inside Elementor editor you will be able to see all of them.
+The visibility settings will only affect widgets rendering in the frontend. While you are inside Elementor editor you will be able to see all of them.
 
 = Free Features =
+- NEW - Flex container visibility restrictions support
 - User Meta content restriction
 - Restrict content based on User Browser (Chrome, Mozilla, Safari, etc)
 - Date & Time restrictions for content
 - Hide a whole section if all widgets inside it are hidden using visibility settings (Works with nested sections/containers too)
 
 = PRO Features =
+- Geo Location - Use MaxMind to dynamically display elements based on user's country.
+- Dynamic conditions - Restrict Elementor widgets and sections based on all Elementor Pro Dynamic tags.
+- WooCommerce Users - Restrict based on user's order/subscription
+- Easy Digital Downloads Users - Restrict based on user's order/subscription
 - Advanced User Meta - Support for multiple user meta conditions with And/Or condition.
 - Post & Page, Taxonomy, URL Parameter content restriction.
 - Archive restrictions based on Post types and taxonomies.
 - IP & Referrer restrictions.
-- Geo Location - Use MaxMind to dynamically display elements based on user's country.
 - WordPress Conditional Tags restrictions.
-- Dynamic conditions - Restrict Elementor widgets and sections based on all Elementor Pro Dynamic tags.
-- WooCommerce Users - Restrict based on user's order/subscription
-- Easy Digital Downloads Users - Restrict based on user's order/subscription
 - Fallback - Allows you to replace a hidden element with a text message or an Elementor template.
+- Copy/Paste visibility settings between widgets or sections by right-clicking an element.
 
 Find more about our [Pro version](https://staxwp.com/go/visibility-logic).
 
