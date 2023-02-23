@@ -19,7 +19,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '8ce0d1c01527f9e09cd7e6e497de9ab6f26ab7c0',
+    'reference' => 'ff9702d912b3c79e9556452ceecf6e0358abc109',
     'name' => '__root__',
   ),
   'versions' => 
@@ -31,16 +31,16 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '8ce0d1c01527f9e09cd7e6e497de9ab6f26ab7c0',
+      'reference' => 'ff9702d912b3c79e9556452ceecf6e0358abc109',
     ),
     'appsero/client' => 
     array (
-      'pretty_version' => 'v1.2.0',
-      'version' => '1.2.0.0',
+      'pretty_version' => 'v1.2.2',
+      'version' => '1.2.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => '5c3fdc4945c8680bca6fb01eee1ec5dc4f22de87',
+      'reference' => 'fba140030f7141ed71eeba192b5437b2f30d81a8',
     ),
   ),
 );

@@ -159,6 +159,25 @@ You may set your own textdomain to translate text.
 $client->set_textdomain( 'your-project-textdomain' );
 ```
 
+
+
+
+#### 5. Get Plugin Data
+If you want to get the most used plugins with your plugin or theme, send the active plugins' data to Appsero.
+```php
+$client->insights()
+       ->add_plugin_data()
+       ->init();
+```
+---
+
+#### 6. Set Notice Message
+Change opt-in message text
+```php
+$client->insights()
+       ->notice("Your custom notice text")
+       ->init();
+```
 ---
 
 ### Check License Validity
@@ -190,6 +209,9 @@ Or check by pricing plan title
 if ( $twenty_twelve_license->is_valid_by( 'title', 'Business' ) ) {
     // Your special code here
 }
+
+// Set custom options key for storing the license info
+$twenty_twelve_license->set_option_key( 'my_plugin_license' );
 ```
 
 ### Use your own license form

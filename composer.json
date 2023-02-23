@@ -1,5 +1,5 @@
 {
   "require": {
-    "appsero/client": "^1.2"
+    "appsero/client": "^1.2.2"
   }
 }
