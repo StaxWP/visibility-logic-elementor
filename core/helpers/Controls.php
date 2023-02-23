@@ -69,9 +69,9 @@ class Controls {
 	public function register_controls() {
 		$controls_manager = \Elementor\Plugin::$instance->controls_manager;
 
-		foreach ( $this->controls as $key => $name ) {
+		foreach ( $this->controls as $name ) {
 			$class = self::$namespace . $name;
-			$controls_manager->register_control( $key, new $class() );
+			$controls_manager->register( new $class() );
 		}
 	}
 

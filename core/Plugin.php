@@ -103,7 +103,7 @@ class Plugin extends Singleton {
 
 		new Ajax();
 
-		add_action( 'elementor/controls/controls_registered', [ new Controls(), 'on_controls_registered' ] );
+		add_action( 'elementor/controls/register', [ new Controls(), 'on_controls_registered' ] );
 		require_once STAX_VISIBILITY_CORE_PATH . 'helpers/modules/QueryControl.php';
 
 		add_action( 'elementor/editor/before_enqueue_scripts', [ $this, 'before_load_panel_assets' ] );
