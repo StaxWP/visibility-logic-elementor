@@ -4,7 +4,7 @@ Tags: elementor, elementor restrictions, elementor conditions, elementor widgets
 Requires at least: 5.0
 Requires PHP: 7.0
 Tested up to: 6.0
-Stable tag: 2.3.3
+Stable tag: 2.3.4
 License: GLPv2 or later
 
 Show/hide Elementor widgets or sections based on user role, user meta, user logged in or not and many more.
@@ -75,6 +75,9 @@ We use Appsero SDK to collect some telemetry data upon user's confirmation. This
 6. Visibility Logic for Elementor - Admin Panel
 
 == Changelog ==
+
+= 2.3.4 =
+* Upgrade Appsero SDK
 
 = 2.3.3 =
 * Fix Elementor deprecation warnings
