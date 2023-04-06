@@ -7,6 +7,10 @@
   color: #f4f0ff !important;
 }
 
+.elementor-panel [class*="elementor-control-stax_visibility"] .elementor-section-title {
+    flex-grow: 1;
+}
+
 .elementor-panel .elementor-tab-control-stax-visibility a {
   color: #fff;
 }
@@ -130,7 +134,6 @@
 .stax-status-error .elementor-panel-heading-title:after {
   font-family: eicons;
   position: absolute;
-  top: 11px;
   right: 0;
   z-index: 2;
   font-size: 16px;
