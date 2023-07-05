@@ -30,8 +30,24 @@ class Options extends Base {
 	 * @return void
 	 */
 	public function toggle_option() {
+
+		$is_safe = true;
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			$is_safe = false;
+		}
+
+		if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'stax_visibility_options_activation' ) ) {
+			$is_safe = false;
+		}
+
 		if ( ! isset( $_POST['action'] ) || 'stax_visibility_options_activation' !== $_POST['action'] ) {
-			wp_redirect( admin_url( 'options-general.php?page=' . STAX_VISIBILITY_SLUG_PREFIX . $this->current_slug ) );
+			$is_safe = false;
+		}
+
+		if ( ! $is_safe ) {
+			wp_redirect( admin_url( 'admin.php?page=' . STAX_EL_SLUG_PREFIX . $this->current_slug ) );
+			exit;
 		}
 
 		$disabled_options = [];
