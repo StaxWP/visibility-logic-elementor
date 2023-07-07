@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '43d42e53804b8d5c4a82c65e12bc087b34a3948e',
+        'reference' => '10779c4afaf985c1f6f1d4d0597363b3273315f9',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '43d42e53804b8d5c4a82c65e12bc087b34a3948e',
+            'reference' => '10779c4afaf985c1f6f1d4d0597363b3273315f9',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -27,6 +27,17 @@
             'install_path' => __DIR__ . '/../appsero/client',
             'aliases' => array(),
             'dev_requirement' => false,
+        ),
+        'roave/security-advisories' => array(
+            'pretty_version' => 'dev-latest',
+            'version' => 'dev-latest',
+            'reference' => '6ea60363203786a5dd5617c28e933280bb61f78b',
+            'type' => 'metapackage',
+            'install_path' => NULL,
+            'aliases' => array(
+                0 => '9999999-dev',
+            ),
+            'dev_requirement' => true,
         ),
     ),
 );

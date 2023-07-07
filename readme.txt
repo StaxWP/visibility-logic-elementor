@@ -1,10 +1,10 @@
 === Visibility Logic for Elementor ===
-Contributors: staxwp, seventhqueen, kierantaylorio, codezz, rtynio, geowrge
+Contributors: staxwp, kierantaylorio, codezz, rtynio, geowrge
 Tags: elementor, elementor restrictions, elementor conditions, elementor widgets, visibility logic, widget conditions
 Requires at least: 5.0
 Requires PHP: 7.0
 Tested up to: 6.2
-Stable tag: 2.3.5
+Stable tag: 2.3.5.1
 License: GLPv2 or later
 
 Show/hide Elementor widgets or sections based on user role, user meta, user logged in or not and many more.
@@ -48,12 +48,15 @@ Here is how you will find the Elementor visibility restrict settings:
 - [BuddyBuilder - BuddyPress Builder for Elementor - Plugin](https://staxwp.com/go/buddybuilder)
 Create stunning communities on your site powered by Elementor and BuddyPress
 - [Elementor Addons, Widgets & Enhancements - Plugin](https://staxwp.com/go/addons-for-elementor)
-Powerfull Elementor widgets to help you build stunning pages
+Powerful Elementor widgets to help you build stunning pages
 - [Woo Addons for Elementor - Plugin](https://staxwp.com/go/woo-addons-for-elementor/)
 Elementor enhancements for Woocommerce to help you build awesome e-commerce sites
 
 = Privacy Policy =
 We use Appsero SDK to collect some telemetry data upon user's confirmation. This helps us to troubleshoot problems faster & make product improvements.
+
+= Found a bug? =
+You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team help validate, triage and handle any security vulnerabilities. [Report bug](https://patchstack.com/database/vdp/visibility-logic-elementor).
 
 == Installation ==
 
@@ -75,6 +78,9 @@ We use Appsero SDK to collect some telemetry data upon user's confirmation. This
 6. Visibility Logic for Elementor - Admin Panel
 
 == Changelog ==
+
+= 2.3.5.1 =
+* Update readme.txt to include patchstack.com report bug link
 
 = 2.3.5 =
 * Add extra security checks when saving plugin options.

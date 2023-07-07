@@ -5,7 +5,7 @@
  * Plugin URI: https://wordpress.org/plugins/visibility-logic-elementor
  * Author URI: https://staxwp.com
  * Author: StaxWP
- * Version: 2.3.5
+ * Version: 2.3.5.1
  *
  * Elementor tested up to: 3.14.1
  * Elementor Pro tested up to: 3.14.1
@@ -14,10 +14,10 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
+    exit; // Exit if accessed directly.
 }
 
-define( 'STAX_VISIBILITY_VERSION', '2.3.5' );
+define( 'STAX_VISIBILITY_VERSION', '2.3.5.1' );
 
 define( 'STAX_VISIBILITY_FILE', __FILE__ );
 define( 'STAX_VISIBILITY_PLUGIN_BASE', plugin_basename( STAX_VISIBILITY_FILE ) );
@@ -42,10 +42,10 @@ add_action( 'plugins_loaded', 'ecl_load_plugin_textdomain' );
  * @since 1.0.0
  */
 function ecl_load_plugin_textdomain() {
-	load_plugin_textdomain( 'visibility-logic-elementor' );
+    load_plugin_textdomain( 'visibility-logic-elementor' );
 }
 
-require __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
 require_once STAX_VISIBILITY_CORE_PATH . 'Singleton.php';
 require_once STAX_VISIBILITY_CORE_PATH . 'Plugin.php';
 
@@ -57,14 +57,14 @@ require_once STAX_VISIBILITY_CORE_PATH . 'Plugin.php';
  */
 function appsero_init_tracker_visibility_logic_elementor() {
 
-	if ( ! class_exists( 'Appsero\Client' ) ) {
-		require_once __DIR__ . '/appsero/src/Client.php';
-	}
+    if ( ! class_exists( 'Appsero\Client' ) ) {
+        require_once __DIR__ . '/vendor/appsero/client/src/Client.php';
+    }
 
-	$client = new Appsero\Client( 'd40e3204-1270-4588-b9ff-37b420fad6b8', 'Visibility Logic for Elementor', __FILE__ );
+    $client = new Appsero\Client( 'd40e3204-1270-4588-b9ff-37b420fad6b8', 'Visibility Logic for Elementor', __FILE__ );
 
-	// Active insights.
-	$client->insights()->init();
+    // Active insights.
+    $client->insights()->init();
 
 }
 
