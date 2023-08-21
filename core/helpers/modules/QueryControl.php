@@ -95,7 +95,7 @@ class QueryControl extends Module {
 		foreach ( $object_types as $object_type ) {
 			$function = 'get_' . $object_type . '_fields';
 
-			if ( 'post' === $object_type && Plugin::instance()->has_pro() ) {
+			if ( 'post' === $object_type && has_pro_visibility() ) {
 				$fields = \Stax\VisibilityLogicPro\FunctionCaller::{$function}( $data['q'] );
 			} else {
 				$fields = \Stax\VisibilityLogic\FunctionCaller::{$function}( $data['q'] );
@@ -156,7 +156,7 @@ class QueryControl extends Module {
 		foreach ( $object_types as $object_type ) {
 			$function = 'get_' . $object_type . '_fields';
 			foreach ( $ids as $id ) {
-				if ( 'post' === $object_type && Plugin::instance()->has_pro() ) {
+				if ( 'post' === $object_type && has_pro_visibility() ) {
 					$fields = \Stax\VisibilityLogicPro\FunctionCaller::{$function}( $id );
 				} else {
 					$fields = \Stax\VisibilityLogic\FunctionCaller::{$function}( $id );
@@ -182,7 +182,7 @@ class QueryControl extends Module {
 	 * @return array
 	 */
 	protected function get_value_titles_for_posts( $request ) {
-		if ( Plugin::instance()->has_pro() ) {
+		if ( has_pro_visibility() ) {
 			return \Stax\VisibilityLogicPro\FunctionCaller::get_value_titles_for_posts( $request );
 		}
 
@@ -196,7 +196,7 @@ class QueryControl extends Module {
 	 * @return array
 	 */
 	protected function get_value_titles_for_terms( $request ) {
-		if ( Plugin::instance()->has_pro() ) {
+		if ( has_pro_visibility() ) {
 			return \Stax\VisibilityLogicPro\FunctionCaller::get_value_titles_for_terms( $request );
 		}
 
@@ -210,7 +210,7 @@ class QueryControl extends Module {
 	 * @return array
 	 */
 	protected function get_posts( $data ) {
-		if ( Plugin::instance()->has_pro() ) {
+		if ( has_pro_visibility() ) {
 			return \Stax\VisibilityLogicPro\FunctionCaller::get_posts( $data );
 		}
 
@@ -224,7 +224,7 @@ class QueryControl extends Module {
 	 * @return array
 	 */
 	protected function get_terms( $data ) {
-		if ( Plugin::instance()->has_pro() ) {
+		if ( has_pro_visibility() ) {
 			return \Stax\VisibilityLogicPro\FunctionCaller::get_terms( $data );
 		}
 
@@ -238,7 +238,7 @@ class QueryControl extends Module {
 	 * @return array
 	 */
 	protected function get_value_titles_for_products_variations( $request ) {
-		if ( Plugin::instance()->has_pro() ) {
+		if ( has_pro_visibility() ) {
 			return \Stax\VisibilityLogicPro\FunctionCaller::get_value_titles_for_products_variations( $request );
 		}
 
@@ -252,7 +252,7 @@ class QueryControl extends Module {
 	 * @return array
 	 */
 	protected function get_products_variations( $data ) {
-		if ( Plugin::instance()->has_pro() ) {
+		if ( has_pro_visibility() ) {
 			return \Stax\VisibilityLogicPro\FunctionCaller::get_products_variations( $data );
 		}
 
@@ -266,7 +266,7 @@ class QueryControl extends Module {
 	 * @return array
 	 */
 	protected function get_value_titles_for_products( $request ) {
-		if ( Plugin::instance()->has_pro() ) {
+		if ( has_pro_visibility() ) {
 			return \Stax\VisibilityLogicPro\FunctionCaller::get_value_titles_for_products( $request );
 		}
 
@@ -280,7 +280,7 @@ class QueryControl extends Module {
 	 * @return array
 	 */
 	protected function get_products( $data ) {
-		if ( Plugin::instance()->has_pro() ) {
+		if ( has_pro_visibility() ) {
 			return \Stax\VisibilityLogicPro\FunctionCaller::get_products( $data );
 		}
 
@@ -294,7 +294,7 @@ class QueryControl extends Module {
 	 * @return array
 	 */
 	protected function get_value_titles_for_subscriptions( $request ) {
-		if ( Plugin::instance()->has_pro() ) {
+		if ( has_pro_visibility() ) {
 			return \Stax\VisibilityLogicPro\FunctionCaller::get_value_titles_for_subscriptions( $request );
 		}
 
@@ -308,7 +308,7 @@ class QueryControl extends Module {
 	 * @return array
 	 */
 	protected function get_subscriptions( $data ) {
-		if ( Plugin::instance()->has_pro() ) {
+		if ( has_pro_visibility() ) {
 			return \Stax\VisibilityLogicPro\FunctionCaller::get_subscriptions( $data );
 		}
 
@@ -322,7 +322,7 @@ class QueryControl extends Module {
 	 * @return array
 	 */
 	protected function get_value_titles_for_geo_location_country( $request ) {
-		if ( Plugin::instance()->has_pro() ) {
+		if ( has_pro_visibility() ) {
 			return \Stax\VisibilityLogicPro\FunctionCaller::get_value_titles_for_geo_location_country( $request );
 		}
 
@@ -336,7 +336,7 @@ class QueryControl extends Module {
 	 * @return array
 	 */
 	protected function get_geo_location_country( $data ) {
-		if ( Plugin::instance()->has_pro() ) {
+		if ( has_pro_visibility() ) {
 			return \Stax\VisibilityLogicPro\FunctionCaller::get_geo_location_country( $data );
 		}
 
@@ -350,7 +350,7 @@ class QueryControl extends Module {
 	 * @return array
 	 */
 	protected function get_value_titles_for_geo_location_city( $request ) {
-		if ( Plugin::instance()->has_pro() ) {
+		if ( has_pro_visibility() ) {
 			return \Stax\VisibilityLogicPro\FunctionCaller::get_value_titles_for_geo_location_city( $request );
 		}
 
@@ -364,7 +364,7 @@ class QueryControl extends Module {
 	 * @return array
 	 */
 	protected function get_geo_location_city( $data ) {
-		if ( Plugin::instance()->has_pro() ) {
+		if ( has_pro_visibility() ) {
 			return \Stax\VisibilityLogicPro\FunctionCaller::get_geo_location_city( $data );
 		}
 
@@ -378,7 +378,7 @@ class QueryControl extends Module {
 	 * @return array
 	 */
 	protected function get_value_titles_for_edd_products( $request ) {
-		if ( Plugin::instance()->has_pro() ) {
+		if ( has_pro_visibility() ) {
 			return \Stax\VisibilityLogicPro\FunctionCaller::get_value_titles_for_edd_products( $request );
 		}
 
@@ -392,7 +392,7 @@ class QueryControl extends Module {
 	 * @return array
 	 */
 	protected function get_edd_products( $data ) {
-		if ( Plugin::instance()->has_pro() ) {
+		if ( has_pro_visibility() ) {
 			return \Stax\VisibilityLogicPro\FunctionCaller::get_edd_products( $data );
 		}
 

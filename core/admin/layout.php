@@ -11,7 +11,7 @@
 
 				<div class="ste-text-right">
 					<h1 class="ste-block ste-leading-normal ste-my-0"><span class="ste-font-light">Welcome to</span> STAX</h1>
-					<div class="ste-font-medium ste-text-lg ste-text-gray-600">Visibility Logic for Elementor</div>
+					<div class="ste-font-medium ste-text-lg ste-text-gray-600">Visibility Logic</div>
 				</div>
 			</div>
 			<ul class="ste-flex ste-overflow-hidden ste-bg-gradient-to-r ste-from-blue-500 ste-to-indigo-500 ste-m-0">

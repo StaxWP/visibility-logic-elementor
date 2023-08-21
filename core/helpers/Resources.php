@@ -134,6 +134,80 @@ final class Resources extends Singleton {
 	}
 
 	/**
+	 * Get all builders
+	 *
+	 * @return array
+	 */
+	public static function get_all_builders() {
+		$builders = [
+			'elementor'        => [
+				'name' => __( 'Elementor', 'visibility-logic-elementor' ),
+				// 'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'UserRoleVisibility.php',
+			],
+			'gutenberg'        => [
+				'name' => __( 'Gutenberg', 'visibility-logic-elementor' ),
+				// 'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'UserMetaVisibility.php',
+			],
+			'beaver-builder'   => [
+				'name' => __( 'Beaver Builder', 'visibility-logic-elementor' ),
+				// 'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'UserMetaVisibility.php',
+				'soon' => true,
+			],
+			'brizy'            => [
+				'name' => __( 'Brizy', 'visibility-logic-elementor' ),
+				// 'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'UserMetaVisibility.php',
+				'soon' => true,
+			],
+			'bricks'           => [
+				'name' => __( 'Bricks', 'visibility-logic-elementor' ),
+				// 'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'UserMetaVisibility.php',
+				'soon' => true,
+			],
+			'breakdance'       => [
+				'name' => __( 'Breakdance', 'visibility-logic-elementor' ),
+				// 'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'UserMetaVisibility.php',
+				'soon' => true,
+			],
+			'thrive-architect' => [
+				'name' => __( 'Thrive Architect', 'visibility-logic-elementor' ),
+				// 'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'UserMetaVisibility.php',
+				'soon' => true,
+			],
+			'wp-page-builder'  => [
+				'name' => __( 'WP Page Builder', 'visibility-logic-elementor' ),
+				// 'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'UserMetaVisibility.php',
+				'soon' => true,
+			],
+			'oxygen'           => [
+				'name' => __( 'Oxygen', 'visibility-logic-elementor' ),
+				// 'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'UserMetaVisibility.php',
+				'soon' => true,
+			],
+			'wpbakery'         => [
+				'name' => __( 'WPBakery', 'visibility-logic-elementor' ),
+				// 'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'UserMetaVisibility.php',
+				'soon' => true,
+			],
+			'visual-composer'  => [
+				'name' => __( 'Visual Composer', 'visibility-logic-elementor' ),
+				// 'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'UserMetaVisibility.php',
+				'soon' => true,
+			],
+
+		];
+
+		$builders = apply_filters( 'stax/visibility/builders', $builders );
+
+		$disabled_builders = get_option( '_stax_visibility_disabled_builders', [] );
+
+		foreach ( $builders as $slug => $builder ) {
+			$builders[ $slug ]['status'] = ! isset( $disabled_builders[ $slug ] );
+		}
+
+		return $builders;
+	}
+
+	/**
 	 * Get pro widget options
 	 *
 	 * @return array

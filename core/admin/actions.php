@@ -1,11 +1,3 @@
-<?php
-
-use Stax\VisibilityLogic\Plugin;
-
-$has_pro = Plugin::instance()->has_pro();
-
-?>
-
 <div class="ste-container ste-mx-auto">
 	<div class="ste-flex ste-flex-wrap ste--mx-2 ste--my-4">
 
@@ -20,7 +12,7 @@ $has_pro = Plugin::instance()->has_pro();
 		</div>
 
 		<div class="ste-px-2 ste-py-4 ste-w-full lg:ste-w-1/4 ste-overflow-hidden ste-box-border">
-			<?php if ( ! $has_pro ) : ?>
+			<?php if ( ! has_pro_visibility() ) : ?>
 				<div class="ste-relative ste-bg-gradient-to-r ste-from-blue-500 ste-to-indigo-500 ste-p-6 lg:ste-p-10 ste-rounded ste-shadow-lg">
 					<span class="ste-absolute ste-right-0 ste-bottom-0 ste-animate-bounce ste-mb-4 ste-mr-4 ste-h-30 ste-w-20 ste-z-10 ste-rotate-45">
 						<svg version="1.1" id="go-pro-rocket-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 75 75" style="enable-background:new 0 0 75 75;" xml:space="preserve"><style type="text/css">    .st0{fill:#F35858;}    .st1{fill:#DE4E4E;}    .st2{fill:#FF6868;}    .st3{fill:#FD7878;}    .st4{fill:#ECFAFF;}    .st5{fill:#FCFEFF;}    .st6{fill:#68D4F8;}    .st7{fill:#8DDEF9;}</style><polygon class="st0" points="12,39.6 24.1,27.6 36.8,27.6 24.8,39.6 "/><polygon class="st1" points="35.4,50.2 47.4,38.2 47.4,50.9 35.4,63 "/><path class="st2" d="M40.1,49.4c-3.3,2-6.6,3.3-9.4,3.7c-1.5-4-4.7-7.2-8.7-8.7c0.4-2.8,1.6-6.1,3.7-9.4c3.8,0.1,7.4,1.7,10.1,4.3

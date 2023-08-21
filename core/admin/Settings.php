@@ -46,12 +46,23 @@ class Settings {
 	public function register_menu() {
 		add_submenu_page(
 			'options-general.php',
-			__( 'STAX Visibility - Dashboard', 'visibility-logic-elementor' ),
+			__( 'STAX Visibility - Builders', 'visibility-logic-elementor' ),
+			__( 'Visibility Logic', 'visibility-logic-elementor' ),
+			'manage_options',
+			'stax-visibility-builders',
+			[ $this, 'settings_template' ]
+		);
+
+		add_submenu_page(
+			'options-general.php',
+			__( 'STAX Visibility - Options', 'visibility-logic-elementor' ),
 			__( 'Visibility Logic', 'visibility-logic-elementor' ),
 			'manage_options',
 			'stax-visibility-options',
 			[ $this, 'settings_template' ]
 		);
+
+		remove_submenu_page( 'options-general.php', 'stax-visibility-options' );
 	}
 
 	/**

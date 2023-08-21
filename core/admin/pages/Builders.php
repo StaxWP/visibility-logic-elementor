@@ -6,13 +6,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-class Options extends Base {
+class Builders extends Base {
 
 	/**
-	 * Options constructor.
+	 * Builders constructor.
 	 */
 	public function __construct() {
-		$this->current_slug = 'options';
+		$this->current_slug = 'builders';
 
 		if ( Resources::is_current_page( $this->current_slug ) ) {
 			add_filter( STAX_VISIBILITY_HOOK_PREFIX . 'current_slug', [ $this, 'set_page_slug' ] );
@@ -21,26 +21,26 @@ class Options extends Base {
 		}
 
 		add_filter( STAX_VISIBILITY_HOOK_PREFIX . 'admin_menu', [ $this, 'add_menu_item' ] );
-		add_action( 'admin_post_stax_visibility_options_activation', [ $this, 'save_options' ] );
+		add_action( 'admin_post_stax_visibility_builders_activation', [ $this, 'save_builders' ] );
 	}
 
 	/**
-	 * Save options
+	 * Save builders
 	 *
 	 * @return void
 	 */
-	public function save_options() {
+	public function save_builders() {
 		$is_safe = true;
 
 		if ( ! current_user_can( 'manage_options' ) ) {
 			$is_safe = false;
 		}
 
-		if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'stax_visibility_options_activation' ) ) {
+		if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'stax_visibility_builders_activation' ) ) {
 			$is_safe = false;
 		}
 
-		if ( ! isset( $_POST['action'] ) || 'stax_visibility_options_activation' !== $_POST['action'] ) {
+		if ( ! isset( $_POST['action'] ) || 'stax_visibility_builders_activation' !== $_POST['action'] ) {
 			$is_safe = false;
 		}
 
@@ -49,17 +49,17 @@ class Options extends Base {
 			exit;
 		}
 
-		$disabled_options = [];
+		$disabled_builders = [];
 
-		$options = Resources::get_all_widget_options( has_pro_visibility() );
+		$builders = Resources::get_all_builders();
 
-		foreach ( $options as $slug => $option ) {
+		foreach ( $builders as $slug => $builder ) {
 			if ( ! isset( $_POST[ $slug ] ) ) {
-				$disabled_options[ $slug ] = true;
+				$disabled_builders[ $slug ] = true;
 			}
 		}
 
-		update_option( '_stax_visibility_disabled_options', $disabled_options );
+		update_option( '_stax_visibility_disabled_builders', $disabled_builders );
 
 		wp_redirect( admin_url( 'options-general.php?page=' . STAX_VISIBILITY_SLUG_PREFIX . $this->current_slug ) );
 		exit();
@@ -70,9 +70,9 @@ class Options extends Base {
 	 */
 	public function panel_content() {
 		Resources::load_template(
-			'core/admin/pages/templates/options',
+			'core/admin/pages/templates/builders',
 			[
-				'options' => Resources::get_all_widget_options(),
+				'builders' => Resources::get_all_builders(),
 			]
 		);
 	}
@@ -85,10 +85,10 @@ class Options extends Base {
 	 */
 	public function add_menu_item( $menu ) {
 		$menu[] = [
-			'name'     => __( 'Options', 'visibility-logic-elementor' ),
+			'name'     => __( 'Builders', 'visibility-logic-elementor' ),
 			'link'     => admin_url( 'options-general.php?page=' . STAX_VISIBILITY_SLUG_PREFIX . $this->current_slug ),
 			'query'    => STAX_VISIBILITY_SLUG_PREFIX . $this->current_slug,
-			'priority' => 3,
+			'priority' => 2,
 		];
 
 		return $menu;
@@ -96,4 +96,4 @@ class Options extends Base {
 
 }
 
-Options::instance();
+Builders::instance();
