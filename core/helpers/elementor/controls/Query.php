@@ -1,6 +1,6 @@
 <?php
 
-namespace Stax\VisibilityLogic\Controls;
+namespace Stax\VisibilityLogic\Elementor\Controls;
 
 use \Elementor\Control_Select2;
 use \Elementor\Modules\DynamicTags\Module as TagsModule;

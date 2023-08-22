@@ -1,18 +1,19 @@
 <?php
 
-namespace Stax\VisibilityLogic;
+namespace Stax\VisibilityLogic\Beaver;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 use Elementor\Controls_Manager;
-use Stax\VisibilityLogic\Singleton;
+use Stax\VisibilityLogic\ElementorRegisterSettingsTrait;
 
 /**
  * Class DateTimeVisibility
  */
-class DateTimeVisibility extends Singleton {
+class DateTimeVisibility extends BeaverWidgetBase {
+	use ElementorRegisterSettingsTrait;
 
 	/**
 	 * DateTimeVisibility constructor

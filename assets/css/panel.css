@@ -3,7 +3,8 @@
   border-bottom-color: #673ab7 !important;
 }
 
-.elementor-panel .elementor-tab-control-stax-visibility.elementor-active a {
+.elementor-panel .elementor-tab-control-stax-visibility.elementor-active a,
+.elementor-panel .elementor-tab-control-stax-visibility.elementor-active span {
   color: #f4f0ff !important;
 }
 
@@ -11,11 +12,13 @@
     flex-grow: 1;
 }
 
-.elementor-panel .elementor-tab-control-stax-visibility a {
+.elementor-panel .elementor-tab-control-stax-visibility a,
+.elementor-panel .elementor-tab-control-stax-visibility span {
   color: #fff;
 }
 
-.elementor-panel .elementor-tab-control-stax-visibility a:before {
+.elementor-panel .elementor-tab-control-stax-visibility a:before,
+.elementor-panel .elementor-tab-control-stax-visibility span:before {
   font-family: eicons;
   content: "\e8ac";
 }

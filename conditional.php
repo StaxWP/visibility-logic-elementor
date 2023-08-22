@@ -50,7 +50,7 @@ function ecl_load_plugin_textdomain() {
  *
  * @return boolean
  */
-function has_pro_visibility() {
+function stax_vle_is_pro() {
 	return defined( 'STAX_VISIBILITY_PRO_VERSION' )
 		   || in_array( 'visibility-logic-elementor-pro/conditional.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) );
 }

@@ -92,26 +92,26 @@ final class Resources extends Singleton {
 	 */
 	public static function get_all_widget_options( $with_pro = true ) {
 		$options = [
-			'user-role'    => [
+			'user-role' => [
 				'name'  => __( 'User Role', 'visibility-logic-elementor' ),
 				'pro'   => false,
-				'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'UserRoleVisibility.php',
+				'class' => 'UserRoleVisibility',
 			],
-			'user-meta'    => [
+			'user-meta' => [
 				'name'  => __( 'User Meta', 'visibility-logic-elementor' ),
 				'pro'   => false,
-				'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'UserMetaVisibility.php',
+				'class' => 'UserMetaVisibility',
 			],
-			'date-time'    => [
-				'name'  => __( 'Date & Time', 'visibility-logic-elementor' ),
-				'pro'   => false,
-				'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'DateTimeVisibility.php',
-			],
-			'browser-type' => [
-				'name'  => __( 'Browser Type', 'visibility-logic-elementor' ),
-				'pro'   => false,
-				'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'BrowserTypeVisiblity.php',
-			],
+			// 'date-time'    => [
+			// 'name'  => __( 'Date & Time', 'visibility-logic-elementor' ),
+			// 'pro'   => false,
+			// 'class' => 'DateTimeVisibility',
+			// ],
+			// 'browser-type' => [
+			// 'name'  => __( 'Browser Type', 'visibility-logic-elementor' ),
+			// 'pro'   => false,
+			// 'class' => 'BrowserTypeVisiblity',
+			// ],
 
 		];
 
@@ -142,55 +142,43 @@ final class Resources extends Singleton {
 		$builders = [
 			'elementor'        => [
 				'name' => __( 'Elementor', 'visibility-logic-elementor' ),
-				// 'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'UserRoleVisibility.php',
 			],
 			'gutenberg'        => [
 				'name' => __( 'Gutenberg', 'visibility-logic-elementor' ),
-				// 'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'UserMetaVisibility.php',
 			],
-			'beaver-builder'   => [
+			'beaver'           => [
 				'name' => __( 'Beaver Builder', 'visibility-logic-elementor' ),
-				// 'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'UserMetaVisibility.php',
-				'soon' => true,
 			],
 			'brizy'            => [
 				'name' => __( 'Brizy', 'visibility-logic-elementor' ),
-				// 'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'UserMetaVisibility.php',
 				'soon' => true,
 			],
 			'bricks'           => [
 				'name' => __( 'Bricks', 'visibility-logic-elementor' ),
-				// 'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'UserMetaVisibility.php',
 				'soon' => true,
 			],
 			'breakdance'       => [
 				'name' => __( 'Breakdance', 'visibility-logic-elementor' ),
-				// 'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'UserMetaVisibility.php',
 				'soon' => true,
 			],
 			'thrive-architect' => [
 				'name' => __( 'Thrive Architect', 'visibility-logic-elementor' ),
-				// 'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'UserMetaVisibility.php',
 				'soon' => true,
 			],
-			'wp-page-builder'  => [
+			'wp-page'          => [
 				'name' => __( 'WP Page Builder', 'visibility-logic-elementor' ),
-				// 'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'UserMetaVisibility.php',
 				'soon' => true,
 			],
 			'oxygen'           => [
 				'name' => __( 'Oxygen', 'visibility-logic-elementor' ),
-				// 'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'UserMetaVisibility.php',
 				'soon' => true,
 			],
 			'wpbakery'         => [
 				'name' => __( 'WPBakery', 'visibility-logic-elementor' ),
-				// 'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'UserMetaVisibility.php',
 				'soon' => true,
 			],
 			'visual-composer'  => [
 				'name' => __( 'Visual Composer', 'visibility-logic-elementor' ),
-				// 'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'UserMetaVisibility.php',
 				'soon' => true,
 			],
 

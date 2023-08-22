@@ -18,6 +18,9 @@ class Plugin extends Singleton {
 		do_action( 'stax/visibility/pre_init' );
 
 		require_once STAX_VISIBILITY_CORE_HELPERS_PATH . 'Resources.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'traits/ElementorRegisterSettingsTrait.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'settings/elementor/ElementorWidgetBase.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'settings/beaver/BeaverWidgetBase.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'BuilderLoader.php';
 
 		// load builders.

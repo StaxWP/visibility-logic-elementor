@@ -1,17 +1,19 @@
 <?php
 
-namespace Stax\VisibilityLogic;
+namespace Stax\VisibilityLogic\Elementor;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 use Elementor\Controls_Manager;
+use Stax\VisibilityLogic\ElementorRegisterSettingsTrait;
 
 /**
  * Class GeneralVisibility
  */
-class GeneralVisibility extends Singleton {
+class GeneralVisibility extends ElementorWidgetBase {
+	use ElementorRegisterSettingsTrait;
 
 	/**
 	 * GeneralVisibility constructor

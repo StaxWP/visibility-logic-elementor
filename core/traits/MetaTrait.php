@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-trait Meta_Trait {
+trait MetaTrait {
 
 	/**
 	 * Get user metas

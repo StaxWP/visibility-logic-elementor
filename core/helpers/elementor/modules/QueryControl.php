@@ -1,12 +1,11 @@
 <?php
 
-namespace Stax\VisibilityLogic\Modules;
+namespace Stax\VisibilityLogic\Elementor\Modules;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-use Stax\VisibilityLogic\Plugin;
 use Elementor\Core\Base\Module;
 
 class QueryControl extends Module {
@@ -95,10 +94,10 @@ class QueryControl extends Module {
 		foreach ( $object_types as $object_type ) {
 			$function = 'get_' . $object_type . '_fields';
 
-			if ( 'post' === $object_type && has_pro_visibility() ) {
+			if ( 'post' === $object_type && stax_vle_is_pro() ) {
 				$fields = \Stax\VisibilityLogicPro\FunctionCaller::{$function}( $data['q'] );
 			} else {
-				$fields = \Stax\VisibilityLogic\FunctionCaller::{$function}( $data['q'] );
+				$fields = \Stax\VisibilityLogic\Elementor\FunctionCaller::{$function}( $data['q'] );
 			}
 
 			if ( ! empty( $fields ) ) {
@@ -126,7 +125,7 @@ class QueryControl extends Module {
 		$function = 'get_' . $request['object_type'] . '_metas';
 
 		foreach ( $ids as $aid ) {
-			$fields = \Stax\VisibilityLogic\FunctionCaller::{$function}( false, $aid );
+			$fields = \Stax\VisibilityLogic\Elementor\FunctionCaller::{$function}( false, $aid );
 			foreach ( $fields as $field_key => $field_name ) {
 				if ( in_array( $field_key, $ids ) ) {
 					$results[ $field_key ] = $field_name;
@@ -156,10 +155,10 @@ class QueryControl extends Module {
 		foreach ( $object_types as $object_type ) {
 			$function = 'get_' . $object_type . '_fields';
 			foreach ( $ids as $id ) {
-				if ( 'post' === $object_type && has_pro_visibility() ) {
+				if ( 'post' === $object_type && stax_vle_is_pro() ) {
 					$fields = \Stax\VisibilityLogicPro\FunctionCaller::{$function}( $id );
 				} else {
-					$fields = \Stax\VisibilityLogic\FunctionCaller::{$function}( $id );
+					$fields = \Stax\VisibilityLogic\Elementor\FunctionCaller::{$function}( $id );
 				}
 
 				if ( ! empty( $fields ) ) {
@@ -182,7 +181,7 @@ class QueryControl extends Module {
 	 * @return array
 	 */
 	protected function get_value_titles_for_posts( $request ) {
-		if ( has_pro_visibility() ) {
+		if ( stax_vle_is_pro() ) {
 			return \Stax\VisibilityLogicPro\FunctionCaller::get_value_titles_for_posts( $request );
 		}
 
@@ -196,7 +195,7 @@ class QueryControl extends Module {
 	 * @return array
 	 */
 	protected function get_value_titles_for_terms( $request ) {
-		if ( has_pro_visibility() ) {
+		if ( stax_vle_is_pro() ) {
 			return \Stax\VisibilityLogicPro\FunctionCaller::get_value_titles_for_terms( $request );
 		}
 
@@ -210,7 +209,7 @@ class QueryControl extends Module {
 	 * @return array
 	 */
 	protected function get_posts( $data ) {
-		if ( has_pro_visibility() ) {
+		if ( stax_vle_is_pro() ) {
 			return \Stax\VisibilityLogicPro\FunctionCaller::get_posts( $data );
 		}
 
@@ -224,7 +223,7 @@ class QueryControl extends Module {
 	 * @return array
 	 */
 	protected function get_terms( $data ) {
-		if ( has_pro_visibility() ) {
+		if ( stax_vle_is_pro() ) {
 			return \Stax\VisibilityLogicPro\FunctionCaller::get_terms( $data );
 		}
 
@@ -238,7 +237,7 @@ class QueryControl extends Module {
 	 * @return array
 	 */
 	protected function get_value_titles_for_products_variations( $request ) {
-		if ( has_pro_visibility() ) {
+		if ( stax_vle_is_pro() ) {
 			return \Stax\VisibilityLogicPro\FunctionCaller::get_value_titles_for_products_variations( $request );
 		}
 
@@ -252,7 +251,7 @@ class QueryControl extends Module {
 	 * @return array
 	 */
 	protected function get_products_variations( $data ) {
-		if ( has_pro_visibility() ) {
+		if ( stax_vle_is_pro() ) {
 			return \Stax\VisibilityLogicPro\FunctionCaller::get_products_variations( $data );
 		}
 
@@ -266,7 +265,7 @@ class QueryControl extends Module {
 	 * @return array
 	 */
 	protected function get_value_titles_for_products( $request ) {
-		if ( has_pro_visibility() ) {
+		if ( stax_vle_is_pro() ) {
 			return \Stax\VisibilityLogicPro\FunctionCaller::get_value_titles_for_products( $request );
 		}
 
@@ -280,7 +279,7 @@ class QueryControl extends Module {
 	 * @return array
 	 */
 	protected function get_products( $data ) {
-		if ( has_pro_visibility() ) {
+		if ( stax_vle_is_pro() ) {
 			return \Stax\VisibilityLogicPro\FunctionCaller::get_products( $data );
 		}
 
@@ -294,7 +293,7 @@ class QueryControl extends Module {
 	 * @return array
 	 */
 	protected function get_value_titles_for_subscriptions( $request ) {
-		if ( has_pro_visibility() ) {
+		if ( stax_vle_is_pro() ) {
 			return \Stax\VisibilityLogicPro\FunctionCaller::get_value_titles_for_subscriptions( $request );
 		}
 
@@ -308,7 +307,7 @@ class QueryControl extends Module {
 	 * @return array
 	 */
 	protected function get_subscriptions( $data ) {
-		if ( has_pro_visibility() ) {
+		if ( stax_vle_is_pro() ) {
 			return \Stax\VisibilityLogicPro\FunctionCaller::get_subscriptions( $data );
 		}
 
@@ -322,7 +321,7 @@ class QueryControl extends Module {
 	 * @return array
 	 */
 	protected function get_value_titles_for_geo_location_country( $request ) {
-		if ( has_pro_visibility() ) {
+		if ( stax_vle_is_pro() ) {
 			return \Stax\VisibilityLogicPro\FunctionCaller::get_value_titles_for_geo_location_country( $request );
 		}
 
@@ -336,7 +335,7 @@ class QueryControl extends Module {
 	 * @return array
 	 */
 	protected function get_geo_location_country( $data ) {
-		if ( has_pro_visibility() ) {
+		if ( stax_vle_is_pro() ) {
 			return \Stax\VisibilityLogicPro\FunctionCaller::get_geo_location_country( $data );
 		}
 
@@ -350,7 +349,7 @@ class QueryControl extends Module {
 	 * @return array
 	 */
 	protected function get_value_titles_for_geo_location_city( $request ) {
-		if ( has_pro_visibility() ) {
+		if ( stax_vle_is_pro() ) {
 			return \Stax\VisibilityLogicPro\FunctionCaller::get_value_titles_for_geo_location_city( $request );
 		}
 
@@ -364,7 +363,7 @@ class QueryControl extends Module {
 	 * @return array
 	 */
 	protected function get_geo_location_city( $data ) {
-		if ( has_pro_visibility() ) {
+		if ( stax_vle_is_pro() ) {
 			return \Stax\VisibilityLogicPro\FunctionCaller::get_geo_location_city( $data );
 		}
 
@@ -378,7 +377,7 @@ class QueryControl extends Module {
 	 * @return array
 	 */
 	protected function get_value_titles_for_edd_products( $request ) {
-		if ( has_pro_visibility() ) {
+		if ( stax_vle_is_pro() ) {
 			return \Stax\VisibilityLogicPro\FunctionCaller::get_value_titles_for_edd_products( $request );
 		}
 
@@ -392,7 +391,7 @@ class QueryControl extends Module {
 	 * @return array
 	 */
 	protected function get_edd_products( $data ) {
-		if ( has_pro_visibility() ) {
+		if ( stax_vle_is_pro() ) {
 			return \Stax\VisibilityLogicPro\FunctionCaller::get_edd_products( $data );
 		}
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Stax\VisibilityLogic;
+namespace Stax\VisibilityLogic\Elementor;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -27,7 +27,7 @@ class Controls {
 	 *
 	 * @var string
 	 */
-	public static $namespace = '\\Stax\\VisibilityLogic\\Controls\\';
+	public static $namespace = '\\Stax\\VisibilityLogic\\Elementor\\Controls\\';
 
 	/**
 	 * Controls constructor

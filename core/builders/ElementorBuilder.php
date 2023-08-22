@@ -6,7 +6,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+use Stax\VisibilityLogic\ElementorRegisterSettingsTrait;
+use Stax\VisibilityLogic\Resources;
+
 class ElementorBuilder extends Singleton {
+	use ElementorRegisterSettingsTrait;
 
 	/**
 	 * @var string
@@ -74,21 +78,30 @@ class ElementorBuilder extends Singleton {
 
 		add_action( 'wp_footer', [ $this, 'editor_show_visibility_icon' ] );
 
-		require_once STAX_VISIBILITY_CORE_SETTINGS_PATH . 'OldVersionFallback.php';
-		require_once STAX_VISIBILITY_CORE_SETTINGS_PATH . 'GeneralVisibility.php';
+		require_once STAX_VISIBILITY_CORE_SETTINGS_PATH . 'elementor/OldVersionFallback.php';
+		require_once STAX_VISIBILITY_CORE_SETTINGS_PATH . 'elementor/GeneralVisibility.php';
 
 		// Load active options.
-		$widgets = Resources::get_all_widget_options();
-
-		foreach ( $widgets as $slug => $option ) {
-			if ( isset( $option['status'], $option['class'], $option['pro'] ) &&
-				 $option['status'] && file_exists( $option['class'] ) && $option['pro'] === false ) {
-				require_once $option['class'];
+		foreach ( Resources::get_all_widget_options() as $slug => $option ) {
+			if ( ! isset( $option['status'], $option['class'], $option['pro'] ) ||
+				! $option['status'] ||
+				false !== $option['pro'] ) {
+				continue;
 			}
+
+			$class_path = STAX_VISIBILITY_CORE_SETTINGS_PATH . "elementor/{$option['class']}.php";
+
+			if ( ! file_exists( $class_path ) ) {
+				continue;
+			}
+
+			require_once $class_path;
 		}
 
-		if ( ! has_pro_visibility() ) {
-			require_once STAX_VISIBILITY_CORE_SETTINGS_PATH . 'ProVisibility.php';
+		if ( ! stax_vle_is_pro() ) {
+			foreach ( $this->elements as $element ) {
+				add_action( "elementor/element/{$element['name']}/{$element['section_id']}/after_section_end", [ $this, 'register_section' ] );
+			}
 		}
 
 		do_action( 'stax/visibility/after/elementor/load_settings' );
@@ -101,19 +114,18 @@ class ElementorBuilder extends Singleton {
 	 */
 	public function load_modules() {
 		// Traits.
-		require_once STAX_VISIBILITY_CORE_PATH . 'helpers/traits/Meta_Trait.php';
-		require_once STAX_VISIBILITY_CORE_PATH . 'helpers/traits/Wp_Trait.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'traits/MetaTrait.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'traits/WpTrait.php';
 
 		// Query helpers.
-		require_once STAX_VISIBILITY_CORE_PATH . 'helpers/Ajax.php';
-		require_once STAX_VISIBILITY_CORE_PATH . 'helpers/FunctionCaller.php';
-		require_once STAX_VISIBILITY_CORE_PATH . 'helpers/controls/Query.php';
-		require_once STAX_VISIBILITY_CORE_PATH . 'helpers/Controls.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'helpers/elementor/Ajax.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'helpers/elementor/FunctionCaller.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'helpers/elementor/controls/Query.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'helpers/elementor/Controls.php';
 
-		new Ajax();
+		new \Stax\VisibilityLogic\Elementor\Ajax();
 
-		add_action( 'elementor/controls/register', [ new Controls(), 'on_controls_registered' ] );
-		require_once STAX_VISIBILITY_CORE_PATH . 'helpers/modules/QueryControl.php';
+		add_action( 'elementor/controls/register', [ new \Stax\VisibilityLogic\Elementor\Controls(), 'on_controls_registered' ] );
 
 		add_action( 'elementor/editor/before_enqueue_scripts', [ $this, 'before_load_panel_assets' ] );
 		add_action( 'elementor/editor/after_enqueue_scripts', [ $this, 'after_load_panel_assets' ] );
@@ -447,10 +459,9 @@ class ElementorBuilder extends Singleton {
 			false
 		);
 
-		$widgets    = Resources::get_all_widget_options();
 		$js_widgets = [];
 
-		foreach ( $widgets as $type => $data ) {
+		foreach ( Resources::get_all_widget_options() as $type => $data ) {
 			if ( 'post-page' === $type ) {
 				$type = 'post';
 			}
@@ -509,6 +520,29 @@ class ElementorBuilder extends Singleton {
 	}
 
 	/**
+	 * Register section
+	 *
+	 * @param $element
+	 * @return void
+	 */
+	public function register_section( $element ) {
+		foreach ( Resources::get_pro_widget_options() as $slug => $option ) {
+			$element->start_controls_section(
+				self::SECTION_PREFIX . 'pro_' . str_replace( '-', '_', $slug ),
+				[
+					'tab'       => self::VISIBILITY_TAB,
+					'label'     => $option['name'],
+					'condition' => [
+						self::SECTION_PREFIX . 'enabled' => 'yes',
+					],
+				]
+			);
+
+			$element->end_controls_section();
+		}
+	}
+
+	/**
 	 * Not installed notice
 	 *
 	 * @return void
@@ -516,7 +550,7 @@ class ElementorBuilder extends Singleton {
 	public function not_installed_notice() {
 		$class = 'notice notice-warning';
 		/* translators: %s: html tags */
-		$message = sprintf( __( '%1$sVisibility Logic %2$s requires %1$sElementor%2$s plugin installed & activated.', 'visibility-logic-elementor' ), '<strong>', '</strong>' );
+		$message = sprintf( __( '%1$sVisibility Logic%2$s is enabled for %1$sElementor%2$s but the %1$sElementor%2$s plugin installed & activated.', 'visibility-logic-elementor' ), '<strong>', '</strong>' );
 
 		$plugin = 'elementor/elementor.php';
 
@@ -559,7 +593,7 @@ class ElementorBuilder extends Singleton {
 		$message = sprintf(
 			'<span style="display: block; margin: 0.5em 0.5em 0 0; clear: both;">'
 			/* translators: 1: Plugin name 2: Elementor */
-			. esc_html__( '%1$s requires version %3$s or greater of %2$s plugin.', 'visibility-logic-elementor' )
+			. esc_html__( '%1$s is enabled for %2$s but it requires version %3$s or greater of %2$s plugin.', 'visibility-logic-elementor' )
 			. '</span>',
 			'<strong>' . __( 'Visibility Logic', 'visibility-logic-elementor' ) . '</strong>',
 			'<strong>' . __( 'Elementor', 'visibility-logic-elementor' ) . '</strong>',

@@ -1,6 +1,6 @@
 <?php
 
-$item_class = has_pro_visibility() ? 'xl:ste-w-1/4' : '';
+$item_class = stax_vle_is_pro() ? 'xl:ste-w-1/4' : '';
 
 ?>
 

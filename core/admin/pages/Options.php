@@ -51,7 +51,7 @@ class Options extends Base {
 
 		$disabled_options = [];
 
-		$options = Resources::get_all_widget_options( has_pro_visibility() );
+		$options = Resources::get_all_widget_options( stax_vle_is_pro() );
 
 		foreach ( $options as $slug => $option ) {
 			if ( ! isset( $_POST[ $slug ] ) ) {

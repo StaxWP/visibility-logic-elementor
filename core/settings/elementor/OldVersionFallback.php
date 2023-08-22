@@ -1,17 +1,20 @@
 <?php
 
-namespace Stax\VisibilityLogic;
+namespace Stax\VisibilityLogic\Elementor;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 use Elementor\Controls_Manager;
+use Stax\VisibilityLogic\ElementorRegisterSettingsTrait;
+use Stax\VisibilityLogic\Resources;
 
 /**
  * Class OldVersionFallback
  */
-class OldVersionFallback extends Singleton {
+class OldVersionFallback extends ElementorWidgetBase {
+	use ElementorRegisterSettingsTrait;
 
 	/**
 	 * OldVersionFallback constructor

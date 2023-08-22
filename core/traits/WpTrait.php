@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-trait Wp_Trait {
+trait WpTrait {
 
 	/**
 	 * Get user fields

@@ -51,10 +51,12 @@ class Builders extends Base {
 
 		$disabled_builders = [];
 
-		$builders = Resources::get_all_builders();
-
-		foreach ( $builders as $slug => $builder ) {
+		foreach ( Resources::get_all_builders() as $slug => $builder ) {
 			if ( ! isset( $_POST[ $slug ] ) ) {
+				$disabled_builders[ $slug ] = true;
+			}
+
+			if ( isset( $builder['soon'] ) && $builder['soon'] ) {
 				$disabled_builders[ $slug ] = true;
 			}
 		}

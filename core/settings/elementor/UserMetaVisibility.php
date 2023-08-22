@@ -1,18 +1,19 @@
 <?php
 
-namespace Stax\VisibilityLogic;
+namespace Stax\VisibilityLogic\Elementor;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 use Elementor\Controls_Manager;
-use Stax\VisibilityLogic\Singleton;
+use Stax\VisibilityLogic\ElementorRegisterSettingsTrait;
 
 /**
  * Class UserMetaVisibility
  */
-class UserMetaVisibility extends Singleton {
+class UserMetaVisibility extends ElementorWidgetBase {
+	use ElementorRegisterSettingsTrait;
 
 	/**
 	 * UserMetaVisibility constructor
