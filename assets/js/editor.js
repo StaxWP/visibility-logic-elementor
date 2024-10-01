@@ -133,7 +133,7 @@ var STAXVisibilityEditor = STAXVisibilityEditor || {};
     initStateDisplay: function () {
       $(document).on(
         "click",
-        ".elementor-control-type-switcher .elementor-switch",
+        ".elementor-control-type-switcher .elementor-switch, .elementor-panel-heading",
         function () {
           setTimeout(function () {
             STAXVisibilityEditor.fn.checkState();
@@ -141,15 +141,6 @@ var STAXVisibilityEditor = STAXVisibilityEditor || {};
         }
       );
 
-      $(document).on("DOMSubtreeModified", "#elementor-controls", function () {
-        if (STAXVisibilityEditor.vars.checkCounter < 1) {
-          setTimeout(function () {
-            STAXVisibilityEditor.fn.checkState();
-          }, 100);
-
-          STAXVisibilityEditor.vars.checkCounter = 1;
-        }
-      });
     },
 
     checkState: function () {
@@ -210,7 +201,41 @@ var STAXVisibilityEditor = STAXVisibilityEditor || {};
   $(window).on("elementor:init", function () {
     STAXVisibilityEditor.fn.initSelect2();
     STAXVisibilityEditor.fn.initStateDisplay();
+
+      // Hook into Elementor's panel events
+    elementor.on('panel:init', function () {
+      setTimeout(function () {
+        STAXVisibilityEditor.fn.checkState();
+      }, 1000);
+    });
   });
 
-  $(document).on("ready", function () {});
+
+  $(window).on("panel:init", function () {
+    var targetNode = document.getElementById('elementor-controls');
+    
+    if (targetNode) {
+      var config = { childList: true, subtree: true };
+
+      var callback = function (mutationsList, observer) {
+        for (var mutation of mutationsList) {
+          if (mutation.type === 'childList') {
+            if (STAXVisibilityEditor.vars.checkCounter < 1) {
+              setTimeout(function () {
+                STAXVisibilityEditor.fn.checkState();
+              }, 100);
+
+              STAXVisibilityEditor.vars.checkCounter = 1;
+            }
+          }
+        }
+      };
+
+      var observer = new MutationObserver(callback);
+      observer.observe(targetNode, config);
+    }
+    
+  });
+
+
 })(jQuery);

@@ -30,7 +30,6 @@ class Plugin extends Singleton {
 	 * Plugin constructor
 	 */
 	public function __construct() {
-		do_action( 'stax/visibility/pre_init' );
 
 		require_once STAX_VISIBILITY_CORE_HELPERS_PATH . 'Resources.php';
 		require_once STAX_VISIBILITY_CORE_HELPERS_PATH . 'Notices.php';
@@ -40,6 +39,8 @@ class Plugin extends Singleton {
 
 			return;
 		}
+
+		do_action( 'stax/visibility/pre_init' );
 
 		// Check for the minimum required Elementor version.
 		if ( ! version_compare( ELEMENTOR_VERSION, self::$minimum_elementor_version, '>=' ) ) {
@@ -59,23 +60,17 @@ class Plugin extends Singleton {
 		add_filter( 'elementor/frontend/section/before_render', [ $this, 'section_content_change' ], 999 );
 		add_filter( 'elementor/frontend/container/before_render', [ $this, 'section_content_change' ], 999 );
 
-		add_action(
-			'elementor/element/print_template',
-			function ( $template, $widget ) {
-				return $template;
-			},
-			10,
-			2
-		);
-
 		add_filter( 'elementor/frontend/section/should_render', [ $this, 'item_should_render' ], 99999, 2 );
 		add_filter( 'elementor/frontend/container/should_render', [ $this, 'item_should_render' ], 99999, 2 );
 		add_filter( 'elementor/frontend/widget/should_render', [ $this, 'item_should_render' ], 99999, 2 );
 		add_filter( 'elementor/frontend/repeater/should_render', [ $this, 'item_should_render' ], 99999, 2 );
 
+		add_action( 'elementor/frontend/before_get_builder_content', [ $this, 'maybe_disable_document_caching' ], 99999, 2 );
+		add_action( 'elementor/frontend/get_builder_content', [ $this, 're_enable_document_caching' ], 99999, 2 );
+
 		\Elementor\Controls_Manager::add_tab(
 			'stax-visibility',
-			__( 'Stax Visibility', 'visibility-logic-elementor' )
+			__( 'Visibility', 'visibility-logic-elementor' )
 		);
 
 		add_action( 'wp_footer', [ $this, 'editor_show_visibility_icon' ] );
@@ -159,7 +154,7 @@ class Plugin extends Singleton {
 	}
 
 	/**
-	 * Render item or not based on conditions
+	 * Hide widget content based on visibility conditions using CSS.
 	 *
 	 * @param string                 $content
 	 * @param \Elementor\Widget_Base $widget
@@ -238,18 +233,21 @@ class Plugin extends Singleton {
 	 * Check if item should render
 	 *
 	 * @param bool   $should_render
-	 * @param object $widget
+	 * @param \Elementor\Element_Base $widget
 	 *
 	 * @return boolean
 	 */
 	public function item_should_render( $should_render, $widget ) {
 		$settings = $widget->get_settings();
 
-		if ( ! $this->should_render( $widget ) ) {
+		if ( ! $this->should_render( $widget, $should_render ) ) {
+			
+			// if keep html is enabled, return true
 			if ( (bool) $settings[ self::SECTION_PREFIX . 'keep_html' ] ) {
 				return true;
 			}
 
+			// if fallback is enabled, return true
 			if ( isset( $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) &&
 				 (bool) $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) {
 				return true;
@@ -257,6 +255,8 @@ class Plugin extends Singleton {
 
 			return false;
 		}
+
+		$should_render = true;
 
 		// Hide section if needed
 		if ( ( 'section' === $widget->get_name() || 'container' === $widget->get_name() ) &&
@@ -339,17 +339,17 @@ class Plugin extends Singleton {
 	 *
 	 * @return boolean
 	 */
-	private function should_render( $item ) {
+	private function should_render( $item, $default_render = true ) {
 		$settings = $item->get_settings();
 
 		if ( ! (bool) $settings[ self::SECTION_PREFIX . 'enabled' ] ) {
-			return $this->version_fallback_render( $settings );
+			return $this->version_fallback_render( $settings, $default_render );
 		}
 
 		$options = apply_filters( 'stax/visibility/apply_conditions', [], $settings, $item );
 
 		if ( empty( $options ) ) {
-			return true;
+			return $default_render;
 		}
 
 		$should_render = false;
@@ -357,27 +357,17 @@ class Plugin extends Singleton {
 		$condition_type = isset( $settings[ self::SECTION_PREFIX . 'condition_type' ] ) ? $settings[ self::SECTION_PREFIX . 'condition_type' ] : 'all';
 
 		if ( 'all' === $condition_type ) {
-			$should_render = true;
-
-			foreach ( $options as $status ) {
-				if ( ! $status ) {
-					$should_render = false;
-					break;
-				}
-			}
+			$should_render = array_reduce($options, function($carry, $status) {
+				return $carry && $status;
+			}, true);
 		} elseif ( 'one' === $condition_type ) {
-			foreach ( $options as $status ) {
-				if ( $status ) {
-					$should_render = true;
-					break;
-				}
-			}
+			$should_render = in_array(true, $options, true);
 		}
 
 		if ( (bool) $settings[ self::SECTION_PREFIX . 'show_hide' ] ) {
 			return $should_render;
 		}
-
+		
 		return ! $should_render;
 	}
 
@@ -388,9 +378,9 @@ class Plugin extends Singleton {
 	 *
 	 * @return boolean
 	 */
-	private function version_fallback_render( $settings ) {
+	private function version_fallback_render( $settings, $default_render ) {
 		if ( ! isset( $settings['ecl_enabled'] ) ) {
-			return true;
+			return $default_render;
 		}
 
 		$user_state = is_user_logged_in();
@@ -443,7 +433,7 @@ class Plugin extends Singleton {
 			}
 		}
 
-		return true;
+		return $default_render;
 	}
 
 	/**
@@ -533,6 +523,73 @@ class Plugin extends Singleton {
 			}
 		</style>
 		<?php
+	}
+
+	/**
+	 * Maybe disable caching for documents with elements with visibility logic
+	 *
+	 * @param bool $should_cache
+	 * @param \Elementor\Core\Base\Document $document
+	 * @return bool
+	 */
+	public function maybe_disable_document_caching( $document, $is_excerpt ) {
+		$elements_data = $document->get_elements_data();
+
+		if ( $this->has_visibility_logic( $elements_data ) ) {
+
+			// disable caching globally
+			add_filter( "get_post_metadata", [ $this, 'filter_document_cache_meta' ], 9999, 5 );
+		}
+		
+	}
+
+	public function re_enable_document_caching( $document, $is_excerpt ) {
+		remove_filter( "get_post_metadata", [ $this, 'filter_document_cache_meta' ], 9999, 5 );
+	}
+
+	public function filter_document_cache_meta( $value, $object_id, $meta_key, $single, $meta_type ) {
+
+		if ( $meta_key === \Elementor\Core\Base\Document::CACHE_META_KEY ) {
+			return false;
+		}
+		return $value;
+	}
+
+	/**
+	 * Check if any element in the document has visibility logic enabled
+	 *
+	 * @param array $elements_data
+	 * @return bool
+	 */
+	private function has_visibility_logic( $elements_data ) {
+		foreach ( $elements_data as $element_data ) {
+			if ( $this->element_has_visibility_logic( $element_data ) ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Recursively check if an element or its children have visibility logic enabled
+	 *
+	 * @param array $element_data
+	 * @return bool
+	 */
+	private function element_has_visibility_logic( $element_data ) {
+		if ( isset( $element_data['settings'][ self::SECTION_PREFIX . 'enabled' ] ) && $element_data['settings'][ self::SECTION_PREFIX . 'enabled' ] ) {
+			return true;
+		}
+
+		if ( ! empty( $element_data['elements'] ) ) {
+			foreach ( $element_data['elements'] as $child_element ) {
+				if ( $this->element_has_visibility_logic( $child_element ) ) {
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 }
 

@@ -3,8 +3,8 @@ Contributors: staxwp, kierantaylorio, codezz, rtynio, geowrge
 Tags: elementor, elementor restrictions, elementor conditions, elementor widgets, visibility logic, widget conditions
 Requires at least: 5.0
 Requires PHP: 7.0
-Tested up to: 6.2
-Stable tag: 2.3.5.1
+Tested up to: 6.6
+Stable tag: 2.3.6
 License: GLPv2 or later
 
 Show/hide Elementor widgets or sections based on user role, user meta, user logged in or not and many more.
@@ -78,6 +78,10 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 6. Visibility Logic for Elementor - Admin Panel
 
 == Changelog ==
+
+= 2.3.6 =
+* Add compatibility with Elementor element caching experimental feature.
+* Other fixes and improvements.
 
 = 2.3.5.1 =
 * Update readme.txt to include patchstack.com report bug link

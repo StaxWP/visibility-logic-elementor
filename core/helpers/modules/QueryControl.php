@@ -35,7 +35,7 @@ class QueryControl extends Module {
 	 * @return void
 	 */
 	protected function add_actions() {
-		add_action( 'elementor/ajax/register_actions', [ $this, 'register_ajax_actions' ] );
+		add_action( 'elementor/ajax/register_actions', [ $this, 'register_ajax_actions' ], 11 );
 	}
 
 	/**

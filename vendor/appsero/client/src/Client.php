@@ -14,7 +14,7 @@ class Client {
      *
      * @var string
      */
-    public $version = '1.2.3';
+    public $version = '1.4.0';
 
     /**
      * Hash identifier of the plugin
@@ -84,6 +84,7 @@ class Client {
      * @var object
      */
     private $insights;
+
 
     /**
      * The Object of Updater Class

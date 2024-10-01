@@ -1,5 +1,5 @@
 # AppSero Client
-### Version 1.2.3
+### Version 1.4.0
 
 - [Installation](#installation)
 - [Insights](#insights)
@@ -77,9 +77,6 @@ function appsero_init_tracker_appsero_test() {
 
     // Active insights
     $client->insights()->init();
-
-    // Active automatic updater
-    $client->updater();
 
     // Active license page and checker
     $args = array(
