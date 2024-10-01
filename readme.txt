@@ -1,11 +1,12 @@
 === Visibility Logic for Elementor ===
 Contributors: staxwp, kierantaylorio, codezz, rtynio, geowrge
-Tags: elementor, elementor restrictions, elementor conditions, elementor widgets, visibility logic, widget conditions
+Tags: elementor, elementor restrictions, elementor conditions, elementor widgets, widget conditions
 Requires at least: 5.0
 Requires PHP: 7.0
 Tested up to: 6.6
 Stable tag: 2.3.6
-License: GLPv2 or later
+License: GPLv3
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 Show/hide Elementor widgets or sections based on user role, user meta, user logged in or not and many more.
 
