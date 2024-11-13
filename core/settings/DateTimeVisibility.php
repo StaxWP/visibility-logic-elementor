@@ -1,4 +1,15 @@
 <?php
+/**
+ * Date/Time visibility conditions for Elementor
+ * 
+ * Parts of this code are adapted from:
+ * Dynamic Content for Elementor by Dynamic.ooo
+ * Source: dynamic-content-for-elementor/includes/extensions/DCE_Extension_Visibility.php
+ * License: GPL v2 or later
+ * 
+ * Specifically adapted:
+ * - Weekday handling functionality using wp_locale	
+ */
 
 namespace Stax\VisibilityLogic;
 

@@ -1,4 +1,16 @@
 <?php
+/**
+ * Meta handling trait
+ * 
+ * Parts of this code are adapted from:
+ * Dynamic Content for Elementor by Dynamic.ooo
+ * Source: dynamic-content-for-elementor/class/trait/DCE_Trait_Meta.php
+ * License: GPL v2 or later
+ * 
+ * Specifically adapted:
+ * - User meta retrieval functionality
+ * - ACF field group handling
+ */
 
 namespace Stax\VisibilityLogic;
 

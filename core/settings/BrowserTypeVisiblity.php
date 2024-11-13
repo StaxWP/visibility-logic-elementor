@@ -1,4 +1,15 @@
 <?php
+/**
+ * Browser type visibility conditions for Elementor
+ * 
+ * Parts of this code are adapted from:
+ * Dynamic Content for Elementor by Dynamic.ooo
+ * Source: dynamic-content-for-elementor/includes/extensions/DCE_Extension_Visibility.php
+ * License: GPL v2 or later
+ * 
+ * Specifically adapted:
+ * - Browser detection options array
+ */
 
 namespace Stax\VisibilityLogic;
 
@@ -83,7 +94,7 @@ class BrowserTypeVisiblity extends Singleton {
 					'is_lynx'   => 'Lynx',
 					'is_iphone' => 'iPhone Safari',
 				],
-				'description'    => __( 'Trigger visibility for a specific browsers.', 'visibility-logic-elementor' ),
+				'description'    => __( 'Trigger visibility for specific browsers.', 'visibility-logic-elementor' ),
 				'multiple'       => true,
 				'condition'      => [
 					self::SECTION_PREFIX . 'browser_type_enabled' => 'yes',
