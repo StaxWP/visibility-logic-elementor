@@ -223,8 +223,9 @@ class DateTimeVisibility extends Singleton {
 		}
 
 		$options['date_time'] = false;
-
-		switch ( $settings[ self::SECTION_PREFIX . 'date_time_type' ] ) {
+		$date_time_type = isset($settings[self::SECTION_PREFIX . 'date_time_type']) ? $settings[self::SECTION_PREFIX . 'date_time_type'] : '';
+		
+		switch ( $date_time_type ) {
 			case 'date':
 				$date_from    = $settings[ self::SECTION_PREFIX . 'date_from' ];
 				$date_to      = $settings[ self::SECTION_PREFIX . 'date_to' ];
