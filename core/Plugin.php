@@ -55,6 +55,7 @@ class Plugin extends Singleton {
 		require_once STAX_VISIBILITY_CORE_PATH . 'admin/Settings.php';
 
 		add_action( 'elementor/init', [ $this, 'load_elementor_modules' ] );
+		add_action( 'elementor/init', [ $this, 'register_visibility_tab' ] );
 
 		add_filter( 'elementor/widget/render_content', [ $this, 'content_change' ], 999, 2 );
 		add_filter( 'elementor/frontend/section/before_render', [ $this, 'section_content_change' ], 999 );
@@ -68,16 +69,21 @@ class Plugin extends Singleton {
 		add_action( 'elementor/frontend/before_get_builder_content', [ $this, 'maybe_disable_document_caching' ], 99999, 2 );
 		add_action( 'elementor/frontend/get_builder_content', [ $this, 're_enable_document_caching' ], 99999, 2 );
 
-		\Elementor\Controls_Manager::add_tab(
-			'stax-visibility',
-			__( 'Visibility', 'visibility-logic-elementor' )
-		);
-
 		add_action( 'wp_footer', [ $this, 'editor_show_visibility_icon' ] );
 
 		$this->load_settings();
 
 		do_action( 'stax/visibility/after_init' );
+	}
+
+	/**
+	 * Register visibility tab
+	 */
+	public function register_visibility_tab() {
+		\Elementor\Controls_Manager::add_tab(
+			'stax-visibility',
+			__( 'Visibility', 'visibility-logic-elementor' )
+		);
 	}
 
 	/**
@@ -241,7 +247,7 @@ class Plugin extends Singleton {
 		$settings = $widget->get_settings();
 
 		if ( ! $this->should_render( $widget, $should_render ) ) {
-			
+
 			// if keep html is enabled, return true
 			if ( (bool) $settings[ self::SECTION_PREFIX . 'keep_html' ] ) {
 				return true;
@@ -342,7 +348,8 @@ class Plugin extends Singleton {
 	private function should_render( $item, $default_render = true ) {
 		$settings = $item->get_settings();
 
-		if ( ! (bool) $settings[ self::SECTION_PREFIX . 'enabled' ] ) {
+		// older version settings fallback.
+		if ( ! isset( $settings[ self::SECTION_PREFIX . 'enabled' ] ) || ! (bool) $settings[ self::SECTION_PREFIX . 'enabled' ] ) {
 			return $this->version_fallback_render( $settings, $default_render );
 		}
 

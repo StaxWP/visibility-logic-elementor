@@ -72,7 +72,7 @@ class DateTimeVisibility extends Singleton {
 				'label_on'       => __( 'Yes', 'visibility-logic-elementor' ),
 				'label_off'      => __( 'No', 'visibility-logic-elementor' ),
 				'return_value'   => 'yes',
-				'render_type'    => 'ui',
+				//'render_type'    => 'ui',
 				'prefix_class'   => 'stax-date_time_enabled-',
 				'style_transfer' => false,
 			]
@@ -93,7 +93,7 @@ class DateTimeVisibility extends Singleton {
 				'condition'      => [
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
 				],
-				'render_type'    => 'ui',
+				//'render_type'    => 'ui',
 				'style_transfer' => false,
 			]
 		);
@@ -107,7 +107,7 @@ class DateTimeVisibility extends Singleton {
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
 					self::SECTION_PREFIX . 'date_time_type' => 'date',
 				],
-				'render_type'    => 'ui',
+				//'render_type'    => 'ui',
 				'style_transfer' => false,
 			]
 		);
@@ -121,7 +121,7 @@ class DateTimeVisibility extends Singleton {
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
 					self::SECTION_PREFIX . 'date_time_type' => 'date',
 				],
-				'render_type'    => 'ui',
+				//'render_type'    => 'ui',
 				'style_transfer' => false,
 			]
 		);
@@ -145,7 +145,7 @@ class DateTimeVisibility extends Singleton {
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
 					self::SECTION_PREFIX . 'date_time_type' => [ 'week_days', 'week_days_time' ],
 				],
-				'render_type'    => 'ui',
+				//'render_type'    => 'ui',
 				'style_transfer' => false,
 			]
 		);
@@ -174,7 +174,7 @@ class DateTimeVisibility extends Singleton {
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
 					self::SECTION_PREFIX . 'date_time_type' => [ 'time', 'week_days_time' ],
 				],
-				'render_type'    => 'ui',
+				//'render_type'    => 'ui',
 				'style_transfer' => false,
 			]
 		);

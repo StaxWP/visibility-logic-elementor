@@ -4,7 +4,7 @@ Tags: elementor, elementor restrictions, elementor conditions, elementor widgets
 Requires at least: 5.0
 Requires PHP: 7.0
 Tested up to: 6.7
-Stable tag: 2.3.7
+Stable tag: 2.3.9
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -79,6 +79,12 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 6. Visibility Logic for Elementor - Admin Panel
 
 == Changelog ==
+
+= 2.3.9 =
+* Fix compatibility with Elementor 3.12.0
+* Latest WordPress compatibility
+* Latest Elementor compatibility
+* Fix PHP noticies 
 
 = 2.3.6 =
 * Add compatibility with Elementor element caching experimental feature.

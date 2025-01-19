@@ -5,7 +5,7 @@
  * Plugin URI: https://wordpress.org/plugins/visibility-logic-elementor
  * Author URI: https://staxwp.com
  * Author: StaxWP
- * Version: 2.3.7
+ * Version: 2.3.9
  *
  * Elementor tested up to: 3.25.5
  * Elementor Pro tested up to: 3.25.5
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly.
 }
 
-define( 'STAX_VISIBILITY_VERSION', '2.3.7' );
+define( 'STAX_VISIBILITY_VERSION', '2.3.9' );
 
 define( 'STAX_VISIBILITY_FILE', __FILE__ );
 define( 'STAX_VISIBILITY_PLUGIN_BASE', plugin_basename( STAX_VISIBILITY_FILE ) );
@@ -31,7 +31,10 @@ define( 'STAX_VISIBILITY_CORE_SETTINGS_PATH', STAX_VISIBILITY_CORE_PATH . 'setti
 define( 'STAX_VISIBILITY_HOOK_PREFIX', 'stax_visibility_' );
 define( 'STAX_VISIBILITY_SLUG_PREFIX', 'stax-visibility-' );
 
-add_action( 'plugins_loaded', 'ecl_load_plugin_textdomain' );
+require_once __DIR__ . '/vendor/autoload.php';
+require_once STAX_VISIBILITY_CORE_PATH . 'Singleton.php';
+require_once STAX_VISIBILITY_CORE_PATH . 'Plugin.php';
+
 
 /**
  * Load textdomain.
@@ -45,9 +48,7 @@ function ecl_load_plugin_textdomain() {
     load_plugin_textdomain( 'visibility-logic-elementor' );
 }
 
-require_once __DIR__ . '/vendor/autoload.php';
-require_once STAX_VISIBILITY_CORE_PATH . 'Singleton.php';
-require_once STAX_VISIBILITY_CORE_PATH . 'Plugin.php';
+add_action( 'init', 'ecl_load_plugin_textdomain', 0 );
 
 
 /**
@@ -68,4 +69,4 @@ function appsero_init_tracker_visibility_logic_elementor() {
 
 }
 
-appsero_init_tracker_visibility_logic_elementor();
+add_action( 'init', 'appsero_init_tracker_visibility_logic_elementor', 1 );
