@@ -197,7 +197,7 @@ class DateTimeVisibility extends Singleton {
 			[
 				'type'           => Controls_Manager::RAW_HTML,
 				'raw'            => __( 'Use timestamps based on server time:', 'visibility-logic-elementor' ) .
-									 '<br><strong>' . date( 'Y-m-d H:i', current_time( 'timestamp' ) ) . '</strong>',
+									 '<br><strong>' . wp_date( 'Y-m-d H:i' ) . '</strong>',
 				'condition'      => [
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
 				],
@@ -229,7 +229,7 @@ class DateTimeVisibility extends Singleton {
 			case 'date':
 				$date_from    = $settings[ self::SECTION_PREFIX . 'date_from' ];
 				$date_to      = $settings[ self::SECTION_PREFIX . 'date_to' ];
-				$current_date = current_time( 'timestamp' );
+				$current_date = current_datetime()->getTimestamp();
 
 				if ( $date_from && $date_to ) {
 					if ( $current_date >= strtotime( $date_from ) && $current_date <= strtotime( $date_to ) ) {

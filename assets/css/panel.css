@@ -41,29 +41,14 @@
   border-radius: 30px;
 }
 
-.stax-status-active .elementor-panel-heading-title:after,
-.stax-status-inactive .elementor-panel-heading-title:after,
-.stax-status-error .elementor-panel-heading-title:after {
+.stax-status-active .elementor-panel-heading-title:after {
   font-family: eicons;
+  content: "\e90d";
   position: absolute;
   right: 0;
   z-index: 2;
   font-size: 16px;
-}
-
-.stax-status-active .elementor-panel-heading-title:after {
-  content: "\e90d";
   color: #229b12;
-}
-
-.stax-status-inactive .elementor-panel-heading-title:after {
-  content: "\e93a";
-  color: #797979;
-}
-
-.stax-status-error .elementor-panel-heading-title:after {
-  content: "\e946";
-  color: #e32525;
 }
 
 .elementor-control-old_version_note .elementor-control-content {

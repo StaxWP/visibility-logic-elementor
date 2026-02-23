@@ -215,34 +215,45 @@ final class Resources extends Singleton {
 	 * @return string
 	 */
 	public static function get_browser_type() {
-		global $is_lynx, $is_gecko, $is_IE, $is_opera, $is_NS4, $is_safari, $is_chrome, $is_iphone, $is_android;
-
-		$android = stripos( $_SERVER['HTTP_USER_AGENT'], 'Android' );
-
-		if ( $is_lynx ) {
-			return 'is_lynx';
-		} elseif ( $is_gecko ) {
-			return 'is_gecko';
-		} elseif ( $is_opera ) {
-			return 'is_opera';
-		} elseif ( $is_NS4 ) {
-			return 'is_ns4';
-		} elseif ( $is_safari ) {
-			return 'is_safari';
-		} elseif ( $is_chrome ) {
-			return 'is_chrome';
-		} elseif ( $is_IE ) {
-			return 'is_ie';
-		} else {
+		if ( ! isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
 			return 'is_unknown';
 		}
 
-		if ( $is_iphone ) {
-			return 'is_ios';
+		$ua = $_SERVER['HTTP_USER_AGENT'];
+
+		// Check Edge first (contains Chrome/Safari in UA string)
+		if ( stripos( $ua, 'Edge' ) !== false || stripos( $ua, 'Edg/' ) !== false ) {
+			return 'is_edge';
 		}
 
-		if ( $android ) {
+		global $is_lynx, $is_gecko, $is_IE, $is_opera, $is_NS4, $is_safari, $is_chrome, $is_iphone;
+
+		if ( $is_iphone ) {
+			return 'is_iphone';
+		}
+		if ( stripos( $ua, 'Android' ) !== false ) {
 			return 'is_android';
+		}
+		if ( $is_chrome ) {
+			return 'is_chrome';
+		}
+		if ( $is_safari ) {
+			return 'is_safari';
+		}
+		if ( $is_gecko ) {
+			return 'is_gecko';
+		}
+		if ( $is_opera ) {
+			return 'is_opera';
+		}
+		if ( $is_IE ) {
+			return 'is_ie';
+		}
+		if ( $is_lynx ) {
+			return 'is_lynx';
+		}
+		if ( $is_NS4 ) {
+			return 'is_ns4';
 		}
 
 		return 'is_unknown';

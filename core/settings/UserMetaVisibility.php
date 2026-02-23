@@ -274,12 +274,12 @@ class UserMetaVisibility extends Singleton {
 					}
 					break;
 				case 'contain':
-					if ( strpos( $user_meta, $meta_check_value ) === false ) {
+					if ( ! is_string( $user_meta ) || strpos( $user_meta, $meta_check_value ) === false ) {
 						$meta_is_consistent = false;
 					}
 					break;
 				case 'not_contain':
-					if ( strpos( $user_meta, $meta_check_value ) !== false ) {
+					if ( is_string( $user_meta ) && strpos( $user_meta, $meta_check_value ) !== false ) {
 						$meta_is_consistent = false;
 					}
 					break;
@@ -320,6 +320,7 @@ class UserMetaVisibility extends Singleton {
 				case 'is_array_and_contains':
 					if ( ! is_array( $user_meta ) ) {
 						$meta_is_consistent = false;
+						break;
 					}
 
 					$values = explode( ',', $meta_check_value );

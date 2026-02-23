@@ -2,9 +2,9 @@
 Contributors: staxwp, kierantaylorio, codezz, rtynio, geowrge
 Tags: elementor, elementor restrictions, elementor conditions, elementor widgets, widget conditions
 Requires at least: 5.0
-Requires PHP: 7.0
-Tested up to: 6.7
-Stable tag: 2.3.9
+Requires PHP: 7.4
+Tested up to: 6.9
+Stable tag: 2.4.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -79,6 +79,16 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 6. Visibility Logic for Elementor - Admin Panel
 
 == Changelog ==
+
+= 2.4.0 =
+* WordPress 6.9 compatibility
+* Elementor 3.35 compatibility
+* Fix: Replace deprecated current_time('timestamp') with current_datetime()
+* Fix: Browser detection now properly detects Edge, iPhone and Android browsers
+* Fix: PHP 8.x warnings for undefined HTTP_USER_AGENT
+* Fix: PHP 8.x TypeError when using strpos() on non-string user meta values
+* Fix: Early translation loading notice on WordPress 6.7+
+* Improved: Minimum PHP version raised to 7.4
 
 = 2.3.9 =
 * Fix compatibility with Elementor 3.12.0

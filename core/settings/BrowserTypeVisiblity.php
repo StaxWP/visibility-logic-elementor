@@ -93,6 +93,7 @@ class BrowserTypeVisiblity extends Singleton {
 					'is_opera'  => 'Opera',
 					'is_lynx'   => 'Lynx',
 					'is_iphone' => 'iPhone Safari',
+					'is_android' => 'Android Browser',
 				],
 				'description'    => __( 'Trigger visibility for specific browsers.', 'visibility-logic-elementor' ),
 				'multiple'       => true,
