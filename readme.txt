@@ -16,7 +16,7 @@ Show or hide Elementor widgets or sections based on various conditions like: Use
 The visibility settings will only affect widgets rendering in the frontend. While you are inside Elementor editor you will be able to see all of them.
 
 = Free Features =
-- NEW - ACF (Advanced Custom Fields) support — show/hide based on any ACF field value
+- NEW - ACF (Advanced Custom Fields) support — show/hide based on ACF field values on the current post/page
 - NEW - Device Type visibility — target Desktop, Tablet, or Mobile users
 - Flex container visibility restrictions support
 - User Meta content restriction
@@ -119,9 +119,8 @@ Visibility Logic automatically disables Elementor's element caching for pages th
 
 = 2.5.0 =
 * NEW: Device Type condition — show/hide elements for Desktop, Tablet, or Mobile (server-side User-Agent detection)
-* NEW: ACF Field condition — show/hide based on Advanced Custom Fields values with 7 operators: is empty, is not empty, equals, not equals, contains, is true, is false
-* ACF supports Current Post and Current User as field sources
-* Advanced ACF features available in Pro: repeater fields, options page, term meta, specific post/user, AND/OR logic with 17 operators
+* NEW: ACF Field condition — show/hide based on Advanced Custom Fields values on the current post/page with 7 operators: is empty, is not empty, equals, not equals, contains, is true, is false
+* Advanced ACF features available in Pro: user fields, repeater fields, options page, term meta, specific post/user sources, AND/OR logic with 17 operators
 
 = 2.4.0 =
 * WordPress 6.9 compatibility
