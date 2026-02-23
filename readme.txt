@@ -1,6 +1,6 @@
 === Visibility Logic for Elementor ===
 Contributors: staxwp, kierantaylorio, codezz, rtynio, geowrge
-Tags: elementor, elementor restrictions, elementor conditions, elementor widgets, widget conditions
+Tags: elementor, visibility, conditional content, restrict content, elementor addons
 Requires at least: 5.0
 Requires PHP: 7.4
 Tested up to: 6.9
