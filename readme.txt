@@ -8,7 +8,7 @@ Stable tag: 2.4.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Show or hide Elementor widgets, sections and containers based on dynamic visibility conditions — user role, logged-in status, date & time, browser, user meta and more. The best free conditional logic plugin for Elementor.
+Show or hide Elementor widgets and sections based on user role, logged-in status, date & time, browser, user meta and more.
 
 == Description ==
 Show or hide Elementor widgets or sections based on various conditions like: User is logged in, User has a specific meta, The day is Wednesday, The time is between X and Y, The user is using Firefox browser, and many more.
