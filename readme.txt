@@ -8,61 +8,88 @@ Stable tag: 2.5.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Show or hide Elementor widgets and sections based on user role, logged-in status, date & time, browser, user meta and more.
+Conditional visibility for Elementor — show or hide widgets, sections and containers based on user role, ACF fields, device type, date & time, browser, user meta and more.
 
 == Description ==
-Show or hide Elementor widgets or sections based on various conditions like: User is logged in, User has a specific meta, The day is Wednesday, The time is between X and Y, The user is using Firefox browser, and many more.
 
-The visibility settings will only affect widgets rendering in the frontend. While you are inside Elementor editor you will be able to see all of them.
+**Visibility Logic** adds powerful **conditional display conditions** to every Elementor widget, section, and container. Control exactly who sees what, when, and on which device — without writing a single line of code.
 
-= Free Features =
-- NEW - ACF (Advanced Custom Fields) support — show/hide based on ACF field values on the current post/page
-- NEW - Device Type visibility — target Desktop, Tablet, or Mobile users
-- Flex container visibility restrictions support
-- User Meta content restriction
-- Restrict content based on User Browser (Chrome, Mozilla, Safari, Edge, etc)
-- Date & Time restrictions for content
-- Hide a whole section if all widgets inside it are hidden using visibility settings (Works with nested sections/containers too)
+Hidden elements are **completely removed from the HTML** (not just hidden with CSS), keeping your pages fast and your content secure.
 
-= PRO Features =
-- Advanced ACF — Repeater fields, options page, term meta, specific post/user sources, AND/OR logic with 17 operators.
-- Language — Show/hide based on current language (WPML, Polylang, TranslatePress).
-- URL Parameters — Standalone URL query string conditions with repeater and 9 operators.
-- Geo Location — Use MaxMind to dynamically display elements based on user's country.
-- Dynamic conditions — Restrict Elementor widgets and sections based on all Elementor Pro Dynamic tags.
-- WooCommerce Users — Restrict based on user's order/subscription.
-- Easy Digital Downloads Users — Restrict based on user's order/subscription.
-- Advanced User Meta — Support for multiple user meta conditions with AND/OR logic.
-- Post & Page, Taxonomy content restriction.
-- Archive restrictions based on Post types and taxonomies.
-- IP & Referrer restrictions.
-- WordPress Conditional Tags restrictions.
-- Fallback — Replace a hidden element with a text message or an Elementor template.
-- Copy/Paste visibility settings between widgets or sections by right-clicking an element.
+= When to use Visibility Logic =
+- **Restrict content** to logged-in users, specific roles, or subscribers
+- **Schedule content** to appear during a sale, event, or launch window
+- **Personalize pages** based on user meta, ACF custom fields, or device type
+- **Show/hide elements** for Desktop, Tablet, or Mobile visitors
+- **A/B test layouts** by showing different content to different user segments
+- **Hide empty sections** automatically when all child widgets are hidden
 
-Find more about our [Pro version](https://staxwp.com/go/visibility-logic).
+= Free Conditions =
+- **ACF Fields** (NEW) — Show/hide based on Advanced Custom Fields values on the current post or page. 7 operators: is empty, is not empty, equals, not equals, contains, is true, is false.
+- **Device Type** (NEW) — Target Desktop, Tablet, or Mobile users with server-side User-Agent detection. Hidden elements are fully removed from HTML.
+- **User Role** — Logged in, logged out, or specific roles (Administrator, Editor, Subscriber, custom roles).
+- **User Meta** — Show/hide based on any user meta field value.
+- **Date & Time** — Schedule visibility with "from" and "to" dates. Perfect for sales, events, and time-limited content.
+- **Browser Type** — Target Chrome, Firefox, Safari, Edge, Opera, iPhone, Android, and more.
+- **Flexbox Containers** — Full support for Elementor's Flexbox containers, classic sections, and nested containers.
+- **Hide When Empty** — Automatically hide a parent section/container when all child widgets are hidden by visibility conditions.
 
-Other restriction options to come. Suggestions are welcomed. 
+= PRO Conditions =
+- **Advanced ACF** — Repeater fields, options page, term meta, user fields, specific post/user sources, AND/OR logic with 17 operators.
+- **Language** — Show/hide based on current language. Supports WPML, Polylang, and TranslatePress.
+- **URL Parameters** — Standalone query string conditions with repeater support and 9 operators.
+- **Geo Location** — Display elements based on visitor's country using MaxMind geolocation.
+- **Dynamic Conditions** — Use all Elementor Pro Dynamic Tags as visibility conditions.
+- **WooCommerce** — Restrict content based on order history, active subscriptions, or customer status.
+- **Easy Digital Downloads** — Restrict based on purchase history or subscription status.
+- **Advanced User Meta** — Multiple user meta conditions with AND/OR logic.
+- **Post & Page, Taxonomy** — Show/hide based on current post type, specific pages, or taxonomy terms.
+- **Archive** — Conditions based on post type archives and taxonomy archives.
+- **IP & Referrer** — Target visitors by IP address or referral source.
+- **WordPress Conditional Tags** — Use any WordPress conditional tag as a visibility condition.
+- **Fallback Content** — Replace hidden elements with a custom text message or an Elementor template.
+- **Copy/Paste** — Right-click to copy visibility settings between widgets or sections.
 
-Here is how you will find the Elementor visibility restrict settings:
-1. Open a page with Elementor
-2. Go and select any widget from the page
-3. Go to Advanced - Visibility control
-4. Here you will find the restriction settings for your element.
+Get [Visibility Logic Pro](https://staxwp.com/go/visibility-logic) and unlock all conditions.
+
+= How it works =
+1. Edit any page with Elementor
+2. Select a widget, section, or container
+3. Go to the **Visibility** tab (or Advanced → Visibility Control)
+4. Enable conditions and configure your display rules
+5. Save — elements are shown or hidden on the live site based on your rules
+
+= Free vs Pro =
+
+| Feature | Free | Pro |
+|---------|------|-----|
+| User Role & Logged-in status | ✅ | ✅ |
+| User Meta | ✅ | ✅ |
+| Date & Time scheduling | ✅ | ✅ |
+| Browser detection | ✅ | ✅ |
+| Device Type (Desktop/Tablet/Mobile) | ✅ | ✅ |
+| ACF Fields (current post/page) | ✅ | ✅ |
+| Advanced ACF (repeater, options, user, AND/OR) | ❌ | ✅ |
+| Language (WPML/Polylang/TranslatePress) | ❌ | ✅ |
+| URL Parameters | ❌ | ✅ |
+| Geolocation (country) | ❌ | ✅ |
+| WooCommerce & EDD | ❌ | ✅ |
+| Dynamic Tags conditions | ❌ | ✅ |
+| Post/Page, Taxonomy, Archive | ❌ | ✅ |
+| IP & Referrer | ❌ | ✅ |
+| Fallback content | ❌ | ✅ |
+| Copy/Paste conditions | ❌ | ✅ |
 
 = More from StaxWP =
-- [BuddyBuilder - BuddyPress Builder for Elementor - Plugin](https://staxwp.com/go/buddybuilder)
-Create stunning communities on your site powered by Elementor and BuddyPress
-- [Elementor Addons, Widgets & Enhancements - Plugin](https://staxwp.com/go/addons-for-elementor)
-Powerful Elementor widgets to help you build stunning pages
-- [Woo Addons for Elementor - Plugin](https://staxwp.com/go/woo-addons-for-elementor/)
-Elementor enhancements for Woocommerce to help you build awesome e-commerce sites
+- [BuddyBuilder — BuddyPress Builder for Elementor](https://staxwp.com/go/buddybuilder) — Build stunning BuddyPress communities with Elementor.
+- [Elementor Addons & Widgets](https://staxwp.com/go/addons-for-elementor) — Powerful widgets to help you build stunning pages.
+- [Woo Addons for Elementor](https://staxwp.com/go/woo-addons-for-elementor/) — Elementor enhancements for WooCommerce.
 
 = Privacy Policy =
-We use Appsero SDK to collect some telemetry data upon user's confirmation. This helps us to troubleshoot problems faster & make product improvements.
+We use Appsero SDK to collect some telemetry data upon user's confirmation. This helps us troubleshoot problems faster and make product improvements.
 
 = Found a bug? =
-You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team help validate, triage and handle any security vulnerabilities. [Report bug](https://patchstack.com/database/vdp/visibility-logic-elementor).
+Report security bugs through the [Patchstack Vulnerability Disclosure Program](https://patchstack.com/database/vdp/visibility-logic-elementor). The Patchstack team helps validate, triage, and handle any security vulnerabilities.
 
 == Frequently Asked Questions ==
 
@@ -81,6 +108,12 @@ Yes. Visibility Logic fully supports Elementor's Flexbox containers, classic sec
 = Can I combine multiple conditions (AND / OR)? =
 Yes. You can enable multiple condition types at once (e.g., User Role + Date Time). In the General settings, choose **All** (all conditions must be met) or **At least one** (any single condition triggers the action). The [Pro version](https://staxwp.com/go/visibility-logic) extends this with advanced AND/OR logic for user meta conditions.
 
+= Can I show or hide content based on ACF field values? =
+Yes! The free version supports ACF (Advanced Custom Fields) visibility on the current post or page with 7 operators. The [Pro version](https://staxwp.com/go/visibility-logic) extends ACF support with repeater fields, options pages, user fields, term meta, and AND/OR logic with 17 operators.
+
+= Can I show different content on mobile vs desktop? =
+Yes. The **Device Type** condition detects Desktop, Tablet, and Mobile visitors using server-side User-Agent detection. Unlike CSS-based solutions, hidden elements are completely removed from the HTML — not just visually hidden.
+
 = Can I show different content based on the visitor's country? =
 Geolocation-based visibility is available in [Visibility Logic Pro](https://staxwp.com/go/visibility-logic). It uses MaxMind to detect the visitor's country and dynamically show or hide elements — great for localized offers, compliance notices, or region-specific content.
 
@@ -98,22 +131,22 @@ Visibility Logic automatically disables Elementor's element caching for pages th
 
 == Installation ==
 
-1. Upload the plugin to your 'wp-content/plugins' directory
+1. Upload the plugin to your `wp-content/plugins` directory or install directly from WP Admin → Plugins → Add New
 2. Activate the plugin
 3. Edit a page using Elementor
-4. Select an existing element or add a new one.
-5. Go to Stax Visibility tab.
-6. Enable conditions and set your restrictions for the Elementor widget or section.
-7. That is it :)
+4. Select any widget, section, or container
+5. Go to the **Visibility** tab
+6. Enable conditions and configure your display rules
+7. Save and preview your page
 
 == Screenshots ==
 
-1. Visibility Logic for Elementor - Enable conditions for widget.
-2. Visibility Logic for Elementor - Restrict widget/section by user role.
-3. Visibility Logic for Elementor - Restrict widget/section by user meta.
-4. Visibility Logic for Elementor - Restrict widget/section by date and time. Show content at a certain date.
-5. Visibility Logic for Elementor - Restrict widget/section by browser used.
-6. Visibility Logic for Elementor - Admin Panel
+1. **Visibility tab** — Enable conditional visibility on any Elementor widget
+2. **User Role** — Restrict content by user role or logged-in status
+3. **User Meta** — Show/hide based on user meta field values
+4. **Date & Time** — Schedule content to appear during a specific period
+5. **Browser Type** — Target specific browsers and devices
+6. **Admin Panel** — Global plugin settings and configuration
 
 == Changelog ==
 
@@ -136,7 +169,7 @@ Visibility Logic automatically disables Elementor's element caching for pages th
 * Fix compatibility with Elementor 3.12.0
 * Latest WordPress compatibility
 * Latest Elementor compatibility
-* Fix PHP noticies 
+* Fix PHP noticies
 
 = 2.3.6 =
 * Add compatibility with Elementor element caching experimental feature.
@@ -257,7 +290,7 @@ Visibility Logic automatically disables Elementor's element caching for pages th
 * Initial release
 
 = Be a contributor =
-If you want to contribute, go to our [GitHub Repository](https://github.com/seventhqueen/visibility-logic-elementor).
+If you want to contribute, go to our [GitHub Repository](https://github.com/staxwp/visibility-logic-elementor).
 
 You can also add a new language via [translate.wordpress.org](https://translate.wordpress.org/projects/wp-plugins/visibility-logic-elementor).
 
