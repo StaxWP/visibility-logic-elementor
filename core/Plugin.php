@@ -71,7 +71,7 @@ class Plugin extends Singleton {
 
 		add_action( 'wp_footer', [ $this, 'editor_show_visibility_icon' ] );
 
-		$this->load_settings();
+		add_action( 'init', [ $this, 'load_settings' ], 0 );
 
 		do_action( 'stax/visibility/after_init' );
 	}

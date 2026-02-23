@@ -131,6 +131,7 @@ var STAXVisibilityEditor = STAXVisibilityEditor || {};
     },
 
     initStateDisplay: function () {
+      // Update state on switcher toggle and section click
       $(document).on(
         "click",
         ".elementor-control-type-switcher .elementor-switch, .elementor-panel-heading",
@@ -140,6 +141,13 @@ var STAXVisibilityEditor = STAXVisibilityEditor || {};
           }, 100);
         }
       );
+
+      // Update state when element is selected in the panel
+      elementor.channels.editor.on("section:activated", function () {
+        setTimeout(function () {
+          STAXVisibilityEditor.fn.checkState();
+        }, 100);
+      });
 
     },
 
@@ -159,13 +167,7 @@ var STAXVisibilityEditor = STAXVisibilityEditor || {};
           ) {
             item.status = "active";
           } else {
-            item.status = "inactive";
-          }
-
-          if (
-            currentElement.$el.hasClass("stax-" + item.name + "_enabled-error")
-          ) {
-            item.status = "error";
+            item.status = "";
           }
         });
 
@@ -173,22 +175,20 @@ var STAXVisibilityEditor = STAXVisibilityEditor || {};
           index,
           item
         ) {
-          $(item)
-            .removeClass("stax-status-active")
-            .removeClass("stax-status-inactive")
-            .removeClass("stax-status-error");
+          $(item).removeClass("stax-status-active");
 
           let _this = $(item);
 
           $.each(options, function (i, optionItem) {
             if (
+              optionItem.status === "active" &&
               _this.hasClass(
                 "elementor-control-stax_visibility_" +
                   optionItem.name +
                   "_section"
               )
             ) {
-              _this.addClass("stax-status-" + optionItem.status);
+              _this.addClass("stax-status-active");
             }
           });
         });
@@ -202,11 +202,21 @@ var STAXVisibilityEditor = STAXVisibilityEditor || {};
     STAXVisibilityEditor.fn.initSelect2();
     STAXVisibilityEditor.fn.initStateDisplay();
 
-      // Hook into Elementor's panel events
-    elementor.on('panel:init', function () {
+    // Check state when any element panel opens
+    elementor.hooks.addAction('panel/open_editor/widget', function () {
       setTimeout(function () {
         STAXVisibilityEditor.fn.checkState();
-      }, 1000);
+      }, 200);
+    });
+    elementor.hooks.addAction('panel/open_editor/section', function () {
+      setTimeout(function () {
+        STAXVisibilityEditor.fn.checkState();
+      }, 200);
+    });
+    elementor.hooks.addAction('panel/open_editor/container', function () {
+      setTimeout(function () {
+        STAXVisibilityEditor.fn.checkState();
+      }, 200);
     });
   });
 
