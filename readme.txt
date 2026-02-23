@@ -59,27 +59,6 @@ Get [Visibility Logic Pro](https://staxwp.com/go/visibility-logic) and unlock al
 4. Enable conditions and configure your display rules
 5. Save — elements are shown or hidden on the live site based on your rules
 
-= Free vs Pro =
-
-| Feature | Free | Pro |
-|---------|------|-----|
-| User Role & Logged-in status | ✅ | ✅ |
-| User Meta | ✅ | ✅ |
-| Date & Time scheduling | ✅ | ✅ |
-| Browser detection | ✅ | ✅ |
-| Device Type (Desktop/Tablet/Mobile) | ✅ | ✅ |
-| ACF Fields (current post/page) | ✅ | ✅ |
-| Advanced ACF (repeater, options, user, AND/OR) | ❌ | ✅ |
-| Language (WPML/Polylang/TranslatePress) | ❌ | ✅ |
-| URL Parameters | ❌ | ✅ |
-| Geolocation (country) | ❌ | ✅ |
-| WooCommerce & EDD | ❌ | ✅ |
-| Dynamic Tags conditions | ❌ | ✅ |
-| Post/Page, Taxonomy, Archive | ❌ | ✅ |
-| IP & Referrer | ❌ | ✅ |
-| Fallback content | ❌ | ✅ |
-| Copy/Paste conditions | ❌ | ✅ |
-
 = More from StaxWP =
 - [BuddyBuilder — BuddyPress Builder for Elementor](https://staxwp.com/go/buddybuilder) — Build stunning BuddyPress communities with Elementor.
 - [Elementor Addons & Widgets](https://staxwp.com/go/addons-for-elementor) — Powerful widgets to help you build stunning pages.
