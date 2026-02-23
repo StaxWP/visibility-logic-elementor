@@ -112,6 +112,16 @@ final class Resources extends Singleton {
 				'pro'   => false,
 				'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'BrowserTypeVisiblity.php',
 			],
+			'device-type'  => [
+				'name'  => __( 'Device Type', 'visibility-logic-elementor' ),
+				'pro'   => false,
+				'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'DeviceTypeVisibility.php',
+			],
+			'acf'          => [
+				'name'  => __( 'ACF Field', 'visibility-logic-elementor' ),
+				'pro'   => false,
+				'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'AcfVisibility.php',
+			],
 
 		];
 
@@ -180,6 +190,18 @@ final class Resources extends Singleton {
 				'name' => __( 'Fallback', 'visibility-logic-elementor' ),
 				'pro'  => true,
 			],
+			'query-string'       => [
+				'name' => __( 'URL Parameters', 'visibility-logic-elementor' ),
+				'pro'  => true,
+			],
+			'language'           => [
+				'name' => __( 'Language (WPML/Polylang)', 'visibility-logic-elementor' ),
+				'pro'  => true,
+			],
+			'advanced-acf'       => [
+				'name' => __( 'Advanced ACF', 'visibility-logic-elementor' ),
+				'pro'  => true,
+			],
 		];
 	}
 
@@ -211,6 +233,67 @@ final class Resources extends Singleton {
 
 	/**
 	 * Get borwser type
+	 *
+	 * @return string
+	 */
+	/**
+	 * Get device type based on User-Agent
+	 *
+	 * @return string desktop|tablet|mobile
+	 */
+	public static function get_device_type() {
+		if ( ! isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
+			return 'desktop';
+		}
+
+		$ua = $_SERVER['HTTP_USER_AGENT'];
+
+		// Tablet detection (must come before mobile - some tablets contain "Mobile" in UA)
+		$tablet_patterns = [
+			'iPad',
+			'Android(?!.*Mobile)',  // Android without "Mobile" = tablet
+			'Kindle',
+			'Silk',
+			'PlayBook',
+			'Tablet',
+			'Nexus 7',
+			'Nexus 10',
+			'KFAPWI',
+			'SM-T',
+			'GT-P',
+		];
+
+		foreach ( $tablet_patterns as $pattern ) {
+			if ( preg_match( '/' . $pattern . '/i', $ua ) ) {
+				return 'tablet';
+			}
+		}
+
+		// Mobile detection
+		$mobile_patterns = [
+			'Mobile',
+			'Android.*Mobile',
+			'iPhone',
+			'iPod',
+			'Opera Mini',
+			'Opera Mobi',
+			'Windows Phone',
+			'BlackBerry',
+			'BB10',
+			'webOS',
+		];
+
+		foreach ( $mobile_patterns as $pattern ) {
+			if ( preg_match( '/' . $pattern . '/i', $ua ) ) {
+				return 'mobile';
+			}
+		}
+
+		return 'desktop';
+	}
+
+	/**
+	 * Get browser type
 	 *
 	 * @return string
 	 */
