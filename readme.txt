@@ -25,16 +25,19 @@ The visibility settings will only affect widgets rendering in the frontend. Whil
 - Hide a whole section if all widgets inside it are hidden using visibility settings (Works with nested sections/containers too)
 
 = PRO Features =
-- Geo Location - Use MaxMind to dynamically display elements based on user's country.
-- Dynamic conditions - Restrict Elementor widgets and sections based on all Elementor Pro Dynamic tags.
-- WooCommerce Users - Restrict based on user's order/subscription
-- Easy Digital Downloads Users - Restrict based on user's order/subscription
-- Advanced User Meta - Support for multiple user meta conditions with And/Or condition.
-- Post & Page, Taxonomy, URL Parameter content restriction.
+- Advanced ACF — Repeater fields, options page, term meta, specific post/user sources, AND/OR logic with 17 operators.
+- Language — Show/hide based on current language (WPML, Polylang, TranslatePress).
+- URL Parameters — Standalone URL query string conditions with repeater and 9 operators.
+- Geo Location — Use MaxMind to dynamically display elements based on user's country.
+- Dynamic conditions — Restrict Elementor widgets and sections based on all Elementor Pro Dynamic tags.
+- WooCommerce Users — Restrict based on user's order/subscription.
+- Easy Digital Downloads Users — Restrict based on user's order/subscription.
+- Advanced User Meta — Support for multiple user meta conditions with AND/OR logic.
+- Post & Page, Taxonomy content restriction.
 - Archive restrictions based on Post types and taxonomies.
 - IP & Referrer restrictions.
 - WordPress Conditional Tags restrictions.
-- Fallback - Allows you to replace a hidden element with a text message or an Elementor template.
+- Fallback — Replace a hidden element with a text message or an Elementor template.
 - Copy/Paste visibility settings between widgets or sections by right-clicking an element.
 
 Find more about our [Pro version](https://staxwp.com/go/visibility-logic).
@@ -115,10 +118,10 @@ Visibility Logic automatically disables Elementor's element caching for pages th
 == Changelog ==
 
 = 2.5.0 =
-* NEW: Device Type condition — show/hide elements for Desktop, Tablet, or Mobile
-* NEW: ACF Field condition — show/hide based on Advanced Custom Fields values (empty, equals, contains, true/false)
-* ACF supports Current Post and Current User field sources
-* Pro upsell hint for advanced ACF features (repeater, options page, AND/OR logic)
+* NEW: Device Type condition — show/hide elements for Desktop, Tablet, or Mobile (server-side User-Agent detection)
+* NEW: ACF Field condition — show/hide based on Advanced Custom Fields values with 7 operators: is empty, is not empty, equals, not equals, contains, is true, is false
+* ACF supports Current Post and Current User as field sources
+* Advanced ACF features available in Pro: repeater fields, options page, term meta, specific post/user, AND/OR logic with 17 operators
 
 = 2.4.0 =
 * WordPress 6.9 compatibility
