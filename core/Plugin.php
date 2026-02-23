@@ -209,24 +209,21 @@ class Plugin extends Singleton {
 		}
 
 		if ( ! in_array( $widget->get_name(), [ 'section', 'container', 'column' ] ) ) {
-			if ( method_exists( $widget, 'get_css_config' ) && method_exists( $widget, 'get_group_name' ) ) {
-				$needs_print = false;
+			$needs_print = false;
 
-				foreach ( $this->initiated_widgets as $k => $initiated_widget ) {
-					if ( $initiated_widget === $widget->get_group_name() && ! in_array( $widget->get_id(), $this->excluded_widgets ) ) {
-						$needs_print = true;
-						unset( $this->initiated_widgets[ $k ] );
-					}
+			foreach ( $this->initiated_widgets as $k => $initiated_widget ) {
+				if ( $initiated_widget === $widget->get_name() && ! in_array( $widget->get_id(), $this->excluded_widgets ) ) {
+					$needs_print = true;
+					unset( $this->initiated_widgets[ $k ] );
 				}
+			}
 
-				if ( $needs_print ) {
-					$config = $widget->get_css_config();
-
-					if ( file_exists( $config['file_path'] ) ) {
-						$css_manager = new \Elementor\Core\Page_Assets\Data_Managers\Widgets_Css();
-						$css         = $css_manager->get_asset_data_from_config( $config );
-
-						$content .= $css;
+			if ( $needs_print ) {
+				// Get widget styles
+				$styles = $widget->get_style_depends();
+				if ( ! empty( $styles ) ) {
+					foreach ( $styles as $style ) {
+						wp_enqueue_style( $style );
 					}
 				}
 			}
@@ -556,7 +553,12 @@ class Plugin extends Singleton {
 
 	public function filter_document_cache_meta( $value, $object_id, $meta_key, $single, $meta_type ) {
 
-		if ( $meta_key === \Elementor\Core\Base\Document::CACHE_META_KEY ) {
+		// Check if the constant exists before using it
+		if ( defined( '\Elementor\Core\Base\Document::CACHE_META_KEY' ) ) {
+			if ( $meta_key === \Elementor\Core\Base\Document::CACHE_META_KEY ) {
+				return false;
+			}
+		} else if ( $meta_key === '_elementor_element_cache' ) {
 			return false;
 		}
 		return $value;
