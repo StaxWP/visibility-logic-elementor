@@ -4,7 +4,7 @@ Tags: elementor, visibility, conditional logic, restrict content, dynamic visibi
 Requires at least: 5.0
 Requires PHP: 7.4
 Tested up to: 6.9
-Stable tag: 2.4.0
+Stable tag: 2.5.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -16,9 +16,11 @@ Show or hide Elementor widgets or sections based on various conditions like: Use
 The visibility settings will only affect widgets rendering in the frontend. While you are inside Elementor editor you will be able to see all of them.
 
 = Free Features =
-- NEW - Flex container visibility restrictions support
+- NEW - ACF (Advanced Custom Fields) support — show/hide based on any ACF field value
+- NEW - Device Type visibility — target Desktop, Tablet, or Mobile users
+- Flex container visibility restrictions support
 - User Meta content restriction
-- Restrict content based on User Browser (Chrome, Mozilla, Safari, etc)
+- Restrict content based on User Browser (Chrome, Mozilla, Safari, Edge, etc)
 - Date & Time restrictions for content
 - Hide a whole section if all widgets inside it are hidden using visibility settings (Works with nested sections/containers too)
 
@@ -111,6 +113,12 @@ Visibility Logic automatically disables Elementor's element caching for pages th
 6. Visibility Logic for Elementor - Admin Panel
 
 == Changelog ==
+
+= 2.5.0 =
+* NEW: Device Type condition — show/hide elements for Desktop, Tablet, or Mobile
+* NEW: ACF Field condition — show/hide based on Advanced Custom Fields values (empty, equals, contains, true/false)
+* ACF supports Current Post and Current User field sources
+* Pro upsell hint for advanced ACF features (repeater, options page, AND/OR logic)
 
 = 2.4.0 =
 * WordPress 6.9 compatibility

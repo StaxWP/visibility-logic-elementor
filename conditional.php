@@ -5,7 +5,7 @@
  * Plugin URI: https://wordpress.org/plugins/visibility-logic-elementor
  * Author URI: https://staxwp.com
  * Author: StaxWP
- * Version: 2.4.0
+ * Version: 2.5.0
  *
  * Elementor tested up to: 3.35
  * Elementor Pro tested up to: 3.35
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly.
 }
 
-define( 'STAX_VISIBILITY_VERSION', '2.4.0' );
+define( 'STAX_VISIBILITY_VERSION', '2.5.0' );
 
 define( 'STAX_VISIBILITY_FILE', __FILE__ );
 define( 'STAX_VISIBILITY_PLUGIN_BASE', plugin_basename( STAX_VISIBILITY_FILE ) );
