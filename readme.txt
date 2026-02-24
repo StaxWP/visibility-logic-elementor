@@ -61,8 +61,6 @@ Get [Visibility Logic Pro](https://staxwp.com/go/visibility-logic) and unlock al
 
 = More from StaxWP =
 - [BuddyBuilder — BuddyPress Builder for Elementor](https://staxwp.com/go/buddybuilder) — Build stunning BuddyPress communities with Elementor.
-- [Elementor Addons & Widgets](https://staxwp.com/go/addons-for-elementor) — Powerful widgets to help you build stunning pages.
-- [Woo Addons for Elementor](https://staxwp.com/go/woo-addons-for-elementor/) — Elementor enhancements for WooCommerce.
 
 = Privacy Policy =
 We use Appsero SDK to collect some telemetry data upon user's confirmation. This helps us troubleshoot problems faster and make product improvements.
