@@ -50,33 +50,6 @@ Hidden elements are **completely removed from the HTML** (not just hidden with C
 - **Fallback Content** — Replace hidden elements with a custom text message or an Elementor template.
 - **Copy/Paste** — Right-click to copy visibility settings between widgets or sections.
 
-= Free vs Pro =
-
-| Feature | Free | Pro |
-|---|---|---|
-| User Role (logged in/out, specific roles) | ✅ | ✅ |
-| User Meta | ✅ | ✅ |
-| Date & Time scheduling | ✅ | ✅ |
-| Browser Type | ✅ | ✅ |
-| Device Type (Desktop/Tablet/Mobile) | ✅ | ✅ |
-| ACF Fields (current post/page) | ✅ | ✅ |
-| Flexbox Containers | ✅ | ✅ |
-| Hide When Empty | ✅ | ✅ |
-| Advanced ACF (repeater, options, user, term) | ❌ | ✅ |
-| Language (WPML, Polylang, TranslatePress) | ❌ | ✅ |
-| URL Parameters | ❌ | ✅ |
-| Geo Location | ❌ | ✅ |
-| Dynamic Conditions | ❌ | ✅ |
-| WooCommerce | ❌ | ✅ |
-| Easy Digital Downloads | ❌ | ✅ |
-| Advanced User Meta (AND/OR) | ❌ | ✅ |
-| Post & Page, Taxonomy | ❌ | ✅ |
-| Archive conditions | ❌ | ✅ |
-| IP & Referrer | ❌ | ✅ |
-| WordPress Conditional Tags | ❌ | ✅ |
-| Fallback Content | ❌ | ✅ |
-| Copy/Paste settings | ❌ | ✅ |
-
 Get [Visibility Logic Pro](https://staxwp.com/go/visibility-logic) and unlock all conditions.
 
 = How it works =
