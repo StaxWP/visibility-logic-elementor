@@ -3,7 +3,7 @@ Contributors: staxwp, kierantaylorio, codezz, rtynio, geowrge
 Tags: elementor, visibility, conditional logic, restrict content, dynamic visibility
 Requires at least: 5.0
 Requires PHP: 7.4
-Tested up to: 7.0
+Tested up to: 7.1
 Stable tag: 2.5.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
