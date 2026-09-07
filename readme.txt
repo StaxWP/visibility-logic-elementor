@@ -1,26 +1,27 @@
 === Visibility Logic for Elementor ===
 Contributors: staxwp, kierantaylorio, codezz, rtynio, geowrge
-Tags: elementor, visibility, conditional logic, restrict content, dynamic visibility
+Tags: elementor, visibility, display conditions, conditional visibility, dynamic visibility
 Requires at least: 5.0
 Requires PHP: 7.4
 Tested up to: 7.1
-Stable tag: 2.5.0
+Stable tag: 2.5.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Conditional visibility for Elementor — show or hide widgets based on user role, ACF fields, device type, date & time, browser and more.
+Display Conditions for Elementor — conditional visibility rules to show or hide widgets by user role, ACF fields, device type, date & time, browser and more.
 
 == Description ==
 
-**Visibility Logic** adds powerful **conditional display conditions** to every Elementor widget, section, and container. Control exactly who sees what, when, and on which device — without writing a single line of code.
+**Visibility Logic** adds focused **Display Conditions for Elementor** to every widget, section, and container. Use conditional display rules to control exactly who sees what, when, and on which device — without writing a single line of code.
 
-Hidden elements are **completely removed from the HTML** (not just hidden with CSS), keeping your pages fast and your content secure.
+By default, hidden elements are removed from the HTML instead of only hidden with CSS. If you need the markup to stay in the DOM, enable the **Keep HTML / Hide by CSS** option.
 
 = When to use Visibility Logic =
 - **Restrict content** to logged-in users, specific roles, or subscribers
+- **Control membership content** with Elementor sections for members, subscribers, guests, or specific roles
 - **Schedule content** to appear during a sale, event, or launch window
 - **Personalize pages** based on user meta, ACF custom fields, or device type
-- **Show/hide elements** for Desktop, Tablet, or Mobile visitors
+- **Show/hide Elementor elements** for Desktop, Tablet, or Mobile visitors
 - **A/B test layouts** by showing different content to different user segments
 - **Hide empty sections** automatically when all child widgets are hidden
 
@@ -37,7 +38,7 @@ Hidden elements are **completely removed from the HTML** (not just hidden with C
 = PRO Conditions =
 - **Advanced ACF** — Repeater fields, options page, term meta, user fields, specific post/user sources, AND/OR logic with 17 operators.
 - **Language** — Show/hide based on current language. Supports WPML, Polylang, and TranslatePress.
-- **URL Parameters** — Standalone query string conditions with repeater support and 9 operators.
+- **URL Parameters** — URL parameter visibility and standalone query string conditions with repeater support and 9 operators.
 - **Geo Location** — Display elements based on visitor's country using MaxMind geolocation.
 - **Dynamic Conditions** — Use all Elementor Pro Dynamic Tags as visibility conditions.
 - **WooCommerce** — Restrict content based on order history, active subscriptions, or customer status.
@@ -71,7 +72,7 @@ Report security bugs through the [Patchstack Vulnerability Disclosure Program](h
 == Frequently Asked Questions ==
 
 = How do I show or hide an Elementor widget based on user role? =
-Edit your page with Elementor, select any widget, go to the **Visibility** tab, enable Visibility Logic, then open the **User Role** section. Select the roles you want to target (e.g., Administrator, Subscriber, Guest). You can choose to show or hide the element when the condition is met.
+Edit your page with Elementor, select any widget, go to the **Visibility** tab, enable Visibility Logic, then open the **User Role** section. Select the roles you want to target (e.g., Administrator, Subscriber, Guest). You can choose to show or hide the element when the condition is met, including common setups such as hide Elementor by user role or show a section only to logged in members.
 
 = Can I restrict content to logged-in users only? =
 Yes. Enable Visibility Logic on any widget, section or container, go to User Role conditions and select "Logged in users". The element will only be visible to authenticated users. Guests will see nothing (or a fallback message with Pro).
@@ -108,13 +109,18 @@ Visibility Logic automatically disables Elementor's element caching for pages th
 
 == Installation ==
 
-1. Upload the plugin to your `wp-content/plugins` directory or install directly from WP Admin → Plugins → Add New
-2. Activate the plugin
-3. Edit a page using Elementor
-4. Select any widget, section, or container
-5. Go to the **Visibility** tab
-6. Enable conditions and configure your display rules
-7. Save and preview your page
+Free plugin:
+1. Install directly from WP Admin → Plugins → Add New by searching for "Visibility Logic for Elementor", or upload the free plugin folder to your `wp-content/plugins` directory.
+2. Activate the plugin.
+3. Edit a page using Elementor, select any widget, section, or container, then go to the **Visibility** tab.
+4. Enable conditions and configure your display rules.
+5. Save and preview your page.
+
+Visibility Logic Pro:
+1. Purchase Pro from StaxWP and download the Pro zip file from your StaxWP account.
+2. In WP Admin, go to Plugins → Add New → Upload Plugin, upload the Pro zip file, then install and activate it.
+3. Go to Settings → Visibility Logic → Pro Version and choose **Add your License Key**.
+4. Enter your API key/license key from your StaxWP account and save your changes.
 
 == Screenshots ==
 
@@ -126,6 +132,11 @@ Visibility Logic automatically disables Elementor's element caching for pages th
 6. **Admin Panel** — Global plugin settings and configuration
 
 == Changelog ==
+
+= 2.5.1 =
+* Fix: Corrected the Pro/admin URL used on the settings page.
+* Improved: Refreshed readme positioning around Display Conditions for Elementor, conditional display, user role, ACF, device, and membership visibility use cases.
+* Improved: Clarified installation steps for the free plugin and separate Visibility Logic Pro zip/license activation flow.
 
 = 2.5.0 =
 * NEW: Device Type condition — show/hide elements for Desktop, Tablet, or Mobile (server-side User-Agent detection)
@@ -265,6 +276,11 @@ Visibility Logic automatically disables Elementor's element caching for pages th
 
 = 1.0.0 =
 * Initial release
+
+== Upgrade Notice ==
+
+= 2.5.1 =
+Maintenance release with a corrected Pro/admin URL, refreshed Display Conditions for Elementor readme copy, and clearer free/Pro installation instructions.
 
 = Be a contributor =
 If you want to contribute, go to our [GitHub Repository](https://github.com/staxwp/visibility-logic-elementor).
