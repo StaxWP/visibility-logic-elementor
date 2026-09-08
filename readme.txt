@@ -8,11 +8,11 @@ Stable tag: 2.5.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Display Conditions for Elementor — conditional visibility rules to show or hide widgets by user role, ACF fields, device type, date & time, browser and more.
+Display Conditions for Elementor: conditional visibility rules to show or hide widgets by user role, ACF fields, device type, date & time, browser and more.
 
 == Description ==
 
-**Visibility Logic** adds focused **Display Conditions for Elementor** to every widget, section, and container. Use conditional display rules to control exactly who sees what, when, and on which device — without writing a single line of code.
+**Visibility Logic** adds focused **Display Conditions for Elementor** to every widget, section, and container. Use conditional display rules to control exactly who sees what, when, and on which device without writing a single line of code.
 
 By default, hidden elements are removed from the HTML instead of only hidden with CSS. If you need the markup to stay in the DOM, enable the **Keep HTML / Hide by CSS** option.
 
@@ -26,30 +26,30 @@ By default, hidden elements are removed from the HTML instead of only hidden wit
 - **Hide empty sections** automatically when all child widgets are hidden
 
 = Free Conditions =
-- **ACF Fields** (NEW) — Show/hide based on Advanced Custom Fields values on the current post or page. 7 operators: is empty, is not empty, equals, not equals, contains, is true, is false.
-- **Device Type** (NEW) — Target Desktop, Tablet, or Mobile users with server-side User-Agent detection. Hidden elements are fully removed from HTML.
-- **User Role** — Logged in, logged out, or specific roles (Administrator, Editor, Subscriber, custom roles).
-- **User Meta** — Show/hide based on any user meta field value.
-- **Date & Time** — Schedule visibility with "from" and "to" dates. Perfect for sales, events, and time-limited content.
-- **Browser Type** — Target Chrome, Firefox, Safari, Edge, Opera, iPhone, Android, and more.
-- **Flexbox Containers** — Full support for Elementor's Flexbox containers, classic sections, and nested containers.
-- **Hide When Empty** — Automatically hide a parent section/container when all child widgets are hidden by visibility conditions.
+- **ACF Fields** (NEW): Show/hide based on Advanced Custom Fields values on the current post or page. 7 operators: is empty, is not empty, equals, not equals, contains, is true, is false.
+- **Device Type** (NEW): Target Desktop, Tablet, or Mobile users with server-side User-Agent detection. Hidden elements are fully removed from HTML.
+- **User Role**: Logged in, logged out, or specific roles (Administrator, Editor, Subscriber, custom roles).
+- **User Meta**: Show/hide based on any user meta field value.
+- **Date & Time**: Schedule visibility with "from" and "to" dates. Perfect for sales, events, and time-limited content.
+- **Browser Type**: Target Chrome, Firefox, Safari, Edge, Opera, iPhone, Android, and more.
+- **Flexbox Containers**: Full support for Elementor's Flexbox containers, classic sections, and nested containers.
+- **Hide When Empty**: Automatically hide a parent section/container when all child widgets are hidden by visibility conditions.
 
 = PRO Conditions =
-- **Advanced ACF** — Repeater fields, options page, term meta, user fields, specific post/user sources, AND/OR logic with 17 operators.
-- **Language** — Show/hide based on current language. Supports WPML, Polylang, and TranslatePress.
-- **URL Parameters** — URL parameter visibility and standalone query string conditions with repeater support and 9 operators.
-- **Geo Location** — Display elements based on visitor's country using MaxMind geolocation.
-- **Dynamic Conditions** — Use all Elementor Pro Dynamic Tags as visibility conditions.
-- **WooCommerce** — Restrict content based on order history, active subscriptions, or customer status.
-- **Easy Digital Downloads** — Restrict based on purchase history or subscription status.
-- **Advanced User Meta** — Multiple user meta conditions with AND/OR logic.
-- **Post & Page, Taxonomy** — Show/hide based on current post type, specific pages, or taxonomy terms.
-- **Archive** — Conditions based on post type archives and taxonomy archives.
-- **IP & Referrer** — Target visitors by IP address or referral source.
-- **WordPress Conditional Tags** — Use any WordPress conditional tag as a visibility condition.
-- **Fallback Content** — Replace hidden elements with a custom text message or an Elementor template.
-- **Copy/Paste** — Right-click to copy visibility settings between widgets or sections.
+- **Advanced ACF**: Repeater fields, options page, term meta, user fields, specific post/user sources, AND/OR logic with 17 operators.
+- **Language**: Show/hide based on current language. Supports WPML, Polylang, and TranslatePress.
+- **URL Parameters**: URL parameter visibility and standalone query string conditions with repeater support and 9 operators.
+- **Geo Location**: Display elements based on visitor's country using MaxMind geolocation.
+- **Dynamic Conditions**: Use all Elementor Pro Dynamic Tags as visibility conditions.
+- **WooCommerce**: Restrict content based on order history, active subscriptions, or customer status.
+- **Easy Digital Downloads**: Restrict based on purchase history or subscription status.
+- **Advanced User Meta**: Multiple user meta conditions with AND/OR logic.
+- **Post & Page, Taxonomy**: Show/hide based on current post type, specific pages, or taxonomy terms.
+- **Archive**: Conditions based on post type archives and taxonomy archives.
+- **IP & Referrer**: Target visitors by IP address or referral source.
+- **WordPress Conditional Tags**: Use any WordPress conditional tag as a visibility condition.
+- **Fallback Content**: Replace hidden elements with a custom text message or an Elementor template.
+- **Copy/Paste**: Right-click to copy visibility settings between widgets or sections.
 
 Get [Visibility Logic Pro](https://staxwp.com/go/visibility-logic) and unlock all conditions.
 
@@ -58,10 +58,10 @@ Get [Visibility Logic Pro](https://staxwp.com/go/visibility-logic) and unlock al
 2. Select a widget, section, or container
 3. Go to the **Visibility** tab (or Advanced → Visibility Control)
 4. Enable conditions and configure your display rules
-5. Save — elements are shown or hidden on the live site based on your rules
+5. Save: elements are shown or hidden on the live site based on your rules
 
 = More from StaxWP =
-- [BuddyBuilder — BuddyPress Builder for Elementor](https://staxwp.com/go/buddybuilder) — Build stunning BuddyPress communities with Elementor.
+- [BuddyBuilder](https://staxwp.com/go/buddybuilder): Build stunning BuddyPress communities with Elementor.
 
 = Privacy Policy =
 We use Appsero SDK to collect some telemetry data upon user's confirmation. This helps us troubleshoot problems faster and make product improvements.
@@ -78,7 +78,7 @@ Edit your page with Elementor, select any widget, go to the **Visibility** tab, 
 Yes. Enable Visibility Logic on any widget, section or container, go to User Role conditions and select "Logged in users". The element will only be visible to authenticated users. Guests will see nothing (or a fallback message with Pro).
 
 = How do I schedule content to show at a specific date and time? =
-Use the **Date Time** condition. You can set a "From" and "To" date to display content only during a specific period — perfect for sales, events, promotions or limited-time offers. All times are based on your WordPress server time.
+Use the **Date Time** condition. You can set a "From" and "To" date to display content only during a specific period. This is useful for sales, events, promotions or limited-time offers. All times are based on your WordPress server time.
 
 = Does it work with Elementor containers and Flexbox? =
 Yes. Visibility Logic fully supports Elementor's Flexbox containers, classic sections, and nested containers. You can also enable "Hide when empty" on a container to automatically hide it when all child widgets are hidden by visibility conditions.
@@ -90,13 +90,13 @@ Yes. You can enable multiple condition types at once (e.g., User Role + Date Tim
 Yes! The free version supports ACF (Advanced Custom Fields) visibility on the current post or page with 7 operators. The [Pro version](https://staxwp.com/go/visibility-logic) extends ACF support with repeater fields, options pages, user fields, term meta, and AND/OR logic with 17 operators.
 
 = Can I show different content on mobile vs desktop? =
-Yes. The **Device Type** condition detects Desktop, Tablet, and Mobile visitors using server-side User-Agent detection. Unlike CSS-based solutions, hidden elements are completely removed from the HTML — not just visually hidden.
+Yes. The **Device Type** condition detects Desktop, Tablet, and Mobile visitors using server-side User-Agent detection. Unlike CSS-based solutions, hidden elements are completely removed from the HTML, not just visually hidden.
 
 = Can I show different content based on the visitor's country? =
-Geolocation-based visibility is available in [Visibility Logic Pro](https://staxwp.com/go/visibility-logic). It uses MaxMind to detect the visitor's country and dynamically show or hide elements — great for localized offers, compliance notices, or region-specific content.
+Geolocation-based visibility is available in [Visibility Logic Pro](https://staxwp.com/go/visibility-logic). It uses MaxMind to detect the visitor's country and dynamically show or hide elements for localized offers, compliance notices, or region-specific content.
 
 = Does it work with WooCommerce? =
-The [Pro version](https://staxwp.com/go/visibility-logic) includes WooCommerce conditions — restrict content based on a user's order history, active subscriptions, or customer status. Perfect for showing exclusive content to paying customers.
+The [Pro version](https://staxwp.com/go/visibility-logic) includes WooCommerce conditions: restrict content based on a user's order history, active subscriptions, or customer status. Perfect for showing exclusive content to paying customers.
 
 = What happens when an element is hidden? Is the HTML removed? =
 By default, hidden elements are completely removed from the page HTML. If you need the HTML to remain in the DOM (hidden via CSS), enable the **Keep HTML / Hide by CSS** option. The Pro version also offers a **Fallback** feature to replace hidden elements with a custom message or an Elementor template.
@@ -124,12 +124,12 @@ Visibility Logic Pro:
 
 == Screenshots ==
 
-1. **Visibility tab** — Enable conditional visibility on any Elementor widget
-2. **User Role** — Restrict content by user role or logged-in status
-3. **User Meta** — Show/hide based on user meta field values
-4. **Date & Time** — Schedule content to appear during a specific period
-5. **Browser Type** — Target specific browsers and devices
-6. **Admin Panel** — Global plugin settings and configuration
+1. **Visibility tab**: Enable conditional visibility on any Elementor widget
+2. **User Role**: Restrict content by user role or logged-in status
+3. **User Meta**: Show/hide based on user meta field values
+4. **Date & Time**: Schedule content to appear during a specific period
+5. **Browser Type**: Target specific browsers and devices
+6. **Admin Panel**: Global plugin settings and configuration
 
 == Changelog ==
 
@@ -139,8 +139,8 @@ Visibility Logic Pro:
 * Improved: Clarified installation steps for the free plugin and separate Visibility Logic Pro zip/license activation flow.
 
 = 2.5.0 =
-* NEW: Device Type condition — show/hide elements for Desktop, Tablet, or Mobile (server-side User-Agent detection)
-* NEW: ACF Field condition — show/hide based on Advanced Custom Fields values on the current post/page with 7 operators: is empty, is not empty, equals, not equals, contains, is true, is false
+* NEW: Device Type condition: show/hide elements for Desktop, Tablet, or Mobile (server-side User-Agent detection)
+* NEW: ACF Field condition: show/hide based on Advanced Custom Fields values on the current post/page with 7 operators: is empty, is not empty, equals, not equals, contains, is true, is false
 * Advanced ACF features available in Pro: user fields, repeater fields, options page, term meta, specific post/user sources, AND/OR logic with 17 operators
 
 = 2.4.0 =
