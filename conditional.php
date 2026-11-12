@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Visibility Logic for Elementor
+ * Plugin Name: Visibility Logic for Elementor and the Block Editor
  * Description: Show or hide Elementor widgets, sections, containers, Elementor 4 elements and blocks by user role, user meta, date and time, device, browser and ACF fields.
  * Plugin URI: https://wordpress.org/plugins/visibility-logic-elementor/
  * Author URI: https://staxwp.com

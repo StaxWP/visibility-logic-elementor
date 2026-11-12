@@ -1,6 +1,6 @@
 {
   "name": "staxwp/visibility-logic-elementor",
-  "description": "Visibility Logic for Elementor (development tools only, nothing is shipped from vendor/).",
+  "description": "Visibility Logic for Elementor and the Block Editor (development tools only, nothing is shipped from vendor/).",
   "type": "wordpress-plugin",
   "license": "GPL-3.0-or-later",
   "require-dev": {

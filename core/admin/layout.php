@@ -27,6 +27,8 @@ $stax_vl_classes = array_map( 'sanitize_html_class', array_filter( array_map( 's
 			<?php endif; ?>
 		</h1>
 		<p class="stax-vl-version">
+			<?php esc_html_e( 'for Elementor and the Block Editor', 'visibility-logic-elementor' ); ?>
+			&middot;
 			<?php
 			/* translators: %s: version number. */
 			printf( esc_html__( 'Version %s', 'visibility-logic-elementor' ), esc_html( STAX_VISIBILITY_VERSION ) );

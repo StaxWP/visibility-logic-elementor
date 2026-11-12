@@ -1,6 +1,6 @@
-=== Visibility Logic for Elementor ===
+=== Visibility Logic for Elementor and the Block Editor ===
 Contributors: staxwp, kierantaylorio, codezz, rtynio, geowrge
-Tags: elementor, visibility, display conditions, conditional visibility, dynamic visibility
+Tags: elementor, block visibility, display conditions, conditional visibility, gutenberg
 Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 7.1.4
@@ -8,11 +8,11 @@ Stable tag: 3.0.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Display conditions for Elementor and blocks: show or hide widgets, containers and blocks by user role, ACF field, device, date & time, browser.
+Display conditions for Elementor and the block editor: show or hide widgets, containers and blocks by user role, ACF field, device, date, browser.
 
 == Description ==
 
-**Visibility Logic** adds focused **Display Conditions for Elementor** to every widget, section, and container. Use conditional display rules to control exactly who sees what, when, and on which device without writing a single line of code.
+**Visibility Logic** adds focused **display conditions** to every Elementor widget, section and container, every Elementor 4 element, and every block in the block editor (Gutenberg). Use conditional display rules to control exactly who sees what, when, and on which device without writing a single line of code.
 
 By default, hidden elements are removed from the HTML instead of only hidden with CSS. If you need the markup to stay in the DOM, enable the **Keep HTML / Hide by CSS** option.
 
@@ -133,7 +133,7 @@ On WordPress 6.9 or newer, Visibility Logic registers two read-only abilities th
 == Installation ==
 
 Free plugin:
-1. Install directly from WP Admin → Plugins → Add New by searching for "Visibility Logic for Elementor", or upload the free plugin folder to your `wp-content/plugins` directory.
+1. Install directly from WP Admin → Plugins → Add New by searching for "Visibility Logic", or upload the free plugin folder to your `wp-content/plugins` directory.
 2. Activate the plugin.
 3. Edit a page using Elementor, select any widget, section, or container, then go to the **Visibility** tab.
 4. Enable conditions and configure your display rules.
@@ -157,6 +157,7 @@ Visibility Logic Pro:
 == Changelog ==
 
 = 3.0.0 =
+* Renamed to Visibility Logic for Elementor and the Block Editor (same plugin, same slug and settings).
 Updating keeps your site working exactly as before: every saved rule renders the same, and each newer behaviour below is an option in Settings > Visibility Logic (on by default only for new installs, except the time zone option, which is always opt-in).
 
 * NEW: Block editor (Gutenberg): a Visibility panel on every block (core and third-party) with the same conditions, evaluated on the server; no front-end script.

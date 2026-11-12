@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<ruleset name="Visibility Logic for Elementor">
+<ruleset name="Visibility Logic for Elementor and the Block Editor">
 	<description>WordPress coding standards for Visibility Logic. Run with a phpcs that has WPCS 3 and PHPCompatibilityWP installed (not bundled).</description>
 
 	<file>conditional.php</file>

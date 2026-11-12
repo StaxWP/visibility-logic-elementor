@@ -75,7 +75,7 @@ class Settings {
 	public function register_menu() {
 		add_submenu_page(
 			'options-general.php',
-			__( 'Visibility Logic', 'visibility-logic-elementor' ),
+			__( 'Visibility Logic for Elementor and the Block Editor', 'visibility-logic-elementor' ),
 			__( 'Visibility Logic', 'visibility-logic-elementor' ),
 			'manage_options',
 			self::MAIN_PAGE,
