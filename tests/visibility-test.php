@@ -135,7 +135,7 @@ function vle_render( array $data ) {
  * @return string visible|css|absent
  */
 function vle_state( $html, $id ) {
-	if ( ! preg_match( '/<[^>]*data-id="' . preg_quote( $id, '/' ) . '"[^>]*>/', $html, $m ) ) {
+	if ( ! preg_match( '/<[^>]*data-(?:id|interaction-id)="' . preg_quote( $id, '/' ) . '"[^>]*>/', $html, $m ) ) {
 		return 'absent';
 	}
 
@@ -896,6 +896,102 @@ $html = vle_render( $container( 'con6', [ $shown_w ], array_merge( $guest_show, 
 vle_is( 'container keep HTML: present', true, 'absent' !== vle_state( $html, 'con6' ) );
 
 // ---------------------------------------------------------------------------------------------------------------
+// Elementor 4 atomic elements: same conditions through the Visibility section props.
+if ( class_exists( '\\Stax\\VisibilityLogic\\Atomic' ) && \Stax\VisibilityLogic\Atomic::available() && \Elementor\Plugin::$instance->widgets_manager->get_widget_types( 'e-heading' ) ) {
+	WP_CLI::log( 'Elementor 4 atomic elements' );
+
+	$atomic_props = function ( array $values ) {
+		$props = [];
+		foreach ( $values as $key => $value ) {
+			if ( is_bool( $value ) ) {
+				$props[ 'stax_visibility_' . $key ] = [ '$$type' => 'boolean', 'value' => $value ];
+			} elseif ( is_array( $value ) ) {
+				$props[ 'stax_visibility_' . $key ] = [
+					'$$type' => 'string-array',
+					'value'  => array_map(
+						function ( $item ) {
+							return [ '$$type' => 'string', 'value' => $item ];
+						},
+						$value
+					),
+				];
+			} else {
+				$props[ 'stax_visibility_' . $key ] = [ '$$type' => 'string', 'value' => $value ];
+			}
+		}
+		return $props;
+	};
+	$atomic_heading = function ( $id, array $values ) use ( $atomic_props ) {
+		return [
+			'id'         => $id,
+			'elType'     => 'widget',
+			'widgetType' => 'e-heading',
+			'settings'   => $atomic_props( $values ),
+			'elements'   => [],
+		];
+	};
+	$guest_only = [
+		'enabled'              => true,
+		'show_hide'            => 'yes',
+		'user_role_enabled'    => true,
+		'user_role_conditions' => [ 'ecl-guest' ],
+	];
+
+	$schema = \Elementor\Plugin::$instance->widgets_manager->get_widget_types( 'e-heading' )::get_props_schema();
+	vle_is( 'atomic schema has the visibility props', true, isset( $schema['stax_visibility_enabled'], $schema['stax_visibility_user_role_conditions'], $schema['stax_visibility_date_from'] ) );
+	vle_is( 'atomic schema has no Keep HTML prop', false, isset( $schema['stax_visibility_keep_html'] ) );
+	$controls      = \Elementor\Plugin::$instance->elements_manager->create_element_instance( $atomic_heading( 'at0', [] ) )->get_atomic_controls();
+	$section_ids   = array_map(
+		function ( $c ) {
+			return method_exists( $c, 'get_id' ) ? $c->get_id() : '';
+		},
+		$controls
+	);
+	vle_is( 'atomic controls have the Visibility section', true, in_array( 'stax-visibility', $section_ids, true ) );
+
+	wp_set_current_user( 0 );
+	vle_is( 'atomic heading, guests only: guest sees it', 'visible', vle_state( vle_render( $atomic_heading( 'at1', $guest_only ) ), 'at1' ) );
+	wp_set_current_user( $sub_id );
+	vle_is( 'atomic heading, guests only: subscriber does not', 'absent', vle_state( vle_render( $atomic_heading( 'at1', $guest_only ) ), 'at1' ) );
+	vle_is( 'atomic heading, rules off: visible', 'visible', vle_state( vle_render( $atomic_heading( 'at2', array_merge( $guest_only, [ 'enabled' => false ] ) ) ), 'at2' ) );
+	vle_is( 'atomic heading, no props: visible', 'visible', vle_state( vle_render( $atomic_heading( 'at3', [] ) ), 'at3' ) );
+	vle_is(
+		'atomic heading, one of role/meta: subscriber with plan gold',
+		'visible',
+		vle_state(
+			vle_render(
+				$atomic_heading(
+					'at4',
+					array_merge(
+						$guest_only,
+						[
+							'condition_type'    => 'one',
+							'user_meta_enabled' => true,
+							'user_meta_options' => [ 'vle_plan' ],
+							'user_meta_status'  => 'specific_value',
+							'user_meta_value'   => 'gold',
+						]
+					)
+				)
+			),
+			'at4'
+		)
+	);
+	$atomic_box = [
+		'id'       => 'afx1',
+		'elType'   => 'e-flexbox',
+		'settings' => $atomic_props( $guest_only ),
+		'elements' => [ $atomic_heading( 'at5', [] ) ],
+	];
+	$html       = vle_render( $atomic_box );
+	vle_is( 'atomic flexbox, guests only: hidden for subscriber', 'absent', vle_state( $html, 'afx1' ) );
+	vle_is( 'atomic flexbox hidden: child not printed', 'absent', vle_state( $html, 'at5' ) );
+	wp_set_current_user( 0 );
+	vle_is( 'atomic flexbox, guests only: guest sees it', 'visible', vle_state( vle_render( $atomic_box ), 'afx1' ) );
+	$found = \Stax\VisibilityLogic\Rules::find_in_elements( [ $atomic_box, $atomic_heading( 'at6', array_merge( $guest_only, [ 'enabled' => false ] ) ) ] );
+	vle_is( 'scanner reads atomic props (enabled only)', [ 'afx1' ], wp_list_pluck( $found, 'id' ) );
+}
+
 // Visibility Logic Pro (when active): its conditions go through the same filter and are never locked on the front end.
 if ( defined( 'STAX_VISIBILITY_PRO_VERSION' ) && class_exists( '\Stax\VisibilityLogicPro\QueryStringVisibility' ) ) {
 	WP_CLI::log( 'Visibility Logic Pro ' . STAX_VISIBILITY_PRO_VERSION );
