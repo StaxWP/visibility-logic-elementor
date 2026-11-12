@@ -8,7 +8,7 @@ Stable tag: 3.0.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Display Conditions for Elementor: conditional visibility rules to show or hide widgets by user role, ACF fields, device type, date & time, browser and more.
+Display conditions for Elementor and blocks: show or hide widgets, containers and blocks by user role, ACF field, device, date & time, browser.
 
 == Description ==
 
@@ -36,6 +36,9 @@ By default, hidden elements are removed from the HTML instead of only hidden wit
 - **Hide When Empty**: Automatically hide a parent section/container when all child widgets are hidden by visibility conditions.
 - **Rules in use** (NEW): one list of every page, post and Elementor template with visibility rules, with the conditions each one uses.
 - **Built for AI agents and the command line** (NEW): read-only WordPress Abilities (`visibility-logic/list-rules`, `visibility-logic/list-conditions`) for MCP clients, and `wp visibility-logic rules` / `wp visibility-logic conditions` for WP-CLI.
+
+= Elementor, Elementor 4 and the block editor =
+The same conditions work on Elementor widgets, sections and containers, on Elementor 4 atomic elements, and on every block in the block editor (Gutenberg), core or third-party. One evaluator checks them all on the server.
 
 = One settings panel =
 Everything lives in **Settings > Visibility Logic**: turn conditions on or off, see which conditions come with Pro, review the rules in use and, with Visibility Logic Pro, its settings and license. Free and Pro share the same panel.
@@ -69,7 +72,7 @@ Get [Visibility Logic Pro](https://staxwp.com/go/visibility-logic) and unlock al
 - [BuddyBuilder](https://staxwp.com/go/buddybuilder): Build stunning BuddyPress communities with Elementor.
 
 = Privacy Policy =
-We use Appsero SDK to collect some telemetry data upon user's confirmation. This helps us troubleshoot problems faster and make product improvements.
+Visibility Logic collects no usage data and makes no requests to external services. The usage tracker (Appsero) bundled until version 2.5.1 was removed in 3.0, and what it stored is deleted on update.
 
 = Found a bug? =
 Report security bugs through the [Patchstack Vulnerability Disclosure Program](https://patchstack.com/database/vdp/visibility-logic-elementor). The Patchstack team helps validate, triage, and handle any security vulnerabilities.
@@ -113,7 +116,13 @@ No. Conditions are checked on the server only for elements that have Visibility 
 Yes, with one rule: the visitor must reach WordPress. Pages with visibility rules skip Elementor's element cache, as in earlier versions. New in 3.0, **Keep Elementor's element cache on for pages with rules** (Settings > Visibility Logic; on for new installs) renders only the elements with rules on every request and serves the rest of the page from the cache, which is much faster. Full-page caches (WP Rocket, LiteSpeed Cache, Cloudflare APO and similar) store one copy of a page for everyone, so exclude pages with user, device, date or URL based rules from them, or serve logged-in users without the page cache (the default in most caching plugins).
 
 = Does it work with Elementor 4 and the new atomic elements? =
-Visibility Logic needs Elementor 3.5 or newer and is tested with Elementor 3.21, 3.35 and 4.4. Widgets, sections and containers (flexbox and grid) get the Visibility tab. The new atomic elements of Elementor 4 (the V4 editor) do not have the classic panel tabs, so the Visibility tab is not available on them yet; elements inside a classic container with rules are hidden with it.
+Yes. Widgets, sections and containers get the Visibility tab as before, and the atomic elements of Elementor 4 (V4 editor: heading, paragraph, flexbox, div block and the others) get a **Visibility** section in their settings with the same conditions. Keep HTML and Hide when empty are available on classic elements only. Tested with Elementor 3.21, 3.35 and 4.4.
+
+= Does it work with the block editor (Gutenberg)? =
+Yes. Every block, core or from other plugins, gets a **Visibility** panel in the block settings sidebar with the same conditions as in Elementor. The rules are checked on the server when the page is rendered: hidden blocks are removed from the HTML (or kept and hidden with CSS), and no script is added to your pages. The editor always shows every block.
+
+= Do I need Elementor? =
+No. Since 3.0 the plugin works on sites without Elementor for blocks; the Elementor features load only when Elementor is active.
 
 = Where are the settings? =
 In **Settings > Visibility Logic**. It is one panel for the free plugin and Visibility Logic Pro: conditions, Pro settings, Pro license and the list of rules in use.
@@ -150,6 +159,10 @@ Visibility Logic Pro:
 = 3.0.0 =
 Updating keeps your site working exactly as before: every saved rule renders the same, and each newer behaviour below is an option in Settings > Visibility Logic (on by default only for new installs, except the time zone option, which is always opt-in).
 
+* NEW: Block editor (Gutenberg): a Visibility panel on every block (core and third-party) with the same conditions, evaluated on the server; no front-end script.
+* NEW: Elementor 4 atomic elements: a Visibility section with the same conditions in the V4 editor.
+* NEW: Works without Elementor (blocks); the Elementor features load only when Elementor is active.
+* NEW: Conditions are builder-agnostic: one registry and one evaluator for Elementor, Elementor 4 and blocks; add-ons register fields with the `stax/visibility/condition_fields` filter and evaluate through `stax/visibility/apply_conditions` as before.
 * NEW: Settings > Visibility Logic is the single panel for the free plugin and Visibility Logic Pro (conditions, Pro settings, Pro license), redesigned with the native WordPress admin look, keyboard and screen reader friendly.
 * NEW: Clear free and Pro overview: every condition with a short description, Pro conditions marked.
 * NEW: Rules in use: list of every page, post and template with visibility rules and the conditions they use.
@@ -160,7 +173,9 @@ Updating keeps your site working exactly as before: every saved rule renders the
 * NEW: Option to read Date FROM/TO in the site time zone instead of UTC. Opt-in for every site.
 * NEW: Filter `stax/visibility/device_type` to override the detected device (for example from a CDN header).
 * Improved: Each element's rules are checked once per request, the User-Agent once per request; no get_plugins() scan on front-end requests; no admin assets outside the plugin's screens; usage tracking client loaded only in the admin.
-* Improved: Compatibility with PHP 8.1 to 8.5 (no deprecations), WordPress 6.x to 7.1, Elementor 3.x and 4.x (tested with 3.21, 3.35 and 4.4) and Elementor Pro 4.4. Declares `Requires Plugins: elementor`.
+* Improved: Compatibility with PHP 8.1 to 8.5 (no deprecations), WordPress 6.x to 7.1, Elementor 3.x and 4.x (tested with 3.21, 3.35 and 4.4) and Elementor Pro 4.4. The Elementor editor uses Elementor's own Select2 (the second copy bundled until 2.5.1 is gone).
+* Removed: the Appsero usage tracker (SDK, opt-in notice, stored options and scheduled event).
+* Added: a one-time, dismissible notice on updated sites (Dashboard, Plugins, Visibility Logic screens) pointing to the two new options.
 * Fix: Saving the options with an expired form no longer causes a fatal error.
 * Security: Stricter checks on the editor search requests, prepared SQL, escaped admin output; the password hash and activation key are no longer offered in the User Meta field list (rules saved with them keep working).
 

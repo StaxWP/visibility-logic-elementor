@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-12T07:42:09+00:00\n"
+"POT-Creation-Date: 2026-11-12T08:09:55+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: visibility-logic-elementor\n"
@@ -26,7 +26,7 @@ msgstr ""
 
 #. Description of the plugin
 #: conditional.php
-msgid "Show or hide Elementor widgets, sections and containers by user role, user meta, date and time, device, browser and ACF fields."
+msgid "Show or hide Elementor widgets, sections, containers, Elementor 4 elements and blocks by user role, user meta, date and time, device, browser and ACF fields."
 msgstr ""
 
 #. Author of the plugin
@@ -65,7 +65,7 @@ msgid "List elements with visibility rules"
 msgstr ""
 
 #: core/Abilities.php:125
-msgid "Lists the Elementor pages, posts and templates that contain elements with Visibility Logic rules, with each element id, widget type, action (show or hide), match (all or one) and the conditions it uses. Read only."
+msgid "Lists the pages, posts and templates (Elementor or block editor) that contain elements or blocks with Visibility Logic rules, with each element id, widget type, action (show or hide), match (all or one) and the conditions it uses. Read only."
 msgstr ""
 
 #: core/Abilities.php:132
@@ -181,12 +181,13 @@ msgstr ""
 
 #: core/admin/pages/Options.php:42
 #: core/admin/pages/Usage.php:41
+#: core/admin/UpdateNotice.php:107
 msgid "Sorry, you are not allowed to do that."
 msgstr ""
 
 #: core/admin/pages/Options.php:115
 #: core/admin/pages/templates/options.php:27
-#: core/admin/pages/templates/usage.php:31
+#: core/admin/pages/templates/usage.php:32
 msgid "Conditions"
 msgstr ""
 
@@ -268,7 +269,7 @@ msgid "Rules in use"
 msgstr ""
 
 #: core/admin/pages/templates/usage.php:18
-msgid "Pages, posts and Elementor templates with at least one element that has Visibility Logic turned on. Use it to review rules before a launch or after a plugin update."
+msgid "Pages, posts and templates with at least one Elementor element or block that has Visibility Logic turned on. Use it to review rules before a launch or after a plugin update."
 msgstr ""
 
 #: core/admin/pages/templates/usage.php:22
@@ -288,15 +289,28 @@ msgid "Type"
 msgstr ""
 
 #: core/admin/pages/templates/usage.php:30
+msgid "Editor"
+msgstr ""
+
+#: core/admin/pages/templates/usage.php:31
 msgid "Elements"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:42
+#: core/admin/pages/templates/usage.php:43
 msgid "(no title)"
 msgstr ""
 
+#: core/admin/pages/templates/usage.php:58
+msgid "Block editor"
+msgstr ""
+
+#: core/admin/pages/templates/usage.php:58
+#: core/helpers/Notices.php:69
+msgid "Elementor"
+msgstr ""
+
 #. translators: %s: number of elements.
-#: core/admin/pages/templates/usage.php:63
+#: core/admin/pages/templates/usage.php:65
 #, php-format
 msgid "%s with 1.x settings"
 msgid_plural "%s with 1.x settings"
@@ -304,18 +318,18 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d: number.
-#: core/admin/pages/templates/usage.php:74
+#: core/admin/pages/templates/usage.php:76
 #, php-format
 msgid "Showing the newest %d documents."
 msgstr ""
 
 #. translators: %s: human time difference.
-#: core/admin/pages/templates/usage.php:84
+#: core/admin/pages/templates/usage.php:86
 #, php-format
 msgid "Scanned %s ago."
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:86
+#: core/admin/pages/templates/usage.php:88
 msgid "Scan again"
 msgstr ""
 
@@ -335,6 +349,85 @@ msgstr ""
 
 #: core/admin/Settings.php:311
 msgid "Sorry, you are not allowed to access this page."
+msgstr ""
+
+#: core/admin/UpdateNotice.php:82
+msgid "Visibility Logic 3.0: your site works exactly as before."
+msgstr ""
+
+#: core/admin/UpdateNotice.php:83
+msgid "Two improvements are available as options, off on updated sites so nothing changes without you:"
+msgstr ""
+
+#: core/admin/UpdateNotice.php:86
+msgid "Faster pages: keep Elementor's element cache on for pages with visibility rules."
+msgstr ""
+
+#: core/admin/UpdateNotice.php:89
+msgid "\"Hide when empty\" fix: containers holding their widgets directly are no longer always hidden (such containers may start to show)."
+msgstr ""
+
+#: core/admin/UpdateNotice.php:93
+msgid "Review the options"
+msgstr ""
+
+#: core/admin/UpdateNotice.php:94
+msgid "Dismiss"
+msgstr ""
+
+#: core/Atomic.php:175
+#: core/Blocks.php:186
+#: core/Plugin.php:130
+msgid "Visibility"
+msgstr ""
+
+#: core/Blocks.php:187
+msgid "Visibility rules"
+msgstr ""
+
+#: core/Blocks.php:188
+msgid "Rules apply on the live site; the editor always shows the block."
+msgstr ""
+
+#: core/Conditions.php:57
+#: core/settings/GeneralVisibility.php:53
+msgid "Enable Visibility Logic"
+msgstr ""
+
+#: core/Conditions.php:62
+msgid "When the conditions are met"
+msgstr ""
+
+#: core/Conditions.php:64
+#: core/settings/GeneralVisibility.php:92
+msgid "Hide"
+msgstr ""
+
+#: core/Conditions.php:65
+#: core/settings/GeneralVisibility.php:93
+msgid "Show"
+msgstr ""
+
+#: core/Conditions.php:72
+msgid "Conditions to meet"
+msgstr ""
+
+#: core/Conditions.php:74
+#: core/settings/GeneralVisibility.php:109
+msgid "All"
+msgstr ""
+
+#: core/Conditions.php:75
+#: core/settings/GeneralVisibility.php:110
+msgid "At least one"
+msgstr ""
+
+#: core/Conditions.php:82
+msgid "Keep HTML, hide with CSS"
+msgstr ""
+
+#: core/Conditions.php:83
+msgid "The hidden element stays in the page source with display: none."
 msgstr ""
 
 #. translators: %s: html tags
@@ -357,40 +450,42 @@ msgstr ""
 msgid "%1$s requires version %3$s or greater of %2$s plugin."
 msgstr ""
 
-#: core/helpers/Notices.php:69
-msgid "Elementor"
-msgstr ""
-
 #: core/helpers/Notices.php:80
 msgid "Update Elementor Now"
 msgstr ""
 
 #: core/helpers/Resources.php:240
-#: core/settings/UserRoleVisibility.php:38
+#: core/settings/UserRoleVisibility.php:39
+#: core/settings/UserRoleVisibility.php:95
 msgid "User Role"
 msgstr ""
 
 #: core/helpers/Resources.php:245
-#: core/settings/UserMetaVisibility.php:39
+#: core/settings/UserMetaVisibility.php:40
+#: core/settings/UserMetaVisibility.php:231
 msgid "User Meta"
 msgstr ""
 
 #: core/helpers/Resources.php:250
+#: core/settings/DateTimeVisibility.php:225
 msgid "Date & Time"
 msgstr ""
 
 #: core/helpers/Resources.php:255
-#: core/settings/BrowserTypeVisiblity.php:51
+#: core/settings/BrowserTypeVisiblity.php:52
+#: core/settings/BrowserTypeVisiblity.php:127
 msgid "Browser Type"
 msgstr ""
 
 #: core/helpers/Resources.php:260
-#: core/settings/DeviceTypeVisibility.php:39
+#: core/settings/DeviceTypeVisibility.php:40
+#: core/settings/DeviceTypeVisibility.php:120
 msgid "Device Type"
 msgstr ""
 
 #: core/helpers/Resources.php:265
-#: core/settings/AcfVisibility.php:39
+#: core/settings/AcfVisibility.php:40
+#: core/settings/AcfVisibility.php:203
 msgid "ACF Field"
 msgstr ""
 
@@ -483,7 +578,7 @@ msgid "Advanced User Meta"
 msgstr ""
 
 #: core/helpers/Resources.php:363
-#: core/Rules.php:278
+#: core/Rules.php:388
 msgid "Post & Page"
 msgstr ""
 
@@ -531,206 +626,217 @@ msgstr ""
 msgid "Logged in users"
 msgstr ""
 
-#: core/Plugin.php:123
-msgid "Visibility"
-msgstr ""
-
-#: core/settings/AcfVisibility.php:57
-#: core/settings/BrowserTypeVisiblity.php:70
-#: core/settings/DateTimeVisibility.php:69
-#: core/settings/DeviceTypeVisibility.php:57
-#: core/settings/UserMetaVisibility.php:58
-#: core/settings/UserRoleVisibility.php:57
+#: core/settings/AcfVisibility.php:58
+#: core/settings/BrowserTypeVisiblity.php:71
+#: core/settings/DateTimeVisibility.php:70
+#: core/settings/DeviceTypeVisibility.php:58
+#: core/settings/UserMetaVisibility.php:59
+#: core/settings/UserRoleVisibility.php:58
 msgid "Enable"
-msgstr ""
-
-#: core/settings/AcfVisibility.php:60
-#: core/settings/BrowserTypeVisiblity.php:73
-#: core/settings/DateTimeVisibility.php:72
-#: core/settings/DeviceTypeVisibility.php:60
-#: core/settings/GeneralVisibility.php:56
-#: core/settings/GeneralVisibility.php:72
-#: core/settings/GeneralVisibility.php:127
-#: core/settings/OldVersionFallback.php:132
-#: core/settings/UserMetaVisibility.php:61
-#: core/settings/UserRoleVisibility.php:60
-msgid "Yes"
 msgstr ""
 
 #: core/settings/AcfVisibility.php:61
 #: core/settings/BrowserTypeVisiblity.php:74
 #: core/settings/DateTimeVisibility.php:73
 #: core/settings/DeviceTypeVisibility.php:61
+#: core/settings/GeneralVisibility.php:56
+#: core/settings/GeneralVisibility.php:72
+#: core/settings/GeneralVisibility.php:127
+#: core/settings/OldVersionFallback.php:132
+#: core/settings/UserMetaVisibility.php:62
+#: core/settings/UserRoleVisibility.php:61
+msgid "Yes"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:62
+#: core/settings/BrowserTypeVisiblity.php:75
+#: core/settings/DateTimeVisibility.php:74
+#: core/settings/DeviceTypeVisibility.php:62
 #: core/settings/GeneralVisibility.php:57
 #: core/settings/GeneralVisibility.php:73
 #: core/settings/GeneralVisibility.php:128
 #: core/settings/OldVersionFallback.php:133
-#: core/settings/UserMetaVisibility.php:62
-#: core/settings/UserRoleVisibility.php:61
+#: core/settings/UserMetaVisibility.php:63
+#: core/settings/UserRoleVisibility.php:62
 msgid "No"
 msgstr ""
 
-#: core/settings/AcfVisibility.php:71
+#: core/settings/AcfVisibility.php:72
 msgid "Field Source"
 msgstr ""
 
-#: core/settings/AcfVisibility.php:82
+#: core/settings/AcfVisibility.php:83
 msgid "Checks ACF fields on the current post/page."
 msgstr ""
 
-#: core/settings/AcfVisibility.php:94
+#: core/settings/AcfVisibility.php:95
+#: core/settings/AcfVisibility.php:209
 msgid "Field Name"
 msgstr ""
 
-#: core/settings/AcfVisibility.php:96
+#: core/settings/AcfVisibility.php:97
 msgid "e.g. my_custom_field"
 msgstr ""
 
-#: core/settings/AcfVisibility.php:97
+#: core/settings/AcfVisibility.php:98
 msgid "Enter the ACF field name or key."
 msgstr ""
 
-#: core/settings/AcfVisibility.php:109
+#: core/settings/AcfVisibility.php:110
+#: core/settings/AcfVisibility.php:216
 msgid "Condition"
 msgstr ""
 
-#: core/settings/AcfVisibility.php:112
-msgid "Is empty"
-msgstr ""
-
-#: core/settings/AcfVisibility.php:113
-msgid "Is not empty"
-msgstr ""
-
-#: core/settings/AcfVisibility.php:114
-msgid "Equals"
-msgstr ""
-
-#: core/settings/AcfVisibility.php:115
-msgid "Not equals"
-msgstr ""
-
-#: core/settings/AcfVisibility.php:116
-#: core/settings/UserMetaVisibility.php:99
-msgid "Contains"
-msgstr ""
-
-#: core/settings/AcfVisibility.php:117
-msgid "Is true"
-msgstr ""
-
-#: core/settings/AcfVisibility.php:118
-msgid "Is false"
-msgstr ""
-
-#: core/settings/AcfVisibility.php:132
+#: core/settings/AcfVisibility.php:125
+#: core/settings/AcfVisibility.php:223
 msgid "Value"
 msgstr ""
 
 #. translators: 1: link opening tag, 2: link closing tag.
-#: core/settings/AcfVisibility.php:155
+#: core/settings/AcfVisibility.php:148
 #, php-format
 msgid "User, term and options page fields, repeaters and AND/OR groups are in %1$sVisibility Logic Pro%2$s."
 msgstr ""
 
-#: core/settings/AcfVisibility.php:173
+#: core/settings/AcfVisibility.php:166
 msgid "Advanced Custom Fields plugin is not active. This condition will have no effect."
 msgstr ""
 
-#: core/settings/BrowserTypeVisiblity.php:84
+#: core/settings/AcfVisibility.php:184
+msgid "Is empty"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:185
+msgid "Is not empty"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:186
+msgid "Equals"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:187
+msgid "Not equals"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:188
+#: core/settings/UserMetaVisibility.php:212
+msgid "Contains"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:189
+msgid "Is true"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:190
+msgid "Is false"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:211
+msgid "ACF field of the current post or page."
+msgstr ""
+
+#: core/settings/BrowserTypeVisiblity.php:85
+#: core/settings/BrowserTypeVisiblity.php:133
 msgid "Browser"
 msgstr ""
 
-#: core/settings/BrowserTypeVisiblity.php:98
+#: core/settings/BrowserTypeVisiblity.php:88
 msgid "Trigger visibility for specific browsers."
 msgstr ""
 
-#: core/settings/DateTimeVisibility.php:50
+#: core/settings/DateTimeVisibility.php:51
 msgid "Date Time"
 msgstr ""
 
-#: core/settings/DateTimeVisibility.php:85
+#: core/settings/DateTimeVisibility.php:86
+#: core/settings/DateTimeVisibility.php:231
 msgid "Select Type:"
 msgstr ""
 
-#: core/settings/DateTimeVisibility.php:87
-msgid "Date FROM/TO"
-msgstr ""
-
-#: core/settings/DateTimeVisibility.php:88
-msgid "Time FROM/TO"
-msgstr ""
-
-#: core/settings/DateTimeVisibility.php:89
-msgid "Week Days"
-msgstr ""
-
-#: core/settings/DateTimeVisibility.php:90
-msgid "Week Days + Time FROM/TO"
-msgstr ""
-
-#: core/settings/DateTimeVisibility.php:104
+#: core/settings/DateTimeVisibility.php:100
+#: core/settings/DateTimeVisibility.php:238
 msgid "Date FROM"
 msgstr ""
 
-#: core/settings/DateTimeVisibility.php:118
+#: core/settings/DateTimeVisibility.php:114
+#: core/settings/DateTimeVisibility.php:244
 msgid "Date TO"
 msgstr ""
 
-#: core/settings/DateTimeVisibility.php:139
+#: core/settings/DateTimeVisibility.php:130
+#: core/settings/DateTimeVisibility.php:250
 msgid "Days of the WEEK"
 msgstr ""
 
-#: core/settings/DateTimeVisibility.php:142
+#: core/settings/DateTimeVisibility.php:133
 msgid "Select days in the week."
 msgstr ""
 
-#: core/settings/DateTimeVisibility.php:156
+#: core/settings/DateTimeVisibility.php:147
+#: core/settings/DateTimeVisibility.php:257
 msgid "Time FROM"
 msgstr ""
 
-#: core/settings/DateTimeVisibility.php:170
+#: core/settings/DateTimeVisibility.php:161
+#: core/settings/DateTimeVisibility.php:264
 msgid "Time TO"
 msgstr ""
 
-#: core/settings/DateTimeVisibility.php:186
+#: core/settings/DateTimeVisibility.php:177
 msgid "When picking time that extends over midnight, the condition will be applied just for the selected days. Example: Wednesday 23:00 - 01:00 doesn't mean that the condition will extend from 23:00 Wednesday till 01:00 Thursday. It will get applied only for Wednesday 00:00 - 01:00 and 23:00 - 24:00."
 msgstr ""
 
-#: core/settings/DateTimeVisibility.php:200
+#: core/settings/DateTimeVisibility.php:191
 msgid "Dates and times use the site time zone (Settings > General). Now:"
 msgstr ""
 
-#: core/settings/DateTimeVisibility.php:201
+#: core/settings/DateTimeVisibility.php:192
 msgid "Times use the site time zone, dates FROM/TO use UTC (Settings > Visibility Logic can switch them to the site time zone). Site time now:"
 msgstr ""
 
-#: core/settings/DeviceTypeVisibility.php:71
+#: core/settings/DateTimeVisibility.php:209
+msgid "Date FROM/TO"
+msgstr ""
+
+#: core/settings/DateTimeVisibility.php:210
+msgid "Time FROM/TO"
+msgstr ""
+
+#: core/settings/DateTimeVisibility.php:211
+msgid "Week Days"
+msgstr ""
+
+#: core/settings/DateTimeVisibility.php:212
+msgid "Week Days + Time FROM/TO"
+msgstr ""
+
+#: core/settings/DeviceTypeVisibility.php:72
+#: core/settings/DeviceTypeVisibility.php:126
 msgid "Device"
 msgstr ""
 
-#: core/settings/DeviceTypeVisibility.php:74
-msgid "Desktop"
-msgstr ""
-
 #: core/settings/DeviceTypeVisibility.php:75
-msgid "Tablet"
-msgstr ""
-
-#: core/settings/DeviceTypeVisibility.php:76
-msgid "Mobile"
-msgstr ""
-
-#: core/settings/DeviceTypeVisibility.php:78
 msgid "Trigger visibility for specific device types."
 msgstr ""
 
-#: core/settings/DeviceTypeVisibility.php:91
+#: core/settings/DeviceTypeVisibility.php:88
 msgid "Detection is based on the User-Agent header. The element HTML is completely removed for non-matching devices."
 msgstr ""
 
-#: core/settings/GeneralVisibility.php:53
-msgid "Enable Visibility Logic"
+#: core/settings/DeviceTypeVisibility.php:105
+msgid "Desktop"
+msgstr ""
+
+#: core/settings/DeviceTypeVisibility.php:106
+msgid "Tablet"
+msgstr ""
+
+#: core/settings/DeviceTypeVisibility.php:107
+msgid "Mobile"
+msgstr ""
+
+#: core/settings/DeviceTypeVisibility.php:128
+msgid "Detected on the server from the User-Agent."
 msgstr ""
 
 #: core/settings/GeneralVisibility.php:69
@@ -745,28 +851,12 @@ msgstr ""
 msgid "Determine if the element should be hidden or shown when the conditions are met."
 msgstr ""
 
-#: core/settings/GeneralVisibility.php:92
-msgid "Hide"
-msgstr ""
-
-#: core/settings/GeneralVisibility.php:93
-msgid "Show"
-msgstr ""
-
 #: core/settings/GeneralVisibility.php:105
 msgid "Conditions Type"
 msgstr ""
 
 #: core/settings/GeneralVisibility.php:106
 msgid "If ALL conditions need to be met or JUST ONE in order to trigger the hide/show action."
-msgstr ""
-
-#: core/settings/GeneralVisibility.php:109
-msgid "All"
-msgstr ""
-
-#: core/settings/GeneralVisibility.php:110
-msgid "At least one"
 msgstr ""
 
 #: core/settings/GeneralVisibility.php:123
@@ -801,91 +891,107 @@ msgstr ""
 msgid "This is a backwards compatibility for version 1.2.0. If you want to use the new version please enable the option in General tab."
 msgstr ""
 
-#: core/settings/UserMetaVisibility.php:73
+#: core/settings/UserMetaVisibility.php:74
 msgid "Meta Name"
 msgstr ""
 
-#: core/settings/UserMetaVisibility.php:76
+#: core/settings/UserMetaVisibility.php:77
 msgid "Meta key or Name"
 msgstr ""
 
-#: core/settings/UserMetaVisibility.php:90
+#: core/settings/UserMetaVisibility.php:91
+#: core/settings/UserMetaVisibility.php:244
 msgid "Meta Condition"
 msgstr ""
 
-#: core/settings/UserMetaVisibility.php:91
+#: core/settings/UserMetaVisibility.php:92
 msgid "Select the condition that must be met by the meta"
 msgstr ""
 
-#: core/settings/UserMetaVisibility.php:93
-msgid "None"
-msgstr ""
-
-#: core/settings/UserMetaVisibility.php:94
-msgid "Empty"
-msgstr ""
-
-#: core/settings/UserMetaVisibility.php:95
-msgid "Not empty"
-msgstr ""
-
-#: core/settings/UserMetaVisibility.php:96
-msgid "Is equal to"
-msgstr ""
-
-#: core/settings/UserMetaVisibility.php:97
-msgid "Is equal to one of"
-msgstr ""
-
-#: core/settings/UserMetaVisibility.php:98
-msgid "Not equal to"
-msgstr ""
-
-#: core/settings/UserMetaVisibility.php:100
-msgid "Does not contain"
-msgstr ""
-
-#: core/settings/UserMetaVisibility.php:101
-msgid "Between"
-msgstr ""
-
-#: core/settings/UserMetaVisibility.php:102
-msgid "Less than"
-msgstr ""
-
-#: core/settings/UserMetaVisibility.php:103
-msgid "Greater than"
-msgstr ""
-
-#: core/settings/UserMetaVisibility.php:104
-msgid "Is array"
-msgstr ""
-
-#: core/settings/UserMetaVisibility.php:105
-msgid "Is array and contains"
-msgstr ""
-
-#: core/settings/UserMetaVisibility.php:120
+#: core/settings/UserMetaVisibility.php:107
+#: core/settings/UserMetaVisibility.php:251
 msgid "Condition Value"
 msgstr ""
 
-#: core/settings/UserMetaVisibility.php:145
+#: core/settings/UserMetaVisibility.php:132
+#: core/settings/UserMetaVisibility.php:258
 msgid "Condition Value 2"
 msgstr ""
 
-#: core/settings/UserMetaVisibility.php:161
+#: core/settings/UserMetaVisibility.php:148
 msgid "Type in comma separated strings."
 msgstr ""
 
-#: core/settings/UserMetaVisibility.php:179
+#: core/settings/UserMetaVisibility.php:166
 msgid "The value of the selected meta and also the the values of the conditions must be numeric."
 msgstr ""
 
-#: core/settings/UserMetaVisibility.php:198
+#: core/settings/UserMetaVisibility.php:185
 msgid "Setting the condition to \"None\" will have no effect."
 msgstr ""
 
-#: core/settings/UserRoleVisibility.php:72
+#: core/settings/UserMetaVisibility.php:206
+msgid "None"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:207
+msgid "Empty"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:208
+msgid "Not empty"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:209
+msgid "Is equal to"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:210
+msgid "Is equal to one of"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:211
+msgid "Not equal to"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:213
+msgid "Does not contain"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:214
+msgid "Between"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:215
+msgid "Less than"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:216
+msgid "Greater than"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:217
+msgid "Is array"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:218
+msgid "Is array and contains"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:237
+msgid "Meta keys"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:239
+msgid "User fields or meta keys, separated by commas. Each one must meet the condition."
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:252
+msgid "Comma separated for \"Is equal to one of\" and \"Is array and contains\"."
+msgstr ""
+
+#: core/settings/UserRoleVisibility.php:73
+#: core/settings/UserRoleVisibility.php:101
 msgid "Roles"
 msgstr ""
 
@@ -915,4 +1021,8 @@ msgstr ""
 
 #: core/Upgrades.php:217
 msgid "Something went wrong, please check logs."
+msgstr ""
+
+#: assets/js/blocks.js:180
+msgid "More conditions in Visibility Logic Pro"
 msgstr ""
