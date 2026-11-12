@@ -188,6 +188,14 @@ class QueryControl extends Module {
 			}
 		}
 
+		// A saved key the search no longer offers (for example `key` saved before 3.0 for the stored `_key`) stays
+		// selected under its own name, so editing the element does not drop it from the rule.
+		foreach ( $ids as $id ) {
+			if ( ( is_string( $id ) || is_int( $id ) ) && '' !== (string) $id && ! isset( $results[ $id ] ) ) {
+				$results[ $id ] = (string) $id;
+			}
+		}
+
 		return $results;
 	}
 

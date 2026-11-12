@@ -11,8 +11,9 @@
  * two temporary users are created and deleted at the end. Exit code 1 when a check fails.
  *
  * Covered: General (show/hide, all/one, keep HTML, hide when empty for sections and containers), User Role (guests,
- * logged in, roles), legacy 1.x settings (ecl_*), User Meta operators, Date & Time (date range, time range, over
- * midnight, week days, week days + time), Device Type, Browser Type, ACF Field (with a stub when ACF is not active).
+ * logged in, roles), legacy 1.x settings (ecl_*), User Meta operators and protected (`_key`) meta keys, Date & Time
+ * (date range, time range, over midnight, week days, week days + time), Device Type, Browser Type, ACF Field (with a stub
+ * when ACF is not active).
  *
  * @package Stax\VisibilityLogic
  */
@@ -440,6 +441,44 @@ foreach ( $meta_cases as $c ) {
 	vle_case( "meta {$c[0]} {$c[1]} {$c[2]}", $meta( $c[0], $c[1], $c[2], $c[3] ), $sub_id, $c[4] ? 'visible' : 'absent' );
 }
 vle_case( 'meta for guest: first_name not_empty', $meta( 'first_name', 'not_empty' ), 0, 'absent' );
+
+// Protected keys (leading underscore, #12221): the picker offers the stored key, the rule reads it.
+update_user_meta( $sub_id, '_vle_secret', 'yes' );
+update_user_meta( $sub_id, 'vle_twin', 'plain' );
+update_user_meta( $sub_id, '_vle_twin', 'field_123' );
+if ( ! class_exists( '\\Stax\\VisibilityLogic\\Modules\\QueryControl' ) ) {
+	require_once STAX_VISIBILITY_CORE_PATH . 'helpers/modules/QueryControl.php';
+}
+$query_control = new \Stax\VisibilityLogic\Modules\QueryControl();
+$picker        = function ( $q ) use ( $query_control ) {
+	$found = $query_control->ajax_call_filter_autocomplete(
+		[
+			'query_type'  => 'fields',
+			'object_type' => 'user',
+			'q'           => $q,
+		]
+	);
+
+	return wp_list_pluck( $found['results'], 'id' );
+};
+wp_set_current_user( $edit_id );
+vle_is( 'picker: _vle_secret offered with its underscore', true, in_array( '_vle_secret', $picker( 'vle_secret' ), true ) );
+vle_is( 'picker: no stripped vle_secret', false, in_array( 'vle_secret', $picker( 'vle_secret' ), true ) );
+vle_is( 'picker: twin vle_twin offered', true, in_array( 'vle_twin', $picker( 'vle_twin' ), true ) );
+vle_is( 'picker: _vle_twin hidden next to its twin', false, in_array( '_vle_twin', $picker( 'vle_twin' ), true ) );
+vle_is( 'picker: typing _vle_twin offers it', true, in_array( '_vle_twin', $picker( '_vle_twin' ), true ) );
+$titles = $query_control->ajax_call_control_value_titles(
+	[
+		'query_type'  => 'fields',
+		'object_type' => 'user',
+		'id'          => [ '_vle_secret', 'vle_secret' ],
+	]
+);
+vle_is( 'titles: _vle_secret resolved', '_vle_secret', isset( $titles['_vle_secret'] ) ? $titles['_vle_secret'] : null );
+vle_is( 'titles: key saved before 3.0 (vle_secret) kept selected', 'vle_secret', isset( $titles['vle_secret'] ) ? $titles['vle_secret'] : null );
+vle_case( 'meta _vle_secret specific_value yes', $meta( '_vle_secret', 'specific_value', 'yes' ), $sub_id, 'visible' );
+vle_case( 'meta _vle_secret not_empty', $meta( '_vle_secret', 'not_empty' ), $sub_id, 'visible' );
+vle_case( 'meta vle_secret (saved without underscore) not_empty: unchanged, absent', $meta( 'vle_secret', 'not_empty' ), $sub_id, 'absent' );
 
 // ---------------------------------------------------------------------------------------------------------------
 WP_CLI::log( 'Date & Time' );

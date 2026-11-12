@@ -108,13 +108,12 @@ trait Meta_Trait {
 				$metas[ $auser->meta_key ] = $auser->meta_key;
 			}
 			ksort( $metas );
-			$manual_metas = $metas;
-			foreach ( $manual_metas as $ameta ) {
-				if ( '_' === substr( $ameta, 0, 1 ) ) {
-					$ameta = $tmp = substr( $ameta, 1 );
-					if ( in_array( $tmp, $manual_metas, true ) ) {
-						continue;
-					}
+			foreach ( $metas as $ameta ) {
+				// Keys are offered exactly as stored, also protected ones (`_key`), so the saved rule reads the same key.
+				// A protected key is hidden only when its unprefixed twin is in the same results (ACF keeps `_field`
+				// next to `field`); typing the leading underscore lists it.
+				if ( '_' === substr( $ameta, 0, 1 ) && isset( $metas[ substr( $ameta, 1 ) ] ) ) {
+					continue;
 				}
 				if ( '' !== $ameta ) {
 					$user_metas[ $ameta ]                 = $ameta;

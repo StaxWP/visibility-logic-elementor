@@ -178,6 +178,7 @@ Updating keeps your site working exactly as before: every saved rule renders the
 * Removed: the Appsero usage tracker (SDK, opt-in notice, stored options and scheduled event).
 * Added: a one-time, dismissible notice on updated sites (Dashboard, Plugins, Visibility Logic screens) pointing to the two new options.
 * Fix: Saving the options with an expired form no longer causes a fatal error.
+* Fix: User Meta: meta keys that start with an underscore (for example `_my_key`) are offered and saved exactly as stored. Before, the field list removed the underscore and the rule never matched. Rules saved before keep working as they did; pick the key again to use the underscore version.
 * Security: Stricter checks on the editor search requests, prepared SQL, escaped admin output; the password hash and activation key are no longer offered in the User Meta field list (rules saved with them keep working).
 
 = 2.5.1 =
