@@ -105,17 +105,62 @@ final class Resources extends Singleton {
 	const SETTINGS_OPTION = 'stax_visibility_general';
 
 	/**
-	 * Default general settings.
+	 * Default general settings: the 2.x behaviour. An update never changes how an existing site works; each
+	 * newer behaviour is a setting in Settings > Visibility Logic.
 	 *
-	 * `site_timezone`: read Date FROM/TO in the site time zone (2.x read them as UTC). New installs get it on
-	 * (see Plugin activation), updated sites keep the 2.x behaviour until it is switched on.
+	 * - `site_timezone`: read Date FROM/TO in the site time zone (2.x: UTC). Opt-in for every site.
+	 * - `container_widgets`: "Hide when empty" counts widgets placed directly in a container (2.x skipped them,
+	 *   so such a container was always hidden). On for new installs, opt-in for updated sites.
+	 * - `element_cache`: keep Elementor's element cache on for pages with rules and render only the elements
+	 *   with rules per request (2.x bypassed the cache for the whole page). On for new installs, opt-in for
+	 *   updated sites.
 	 *
 	 * @return array
 	 */
 	public static function default_settings() {
 		return [
-			'site_timezone' => false,
+			'site_timezone'     => false,
+			'container_widgets' => false,
+			'element_cache'     => false,
 		];
+	}
+
+	/**
+	 * Settings of a new install (no Visibility Logic data on the site yet).
+	 *
+	 * @return array
+	 */
+	public static function new_install_settings() {
+		return array_merge(
+			self::default_settings(),
+			[
+				'container_widgets' => true,
+				'element_cache'     => true,
+			]
+		);
+	}
+
+	/**
+	 * Whether the site already has Visibility Logic data (rules in Elementor data or saved options).
+	 *
+	 * @return bool
+	 */
+	public static function site_has_existing_data() {
+		global $wpdb;
+
+		if ( false !== get_option( '_stax_visibility_disabled_options', false ) || false !== get_option( 'stax_visibility_settings', false ) ) {
+			return true;
+		}
+
+		$found = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			$wpdb->prepare(
+				"SELECT meta_id FROM {$wpdb->postmeta} WHERE meta_key = '_elementor_data' AND ( meta_value LIKE %s OR meta_value LIKE %s ) LIMIT 1",
+				'%' . $wpdb->esc_like( '"stax_visibility_' ) . '%',
+				'%' . $wpdb->esc_like( '"ecl_enabled"' ) . '%'
+			)
+		);
+
+		return ! empty( $found );
 	}
 
 	/**
@@ -389,7 +434,8 @@ final class Resources extends Singleton {
 	 * @return string
 	 */
 	private static function user_agent() {
-		return isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
+		// Only matched against patterns, never printed or stored; read as 2.x did so detection stays identical.
+		return isset( $_SERVER['HTTP_USER_AGENT'] ) ? (string) $_SERVER['HTTP_USER_AGENT'] : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
 	}
 
 	/**

@@ -60,14 +60,18 @@ add_action( 'init', 'ecl_load_plugin_textdomain', 0 );
 /**
  * Activation.
  *
- * New installs read Date FROM/TO in the site time zone; updated sites keep the 2.x reading (UTC) until the
- * setting is switched on in Settings > Visibility Logic.
+ * First activation on a site without Visibility Logic data: the 3.0 behaviours (see
+ * Resources::default_settings()). A site that already has rules or saved options keeps the 2.x behaviour.
  *
  * @return void
  */
 function stax_visibility_activate() {
 	if ( false === get_option( 'stax_visibility_general', false ) ) {
-		add_option( 'stax_visibility_general', [ 'site_timezone' => true ] );
+		$settings = \Stax\VisibilityLogic\Resources::site_has_existing_data()
+			? \Stax\VisibilityLogic\Resources::default_settings()
+			: \Stax\VisibilityLogic\Resources::new_install_settings();
+
+		add_option( 'stax_visibility_general', $settings );
 	}
 
 	// Elementor may have cached pages while the plugin was inactive: flush on the next request.

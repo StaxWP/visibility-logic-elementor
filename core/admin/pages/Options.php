@@ -54,10 +54,19 @@ class Options extends Base {
 
 		update_option( '_stax_visibility_disabled_options', $disabled_options );
 
-		$settings                  = wp_parse_args( (array) get_option( Resources::SETTINGS_OPTION, [] ), Resources::default_settings() );
-		$settings['site_timezone'] = ! empty( $_POST['stax_visibility_site_timezone'] );
+		$settings = wp_parse_args( (array) get_option( Resources::SETTINGS_OPTION, [] ), Resources::default_settings() );
+		$previous = $settings;
+
+		foreach ( array_keys( Resources::default_settings() ) as $key ) {
+			$settings[ $key ] = ! empty( $_POST[ 'stax_visibility_' . $key ] );
+		}
 
 		update_option( Resources::SETTINGS_OPTION, $settings );
+
+		// Cached pages were built for the other cache mode.
+		if ( $previous['element_cache'] !== $settings['element_cache'] ) {
+			Plugin::flush_element_cache();
+		}
 
 		wp_safe_redirect( add_query_arg( 'updated', '1', Settings::url( $this->current_slug ) ) );
 		exit;

@@ -202,7 +202,7 @@ class AcfVisibility extends Singleton {
 			return $options;
 		}
 
-		$field_name = trim( (string) self::value( $settings, 'acf_field' ) );
+		$field_name = self::value( $settings, 'acf_field' );
 
 		if ( empty( $field_name ) ) {
 			return $options;

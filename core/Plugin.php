@@ -21,7 +21,7 @@ class Plugin extends Singleton {
 	 *
 	 * @var string
 	 */
-	public static $minimum_elementor_version = '3.5.0';
+	public static $minimum_elementor_version = '2.0.0';
 
 	/**
 	 * Widget types hidden in this request (their styles are enqueued when a visible widget of the type follows).
@@ -186,11 +186,8 @@ class Plugin extends Singleton {
 	}
 
 	/**
-	 * After an update (or a new activation): flush Elementor's element cache once.
-	 *
-	 * Visibility Logic 2.x kept documents with rules out of the element cache but Elementor still stored their
-	 * output, without per-request rendering of the elements with rules. 3.0 renders those elements on every
-	 * request through the cache, so the old entries must go.
+	 * Once per version: store the general settings of a site updating from 2.x (the 2.x behaviour, see
+	 * Resources::default_settings()), and flush Elementor's element cache when the per-element cache mode is on.
 	 *
 	 * @return void
 	 */
@@ -199,7 +196,13 @@ class Plugin extends Singleton {
 			return;
 		}
 
-		self::flush_element_cache();
+		if ( false === get_option( Resources::SETTINGS_OPTION, false ) ) {
+			add_option( Resources::SETTINGS_OPTION, Resources::default_settings() );
+		}
+
+		if ( Resources::get_setting( 'element_cache' ) ) {
+			self::flush_element_cache();
+		}
 
 		update_option( 'stax_visibility_version', STAX_VISIBILITY_VERSION, true );
 	}
@@ -259,7 +262,7 @@ class Plugin extends Singleton {
 					if ( 'text' === $fallback_type ) {
 						$fallback_content = wp_kses_post( (string) self::value( $settings, 'fallback_text' ) );
 					} elseif ( 'template' === $fallback_type && self::value( $settings, 'fallback_template' ) ) {
-						$fallback_content = do_shortcode( '[elementor-template id="' . absint( self::value( $settings, 'fallback_template' ) ) . '"]' );
+						$fallback_content = do_shortcode( '[elementor-template id="' . esc_attr( self::value( $settings, 'fallback_template' ) ) . '"]' );
 					}
 
 					if ( $fallback_content ) {
@@ -372,8 +375,9 @@ class Plugin extends Singleton {
 	/**
 	 * Elements one level below the columns of a section, or below the child containers of a container.
 	 *
-	 * This is the 2.x walk (children of children), with one fix: a widget placed directly in a container counts
-	 * itself (2.x skipped it, so "Hide when empty" hid such containers even with visible widgets).
+	 * The 2.x walk (children of children). With the `container_widgets` setting a widget placed directly in a
+	 * container counts itself; 2.x skipped it, so "Hide when empty" always hid such a container. Sites updating
+	 * from 2.x keep the 2.x walk until they turn the setting on.
 	 *
 	 * @param \Elementor\Element_Base $item Element.
 	 *
@@ -381,9 +385,10 @@ class Plugin extends Singleton {
 	 */
 	private function get_leaf_children( $item ) {
 		$children = [];
+		$direct   = (bool) Resources::get_setting( 'container_widgets' );
 
 		foreach ( $item->get_children() as $child ) {
-			if ( 'widget' === $child->get_type() ) {
+			if ( $direct && 'widget' === $child->get_type() ) {
 				$children[] = $child;
 				continue;
 			}
@@ -689,7 +694,7 @@ class Plugin extends Singleton {
 	 * @return bool
 	 */
 	public function is_dynamic_content( $is_dynamic, $raw_data = [] ) {
-		if ( $is_dynamic || empty( $raw_data['settings'] ) || ! is_array( $raw_data['settings'] ) ) {
+		if ( $is_dynamic || empty( $raw_data['settings'] ) || ! is_array( $raw_data['settings'] ) || ! Resources::get_setting( 'element_cache' ) ) {
 			return $is_dynamic;
 		}
 
@@ -697,9 +702,12 @@ class Plugin extends Singleton {
 	}
 
 	/**
-	 * Disable the document cache when an element with rules cannot be rendered per request through the element
-	 * cache: Elementor without element cache support (before 3.22) or an element whose "Cache Settings" is set to
-	 * active by hand.
+	 * Disable Elementor's element cache for a document while it renders.
+	 *
+	 * 2.x behaviour (default for sites updating from 2.x): for every document with an element that has
+	 * "Enable Visibility Logic" on. With the `element_cache` setting: only when an element with rules cannot be
+	 * rendered per request through the element cache (Elementor before 3.22, or "Cache Settings" forced to
+	 * active on that element).
 	 *
 	 * @param \Elementor\Core\Base\Document $document   Document.
 	 * @param bool                          $is_excerpt Excerpt.
@@ -714,9 +722,13 @@ class Plugin extends Singleton {
 		$id = method_exists( $document, 'get_main_id' ) ? (int) $document->get_main_id() : 0;
 
 		if ( ! isset( $this->uncacheable_documents[ $id ] ) || 0 === $id ) {
-			$legacy_cache = version_compare( ELEMENTOR_VERSION, '3.22.0', '<' );
+			$elements = (array) $document->get_elements_data();
 
-			$this->uncacheable_documents[ $id ] = $this->needs_uncached_render( (array) $document->get_elements_data(), $legacy_cache );
+			if ( Resources::get_setting( 'element_cache' ) ) {
+				$this->uncacheable_documents[ $id ] = $this->needs_uncached_render( $elements, version_compare( ELEMENTOR_VERSION, '3.22.0', '<' ) );
+			} else {
+				$this->uncacheable_documents[ $id ] = $this->has_enabled_element( $elements );
+			}
 		}
 
 		if ( $this->uncacheable_documents[ $id ] ) {
@@ -755,6 +767,31 @@ class Plugin extends Singleton {
 		}
 
 		return $value;
+	}
+
+	/**
+	 * 2.x check: an element (at any depth) with "Enable Visibility Logic" on.
+	 *
+	 * @param array $elements Elements data.
+	 *
+	 * @return bool
+	 */
+	private function has_enabled_element( array $elements ) {
+		foreach ( $elements as $element ) {
+			if ( ! is_array( $element ) ) {
+				continue;
+			}
+
+			if ( ! empty( $element['settings'][ self::SECTION_PREFIX . 'enabled' ] ) ) {
+				return true;
+			}
+
+			if ( ! empty( $element['elements'] ) && $this->has_enabled_element( (array) $element['elements'] ) ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**

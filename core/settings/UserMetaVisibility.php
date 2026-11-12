@@ -228,7 +228,8 @@ class UserMetaVisibility extends Singleton {
 		$current_user       = wp_get_current_user();
 		$meta_is_consistent = true;
 		$meta_check_type    = (string) self::value( $settings, 'user_meta_status', 'none' );
-		$meta_check_value   = (string) self::value( $settings, 'user_meta_value' );
+		$meta_check_raw     = self::value( $settings, 'user_meta_value', null ); // Strict comparisons use the saved value as 2.x did.
+		$meta_check_value   = (string) $meta_check_raw;
 
 		foreach ( self::value( $settings, 'user_meta_options', [] ) as $meta ) {
 			$meta = (string) $meta;
@@ -251,7 +252,7 @@ class UserMetaVisibility extends Singleton {
 					}
 					break;
 				case 'specific_value':
-					if ( $user_meta !== $meta_check_value ) {
+					if ( $user_meta !== $meta_check_raw ) {
 						$meta_is_consistent = false;
 					}
 					break;
@@ -269,7 +270,7 @@ class UserMetaVisibility extends Singleton {
 					$meta_is_consistent = $value_found;
 					break;
 				case 'not_specific_value':
-					if ( $user_meta === $meta_check_value ) {
+					if ( $user_meta === $meta_check_raw ) {
 						$meta_is_consistent = false;
 					}
 					break;

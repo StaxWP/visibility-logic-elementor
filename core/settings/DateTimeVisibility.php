@@ -225,8 +225,8 @@ class DateTimeVisibility extends Singleton {
 		}
 
 		$time_week = self::value( $settings, 'time_week', [] );
-		$time_week = is_array( $time_week ) ? array_map( 'strval', $time_week ) : [];
-		$today     = (string) current_time( 'w' );
+		$time_week = is_array( $time_week ) ? $time_week : [];
+		$is_today  = in_array( current_time( 'w' ), $time_week ); // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict -- 2.x loose match.
 
 		switch ( (string) self::value( $settings, 'date_time_type' ) ) {
 			case 'date':
@@ -236,10 +236,10 @@ class DateTimeVisibility extends Singleton {
 				$options['date_time'] = self::in_time_range( (string) self::value( $settings, 'time_from' ), (string) self::value( $settings, 'time_to' ) );
 				break;
 			case 'week_days':
-				$options['date_time'] = in_array( $today, $time_week, true );
+				$options['date_time'] = $is_today;
 				break;
 			case 'week_days_time':
-				$options['date_time'] = in_array( $today, $time_week, true )
+				$options['date_time'] = $is_today
 					&& self::in_time_range( (string) self::value( $settings, 'time_from' ), (string) self::value( $settings, 'time_to' ) );
 				break;
 			default:
@@ -261,16 +261,22 @@ class DateTimeVisibility extends Singleton {
 	 * @return bool
 	 */
 	public static function in_date_range( $date_from, $date_to ) {
-		if ( '' === $date_from && '' === $date_to ) {
-			return false;
+		$current = current_datetime()->getTimestamp();
+
+		// Same tests as 2.x (truthiness, PHP comparison of a failed parse), only the parse can change.
+		if ( $date_from && $date_to ) {
+			return $current >= self::to_timestamp( $date_from ) && $current <= self::to_timestamp( $date_to );
 		}
 
-		$now  = current_datetime()->getTimestamp();
-		$from = '' === $date_from ? null : self::to_timestamp( $date_from );
-		$to   = '' === $date_to ? null : self::to_timestamp( $date_to );
+		if ( $date_from ) {
+			return $current >= self::to_timestamp( $date_from );
+		}
 
-		return ( null === $from || ( false !== $from && $now >= $from ) )
-			&& ( null === $to || ( false !== $to && $now <= $to ) );
+		if ( $date_to ) {
+			return $current <= self::to_timestamp( $date_to );
+		}
+
+		return false;
 	}
 
 	/**
@@ -303,7 +309,7 @@ class DateTimeVisibility extends Singleton {
 	public static function in_time_range( $time_from, $time_to ) {
 		$current_time = strtotime( current_time( 'H:i' ) );
 
-		if ( '' !== $time_from && '' !== $time_to ) {
+		if ( $time_from && $time_to ) {
 			$from = strtotime( $time_from );
 			$to   = strtotime( $time_to );
 
@@ -315,11 +321,11 @@ class DateTimeVisibility extends Singleton {
 			return $current_time >= $from && $current_time <= $to;
 		}
 
-		if ( '' !== $time_from ) {
+		if ( $time_from ) {
 			return $current_time >= strtotime( $time_from );
 		}
 
-		if ( '' !== $time_to ) {
+		if ( $time_to ) {
 			return $current_time <= strtotime( $time_to );
 		}
 

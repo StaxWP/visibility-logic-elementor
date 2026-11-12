@@ -70,10 +70,34 @@ defined( 'ABSPATH' ) || exit;
 					<?php
 					printf(
 						/* translators: %s: time zone name. */
-						esc_html__( 'Recommended. Site time zone: %s. Versions before 3.0 read these dates as UTC; sites that update keep that until this box is checked, so check your scheduled elements after turning it on.', 'visibility-logic-elementor' ),
+						esc_html__( 'Site time zone: %s. Off by default: Date FROM and Date TO are read as UTC, as in every version before 3.0, while times of day already use the site time zone. Turning it on moves existing schedules by the difference between UTC and the site time zone, so check scheduled elements after changing it.', 'visibility-logic-elementor' ),
 						'<code>' . esc_html( wp_timezone_string() ) . '</code>'
 					);
 					?>
+				</p>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row"><?php esc_html_e( 'Hide when empty', 'visibility-logic-elementor' ); ?></th>
+			<td>
+				<label for="stax-vl-container-widgets">
+					<input type="checkbox" name="stax_visibility_container_widgets" id="stax-vl-container-widgets" value="1" <?php checked( ! empty( $settings['container_widgets'] ) ); ?>>
+					<?php esc_html_e( 'Count widgets placed directly in a container', 'visibility-logic-elementor' ); ?>
+				</label>
+				<p class="description">
+					<?php esc_html_e( 'Recommended. Before 3.0, "Hide when empty" only looked at widgets inside inner containers or columns, so a container holding its widgets directly was always hidden. Sites that update keep that behaviour until this box is checked; containers that were hidden that way will start to show.', 'visibility-logic-elementor' ); ?>
+				</p>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row"><?php esc_html_e( 'Elementor cache', 'visibility-logic-elementor' ); ?></th>
+			<td>
+				<label for="stax-vl-element-cache">
+					<input type="checkbox" name="stax_visibility_element_cache" id="stax-vl-element-cache" value="1" <?php checked( ! empty( $settings['element_cache'] ) ); ?>>
+					<?php esc_html_e( 'Keep Elementor\'s element cache on for pages with rules', 'visibility-logic-elementor' ); ?>
+				</label>
+				<p class="description">
+					<?php esc_html_e( 'Recommended, much faster. Only the elements with visibility rules are rendered on every visit; the rest of the page comes from Elementor\'s cache. Before 3.0 the whole page skipped the cache, so other dynamic widgets on those pages were also rendered on every visit; with this on, they follow their own Elementor cache settings. Changing it clears Elementor\'s element cache.', 'visibility-logic-elementor' ); ?>
 				</p>
 			</td>
 		</tr>
