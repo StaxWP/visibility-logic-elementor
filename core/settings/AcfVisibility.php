@@ -22,6 +22,7 @@ class AcfVisibility extends Singleton {
 		$this->register_elementor_settings( 'acf_section' );
 
 		add_filter( 'stax/visibility/apply_conditions', [ $this, 'apply_conditions' ], 10, 3 );
+		add_filter( 'stax/visibility/condition_fields', [ $this, 'condition_fields' ] ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- shares the 2.x hook namespace.
 	}
 
 	/**
@@ -108,15 +109,7 @@ class AcfVisibility extends Singleton {
 			[
 				'label'          => __( 'Condition', 'visibility-logic-elementor' ),
 				'type'           => Controls_Manager::SELECT,
-				'options'        => [
-					'empty'      => __( 'Is empty', 'visibility-logic-elementor' ),
-					'not_empty'  => __( 'Is not empty', 'visibility-logic-elementor' ),
-					'equals'     => __( 'Equals', 'visibility-logic-elementor' ),
-					'not_equals' => __( 'Not equals', 'visibility-logic-elementor' ),
-					'contains'   => __( 'Contains', 'visibility-logic-elementor' ),
-					'is_true'    => __( 'Is true', 'visibility-logic-elementor' ),
-					'is_false'   => __( 'Is false', 'visibility-logic-elementor' ),
-				],
+				'options'        => self::condition_options(),
 				'default'        => 'not_empty',
 				'condition'      => [
 					self::SECTION_PREFIX . 'acf_enabled' => 'yes',
@@ -179,6 +172,61 @@ class AcfVisibility extends Singleton {
 				]
 			);
 		}
+	}
+
+	/**
+	 * ACF condition choices (value => label).
+	 *
+	 * @return array
+	 */
+	public static function condition_options() {
+		return [
+			'empty'      => __( 'Is empty', 'visibility-logic-elementor' ),
+			'not_empty'  => __( 'Is not empty', 'visibility-logic-elementor' ),
+			'equals'     => __( 'Equals', 'visibility-logic-elementor' ),
+			'not_equals' => __( 'Not equals', 'visibility-logic-elementor' ),
+			'contains'   => __( 'Contains', 'visibility-logic-elementor' ),
+			'is_true'    => __( 'Is true', 'visibility-logic-elementor' ),
+			'is_false'   => __( 'Is false', 'visibility-logic-elementor' ),
+		];
+	}
+
+	/**
+	 * Fields of this condition for the block editor and Elementor 4 atomic elements (see Conditions).
+	 *
+	 * @param array $conditions Registered conditions.
+	 *
+	 * @return array
+	 */
+	public function condition_fields( $conditions ) {
+		$conditions['acf'] = [
+			'label'  => __( 'ACF Field', 'visibility-logic-elementor' ),
+			'switch' => 'acf_enabled',
+			'fields' => [
+				[
+					'key'         => 'acf_field',
+					'type'        => 'text',
+					'label'       => __( 'Field Name', 'visibility-logic-elementor' ),
+					'placeholder' => 'my_custom_field',
+					'help'        => __( 'ACF field of the current post or page.', 'visibility-logic-elementor' ),
+				],
+				[
+					'key'     => 'acf_condition',
+					'type'    => 'select',
+					'label'   => __( 'Condition', 'visibility-logic-elementor' ),
+					'options' => self::condition_options(),
+					'default' => 'not_empty',
+				],
+				[
+					'key'     => 'acf_value',
+					'type'    => 'text',
+					'label'   => __( 'Value', 'visibility-logic-elementor' ),
+					'show_if' => [ 'acf_condition' => [ 'equals', 'not_equals', 'contains' ] ],
+				],
+			],
+		];
+
+		return $conditions;
 	}
 
 	/**

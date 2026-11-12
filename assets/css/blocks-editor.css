@@ -1,0 +1,26 @@
+/* Visibility Logic: block editor only (never loaded on the front end). */
+
+.stax-vl-panel .stax-vl-condition {
+	border-top: 1px solid #e0e0e0;
+	padding-top: 12px;
+	margin-top: 12px;
+}
+
+.stax-vl-panel .stax-vl-condition > * + * {
+	margin-top: 12px;
+}
+
+.stax-vl-panel .stax-vl-checkboxes > * + * {
+	margin-top: 6px;
+}
+
+.stax-vl-panel .stax-vl-note {
+	color: #757575;
+	font-size: 12px;
+	margin: 12px 0 0;
+}
+
+.block-editor-block-list__block.stax-vl-has-rules {
+	outline: 1px dashed rgba(110, 73, 203, 0.6);
+	outline-offset: 2px;
+}

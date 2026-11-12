@@ -58,11 +58,33 @@ class Plugin extends Singleton {
 
 		require_once STAX_VISIBILITY_CORE_HELPERS_PATH . 'Resources.php';
 		require_once STAX_VISIBILITY_CORE_HELPERS_PATH . 'Notices.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'Conditions.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'Condition_Item.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'Rules.php';
 
-		if ( ! defined( 'ELEMENTOR_VERSION' ) ) {
-			add_action( 'admin_notices', [ Notices::instance(), 'elementor_notice' ] );
+		// Builder-agnostic parts: conditions, admin panel, block editor, abilities, WP-CLI.
+		if ( is_admin() ) {
+			require_once STAX_VISIBILITY_CORE_PATH . 'Upgrades.php';
+		}
 
+		require_once STAX_VISIBILITY_CORE_PATH . 'admin/pages/Base.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'admin/pages/Options.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'admin/pages/Usage.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'admin/Settings.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'admin/UpdateNotice.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'Abilities.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'Blocks.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'Atomic.php';
+
+		add_action( 'init', [ $this, 'load_settings' ], 0 );
+		add_action( 'init', [ $this, 'maybe_upgrade' ], 1 );
+
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+			require_once STAX_VISIBILITY_CORE_PATH . 'Cli.php';
+		}
+
+		// Elementor parts, only when Elementor is active.
+		if ( ! defined( 'ELEMENTOR_VERSION' ) ) {
 			return;
 		}
 
@@ -74,16 +96,6 @@ class Plugin extends Singleton {
 
 			return;
 		}
-
-		if ( is_admin() ) {
-			require_once STAX_VISIBILITY_CORE_PATH . 'Upgrades.php';
-		}
-
-		require_once STAX_VISIBILITY_CORE_PATH . 'admin/pages/Base.php';
-		require_once STAX_VISIBILITY_CORE_PATH . 'admin/pages/Options.php';
-		require_once STAX_VISIBILITY_CORE_PATH . 'admin/pages/Usage.php';
-		require_once STAX_VISIBILITY_CORE_PATH . 'admin/Settings.php';
-		require_once STAX_VISIBILITY_CORE_PATH . 'Abilities.php';
 
 		add_action( 'elementor/init', [ $this, 'load_elementor_modules' ] );
 		add_action( 'elementor/init', [ $this, 'register_visibility_tab' ] );
@@ -97,19 +109,14 @@ class Plugin extends Singleton {
 		add_filter( 'elementor/frontend/widget/should_render', [ $this, 'item_should_render' ], 99999, 2 );
 		add_filter( 'elementor/frontend/repeater/should_render', [ $this, 'item_should_render' ], 99999, 2 );
 
-		// Elementor element cache: elements with rules are rendered on every request, the rest stays cached.
+		// Elementor element cache (see the `element_cache` setting).
 		add_filter( 'elementor/element/is_dynamic_content', [ $this, 'is_dynamic_content' ], 10, 2 );
 		add_action( 'elementor/frontend/before_get_builder_content', [ $this, 'maybe_disable_document_caching' ], 99999, 2 );
 		add_action( 'elementor/frontend/get_builder_content', [ $this, 're_enable_document_caching' ], 99999, 2 );
 
 		add_action( 'elementor/preview/enqueue_styles', [ $this, 'editor_preview_styles' ] );
 
-		add_action( 'init', [ $this, 'load_settings' ], 0 );
-		add_action( 'init', [ $this, 'maybe_upgrade' ], 1 );
-
-		if ( defined( 'WP_CLI' ) && WP_CLI ) {
-			require_once STAX_VISIBILITY_CORE_PATH . 'Cli.php';
-		}
+		Atomic::init( [ $this, 'item_should_render' ] );
 
 		do_action( 'stax/visibility/after_init' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- public 2.x hook name.
 	}
@@ -198,13 +205,31 @@ class Plugin extends Singleton {
 
 		if ( false === get_option( Resources::SETTINGS_OPTION, false ) ) {
 			add_option( Resources::SETTINGS_OPTION, Resources::default_settings() );
+
+			// A site updating from 2.x: one admin notice about the opt-in behaviours (see UpdateNotice).
+			add_option( 'stax_visibility_updated_from_2x', '1', '', false );
 		}
+
+		self::remove_appsero_data();
 
 		if ( Resources::get_setting( 'element_cache' ) ) {
 			self::flush_element_cache();
 		}
 
 		update_option( 'stax_visibility_version', STAX_VISIBILITY_VERSION, true );
+	}
+
+	/**
+	 * Remove what the Appsero usage tracker (bundled until 2.5.1) stored on the site.
+	 *
+	 * @return void
+	 */
+	public static function remove_appsero_data() {
+		foreach ( [ '_tracking_last_send', '_allow_tracking', '_tracking_notice', '_tracking_skipped' ] as $suffix ) {
+			delete_option( 'visibility-logic-elementor' . $suffix );
+		}
+
+		wp_clear_scheduled_hook( 'visibility-logic-elementor_tracker_send_event' );
 	}
 
 	/**
@@ -252,7 +277,7 @@ class Plugin extends Singleton {
 		}
 
 		if ( ! $visible && ! $this->is_edit_mode() ) {
-			$settings = $widget->get_settings();
+			$settings = $this->item_settings( $widget );
 
 			if ( self::flag( $settings, 'enabled' ) ) {
 				if ( self::flag( $settings, 'fallback_enabled' ) ) {
@@ -309,7 +334,7 @@ class Plugin extends Singleton {
 	 * @return boolean
 	 */
 	public function item_should_render( $should_render, $widget ) {
-		$settings = $widget->get_settings();
+		$settings = $this->item_settings( $widget );
 
 		if ( ! $this->should_render( $widget, $should_render ) ) {
 
@@ -433,7 +458,7 @@ class Plugin extends Singleton {
 		$elements = [];
 
 		foreach ( $this->get_leaf_children( $item ) as $widget ) {
-			$widget_settings = $widget->get_settings();
+			$widget_settings = $this->item_settings( $widget );
 
 			if ( ! $this->should_render( $widget ) && ! self::flag( $widget_settings, 'keep_html' ) ) {
 				continue;
@@ -460,16 +485,18 @@ class Plugin extends Singleton {
 	 * @return boolean
 	 */
 	private function should_render( $item, $default_render = true ) {
-		$settings = $item->get_settings();
+		$settings = $this->item_settings( $item );
 
 		// Fast path: no rules at all (most elements).
-		if ( ! self::flag( $settings, 'enabled' ) ) {
-			if ( empty( $settings['ecl_enabled'] ) ) {
-				return $default_render;
-			}
+		if ( ! self::flag( $settings, 'enabled' ) && empty( $settings['ecl_enabled'] ) ) {
+			return $default_render;
+		}
 
-			// Settings saved by version 1.x.
-			return $this->version_fallback_render( $settings, $default_render );
+		$atomic = Atomic::is_atomic( $item );
+
+		// Atomic elements stay visible in the Elementor 4 editor canvas.
+		if ( $atomic && $this->is_editor_render() ) {
+			return $default_render;
 		}
 
 		$key = spl_object_id( $item ) . '|' . (int) get_the_ID() . '|' . ( $default_render ? 1 : 0 );
@@ -478,7 +505,8 @@ class Plugin extends Singleton {
 			return $this->results[ $key ][1];
 		}
 
-		$result = $this->evaluate( $settings, $item, $default_render );
+		$target = $atomic ? new Condition_Item( $settings, $item->get_id(), $item->get_name(), 'atomic' ) : $item;
+		$result = Conditions::evaluate( $settings, $target, $default_render );
 
 		$this->results[ $key ] = [ $item->get_id(), $result ];
 
@@ -486,94 +514,42 @@ class Plugin extends Singleton {
 	}
 
 	/**
-	 * Evaluate the rules of an element with "Enable Visibility Logic" on.
+	 * Visibility settings of an element: classic settings as saved, atomic (Elementor 4) props converted.
 	 *
-	 * @param array                   $settings       Raw settings.
-	 * @param \Elementor\Element_Base $item           Element.
-	 * @param bool                    $default_render Answer when no condition is active.
+	 * @param object $item Element.
 	 *
-	 * @return bool
+	 * @return array
 	 */
-	private function evaluate( $settings, $item, $default_render ) {
-		$options = apply_filters( 'stax/visibility/apply_conditions', [], $settings, $item ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- public 2.x hook name.
+	private function item_settings( $item ) {
+		$settings = (array) $item->get_settings();
 
-		if ( empty( $options ) ) {
-			return $default_render;
+		if ( ! Atomic::is_atomic( $item ) ) {
+			return $settings;
 		}
 
-		$should_render  = false;
-		$condition_type = self::value( $settings, 'condition_type', 'all' );
+		$values = [];
+		$prefix = self::SECTION_PREFIX;
 
-		if ( 'all' === $condition_type ) {
-			$should_render = ! in_array( false, array_map( 'boolval', $options ), true );
-		} elseif ( 'one' === $condition_type ) {
-			$should_render = in_array( true, $options, true );
-		}
-
-		if ( self::flag( $settings, 'show_hide' ) ) {
-			return $should_render;
-		}
-
-		return ! $should_render;
-	}
-
-	/**
-	 * Version fallback render (settings saved by version 1.x, `ecl_*` keys).
-	 *
-	 * @param array $settings       Settings.
-	 * @param bool  $default_render Default answer.
-	 *
-	 * @return boolean
-	 */
-	private function version_fallback_render( $settings, $default_render ) {
-		if ( ! isset( $settings['ecl_enabled'] ) ) {
-			return $default_render;
-		}
-
-		$user_state = is_user_logged_in();
-
-		if ( 'yes' === $settings['ecl_enabled'] ) {
-
-			if ( ! empty( $settings['ecl_role_visible'] ) ) {
-				$visible = (array) $settings['ecl_role_visible'];
-
-				if ( in_array( 'ecl-guest', $visible, true ) ) {
-					if ( true === $user_state ) {
-						return false;
-					}
-				} elseif ( in_array( 'ecl-user', $visible, true ) ) {
-					if ( false === $user_state ) {
-						return false;
-					}
-				} else {
-					if ( false === $user_state ) {
-						return false;
-					}
-
-					if ( ! array_intersect( $visible, (array) wp_get_current_user()->roles ) ) {
-						return false;
-					}
-				}
-			} elseif ( ! empty( $settings['ecl_role_hidden'] ) ) {
-				$hidden = (array) $settings['ecl_role_hidden'];
-
-				if ( false === $user_state && in_array( 'ecl-guest', $hidden, true ) ) {
-					return false;
-				} elseif ( true === $user_state && in_array( 'ecl-user', $hidden, true ) ) {
-					return false;
-				} else {
-					if ( false === $user_state ) {
-						return true;
-					}
-
-					if ( array_intersect( $hidden, (array) wp_get_current_user()->roles ) ) {
-						return false;
-					}
-				}
+		foreach ( $settings as $key => $value ) {
+			if ( is_string( $key ) && 0 === strpos( $key, $prefix ) ) {
+				$values[ substr( $key, strlen( $prefix ) ) ] = Conditions::unwrap( $value );
 			}
 		}
 
-		return $default_render;
+		return empty( $values ) ? [] : Conditions::to_settings( $values, 'atomic' );
+	}
+
+	/**
+	 * Whether Elementor is rendering for its editor (edit mode or the preview iframe).
+	 *
+	 * @return bool
+	 */
+	private function is_editor_render() {
+		if ( $this->is_edit_mode() ) {
+			return true;
+		}
+
+		return isset( \Elementor\Plugin::$instance->preview ) && \Elementor\Plugin::$instance->preview->is_preview_mode();
 	}
 
 	/**
@@ -608,7 +584,7 @@ class Plugin extends Singleton {
 		wp_enqueue_script(
 			'stax-visibility-script-editor',
 			STAX_VISIBILITY_ASSETS_URL . 'js/editor.js',
-			[],
+			wp_script_is( 'jquery-elementor-select2', 'registered' ) ? [ 'jquery', 'jquery-elementor-select2' ] : [ 'jquery' ],
 			STAX_VISIBILITY_VERSION,
 			false
 		);
@@ -632,21 +608,8 @@ class Plugin extends Singleton {
 			$js_widgets
 		);
 
-		// Enqueue Select2 assets.
-		wp_enqueue_style(
-			'stax-visibility-select2',
-			STAX_VISIBILITY_ASSETS_URL . 'libs/select2/select2.min.css',
-			[],
-			STAX_VISIBILITY_VERSION
-		);
-
-		wp_enqueue_script(
-			'stax-visibility-select2',
-			STAX_VISIBILITY_ASSETS_URL . 'libs/select2/select2.full.min.js',
-			[ 'jquery' ],
-			STAX_VISIBILITY_VERSION,
-			true
-		);
+		// Select2: Elementor's own copy (handles `jquery-elementor-select2` / `elementor-select2` in Elementor 3.x and 4.x).
+		// 2.x bundled a second Select2 build here.
 	}
 
 	/**
@@ -782,7 +745,7 @@ class Plugin extends Singleton {
 				continue;
 			}
 
-			if ( ! empty( $element['settings'][ self::SECTION_PREFIX . 'enabled' ] ) ) {
+			if ( isset( $element['settings'] ) && Rules::is_enabled( $element['settings'] ) ) {
 				return true;
 			}
 

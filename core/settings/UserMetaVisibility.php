@@ -23,6 +23,7 @@ class UserMetaVisibility extends Singleton {
 		$this->register_elementor_settings( 'user_meta_section' );
 
 		add_filter( 'stax/visibility/apply_conditions', [ $this, 'apply_conditions' ], 10, 3 );
+		add_filter( 'stax/visibility/condition_fields', [ $this, 'condition_fields' ] ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- shares the 2.x hook namespace.
 	}
 
 	/**
@@ -89,21 +90,7 @@ class UserMetaVisibility extends Singleton {
 				'type'           => Controls_Manager::SELECT2,
 				'label'          => __( 'Meta Condition', 'visibility-logic-elementor' ),
 				'description'    => __( 'Select the condition that must be met by the meta', 'visibility-logic-elementor' ),
-				'options'        => [
-					'none'                    => __( 'None', 'visibility-logic-elementor' ),
-					'empty'                   => __( 'Empty', 'visibility-logic-elementor' ),
-					'not_empty'               => __( 'Not empty', 'visibility-logic-elementor' ),
-					'specific_value'          => __( 'Is equal to', 'visibility-logic-elementor' ),
-					'specific_value_multiple' => __( 'Is equal to one of', 'visibility-logic-elementor' ),
-					'not_specific_value'      => __( 'Not equal to', 'visibility-logic-elementor' ),
-					'contain'                 => __( 'Contains', 'visibility-logic-elementor' ),
-					'not_contain'             => __( 'Does not contain', 'visibility-logic-elementor' ),
-					'is_between'              => __( 'Between', 'visibility-logic-elementor' ),
-					'less_than'               => __( 'Less than', 'visibility-logic-elementor' ),
-					'greater_than'            => __( 'Greater than', 'visibility-logic-elementor' ),
-					'is_array'                => __( 'Is array', 'visibility-logic-elementor' ),
-					'is_array_and_contains'   => __( 'Is array and contains', 'visibility-logic-elementor' ),
-				],
+				'options'        => self::status_options(),
 				'default'        => 'none',
 				'label_block'    => true,
 				'condition'      => [
@@ -207,6 +194,74 @@ class UserMetaVisibility extends Singleton {
 				'style_transfer'  => false,
 			]
 		);
+	}
+
+	/**
+	 * User meta conditions (value => label).
+	 *
+	 * @return array
+	 */
+	public static function status_options() {
+		return [
+			'none'                    => __( 'None', 'visibility-logic-elementor' ),
+			'empty'                   => __( 'Empty', 'visibility-logic-elementor' ),
+			'not_empty'               => __( 'Not empty', 'visibility-logic-elementor' ),
+			'specific_value'          => __( 'Is equal to', 'visibility-logic-elementor' ),
+			'specific_value_multiple' => __( 'Is equal to one of', 'visibility-logic-elementor' ),
+			'not_specific_value'      => __( 'Not equal to', 'visibility-logic-elementor' ),
+			'contain'                 => __( 'Contains', 'visibility-logic-elementor' ),
+			'not_contain'             => __( 'Does not contain', 'visibility-logic-elementor' ),
+			'is_between'              => __( 'Between', 'visibility-logic-elementor' ),
+			'less_than'               => __( 'Less than', 'visibility-logic-elementor' ),
+			'greater_than'            => __( 'Greater than', 'visibility-logic-elementor' ),
+			'is_array'                => __( 'Is array', 'visibility-logic-elementor' ),
+			'is_array_and_contains'   => __( 'Is array and contains', 'visibility-logic-elementor' ),
+		];
+	}
+
+	/**
+	 * Fields of this condition for the block editor and Elementor 4 atomic elements (see Conditions).
+	 *
+	 * @param array $conditions Registered conditions.
+	 *
+	 * @return array
+	 */
+	public function condition_fields( $conditions ) {
+		$conditions['user_meta'] = [
+			'label'  => __( 'User Meta', 'visibility-logic-elementor' ),
+			'switch' => 'user_meta_enabled',
+			'fields' => [
+				[
+					'key'         => 'user_meta_options',
+					'type'        => 'list',
+					'label'       => __( 'Meta keys', 'visibility-logic-elementor' ),
+					'placeholder' => 'first_name, billing_country',
+					'help'        => __( 'User fields or meta keys, separated by commas. Each one must meet the condition.', 'visibility-logic-elementor' ),
+				],
+				[
+					'key'     => 'user_meta_status',
+					'type'    => 'select',
+					'label'   => __( 'Meta Condition', 'visibility-logic-elementor' ),
+					'options' => self::status_options(),
+					'default' => 'none',
+				],
+				[
+					'key'     => 'user_meta_value',
+					'type'    => 'textarea',
+					'label'   => __( 'Condition Value', 'visibility-logic-elementor' ),
+					'help'    => __( 'Comma separated for "Is equal to one of" and "Is array and contains".', 'visibility-logic-elementor' ),
+					'show_if' => [ 'user_meta_status' => [ 'specific_value', 'specific_value_multiple', 'not_specific_value', 'contain', 'not_contain', 'is_between', 'less_than', 'greater_than', 'is_array_and_contains' ] ],
+				],
+				[
+					'key'     => 'user_meta_value_2',
+					'type'    => 'textarea',
+					'label'   => __( 'Condition Value 2', 'visibility-logic-elementor' ),
+					'show_if' => [ 'user_meta_status' => [ 'is_between' ] ],
+				],
+			],
+		];
+
+		return $conditions;
 	}
 
 	/**

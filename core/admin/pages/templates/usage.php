@@ -15,7 +15,7 @@ $stax_vl_docs = $index['documents'];
 ?>
 <h2><?php esc_html_e( 'Rules in use', 'visibility-logic-elementor' ); ?></h2>
 <p class="description">
-	<?php esc_html_e( 'Pages, posts and Elementor templates with at least one element that has Visibility Logic turned on. Use it to review rules before a launch or after a plugin update.', 'visibility-logic-elementor' ); ?>
+	<?php esc_html_e( 'Pages, posts and templates with at least one Elementor element or block that has Visibility Logic turned on. Use it to review rules before a launch or after a plugin update.', 'visibility-logic-elementor' ); ?>
 </p>
 
 <?php if ( empty( $stax_vl_docs ) ) : ?>
@@ -27,6 +27,7 @@ $stax_vl_docs = $index['documents'];
 			<tr>
 				<th scope="col"><?php esc_html_e( 'Title', 'visibility-logic-elementor' ); ?></th>
 				<th scope="col"><?php esc_html_e( 'Type', 'visibility-logic-elementor' ); ?></th>
+				<th scope="col"><?php esc_html_e( 'Editor', 'visibility-logic-elementor' ); ?></th>
 				<th scope="col" class="num"><?php esc_html_e( 'Elements', 'visibility-logic-elementor' ); ?></th>
 				<th scope="col"><?php esc_html_e( 'Conditions', 'visibility-logic-elementor' ); ?></th>
 			</tr>
@@ -44,7 +45,7 @@ $stax_vl_docs = $index['documents'];
 				<tr>
 					<td>
 						<?php if ( current_user_can( 'edit_post', $stax_vl_doc['id'] ) ) : ?>
-							<strong><a href="<?php echo esc_url( Rules::edit_url( $stax_vl_doc['id'] ) ); ?>"><?php echo esc_html( $stax_vl_title ); ?></a></strong>
+							<strong><a href="<?php echo esc_url( Rules::edit_url( $stax_vl_doc['id'], isset( $stax_vl_doc['builder'] ) ? $stax_vl_doc['builder'] : 'elementor' ) ); ?>"><?php echo esc_html( $stax_vl_title ); ?></a></strong>
 						<?php else : ?>
 							<strong><?php echo esc_html( $stax_vl_title ); ?></strong>
 						<?php endif; ?>
@@ -54,6 +55,7 @@ $stax_vl_docs = $index['documents'];
 						<?php endif; ?>
 					</td>
 					<td><?php echo esc_html( $stax_vl_label ); ?></td>
+					<td><?php echo esc_html( isset( $stax_vl_doc['builder'] ) && 'blocks' === $stax_vl_doc['builder'] ? __( 'Block editor', 'visibility-logic-elementor' ) : __( 'Elementor', 'visibility-logic-elementor' ) ); ?></td>
 					<td class="num">
 						<?php echo esc_html( number_format_i18n( $stax_vl_doc['count'] ) ); ?>
 						<?php if ( $stax_vl_doc['legacy'] ) : ?>

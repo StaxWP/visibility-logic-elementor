@@ -42,6 +42,7 @@ class Rules {
 		add_action( 'trashed_post', [ __CLASS__, 'flush' ] );
 		add_action( 'untrashed_post', [ __CLASS__, 'flush' ] );
 		add_action( 'deleted_post', [ __CLASS__, 'flush' ] );
+		add_action( 'save_post', [ __CLASS__, 'maybe_flush_post' ], 10, 2 );
 	}
 
 	/**
@@ -55,6 +56,20 @@ class Rules {
 	 */
 	public static function maybe_flush( $meta_id, $object_id, $meta_key ) {
 		if ( '_elementor_data' === $meta_key ) {
+			self::flush();
+		}
+	}
+
+	/**
+	 * Flush when a post with block rules is saved.
+	 *
+	 * @param int      $post_id Post id.
+	 * @param \WP_Post $post    Post.
+	 *
+	 * @return void
+	 */
+	public static function maybe_flush_post( $post_id, $post ) {
+		if ( $post instanceof \WP_Post && false !== strpos( (string) $post->post_content, '"' . Blocks::ATTRIBUTE . '"' ) ) {
 			self::flush();
 		}
 	}
@@ -80,8 +95,56 @@ class Rules {
 			return false;
 		}
 
-		return ! empty( $settings[ Singleton::SECTION_PREFIX . 'enabled' ] )
-			|| ( isset( $settings['ecl_enabled'] ) && 'yes' === $settings['ecl_enabled'] );
+		return self::is_enabled( $settings ) || ( isset( $settings['ecl_enabled'] ) && 'yes' === $settings['ecl_enabled'] );
+	}
+
+	/**
+	 * Whether "Enable Visibility Logic" is on (classic value, or an Elementor 4 atomic prop).
+	 *
+	 * @param array $settings Element settings (saved format).
+	 *
+	 * @return bool
+	 */
+	public static function is_enabled( $settings ) {
+		$key = Singleton::SECTION_PREFIX . 'enabled';
+
+		if ( ! is_array( $settings ) || empty( $settings[ $key ] ) ) {
+			return false;
+		}
+
+		if ( is_array( $settings[ $key ] ) ) {
+			$value = Conditions::unwrap( $settings[ $key ] );
+
+			return true === $value || 'yes' === $value;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Saved settings in the classic format (atomic props unwrapped and converted).
+	 *
+	 * @param array $settings Element settings (saved format).
+	 *
+	 * @return array
+	 */
+	public static function normalize( $settings ) {
+		$settings = (array) $settings;
+		$key      = Singleton::SECTION_PREFIX . 'enabled';
+
+		if ( ! isset( $settings[ $key ] ) || ! is_array( $settings[ $key ] ) ) {
+			return $settings;
+		}
+
+		$values = [];
+
+		foreach ( $settings as $name => $value ) {
+			if ( is_string( $name ) && 0 === strpos( $name, Singleton::SECTION_PREFIX ) ) {
+				$values[ substr( $name, strlen( Singleton::SECTION_PREFIX ) ) ] = Conditions::unwrap( $value );
+			}
+		}
+
+		return Conditions::to_settings( $values, 'atomic' );
 	}
 
 	/**
@@ -123,7 +186,7 @@ class Rules {
 				continue;
 			}
 
-			$settings = isset( $element['settings'] ) && is_array( $element['settings'] ) ? $element['settings'] : [];
+			$settings = isset( $element['settings'] ) && is_array( $element['settings'] ) ? self::normalize( $element['settings'] ) : [];
 
 			if ( self::has_rules( $settings ) ) {
 				$current = ! empty( $settings[ Singleton::SECTION_PREFIX . 'enabled' ] );
@@ -183,17 +246,19 @@ class Rules {
 
 		$like_new = '%' . $wpdb->esc_like( '"' . Singleton::SECTION_PREFIX . 'enabled":"yes"' ) . '%';
 		$like_old = '%' . $wpdb->esc_like( '"ecl_enabled":"yes"' ) . '%';
+		$like_v4  = '%' . $wpdb->esc_like( '"' . Singleton::SECTION_PREFIX . 'enabled":{"$$type":"boolean","value":true' ) . '%';
 
 		// One indexed scan of the Elementor data meta, only on request (admin screen, CLI, abilities).
 		$ids = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 			$wpdb->prepare(
 				"SELECT DISTINCT pm.post_id FROM {$wpdb->postmeta} pm
 				INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id
-				WHERE pm.meta_key = '_elementor_data' AND ( pm.meta_value LIKE %s OR pm.meta_value LIKE %s )
+				WHERE pm.meta_key = '_elementor_data' AND ( pm.meta_value LIKE %s OR pm.meta_value LIKE %s OR pm.meta_value LIKE %s )
 				AND p.post_type <> 'revision' AND p.post_status NOT IN ( 'trash', 'auto-draft', 'inherit' )
 				ORDER BY pm.post_id DESC LIMIT %d",
 				$like_new,
 				$like_old,
+				$like_v4,
 				self::MAX_DOCUMENTS + 1
 			)
 		);
@@ -224,11 +289,52 @@ class Rules {
 				'title'      => get_the_title( $post ),
 				'post_type'  => $post->post_type,
 				'template'   => (string) get_post_meta( $post->ID, '_elementor_template_type', true ),
+				'builder'    => 'elementor',
 				'status'     => $post->post_status,
 				'count'      => count( $elements ),
 				'legacy'     => count( array_filter( wp_list_pluck( $elements, 'legacy' ) ) ),
 				'conditions' => array_values( array_unique( $conditions ) ),
 				'elements'   => $elements,
+			];
+		}
+
+		// Block editor content (`staxVisibility` block attribute).
+		$block_ids = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			$wpdb->prepare(
+				"SELECT ID FROM {$wpdb->posts}
+				WHERE post_content LIKE %s AND post_type <> 'revision' AND post_status NOT IN ( 'trash', 'auto-draft', 'inherit' )
+				ORDER BY ID DESC LIMIT %d",
+				'%' . $wpdb->esc_like( '"' . Blocks::ATTRIBUTE . '":{' ) . '%',
+				self::MAX_DOCUMENTS + 1
+			)
+		);
+
+		$truncated = $truncated || count( $block_ids ) > self::MAX_DOCUMENTS;
+
+		foreach ( array_slice( $block_ids, 0, self::MAX_DOCUMENTS ) as $id ) {
+			$post   = get_post( (int) $id );
+			$blocks = $post && function_exists( 'parse_blocks' ) ? Blocks::find_in_blocks( parse_blocks( $post->post_content ) ) : [];
+
+			if ( empty( $blocks ) ) {
+				continue;
+			}
+
+			$conditions = [];
+			foreach ( $blocks as $block ) {
+				$conditions = array_merge( $conditions, $block['conditions'] );
+			}
+
+			$documents[] = [
+				'id'         => (int) $post->ID,
+				'title'      => get_the_title( $post ),
+				'post_type'  => $post->post_type,
+				'template'   => '',
+				'builder'    => 'blocks',
+				'status'     => $post->post_status,
+				'count'      => count( $blocks ),
+				'legacy'     => 0,
+				'conditions' => array_values( array_unique( $conditions ) ),
+				'elements'   => $blocks,
 			];
 		}
 
@@ -250,7 +356,11 @@ class Rules {
 	 *
 	 * @return string
 	 */
-	public static function edit_url( $post_id ) {
+	public static function edit_url( $post_id, $builder = 'elementor' ) {
+		if ( 'blocks' === $builder ) {
+			return (string) get_edit_post_link( (int) $post_id, 'raw' );
+		}
+
 		return add_query_arg(
 			[
 				'post'   => (int) $post_id,

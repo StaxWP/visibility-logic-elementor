@@ -42,8 +42,15 @@ class Cli {
 		$format = isset( $assoc_args['format'] ) ? $assoc_args['format'] : 'table';
 
 		if ( ! empty( $assoc_args['post'] ) ) {
-			$rows = [];
-			foreach ( Rules::find_in_post( (int) $assoc_args['post'] ) as $element ) {
+			$rows  = [];
+			$found = Rules::find_in_post( (int) $assoc_args['post'] );
+			$post  = get_post( (int) $assoc_args['post'] );
+
+			if ( empty( $found ) && $post && function_exists( 'parse_blocks' ) ) {
+				$found = Blocks::find_in_blocks( parse_blocks( $post->post_content ) );
+			}
+
+			foreach ( $found as $element ) {
 				$element['conditions'] = implode( ',', $element['conditions'] );
 				$rows[]                = $element;
 			}
@@ -58,6 +65,7 @@ class Cli {
 				'id'         => $document['id'],
 				'title'      => $document['title'],
 				'post_type'  => $document['post_type'],
+				'builder'    => isset( $document['builder'] ) ? $document['builder'] : 'elementor',
 				'status'     => $document['status'],
 				'elements'   => $document['count'],
 				'legacy'     => $document['legacy'],
@@ -65,7 +73,7 @@ class Cli {
 			];
 		}
 
-		\WP_CLI\Utils\format_items( $format, $rows, [ 'id', 'title', 'post_type', 'status', 'elements', 'legacy', 'conditions' ] );
+		\WP_CLI\Utils\format_items( $format, $rows, [ 'id', 'title', 'post_type', 'builder', 'status', 'elements', 'legacy', 'conditions' ] );
 	}
 
 	/**

@@ -34,6 +34,7 @@ class DateTimeVisibility extends Singleton {
 		$this->register_elementor_settings( 'date_time_section' );
 
 		add_filter( 'stax/visibility/apply_conditions', [ $this, 'apply_conditions' ], 10, 3 );
+		add_filter( 'stax/visibility/condition_fields', [ $this, 'condition_fields' ] ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- shares the 2.x hook namespace.
 	}
 
 	/**
@@ -83,12 +84,7 @@ class DateTimeVisibility extends Singleton {
 			[
 				'type'           => Controls_Manager::SELECT,
 				'label'          => __( 'Select Type:', 'visibility-logic-elementor' ),
-				'options'        => [
-					'date'           => __( 'Date FROM/TO', 'visibility-logic-elementor' ),
-					'time'           => __( 'Time FROM/TO', 'visibility-logic-elementor' ),
-					'week_days'      => __( 'Week Days', 'visibility-logic-elementor' ),
-					'week_days_time' => __( 'Week Days + Time FROM/TO', 'visibility-logic-elementor' ),
-				],
+				'options'        => self::type_options(),
 				'default'        => 'date',
 				'condition'      => [
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
@@ -126,12 +122,7 @@ class DateTimeVisibility extends Singleton {
 			]
 		);
 
-		global $wp_locale;
-		$week = [];
-
-		for ( $day_index = 0; $day_index <= 6; $day_index++ ) {
-			$week[ esc_attr( $day_index ) ] = $wp_locale->get_weekday( $day_index );
-		}
+		$week = self::weekday_options();
 
 		$element->add_control(
 			self::SECTION_PREFIX . 'time_week',
@@ -206,6 +197,95 @@ class DateTimeVisibility extends Singleton {
 				'style_transfer' => false,
 			]
 		);
+	}
+
+	/**
+	 * Date & Time types (value => label).
+	 *
+	 * @return array
+	 */
+	public static function type_options() {
+		return [
+			'date'           => __( 'Date FROM/TO', 'visibility-logic-elementor' ),
+			'time'           => __( 'Time FROM/TO', 'visibility-logic-elementor' ),
+			'week_days'      => __( 'Week Days', 'visibility-logic-elementor' ),
+			'week_days_time' => __( 'Week Days + Time FROM/TO', 'visibility-logic-elementor' ),
+		];
+	}
+
+	/**
+	 * Fields of this condition for the block editor and Elementor 4 atomic elements (see Conditions).
+	 *
+	 * @param array $conditions Registered conditions.
+	 *
+	 * @return array
+	 */
+	public function condition_fields( $conditions ) {
+		$conditions['date_time'] = [
+			'label'  => __( 'Date & Time', 'visibility-logic-elementor' ),
+			'switch' => 'date_time_enabled',
+			'fields' => [
+				[
+					'key'     => 'date_time_type',
+					'type'    => 'select',
+					'label'   => __( 'Select Type:', 'visibility-logic-elementor' ),
+					'options' => self::type_options(),
+					'default' => 'date',
+				],
+				[
+					'key'     => 'date_from',
+					'type'    => 'date',
+					'label'   => __( 'Date FROM', 'visibility-logic-elementor' ),
+					'show_if' => [ 'date_time_type' => [ 'date' ] ],
+				],
+				[
+					'key'     => 'date_to',
+					'type'    => 'date',
+					'label'   => __( 'Date TO', 'visibility-logic-elementor' ),
+					'show_if' => [ 'date_time_type' => [ 'date' ] ],
+				],
+				[
+					'key'     => 'time_week',
+					'type'    => 'multiselect',
+					'label'   => __( 'Days of the WEEK', 'visibility-logic-elementor' ),
+					'options' => self::weekday_options(),
+					'show_if' => [ 'date_time_type' => [ 'week_days', 'week_days_time' ] ],
+				],
+				[
+					'key'         => 'time_from',
+					'type'        => 'time',
+					'label'       => __( 'Time FROM', 'visibility-logic-elementor' ),
+					'placeholder' => 'HH:mm',
+					'show_if'     => [ 'date_time_type' => [ 'time', 'week_days_time' ] ],
+				],
+				[
+					'key'         => 'time_to',
+					'type'        => 'time',
+					'label'       => __( 'Time TO', 'visibility-logic-elementor' ),
+					'placeholder' => 'HH:mm',
+					'show_if'     => [ 'date_time_type' => [ 'time', 'week_days_time' ] ],
+				],
+			],
+		];
+
+		return $conditions;
+	}
+
+	/**
+	 * Week days (0 = Sunday => localized name).
+	 *
+	 * @return array
+	 */
+	public static function weekday_options() {
+		global $wp_locale;
+
+		$week = [];
+
+		for ( $day_index = 0; $day_index <= 6; $day_index++ ) {
+			$week[ esc_attr( $day_index ) ] = $wp_locale ? $wp_locale->get_weekday( $day_index ) : (string) $day_index;
+		}
+
+		return $week;
 	}
 
 	/**

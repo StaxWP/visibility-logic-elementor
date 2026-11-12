@@ -22,6 +22,7 @@ class DeviceTypeVisibility extends Singleton {
 		$this->register_elementor_settings( 'device_type_section' );
 
 		add_filter( 'stax/visibility/apply_conditions', [ $this, 'apply_conditions' ], 10, 3 );
+		add_filter( 'stax/visibility/condition_fields', [ $this, 'condition_fields' ] ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- shares the 2.x hook namespace.
 	}
 
 	/**
@@ -70,11 +71,7 @@ class DeviceTypeVisibility extends Singleton {
 			[
 				'label'          => __( 'Device', 'visibility-logic-elementor' ),
 				'type'           => Controls_Manager::SELECT2,
-				'options'        => [
-					'desktop' => __( 'Desktop', 'visibility-logic-elementor' ),
-					'tablet'  => __( 'Tablet', 'visibility-logic-elementor' ),
-					'mobile'  => __( 'Mobile', 'visibility-logic-elementor' ),
-				],
+				'options'        => self::device_options(),
 				'description'    => __( 'Trigger visibility for specific device types.', 'visibility-logic-elementor' ),
 				'multiple'       => true,
 				'condition'      => [
@@ -96,6 +93,44 @@ class DeviceTypeVisibility extends Singleton {
 				'style_transfer'  => false,
 			]
 		);
+	}
+
+	/**
+	 * Device choices (value => label).
+	 *
+	 * @return array
+	 */
+	public static function device_options() {
+		return [
+			'desktop' => __( 'Desktop', 'visibility-logic-elementor' ),
+			'tablet'  => __( 'Tablet', 'visibility-logic-elementor' ),
+			'mobile'  => __( 'Mobile', 'visibility-logic-elementor' ),
+		];
+	}
+
+	/**
+	 * Fields of this condition for the block editor and Elementor 4 atomic elements (see Conditions).
+	 *
+	 * @param array $conditions Registered conditions.
+	 *
+	 * @return array
+	 */
+	public function condition_fields( $conditions ) {
+		$conditions['device_type'] = [
+			'label'  => __( 'Device Type', 'visibility-logic-elementor' ),
+			'switch' => 'device_type_enabled',
+			'fields' => [
+				[
+					'key'     => 'device_types',
+					'type'    => 'multiselect',
+					'label'   => __( 'Device', 'visibility-logic-elementor' ),
+					'options' => self::device_options(),
+					'help'    => __( 'Detected on the server from the User-Agent.', 'visibility-logic-elementor' ),
+				],
+			],
+		];
+
+		return $conditions;
 	}
 
 	/**

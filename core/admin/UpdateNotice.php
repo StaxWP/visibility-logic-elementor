@@ -1,0 +1,121 @@
+<?php
+/**
+ * One-time notice for sites updated from 2.x: the opt-in behaviours of 3.0 (element cache per element, Hide when
+ * empty fix). Shown on the Dashboard, Plugins and Visibility Logic screens to users who can manage options, until
+ * the user dismisses it or both options are on. Never on the front end.
+ *
+ * @package Stax\VisibilityLogic
+ * @since 3.0.0
+ */
+
+namespace Stax\VisibilityLogic;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * Class UpdateNotice
+ */
+class UpdateNotice {
+
+	/**
+	 * User meta set when the notice is dismissed.
+	 */
+	const USER_META = 'stax_visibility_dismissed_3_0_notice';
+
+	/**
+	 * Site option set when 3.0 stored the 2.x settings on update.
+	 */
+	const SITE_FLAG = 'stax_visibility_updated_from_2x';
+
+	/**
+	 * Hooks.
+	 *
+	 * @return void
+	 */
+	public static function init() {
+		if ( ! is_admin() ) {
+			return;
+		}
+
+		add_action( 'admin_notices', [ __CLASS__, 'render' ] );
+		add_action( 'admin_post_stax_visibility_dismiss_notice', [ __CLASS__, 'dismiss' ] );
+	}
+
+	/**
+	 * Whether the notice applies to the current user (screen not checked).
+	 *
+	 * @return bool
+	 */
+	public static function applies() {
+		if ( ! current_user_can( 'manage_options' ) || '1' !== (string) get_option( self::SITE_FLAG, '' ) ) {
+			return false;
+		}
+
+		if ( get_user_meta( get_current_user_id(), self::USER_META, true ) ) {
+			return false;
+		}
+
+		return ! Resources::get_setting( 'element_cache' ) || ! Resources::get_setting( 'container_widgets' );
+	}
+
+	/**
+	 * Notice.
+	 *
+	 * @return void
+	 */
+	public static function render() {
+		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+
+		if ( ! $screen || ( ! in_array( $screen->id, [ 'dashboard', 'plugins' ], true ) && false === strpos( (string) $screen->id, 'stax-visibility' ) ) ) {
+			return;
+		}
+
+		if ( ! self::applies() ) {
+			return;
+		}
+
+		$dismiss = wp_nonce_url( admin_url( 'admin-post.php?action=stax_visibility_dismiss_notice' ), 'stax_visibility_dismiss_notice' );
+		?>
+		<div class="notice notice-info">
+			<p><strong><?php esc_html_e( 'Visibility Logic 3.0: your site works exactly as before.', 'visibility-logic-elementor' ); ?></strong></p>
+			<p><?php esc_html_e( 'Two improvements are available as options, off on updated sites so nothing changes without you:', 'visibility-logic-elementor' ); ?></p>
+			<ul class="ul-disc">
+				<?php if ( ! Resources::get_setting( 'element_cache' ) ) : ?>
+					<li><?php esc_html_e( 'Faster pages: keep Elementor\'s element cache on for pages with visibility rules.', 'visibility-logic-elementor' ); ?></li>
+				<?php endif; ?>
+				<?php if ( ! Resources::get_setting( 'container_widgets' ) ) : ?>
+					<li><?php esc_html_e( '"Hide when empty" fix: containers holding their widgets directly are no longer always hidden (such containers may start to show).', 'visibility-logic-elementor' ); ?></li>
+				<?php endif; ?>
+			</ul>
+			<p>
+				<a class="button button-primary" href="<?php echo esc_url( Settings::url( 'options' ) . '#stax-vl-general' ); ?>"><?php esc_html_e( 'Review the options', 'visibility-logic-elementor' ); ?></a>
+				<a class="button" href="<?php echo esc_url( $dismiss ); ?>"><?php esc_html_e( 'Dismiss', 'visibility-logic-elementor' ); ?></a>
+			</p>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Dismiss for the current user.
+	 *
+	 * @return void
+	 */
+	public static function dismiss() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'Sorry, you are not allowed to do that.', 'visibility-logic-elementor' ), 403 );
+		}
+
+		check_admin_referer( 'stax_visibility_dismiss_notice' );
+
+		update_user_meta( get_current_user_id(), self::USER_META, time() );
+
+		$back = wp_get_referer();
+
+		wp_safe_redirect( $back ? $back : admin_url() );
+		exit;
+	}
+}
+
+UpdateNotice::init();

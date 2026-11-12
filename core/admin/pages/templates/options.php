@@ -57,7 +57,7 @@ defined( 'ABSPATH' ) || exit;
 		<?php endforeach; ?>
 	</fieldset>
 
-	<h2><?php esc_html_e( 'General', 'visibility-logic-elementor' ); ?></h2>
+	<h2 id="stax-vl-general"><?php esc_html_e( 'General', 'visibility-logic-elementor' ); ?></h2>
 	<table class="form-table" role="presentation">
 		<tr>
 			<th scope="row"><?php esc_html_e( 'Date ranges', 'visibility-logic-elementor' ); ?></th>

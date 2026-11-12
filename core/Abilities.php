@@ -122,7 +122,7 @@ class Abilities {
 			'visibility-logic/list-rules',
 			[
 				'label'               => __( 'List elements with visibility rules', 'visibility-logic-elementor' ),
-				'description'         => __( 'Lists the Elementor pages, posts and templates that contain elements with Visibility Logic rules, with each element id, widget type, action (show or hide), match (all or one) and the conditions it uses. Read only.', 'visibility-logic-elementor' ),
+				'description'         => __( 'Lists the pages, posts and templates (Elementor or block editor) that contain elements or blocks with Visibility Logic rules, with each element id, widget type, action (show or hide), match (all or one) and the conditions it uses. Read only.', 'visibility-logic-elementor' ),
 				'category'            => self::CATEGORY,
 				'input_schema'        => [
 					'type'                 => 'object',
@@ -211,14 +211,21 @@ class Abilities {
 		$condition = isset( $input['condition'] ) ? sanitize_key( $input['condition'] ) : '';
 
 		if ( ! empty( $input['post_id'] ) ) {
-			$post      = get_post( (int) $input['post_id'] );
-			$elements  = $post ? Rules::find_in_post( $post->ID ) : [];
+			$post     = get_post( (int) $input['post_id'] );
+			$elements = $post ? Rules::find_in_post( $post->ID ) : [];
+			$builder  = 'elementor';
+
+			if ( $post && empty( $elements ) && function_exists( 'parse_blocks' ) ) {
+				$elements = Blocks::find_in_blocks( parse_blocks( $post->post_content ) );
+				$builder  = 'blocks';
+			}
 			$documents = $post && $elements ? [
 				[
 					'id'        => (int) $post->ID,
 					'title'     => get_the_title( $post ),
 					'post_type' => $post->post_type,
 					'status'    => $post->post_status,
+					'builder'   => $builder,
 					'count'     => count( $elements ),
 					'elements'  => $elements,
 				],
@@ -263,7 +270,8 @@ class Abilities {
 				'title'     => $document['title'],
 				'post_type' => $document['post_type'],
 				'status'    => $document['status'],
-				'edit_url'  => Rules::edit_url( $document['id'] ),
+				'builder'   => isset( $document['builder'] ) ? $document['builder'] : 'elementor',
+				'edit_url'  => Rules::edit_url( $document['id'], isset( $document['builder'] ) ? $document['builder'] : 'elementor' ),
 				'count'     => $document['count'],
 				'elements'  => $document['elements'],
 			];

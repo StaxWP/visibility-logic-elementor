@@ -34,6 +34,7 @@ class BrowserTypeVisiblity extends Singleton {
 		$this->register_elementor_settings( 'browser_type_section' );
 
 		add_filter( 'stax/visibility/apply_conditions', [ $this, 'apply_conditions' ], 10, 3 );
+		add_filter( 'stax/visibility/condition_fields', [ $this, 'condition_fields' ] ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- shares the 2.x hook namespace.
 	}
 
 	/**
@@ -83,18 +84,7 @@ class BrowserTypeVisiblity extends Singleton {
 			[
 				'label'          => __( 'Browser', 'visibility-logic-elementor' ),
 				'type'           => Controls_Manager::SELECT2,
-				'options'        => [
-					'is_chrome'  => 'Google Chrome',
-					'is_gecko'   => 'FireFox',
-					'is_safari'  => 'Safari',
-					'is_ie'      => 'Internet Explorer',
-					'is_edge'    => 'Microsoft Edge',
-					'is_ns4'     => 'Netscape',
-					'is_opera'   => 'Opera',
-					'is_lynx'    => 'Lynx',
-					'is_iphone'  => 'iPhone Safari',
-					'is_android' => 'Android Browser',
-				],
+				'options'        => self::browser_options(),
 				'description'    => __( 'Trigger visibility for specific browsers.', 'visibility-logic-elementor' ),
 				'multiple'       => true,
 				'condition'      => [
@@ -103,6 +93,50 @@ class BrowserTypeVisiblity extends Singleton {
 				'style_transfer' => false,
 			]
 		);
+	}
+
+	/**
+	 * Browser choices (value => label).
+	 *
+	 * @return array
+	 */
+	public static function browser_options() {
+		return [
+			'is_chrome'  => 'Google Chrome',
+			'is_gecko'   => 'FireFox',
+			'is_safari'  => 'Safari',
+			'is_ie'      => 'Internet Explorer',
+			'is_edge'    => 'Microsoft Edge',
+			'is_ns4'     => 'Netscape',
+			'is_opera'   => 'Opera',
+			'is_lynx'    => 'Lynx',
+			'is_iphone'  => 'iPhone Safari',
+			'is_android' => 'Android Browser',
+		];
+	}
+
+	/**
+	 * Fields of this condition for the block editor and Elementor 4 atomic elements (see Conditions).
+	 *
+	 * @param array $conditions Registered conditions.
+	 *
+	 * @return array
+	 */
+	public function condition_fields( $conditions ) {
+		$conditions['browser_type'] = [
+			'label'  => __( 'Browser Type', 'visibility-logic-elementor' ),
+			'switch' => 'browser_type_enabled',
+			'fields' => [
+				[
+					'key'     => 'browsers',
+					'type'    => 'multiselect',
+					'label'   => __( 'Browser', 'visibility-logic-elementor' ),
+					'options' => self::browser_options(),
+				],
+			],
+		];
+
+		return $conditions;
 	}
 
 	/**

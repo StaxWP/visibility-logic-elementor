@@ -22,6 +22,7 @@ class UserRoleVisibility extends Singleton {
 		$this->register_elementor_settings( 'user_role_section' );
 
 		add_filter( 'stax/visibility/apply_conditions', [ $this, 'apply_conditions' ], 10, 3 );
+		add_filter( 'stax/visibility/condition_fields', [ $this, 'condition_fields' ] ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- shares the 2.x hook namespace.
 	}
 
 	/**
@@ -80,6 +81,30 @@ class UserRoleVisibility extends Singleton {
 				'style_transfer' => false,
 			]
 		);
+	}
+
+	/**
+	 * Fields of this condition for the block editor and Elementor 4 atomic elements (see Conditions).
+	 *
+	 * @param array $conditions Registered conditions.
+	 *
+	 * @return array
+	 */
+	public function condition_fields( $conditions ) {
+		$conditions['user_role'] = [
+			'label'  => __( 'User Role', 'visibility-logic-elementor' ),
+			'switch' => 'user_role_enabled',
+			'fields' => [
+				[
+					'key'     => 'user_role_conditions',
+					'type'    => 'multiselect',
+					'label'   => __( 'Roles', 'visibility-logic-elementor' ),
+					'options' => Resources::get_user_roles(),
+				],
+			],
+		];
+
+		return $conditions;
 	}
 
 	/**
