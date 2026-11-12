@@ -6,7 +6,8 @@
  *   wp eval-file wp-content/plugins/visibility-logic-elementor/tests/visibility-test.php
  *
  * Every case builds real Elementor elements from saved-data arrays (the format stored in `_elementor_data`), prints
- * them through Elementor's own render pipeline and checks which elements reach the HTML. Nothing is written to posts;
+ * them through Elementor's own render pipeline and checks which elements reach the HTML. Nothing is written to posts; the
+ * general settings run in the 2.x (update) mode, the default after an update, and are restored at the end;
  * two temporary users are created and deleted at the end. Exit code 1 when a check fails.
  *
  * Covered: General (show/hide, all/one, keep HTML, hide when empty for sections and containers), User Role (guests,
@@ -39,6 +40,29 @@ if ( ! function_exists( 'get_field' ) ) {
 }
 
 $GLOBALS['vle_test_acf'] = [];
+
+// Settings of the run: the 2.x behaviour (what a site updating from 2.x gets), restored at the end.
+$GLOBALS['vle_settings_backup'] = get_option( 'stax_visibility_general', false );
+update_option(
+	'stax_visibility_general',
+	[
+		'site_timezone'     => false,
+		'container_widgets' => false,
+		'element_cache'     => false,
+	]
+);
+
+/**
+ * Change one general setting for the next checks.
+ *
+ * @param string $key   Setting.
+ * @param bool   $value Value.
+ */
+function vle_setting( $key, $value ) {
+	$settings         = (array) get_option( 'stax_visibility_general', [] );
+	$settings[ $key ] = $value;
+	update_option( 'stax_visibility_general', $settings );
+}
 
 global $vle;
 $vle = [
@@ -509,12 +533,11 @@ vle_case(
 // Date FROM/TO time zone: 2.x reads them as UTC; the 3.0 setting reads them in the site time zone.
 if ( class_exists( '\\Stax\\VisibilityLogic\\DateTimeVisibility' ) && method_exists( '\\Stax\\VisibilityLogic\\Resources', 'get_setting' ) ) {
 	$tz_backup  = [ get_option( 'timezone_string' ), get_option( 'gmt_offset' ) ];
-	$opt_backup = get_option( 'stax_visibility_general', false );
 	update_option( 'timezone_string', 'Pacific/Kiritimati' ); // UTC+14.
 	$local_now  = new DateTimeImmutable( 'now', wp_timezone() );
 	$from_local = $local_now->modify( '-1 hour' )->format( $fmt );
 	$to_local   = $local_now->modify( '+1 hour' )->format( $fmt );
-	update_option( 'stax_visibility_general', [ 'site_timezone' => false ] );
+	vle_setting( 'site_timezone', false );
 	vle_case(
 		'date range in site time, read as UTC (2.x): hidden',
 		$dt(
@@ -527,7 +550,7 @@ if ( class_exists( '\\Stax\\VisibilityLogic\\DateTimeVisibility' ) && method_exi
 		0,
 		'absent'
 	);
-	update_option( 'stax_visibility_general', [ 'site_timezone' => true ] );
+	vle_setting( 'site_timezone', true );
 	vle_case(
 		'date range in site time, site time zone setting: visible',
 		$dt(
@@ -542,11 +565,7 @@ if ( class_exists( '\\Stax\\VisibilityLogic\\DateTimeVisibility' ) && method_exi
 	);
 	update_option( 'timezone_string', $tz_backup[0] );
 	update_option( 'gmt_offset', $tz_backup[1] );
-	if ( false === $opt_backup ) {
-		delete_option( 'stax_visibility_general' );
-	} else {
-		update_option( 'stax_visibility_general', $opt_backup );
-	}
+	vle_setting( 'site_timezone', false );
 }
 
 $local   = current_time( 'timestamp' ); // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested
@@ -838,13 +857,39 @@ vle_is( 'nested containers, one visible, hide when empty: shown', 'visible', vle
 $html = vle_render( $container( 'con3', [ $hidden_w, $hidden_w2 ], $hwe ) );
 vle_is( 'flat container, all hidden, hide when empty: hidden', 'absent', vle_state( $html, 'con3' ) );
 $html = vle_render( $container( 'con4', [ $hidden_w, $shown_w ], $hwe ) );
-vle_is( 'flat container, one visible, hide when empty: shown (fixed in 3.0)', 'visible', vle_state( $html, 'con4' ) );
+vle_is( 'flat container, one visible, hide when empty: hidden as in 2.x (update default)', 'absent', vle_state( $html, 'con4' ) );
 $html = vle_render( $container( 'con7', [ $container( 'con7a', [ $hidden_w, $shown_w ] ) ], $hwe ) );
 vle_is( 'nested container, inner flat with one visible: shown', 'visible', vle_state( $html, 'con7' ) );
 $html = vle_render( $container( 'con8', [ $container( 'con8a', [ $container( 'con8b', [ $hidden_w ] ) ] ) ], $hwe ) );
 vle_is( 'three levels, deepest container counts as content (2.x)', 'visible', vle_state( $html, 'con8' ) );
 $html = vle_render( $container( 'con9', [ vle_w( 'kh1', array_merge( $guest_show, vle_s( [ 'keep_html' => 'yes' ] ) ) ) ], $hwe ) );
-vle_is( 'flat container, only a CSS-hidden widget: kept', 'visible', vle_state( $html, 'con9' ) );
+vle_is( 'flat container, only a CSS-hidden widget: hidden as in 2.x (update default)', 'absent', vle_state( $html, 'con9' ) );
+
+// 3.0 behaviour (new installs, opt-in for updated sites).
+if ( method_exists( '\Stax\VisibilityLogic\Resources', 'get_setting' ) ) {
+	vle_setting( 'container_widgets', true );
+	$html = vle_render( $container( 'con4', [ $hidden_w, $shown_w ], $hwe ) );
+	vle_is( 'container_widgets on: flat container, one visible: shown', 'visible', vle_state( $html, 'con4' ) );
+	$html = vle_render( $container( 'con3', [ $hidden_w, $hidden_w2 ], $hwe ) );
+	vle_is( 'container_widgets on: flat container, all hidden: hidden', 'absent', vle_state( $html, 'con3' ) );
+	$html = vle_render( $container( 'con9', [ vle_w( 'kh1', array_merge( $guest_show, vle_s( [ 'keep_html' => 'yes' ] ) ) ) ], $hwe ) );
+	vle_is( 'container_widgets on: only a CSS-hidden widget: kept', 'visible', vle_state( $html, 'con9' ) );
+	$html = vle_render( $container( 'con1', [ $container( 'con1a', [ $hidden_w ] ), $container( 'con1b', [ $hidden_w2 ] ) ], $hwe ) );
+	vle_is( 'container_widgets on: nested containers, all hidden: hidden', 'absent', vle_state( $html, 'con1' ) );
+	$html = vle_render( $section( 'sec2', [ $hidden_w, $shown_w ], $hwe ) );
+	vle_is( 'container_widgets on: sections unchanged', 'visible', vle_state( $html, 'sec2' ) );
+	vle_setting( 'container_widgets', false );
+}
+
+// Element cache flag: 2.x mode marks nothing dynamic; the 3.0 mode marks elements with rules.
+if ( method_exists( \Stax\VisibilityLogic\Plugin::instance(), 'is_dynamic_content' ) ) {
+	$plugin = \Stax\VisibilityLogic\Plugin::instance();
+	vle_is( 'element cache 2.x mode: rules not marked dynamic', false, $plugin->is_dynamic_content( false, [ 'settings' => $guest_show ] ) );
+	vle_setting( 'element_cache', true );
+	vle_is( 'element cache 3.0 mode: rules marked dynamic', true, $plugin->is_dynamic_content( false, [ 'settings' => $guest_show ] ) );
+	vle_is( 'element cache 3.0 mode: no rules, not dynamic', false, $plugin->is_dynamic_content( false, [ 'settings' => [ 'title' => 'x' ] ] ) );
+	vle_setting( 'element_cache', false );
+}
 $html = vle_render( $container( 'con5', [ $shown_w ], $guest_show ) );
 vle_is( 'container with its own condition: hidden', 'absent', vle_state( $html, 'con5' ) );
 $html = vle_render( $container( 'con6', [ $shown_w ], array_merge( $guest_show, vle_s( [ 'keep_html' => 'yes' ] ) ) ) );
@@ -941,6 +986,11 @@ if ( class_exists( '\\Stax\\VisibilityLogic\\Abilities' ) ) {
 }
 
 // Cleanup.
+if ( false === $GLOBALS['vle_settings_backup'] ) {
+	delete_option( 'stax_visibility_general' );
+} else {
+	update_option( 'stax_visibility_general', $GLOBALS['vle_settings_backup'] );
+}
 require_once ABSPATH . 'wp-admin/includes/user.php';
 foreach ( $vle['users'] as $uid ) {
 	wp_delete_user( $uid );
