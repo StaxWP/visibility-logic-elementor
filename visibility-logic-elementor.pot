@@ -1,780 +1,897 @@
-#, fuzzy
+# Copyright (C) 2026 StaxWP
+# This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
-"Project-Id-Version: Visibility Logic for Elementor\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-02 17:55+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Project-Id-Version: Visibility Logic for Elementor 3.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/visibility-logic-elementor\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: \n"
-"Language: \n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.2.0; wp-5.0.1"
+"POT-Creation-Date: 2026-11-12T06:50:16+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: visibility-logic-elementor\n"
 
-#. 1: Plugin name 2: Elementor
-#: core/helpers/Notices.php:62
+#. Plugin Name of the plugin
+#: conditional.php
+msgid "Visibility Logic for Elementor"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: conditional.php
+msgid "https://wordpress.org/plugins/visibility-logic-elementor/"
+msgstr ""
+
+#. Description of the plugin
+#: conditional.php
+msgid "Show or hide Elementor widgets, sections and containers by user role, user meta, date and time, device, browser and ACF fields."
+msgstr ""
+
+#. Author of the plugin
+#: conditional.php
+msgid "StaxWP"
+msgstr ""
+
+#. Author URI of the plugin
+#: conditional.php
+msgid "https://staxwp.com"
+msgstr ""
+
+#: core/Abilities.php:61
+#: core/admin/layout.php:24
+#: core/admin/Settings.php:78
+#: core/admin/Settings.php:79
+#: core/admin/Settings.php:142
+#: core/helpers/Notices.php:68
+msgid "Visibility Logic"
+msgstr ""
+
+#: core/Abilities.php:62
+msgid "Visibility rules of Elementor widgets, sections and containers."
+msgstr ""
+
+#: core/Abilities.php:86
+msgid "List visibility conditions"
+msgstr ""
+
+#: core/Abilities.php:87
+msgid "Lists the Visibility Logic conditions (user role, date and time, device and more), whether each one is turned on, and which need Visibility Logic Pro."
+msgstr ""
+
+#: core/Abilities.php:124
+msgid "List elements with visibility rules"
+msgstr ""
+
+#: core/Abilities.php:125
+msgid "Lists the Elementor pages, posts and templates that contain elements with Visibility Logic rules, with each element id, widget type, action (show or hide), match (all or one) and the conditions it uses. Read only."
+msgstr ""
+
+#: core/Abilities.php:132
+msgid "Only this post, page or template."
+msgstr ""
+
+#: core/Abilities.php:137
+msgid "Only this post type, for example page or elementor_library."
+msgstr ""
+
+#: core/Abilities.php:141
+msgid "Only elements using this condition, for example user_role or date_time."
+msgstr ""
+
+#: core/admin/layout.php:26
+#: core/admin/pages/templates/options.php:48
+#: core/admin/pages/templates/options.php:94
+msgid "Pro"
+msgstr ""
+
+#. translators: %s: version number.
+#: core/admin/layout.php:32
 #, php-format
-msgid "%1$s requires version %3$s or greater of %2$s plugin."
+msgid "Version %s"
 msgstr ""
 
-#: _pro/settings/ConditionalTagsVisibility.php:127
-msgid "404 Not Found"
-msgstr ""
-
-#: core/Upgrades.php:94
+#. translators: %s: version number.
+#: core/admin/layout.php:36
 #, php-format
-msgid "<a href=\"%s\">Update now</a>"
+msgid "Pro %s"
 msgstr ""
 
-#: core/Upgrades.php:86
-msgid ""
-"<strong>STAX Visibility Logic</strong> needs to update your database to the "
-"latest version."
+#: core/admin/layout.php:46
+msgid "Visibility Logic sections"
 msgstr ""
 
-#: _pro/settings/ConditionalTagsVisibility.php:135
-msgid "A Woocommerce Page"
+#: core/admin/layout.php:65
+msgid "About Visibility Logic"
 msgstr ""
 
-#: _pro/settings/ConditionalTagsVisibility.php:145
-msgid "Account page"
+#: core/admin/layout.php:68
+#: core/admin/layout.php:85
+msgid "Visibility Logic Pro"
+msgstr ""
+
+#: core/admin/layout.php:69
+msgid "More conditions for the same Visibility tab:"
+msgstr ""
+
+#: core/admin/layout.php:71
+msgid "Posts, pages, archives and conditional tags"
+msgstr ""
+
+#: core/admin/layout.php:72
+msgid "URL parameters, IP, referrer and visitor country"
+msgstr ""
+
+#: core/admin/layout.php:73
+msgid "WooCommerce and EDD customers, language"
+msgstr ""
+
+#: core/admin/layout.php:74
+msgid "Advanced ACF, dynamic tags, fallback content"
+msgstr ""
+
+#: core/admin/layout.php:78
+msgid "Learn about Pro"
+msgstr ""
+
+#: core/admin/layout.php:79
+#: core/admin/layout.php:99
+#: core/admin/layout.php:108
+#: core/admin/layout.php:109
+#: core/admin/pages/templates/options.php:104
+msgid "(opens in a new tab)"
+msgstr ""
+
+#: core/admin/layout.php:89
+msgid "Active and licensed. Thank you for supporting the plugin."
+msgstr ""
+
+#: core/admin/layout.php:91
+msgid "Active, no license yet. Saved Pro conditions keep working; editing them needs a license."
+msgstr ""
+
+#: core/admin/layout.php:93
+msgid "Active."
+msgstr ""
+
+#: core/admin/layout.php:97
+msgid "Manage license"
+msgstr ""
+
+#: core/admin/layout.php:99
+msgid "Your staxwp.com account"
+msgstr ""
+
+#: core/admin/layout.php:105
+msgid "Help"
+msgstr ""
+
+#: core/admin/layout.php:106
+msgid "Open any widget, section or container in Elementor, then the Visibility tab."
+msgstr ""
+
+#: core/admin/layout.php:108
+msgid "Support forum"
+msgstr ""
+
+#: core/admin/layout.php:109
+msgid "Rate the plugin"
+msgstr ""
+
+#: core/admin/pages/Options.php:42
+#: core/admin/pages/Usage.php:41
+msgid "Sorry, you are not allowed to do that."
+msgstr ""
+
+#: core/admin/pages/Options.php:106
+#: core/admin/pages/templates/options.php:27
+#: core/admin/pages/templates/usage.php:31
+msgid "Conditions"
+msgstr ""
+
+#: core/admin/pages/templates/options.php:20
+msgid "Settings saved."
+msgstr ""
+
+#: core/admin/pages/templates/options.php:29
+msgid "Conditions turned off are removed from the Visibility tab in Elementor and are not checked on your pages, so their saved rules have no effect."
+msgstr ""
+
+#: core/admin/pages/templates/options.php:33
+msgid "Active conditions"
+msgstr ""
+
+#: core/admin/pages/templates/options.php:60
+#: core/settings/GeneralVisibility.php:37
+msgid "General"
+msgstr ""
+
+#: core/admin/pages/templates/options.php:63
+msgid "Date ranges"
+msgstr ""
+
+#: core/admin/pages/templates/options.php:67
+msgid "Read Date FROM and Date TO in the site time zone"
+msgstr ""
+
+#. translators: %s: time zone name.
+#: core/admin/pages/templates/options.php:73
+#, php-format
+msgid "Recommended. Site time zone: %s. Versions before 3.0 read these dates as UTC; sites that update keep that until this box is checked, so check your scheduled elements after turning it on."
+msgstr ""
+
+#: core/admin/pages/templates/options.php:82
+msgid "Save Changes"
+msgstr ""
+
+#: core/admin/pages/templates/options.php:86
+msgid "More conditions in Pro"
+msgstr ""
+
+#: core/admin/pages/templates/options.php:88
+msgid "Visibility Logic Pro adds these to the same Visibility tab. Everything above stays free."
+msgstr ""
+
+#: core/admin/pages/templates/options.php:103
+msgid "Compare free and Pro on staxwp.com"
+msgstr ""
+
+#: core/admin/pages/templates/usage.php:16
+#: core/admin/pages/Usage.php:73
+msgid "Rules in use"
+msgstr ""
+
+#: core/admin/pages/templates/usage.php:18
+msgid "Pages, posts and Elementor templates with at least one element that has Visibility Logic turned on. Use it to review rules before a launch or after a plugin update."
+msgstr ""
+
+#: core/admin/pages/templates/usage.php:22
+msgid "No element uses visibility rules yet."
+msgstr ""
+
+#: core/admin/pages/templates/usage.php:25
+msgid "Documents with visibility rules"
+msgstr ""
+
+#: core/admin/pages/templates/usage.php:28
+msgid "Title"
+msgstr ""
+
+#: core/admin/pages/templates/usage.php:29
+msgid "Type"
+msgstr ""
+
+#: core/admin/pages/templates/usage.php:30
+msgid "Elements"
+msgstr ""
+
+#: core/admin/pages/templates/usage.php:42
+msgid "(no title)"
+msgstr ""
+
+#. translators: %s: number of elements.
+#: core/admin/pages/templates/usage.php:63
+#, php-format
+msgid "%s with 1.x settings"
+msgid_plural "%s with 1.x settings"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number.
+#: core/admin/pages/templates/usage.php:74
+#, php-format
+msgid "Showing the newest %d documents."
+msgstr ""
+
+#. translators: %s: human time difference.
+#: core/admin/pages/templates/usage.php:84
+#, php-format
+msgid "Scanned %s ago."
+msgstr ""
+
+#: core/admin/pages/templates/usage.php:86
+msgid "Scan again"
+msgstr ""
+
+#: core/admin/Settings.php:93
+msgid "Dashboard"
+msgstr ""
+
+#. translators: %s: tab name.
+#: core/admin/Settings.php:136
+#, php-format
+msgid "Visibility Logic: %s"
+msgstr ""
+
+#: core/admin/Settings.php:168
+msgid "Settings"
+msgstr ""
+
+#: core/admin/Settings.php:311
+msgid "Sorry, you are not allowed to access this page."
+msgstr ""
+
+#. translators: %s: html tags
+#: core/helpers/Notices.php:17
+#, php-format
+msgid "%1$sVisibility Logic %2$s requires %1$sElementor%2$s plugin installed & activated."
 msgstr ""
 
 #: core/helpers/Notices.php:27
 msgid "Activate Elementor"
 msgstr ""
 
-#: _pro/settings/ConditionalTagsVisibility.php:102
-msgid "Active sidebar"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:143
-msgid "Add Payment method"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:132
-msgid "Admin"
-msgstr ""
-
-#: core/settings/GeneralVisibility.php:97
-msgid "All"
-msgstr ""
-
-#: _pro/settings/PostVisibility.php:150
-msgid "And"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:161
-msgid "Archive"
-msgstr ""
-
-#: core/settings/GeneralVisibility.php:98
-msgid "At least one"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:130
-msgid "Attachment"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:169
-msgid "Author"
-msgstr ""
-
-#: core/Upgrades.php:209
-msgid "Awesome, Visibility Logic database is now at the latest version!"
-msgstr ""
-
-#: core/settings/BrowserTypeVisiblity.php:81
-msgid "Browser"
-msgstr ""
-
-#: core/settings/BrowserTypeVisiblity.php:50 core/helpers/Resources.php:136
-msgid "Browser Type"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:141
-msgid "Cart"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:167
-msgid "Category"
-msgstr ""
-
-#: core/Singleton.php:41 core/Singleton.php:52
-msgid "Cheatin&#8217; huh?"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:142
-msgid "Checkout"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:144
-msgid "Checkout Pay"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:106
-msgid "Child theme"
-msgstr ""
-
-#: core/admin/pages/templates/widgets.php:15
-msgid ""
-"Choose which visibility options should be enabled in Elementor for Widgets "
-"and Sections. Disabled options will have no effect in the show/hide logic."
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:80
-msgid "Comments open"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:134
-msgid "Comments Popup"
-msgstr ""
-
-#: _pro/VisibilityPro.php:70 core/helpers/Resources.php:177
-#: _pro/settings/ConditionalTagsVisibility.php:43
-msgid "Conditional Tags"
-msgstr ""
-
-#: core/settings/GeneralVisibility.php:93
-msgid "Conditions Type"
-msgstr ""
-
-#: _pro/settings/FallbackVisibility.php:73
-msgid "Content type"
-msgstr ""
-
-#: _pro/settings/PostVisibility.php:74
-msgid "Custom Post Type"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:107
-msgid "Customize preview"
-msgstr ""
-
-#: core/admin/Settings.php:64
-msgid "Dashboard"
-msgstr ""
-
-#: core/Upgrades.php:81
-msgid "Database update required"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:170
-msgid "Date"
-msgstr ""
-
-#: core/helpers/Resources.php:131
-msgid "Date & Time"
-msgstr ""
-
-#: core/settings/DateTimeVisibility.php:91
-msgid "Date FROM"
-msgstr ""
-
-#: core/settings/DateTimeVisibility.php:77
-msgid "Date FROM/TO"
-msgstr ""
-
-#: core/settings/DateTimeVisibility.php:43
-msgid "Date Time"
-msgstr ""
-
-#: core/settings/DateTimeVisibility.php:103
-msgid "Date TO"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:173
-msgid "Day"
-msgstr ""
-
-#: core/settings/DateTimeVisibility.php:122
-msgid "Days of the WEEK"
-msgstr ""
-
-#: _pro/settings/PostVisibility.php:288
-msgid "Definited value"
-msgstr ""
-
-#: core/settings/GeneralVisibility.php:77
-msgid ""
-"Determine if the element should be hidden or shown when the conditions are "
-"met."
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:101
-msgid "Dynamic sidebar"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:146
-msgid "Edit Account"
-msgstr ""
-
-#: core/helpers/Notices.php:65
-msgid "Elementor"
-msgstr ""
-
-#: core/settings/UserRoleVisibility.php:61
-#: core/settings/UserMetaVisibility.php:62
-#: core/settings/DateTimeVisibility.php:62
-#: core/settings/BrowserTypeVisiblity.php:69
-#: _pro/settings/FallbackVisibility.php:60
-#: _pro/settings/ConditionalTagsVisibility.php:62
-#: _pro/settings/PostVisibility.php:62
-#: _pro/settings/IpReferrerVisibility.php:62
-msgid "Enable"
-msgstr ""
-
-#: core/settings/GeneralVisibility.php:64
-msgid "Enable Visibility Logic"
-msgstr ""
-
-#: _pro/VisibilityPro.php:74 core/helpers/Resources.php:181
-#: _pro/settings/FallbackVisibility.php:41
-msgid "Fallback"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:109
-msgid "Feed"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:125
-msgid "Front Page"
-msgstr ""
-
-#: core/settings/GeneralVisibility.php:47
-msgid "General"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:84
-msgid "Has Excerpt"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:86
-msgid "Has Nav menu"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:85
-msgid "Has Post Thumbnail"
-msgstr ""
-
-#: _pro/settings/PostVisibility.php:224
-msgid "Has Siblings"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:82
-msgid "Has Tags"
-msgstr ""
-
-#: _pro/settings/PostVisibility.php:236
-msgid "Has Term Buddies"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:83
-msgid "Has Terms"
-msgstr ""
-
-#: core/settings/GeneralVisibility.php:81
-msgid "Hide"
-msgstr ""
-
-#. Description of the plugin
-msgid "Hide or show Elementor widgets based on conditions"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:126
-msgid "Home"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:164
-msgid "Home blog (latest posts)"
-msgstr ""
-
-#: _pro/settings/PostVisibility.php:152
-msgid "How post meta have to satisfy this conditions."
-msgstr ""
-
-#. Author URI of the plugin
-msgid "https://staxwp.com"
-msgstr ""
-
-#. URI of the plugin
-msgid "https://wordpress.org/plugins/visibility-logic-elementor"
-msgstr ""
-
-#: core/settings/GeneralVisibility.php:94
-msgid ""
-"If ALL conditions need to be met or JUST ONE in order to trigger the "
-"hide/show action."
-msgstr ""
-
-#: _pro/settings/PostVisibility.php:136
-msgid "If you want limit visualization by specific meta fields value."
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:179
-msgid "In the Loop"
-msgstr ""
-
-#: _pro/settings/FallbackVisibility.php:112
-msgid "Insert here some content showed if the element is not visible"
-msgstr ""
-
 #: core/helpers/Notices.php:35
 msgid "Install Elementor"
 msgstr ""
 
-#: _pro/VisibilityPro.php:62 core/helpers/Resources.php:169
-#: _pro/settings/IpReferrerVisibility.php:43
-msgid "IP & Referrer"
+#. translators: 1: Plugin name 2: Elementor
+#: core/helpers/Notices.php:66
+#, php-format
+msgid "%1$s requires version %3$s or greater of %2$s plugin."
 msgstr ""
 
-#: _pro/settings/ConditionalTagsVisibility.php:78
-msgid "Is Hierarchical Post Type"
+#: core/helpers/Notices.php:69
+msgid "Elementor"
 msgstr ""
 
-#: _pro/settings/PostVisibility.php:187
-msgid "Is Leaf"
-msgstr ""
-
-#: _pro/settings/PostVisibility.php:199
-msgid "Is Node"
-msgstr ""
-
-#: _pro/settings/PostVisibility.php:163
-msgid "Is Parent"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:79
-msgid "Is Post Type Archive"
-msgstr ""
-
-#: _pro/settings/PostVisibility.php:175
-msgid "Is Root"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:77
-msgid "Is Sticky"
-msgstr ""
-
-#: _pro/settings/PostVisibility.php:284
-msgid "Isset"
-msgstr ""
-
-#: core/settings/GeneralVisibility.php:110
-msgid "Keep HTML/Hide by CSS"
-msgstr ""
-
-#: _pro/settings/IpReferrerVisibility.php:76
-msgid ""
-"List of IPs who will be able to view this element.<br>Separate IPs by comma. "
-"(ex. \"1.1.1.1, 8.8.8.8, 4.4.4.4\")"
-msgstr ""
-
-#: _pro/settings/IpReferrerVisibility.php:89
-msgid ""
-"List of referral websites (one per line). If empty this element will be "
-"visible for all external site."
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:147
-msgid "Lost password"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:178
-msgid "Main Query"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:105
-msgid "Main site"
-msgstr ""
-
-#: _pro/settings/PostVisibility.php:133
-msgid "Meta"
-msgstr ""
-
-#: _pro/settings/PostVisibility.php:147
-msgid "Meta conditions"
-msgstr ""
-
-#: core/settings/UserMetaVisibility.php:93
-msgid "Meta empty"
-msgstr ""
-
-#: core/settings/UserMetaVisibility.php:97
-msgid "Meta not empty"
-msgstr ""
-
-#: core/settings/UserMetaVisibility.php:89
-msgid "Meta Status"
-msgstr ""
-
-#: core/settings/UserMetaVisibility.php:117
-msgid "Meta Value"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:172
-msgid "Month"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:108
-msgid "Multi author"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:104
-msgid "Multisite"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:175
-msgid "New Day"
-msgstr ""
-
-#: core/settings/UserRoleVisibility.php:65
-#: core/settings/UserMetaVisibility.php:66
-#: core/settings/DateTimeVisibility.php:66
-#: core/settings/GeneralVisibility.php:68
-#: core/settings/GeneralVisibility.php:115
-#: core/settings/BrowserTypeVisiblity.php:73
-#: _pro/settings/FallbackVisibility.php:65
-#: _pro/settings/ConditionalTagsVisibility.php:66
-#: _pro/settings/PostVisibility.php:66
-#: _pro/settings/IpReferrerVisibility.php:66
-msgid "No"
-msgstr ""
-
-#: _pro/settings/PostVisibility.php:211
-msgid "Node level"
-msgstr ""
-
-#: _pro/Helpers.php:332
-msgid "None"
-msgstr ""
-
-#: _pro/settings/PostVisibility.php:280
-msgid "Not isset"
-msgstr ""
-
-#: _pro/settings/PostVisibility.php:151
-msgid "Or"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:149
-msgid "Order complete"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:148
-msgid "Order summary"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:122
-#: _pro/settings/ConditionalTagsVisibility.php:129
-msgid "Page"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:133
-msgid "Page Template"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:177
-msgid "Paged"
-msgstr ""
-
-#: _pro/settings/PostVisibility.php:276
-msgid "Parameter Status"
-msgstr ""
-
-#: _pro/settings/PostVisibility.php:304
-msgid "Parameter Value"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:81
-msgid "Pings open"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:74
-msgid "Post"
-msgstr ""
-
-#: _pro/VisibilityPro.php:66 core/helpers/Resources.php:173
-msgid "Post & Page"
-msgstr ""
-
-#: _pro/settings/PostVisibility.php:43 _pro/settings/PostVisibility.php:87
-msgid "Post/Page"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:165
-msgid "Posts page"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:131
-msgid "Preview"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:137
-msgid "Product"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:139
-msgid "Product Category"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:140
-msgid "Product Tag"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:138
-msgid "Product Taxonomy"
-msgstr ""
-
-#: _pro/settings/IpReferrerVisibility.php:86
-msgid "Referral sites"
-msgstr ""
-
-#: _pro/settings/IpReferrerVisibility.php:74
-msgid "Remote IP"
-msgstr ""
-
-#: _pro/settings/FallbackVisibility.php:95
-msgid "Render Template"
-msgstr ""
-
-#: core/settings/UserRoleVisibility.php:74
-msgid "Roles"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:103
-msgid "RTL"
-msgstr ""
-
-#: core/admin/pages/templates/widgets.php:49
-msgid "Save"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:176
-msgid "Search"
-msgstr ""
-
-#: core/settings/DateTimeVisibility.php:125
-msgid "Select days in the week."
-msgstr ""
-
-#: core/settings/UserMetaVisibility.php:75
-msgid "Select Meta:"
-msgstr ""
-
-#: core/settings/DateTimeVisibility.php:75
-msgid "Select Type:"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:136
-msgid "Shop"
-msgstr ""
-
-#: core/settings/GeneralVisibility.php:82
-msgid "Show"
-msgstr ""
-
-#: _pro/settings/FallbackVisibility.php:98
-msgid "Show an Elementor template when the element is hidden."
-msgstr ""
-
-#: _pro/settings/FallbackVisibility.php:63
-msgid "Show something when the element is hidden."
-msgstr ""
-
-#: core/settings/GeneralVisibility.php:76
-msgid "Show/Hide action"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:128
-msgid "Single"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:98
-msgid "Site"
-msgstr ""
-
-#: core/Upgrades.php:215
-msgid "Something went wrong, please check logs."
-msgstr ""
-
-#: _pro/settings/PostVisibility.php:251
-msgid "Specific a Term for current post has friends."
-msgstr ""
-
-#: core/settings/UserMetaVisibility.php:101
-msgid "Specific meta value"
-msgstr ""
-
-#: core/Plugin.php:55
-msgid "Stax Visibility"
-msgstr ""
-
-#: core/admin/Settings.php:49
-msgid "STAX Visibility - Dashboard"
-msgstr ""
-
-#. Author of the plugin
-msgid "StaxWP"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:168
-msgid "Tag"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:166
-#: _pro/settings/PostVisibility.php:102
-msgid "Taxonomy"
-msgstr ""
-
-#: _pro/settings/FallbackVisibility.php:81
-msgid "Template"
-msgstr ""
-
-#: _pro/settings/PostVisibility.php:117
-msgid "Terms"
-msgstr ""
-
-#: _pro/settings/PostVisibility.php:248
-msgid "Terms where find Buddies"
-msgstr ""
-
-#: _pro/settings/FallbackVisibility.php:77
-msgid "Text"
-msgstr ""
-
-#: _pro/settings/FallbackVisibility.php:109
-msgid "Text Fallback"
-msgstr ""
-
-#: _pro/settings/PostVisibility.php:306
-msgid "The specific value of the parameter"
-msgstr ""
-
-#: core/settings/UserMetaVisibility.php:119
-msgid "The specific value of the User Meta"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:174
-msgid "Time"
-msgstr ""
-
-#: core/settings/DateTimeVisibility.php:137
-msgid "Time FROM"
-msgstr ""
-
-#: core/settings/DateTimeVisibility.php:78
-msgid "Time FROM/TO"
-msgstr ""
-
-#: core/settings/DateTimeVisibility.php:150
-msgid "Time TO"
-msgstr ""
-
-#: _pro/settings/ConditionalTagsVisibility.php:110
-msgid "Trackback"
-msgstr ""
-
-#: core/settings/BrowserTypeVisiblity.php:94
-msgid "Trigger visibility for a specific browsers."
-msgstr ""
-
-#: _pro/settings/PostVisibility.php:238
-msgid "Triggered for post grouped in taxonomies with other posts."
-msgstr ""
-
-#: _pro/settings/PostVisibility.php:177
-msgid "Triggered for post of first level (without parent)."
-msgstr ""
-
-#: _pro/settings/PostVisibility.php:201
-msgid "Triggered for post of intermedial level (with parent and child)."
-msgstr ""
-
-#: _pro/settings/PostVisibility.php:189
-msgid "Triggered for post of last level (without children)."
-msgstr ""
-
-#: _pro/settings/PostVisibility.php:165
-msgid "Triggered for post with children."
-msgstr ""
-
-#: _pro/settings/PostVisibility.php:226
-msgid "Triggered for post with siblings."
-msgstr ""
-
-#: core/helpers/Notices.php:76
+#: core/helpers/Notices.php:80
 msgid "Update Elementor Now"
 msgstr ""
 
-#: core/settings/UserRoleVisibility.php:42
-msgid "User"
-msgstr ""
-
-#: core/settings/UserMetaVisibility.php:43 core/helpers/Resources.php:126
-msgid "User Meta"
-msgstr ""
-
-#: core/helpers/Resources.php:121
+#: core/helpers/Resources.php:195
+#: core/settings/UserRoleVisibility.php:38
 msgid "User Role"
 msgstr ""
 
-#: core/admin/layout.php:29
+#: core/helpers/Resources.php:200
+#: core/settings/UserMetaVisibility.php:39
+msgid "User Meta"
+msgstr ""
+
+#: core/helpers/Resources.php:205
+msgid "Date & Time"
+msgstr ""
+
+#: core/helpers/Resources.php:210
+#: core/settings/BrowserTypeVisiblity.php:51
+msgid "Browser Type"
+msgstr ""
+
+#: core/helpers/Resources.php:215
+#: core/settings/DeviceTypeVisibility.php:39
+msgid "Device Type"
+msgstr ""
+
+#: core/helpers/Resources.php:220
+#: core/settings/AcfVisibility.php:39
+msgid "ACF Field"
+msgstr ""
+
+#: core/helpers/Resources.php:276
+msgid "Guests, logged in users or specific roles."
+msgstr ""
+
+#: core/helpers/Resources.php:277
+msgid "Compare a field or meta value of the logged in user."
+msgstr ""
+
+#: core/helpers/Resources.php:278
+msgid "Date range, time of day and days of the week."
+msgstr ""
+
+#: core/helpers/Resources.php:279
+msgid "Chrome, Firefox, Safari, Edge and more."
+msgstr ""
+
+#: core/helpers/Resources.php:280
+msgid "Desktop, tablet or mobile, detected on the server."
+msgstr ""
+
+#: core/helpers/Resources.php:281
+msgid "One ACF field of the current post or page."
+msgstr ""
+
+#: core/helpers/Resources.php:282
+msgid "Visitor IP address and the referring site."
+msgstr ""
+
+#: core/helpers/Resources.php:283
+msgid "Country or city of the visitor (MaxMind)."
+msgstr ""
+
+#: core/helpers/Resources.php:284
+msgid "Several user meta rules combined."
+msgstr ""
+
+#: core/helpers/Resources.php:285
+msgid "Specific posts, pages, post types and terms."
+msgstr ""
+
+#: core/helpers/Resources.php:286
+msgid "Category, tag, author and other archive pages."
+msgstr ""
+
+#: core/helpers/Resources.php:287
+msgid "WordPress conditional tags such as is_front_page."
+msgstr ""
+
+#: core/helpers/Resources.php:288
+msgid "Any Elementor Pro dynamic tag value."
+msgstr ""
+
+#: core/helpers/Resources.php:289
+msgid "Customers who bought products or hold subscriptions."
+msgstr ""
+
+#: core/helpers/Resources.php:290
+msgid "Customers who bought Easy Digital Downloads products."
+msgstr ""
+
+#: core/helpers/Resources.php:291
+msgid "Show text or a template in place of a hidden element."
+msgstr ""
+
+#: core/helpers/Resources.php:292
+msgid "URL parameters such as UTM tags or campaign codes."
+msgstr ""
+
+#: core/helpers/Resources.php:293
+msgid "Current language with WPML, Polylang or TranslatePress."
+msgstr ""
+
+#: core/helpers/Resources.php:294
+msgid "Repeaters, options pages, user and term fields, AND/OR groups."
+msgstr ""
+
+#: core/helpers/Resources.php:306
+msgid "IP & Referrer"
+msgstr ""
+
+#: core/helpers/Resources.php:310
+msgid "Geo Location"
+msgstr ""
+
+#: core/helpers/Resources.php:314
+msgid "Advanced User Meta"
+msgstr ""
+
+#: core/helpers/Resources.php:318
+#: core/Rules.php:278
+msgid "Post & Page"
+msgstr ""
+
+#: core/helpers/Resources.php:322
+msgid "Archive Pages"
+msgstr ""
+
+#: core/helpers/Resources.php:326
+msgid "Conditional Tags"
+msgstr ""
+
+#: core/helpers/Resources.php:330
+msgid "Dynamic Conditions"
+msgstr ""
+
+#: core/helpers/Resources.php:334
+msgid "WooCommerce Users"
+msgstr ""
+
+#: core/helpers/Resources.php:338
+msgid "EDD Users"
+msgstr ""
+
+#: core/helpers/Resources.php:342
+msgid "Fallback"
+msgstr ""
+
+#: core/helpers/Resources.php:346
+msgid "URL Parameters"
+msgstr ""
+
+#: core/helpers/Resources.php:350
+msgid "Language (WPML/Polylang)"
+msgstr ""
+
+#: core/helpers/Resources.php:354
+msgid "Advanced ACF"
+msgstr ""
+
+#: core/helpers/Resources.php:375
+msgid "Guests"
+msgstr ""
+
+#: core/helpers/Resources.php:376
+msgid "Logged in users"
+msgstr ""
+
+#: core/Plugin.php:123
+msgid "Visibility"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:57
+#: core/settings/BrowserTypeVisiblity.php:70
+#: core/settings/DateTimeVisibility.php:69
+#: core/settings/DeviceTypeVisibility.php:57
+#: core/settings/UserMetaVisibility.php:58
+#: core/settings/UserRoleVisibility.php:57
+msgid "Enable"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:60
+#: core/settings/BrowserTypeVisiblity.php:73
+#: core/settings/DateTimeVisibility.php:72
+#: core/settings/DeviceTypeVisibility.php:60
+#: core/settings/GeneralVisibility.php:56
+#: core/settings/GeneralVisibility.php:72
+#: core/settings/GeneralVisibility.php:127
+#: core/settings/OldVersionFallback.php:132
+#: core/settings/UserMetaVisibility.php:61
+#: core/settings/UserRoleVisibility.php:60
+msgid "Yes"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:61
+#: core/settings/BrowserTypeVisiblity.php:74
+#: core/settings/DateTimeVisibility.php:73
+#: core/settings/DeviceTypeVisibility.php:61
+#: core/settings/GeneralVisibility.php:57
+#: core/settings/GeneralVisibility.php:73
+#: core/settings/GeneralVisibility.php:128
+#: core/settings/OldVersionFallback.php:133
+#: core/settings/UserMetaVisibility.php:62
+#: core/settings/UserRoleVisibility.php:61
+msgid "No"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:71
+msgid "Field Source"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:82
+msgid "Checks ACF fields on the current post/page."
+msgstr ""
+
+#: core/settings/AcfVisibility.php:94
+msgid "Field Name"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:96
+msgid "e.g. my_custom_field"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:97
+msgid "Enter the ACF field name or key."
+msgstr ""
+
+#: core/settings/AcfVisibility.php:109
+msgid "Condition"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:112
+msgid "Is empty"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:113
+msgid "Is not empty"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:114
+msgid "Equals"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:115
+msgid "Not equals"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:116
+#: core/settings/UserMetaVisibility.php:99
+msgid "Contains"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:117
+msgid "Is true"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:118
+msgid "Is false"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:132
+msgid "Value"
+msgstr ""
+
+#. translators: 1: link opening tag, 2: link closing tag.
+#: core/settings/AcfVisibility.php:155
 #, php-format
-msgid "Version %s"
+msgid "User, term and options page fields, repeaters and AND/OR groups are in %1$sVisibility Logic Pro%2$s."
 msgstr ""
 
-#: core/admin/Settings.php:50 core/helpers/Notices.php:64
-msgid "Visibility Logic"
+#: core/settings/AcfVisibility.php:173
+msgid "Advanced Custom Fields plugin is not active. This condition will have no effect."
 msgstr ""
 
-#. Name of the plugin
-msgid "Visibility Logic for Elementor"
+#: core/settings/BrowserTypeVisiblity.php:84
+msgid "Browser"
 msgstr ""
 
-#: core/admin/pages/templates/widgets.php:11
-msgid "Visibility Options"
+#: core/settings/BrowserTypeVisiblity.php:98
+msgid "Trigger visibility for specific browsers."
 msgstr ""
 
-#: core/settings/DateTimeVisibility.php:79
+#: core/settings/DateTimeVisibility.php:50
+msgid "Date Time"
+msgstr ""
+
+#: core/settings/DateTimeVisibility.php:85
+msgid "Select Type:"
+msgstr ""
+
+#: core/settings/DateTimeVisibility.php:87
+msgid "Date FROM/TO"
+msgstr ""
+
+#: core/settings/DateTimeVisibility.php:88
+msgid "Time FROM/TO"
+msgstr ""
+
+#: core/settings/DateTimeVisibility.php:89
 msgid "Week Days"
 msgstr ""
 
-#: core/settings/GeneralVisibility.php:111
-msgid ""
-"When the element is hidden, decide if you still want to render the HTML in "
-"the page but hidden using CSS."
+#: core/settings/DateTimeVisibility.php:90
+msgid "Week Days + Time FROM/TO"
 msgstr ""
 
-#: core/admin/pages/Widgets.php:79
-msgid "Widgets"
+#: core/settings/DateTimeVisibility.php:104
+msgid "Date FROM"
 msgstr ""
 
-#: _pro/settings/PostVisibility.php:264
-msgid "With Parameter"
+#: core/settings/DateTimeVisibility.php:118
+msgid "Date TO"
 msgstr ""
 
-#: _pro/settings/PostVisibility.php:266
-msgid "Write here the name of the parameter passed in GET or POST method"
+#: core/settings/DateTimeVisibility.php:139
+msgid "Days of the WEEK"
 msgstr ""
 
-#: _pro/settings/ConditionalTagsVisibility.php:171
-msgid "Year"
+#: core/settings/DateTimeVisibility.php:142
+msgid "Select days in the week."
 msgstr ""
 
-#: core/settings/UserRoleVisibility.php:64
-#: core/settings/UserMetaVisibility.php:65
-#: core/settings/DateTimeVisibility.php:65
-#: core/settings/GeneralVisibility.php:67
-#: core/settings/GeneralVisibility.php:114
-#: core/settings/BrowserTypeVisiblity.php:72
-#: _pro/settings/FallbackVisibility.php:64
-#: _pro/settings/ConditionalTagsVisibility.php:65
-#: _pro/settings/PostVisibility.php:65
-#: _pro/settings/IpReferrerVisibility.php:65
-msgid "Yes"
+#: core/settings/DateTimeVisibility.php:156
+msgid "Time FROM"
+msgstr ""
+
+#: core/settings/DateTimeVisibility.php:170
+msgid "Time TO"
+msgstr ""
+
+#: core/settings/DateTimeVisibility.php:186
+msgid "When picking time that extends over midnight, the condition will be applied just for the selected days. Example: Wednesday 23:00 - 01:00 doesn't mean that the condition will extend from 23:00 Wednesday till 01:00 Thursday. It will get applied only for Wednesday 00:00 - 01:00 and 23:00 - 24:00."
+msgstr ""
+
+#: core/settings/DateTimeVisibility.php:200
+msgid "Dates and times use the site time zone (Settings > General). Now:"
+msgstr ""
+
+#: core/settings/DateTimeVisibility.php:201
+msgid "Times use the site time zone, dates FROM/TO use UTC (Settings > Visibility Logic can switch them to the site time zone). Site time now:"
+msgstr ""
+
+#: core/settings/DeviceTypeVisibility.php:71
+msgid "Device"
+msgstr ""
+
+#: core/settings/DeviceTypeVisibility.php:74
+msgid "Desktop"
+msgstr ""
+
+#: core/settings/DeviceTypeVisibility.php:75
+msgid "Tablet"
+msgstr ""
+
+#: core/settings/DeviceTypeVisibility.php:76
+msgid "Mobile"
+msgstr ""
+
+#: core/settings/DeviceTypeVisibility.php:78
+msgid "Trigger visibility for specific device types."
+msgstr ""
+
+#: core/settings/DeviceTypeVisibility.php:91
+msgid "Detection is based on the User-Agent header. The element HTML is completely removed for non-matching devices."
+msgstr ""
+
+#: core/settings/GeneralVisibility.php:53
+msgid "Enable Visibility Logic"
+msgstr ""
+
+#: core/settings/GeneralVisibility.php:68
+msgid "Hide when empty"
+msgstr ""
+
+#: core/settings/GeneralVisibility.php:69
+msgid "This will hide the entire section if all the widgets inside it are hidden because of Visiblity conditions. Please note that this won't apply if any of the widgets inside the section is hidden via CSS."
+msgstr ""
+
+#: core/settings/GeneralVisibility.php:87
+msgid "Show/Hide action"
+msgstr ""
+
+#: core/settings/GeneralVisibility.php:88
+msgid "Determine if the element should be hidden or shown when the conditions are met."
+msgstr ""
+
+#: core/settings/GeneralVisibility.php:92
+msgid "Hide"
+msgstr ""
+
+#: core/settings/GeneralVisibility.php:93
+msgid "Show"
+msgstr ""
+
+#: core/settings/GeneralVisibility.php:105
+msgid "Conditions Type"
+msgstr ""
+
+#: core/settings/GeneralVisibility.php:106
+msgid "If ALL conditions need to be met or JUST ONE in order to trigger the hide/show action."
+msgstr ""
+
+#: core/settings/GeneralVisibility.php:109
+msgid "All"
+msgstr ""
+
+#: core/settings/GeneralVisibility.php:110
+msgid "At least one"
+msgstr ""
+
+#: core/settings/GeneralVisibility.php:123
+msgid "Keep HTML/Hide by CSS"
+msgstr ""
+
+#: core/settings/GeneralVisibility.php:124
+msgid "When the element is hidden, decide if you still want to render the HTML in the page but hidden using CSS."
+msgstr ""
+
+#: core/settings/OldVersionFallback.php:38
+msgid "Old Version (Deprecated)"
+msgstr ""
+
+#: core/settings/OldVersionFallback.php:129
+msgid "Enable Conditions"
+msgstr ""
+
+#: core/settings/OldVersionFallback.php:143
+msgid "Visible for:"
+msgstr ""
+
+#: core/settings/OldVersionFallback.php:160
+msgid "Hidden for:"
+msgstr ""
+
+#: core/settings/OldVersionFallback.php:176
+msgid "Important Notice"
+msgstr ""
+
+#: core/settings/OldVersionFallback.php:178
+msgid "This is a backwards compatibility for version 1.2.0. If you want to use the new version please enable the option in General tab."
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:73
+msgid "Meta Name"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:76
+msgid "Meta key or Name"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:90
+msgid "Meta Condition"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:91
+msgid "Select the condition that must be met by the meta"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:93
+msgid "None"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:94
+msgid "Empty"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:95
+msgid "Not empty"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:96
+msgid "Is equal to"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:97
+msgid "Is equal to one of"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:98
+msgid "Not equal to"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:100
+msgid "Does not contain"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:101
+msgid "Between"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:102
+msgid "Less than"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:103
+msgid "Greater than"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:104
+msgid "Is array"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:105
+msgid "Is array and contains"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:120
+msgid "Condition Value"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:145
+msgid "Condition Value 2"
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:161
+msgid "Type in comma separated strings."
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:179
+msgid "The value of the selected meta and also the the values of the conditions must be numeric."
+msgstr ""
+
+#: core/settings/UserMetaVisibility.php:198
+msgid "Setting the condition to \"None\" will have no effect."
+msgstr ""
+
+#: core/settings/UserRoleVisibility.php:72
+msgid "Roles"
+msgstr ""
+
+#: core/Singleton.php:64
+#: core/Singleton.php:75
+msgid "Cheatin&#8217; huh?"
+msgstr ""
+
+#: core/Upgrades.php:83
+msgid "Database update required"
+msgstr ""
+
+#. translators: %s: update URL (unused in this sentence).
+#: core/Upgrades.php:89
+msgid "<strong>STAX Visibility Logic</strong> needs to update your database to the latest version."
+msgstr ""
+
+#. translators: %s: update URL.
+#: core/Upgrades.php:97
+#, php-format
+msgid "<a href=\"%s\">Update now</a>"
+msgstr ""
+
+#: core/Upgrades.php:211
+msgid "Awesome, Visibility Logic database is now at the latest version!"
+msgstr ""
+
+#: core/Upgrades.php:217
+msgid "Something went wrong, please check logs."
 msgstr ""

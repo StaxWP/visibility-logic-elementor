@@ -1,0 +1,14 @@
+/.git
+/.gitignore
+/.distignore
+/node_modules
+/tests
+/assets/scss
+/appsero.json
+/composer.json
+/composer.lock
+/package.json
+/package-lock.json
+/postcss.config.js
+/tailwind.config.js
+/phpcs.xml.dist
