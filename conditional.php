@@ -1,14 +1,13 @@
 <?php
 /**
  * Plugin Name: Visibility Logic for Elementor
- * Description: Show or hide Elementor widgets, sections and containers by user role, user meta, date and time, device, browser and ACF fields.
+ * Description: Show or hide Elementor widgets, sections, containers, Elementor 4 elements and blocks by user role, user meta, date and time, device, browser and ACF fields.
  * Plugin URI: https://wordpress.org/plugins/visibility-logic-elementor/
  * Author URI: https://staxwp.com
  * Author: StaxWP
  * Version: 3.0.0
  * Requires at least: 6.0
  * Requires PHP: 7.4
- * Requires Plugins: elementor
  * License: GPLv3
  * License URI: https://www.gnu.org/licenses/gpl-3.0.html
  *
@@ -38,7 +37,6 @@ define( 'STAX_VISIBILITY_CORE_SETTINGS_PATH', STAX_VISIBILITY_CORE_PATH . 'setti
 define( 'STAX_VISIBILITY_HOOK_PREFIX', 'stax_visibility_' );
 define( 'STAX_VISIBILITY_SLUG_PREFIX', 'stax-visibility-' );
 
-require_once __DIR__ . '/vendor/autoload.php';
 require_once STAX_VISIBILITY_CORE_PATH . 'Singleton.php';
 require_once STAX_VISIBILITY_CORE_PATH . 'Plugin.php';
 
@@ -79,26 +77,3 @@ function stax_visibility_activate() {
 }
 
 register_activation_hook( __FILE__, 'stax_visibility_activate' );
-
-/**
- * Initialize the plugin tracker (Appsero, opt-in usage data). Loaded only in the admin and in cron, the only
- * places where it does anything.
- *
- * @return void
- */
-function appsero_init_tracker_visibility_logic_elementor() { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound -- public since 2.x.
-	if ( ! is_admin() && ! wp_doing_cron() ) {
-		return;
-	}
-
-	if ( ! class_exists( 'Appsero\Client' ) ) {
-		require_once __DIR__ . '/vendor/appsero/client/src/Client.php';
-	}
-
-	$client = new Appsero\Client( 'd40e3204-1270-4588-b9ff-37b420fad6b8', 'Visibility Logic for Elementor', __FILE__ );
-
-	// Active insights.
-	$client->insights()->init();
-}
-
-add_action( 'init', 'appsero_init_tracker_visibility_logic_elementor', 1 );
