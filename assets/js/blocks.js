@@ -61,9 +61,9 @@
 		} );
 	}
 
-	function renderField( field, values, set ) {
+	function renderField( field, values, set, disabled ) {
 		var value = values[ field.key ] !== undefined ? values[ field.key ] : defaultOf( field );
-		var common = { key: field.key, label: field.label, help: field.help || undefined, __nextHasNoMarginBottom: true };
+		var common = { key: field.key, label: field.label, help: field.help || undefined, disabled: !! disabled, __nextHasNoMarginBottom: true };
 
 		switch ( field.type ) {
 			case 'switch':
@@ -88,6 +88,7 @@
 							return el( components.CheckboxControl, {
 								key: option.value,
 								label: option.label,
+								disabled: !! disabled,
 								checked: list.indexOf( option.value ) !== -1,
 								__nextHasNoMarginBottom: true,
 								onChange: function ( checked ) {
@@ -160,19 +161,31 @@
 
 			config.conditions.forEach( function ( condition ) {
 				var on = isOn( values[ condition.switch ] );
-				var inner = [
-					renderField( { key: condition.switch, type: 'switch', label: condition.label }, values, set ),
-				];
+				var lock = condition.locked;
+				// Locked (add-on without a license): read-only, saved values kept.
+				var change = lock ? function () {} : set;
+				var inner = [];
+
+				if ( lock ) {
+					inner.push( el( components.Notice, { key: 'lock', status: 'warning', isDismissible: false, className: 'stax-vl-lock',
+						actions: lock.actions.map( function ( action ) {
+							return { label: action.label, url: action.url, noDefaultClasses: false };
+						} ) },
+						el( 'strong', null, lock.title ), lock.text ? el( 'p', null, lock.text ) : null
+					) );
+				}
+
+				inner.push( renderField( { key: condition.switch, type: 'switch', label: condition.label }, values, change, lock ) );
 
 				if ( on ) {
 					condition.fields.forEach( function ( field ) {
 						if ( shown( field, values ) ) {
-							inner.push( renderField( field, values, set ) );
+							inner.push( renderField( field, values, change, lock ) );
 						}
 					} );
 				}
 
-				children.push( el( 'div', { key: condition.slug, className: 'stax-vl-condition' + ( on ? ' is-on' : '' ) }, inner ) );
+				children.push( el( 'div', { key: condition.slug, className: 'stax-vl-condition' + ( on ? ' is-on' : '' ) + ( lock ? ' is-locked' : '' ) }, inner ) );
 			} );
 
 			if ( config.proUrl ) {

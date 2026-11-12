@@ -21,6 +21,8 @@
  * Field keys are setting names without the `stax_visibility_` prefix. Types: switch, select, multiselect, text,
  * textarea, date (Y-m-d H:i), time (HH:mm), list (comma separated, stored as an array). Optional: default,
  * placeholder, help, show_if ( [ 'other_key' => [ values ] ] ), builders ( [ 'blocks', 'atomic' ] ).
+ * Condition-level, optional: `locked` (bool, an add-on without a license: the editors show the condition read-only,
+ * saved values are kept and still apply) and `locked_notice` ( [ 'title', 'text', 'actions' => [ [ 'label', 'url' ] ] ] ).
  *
  * @package Stax\VisibilityLogic
  * @since 3.0.0
@@ -136,6 +138,37 @@ class Conditions {
 				}
 			)
 		);
+	}
+
+	/**
+	 * Lock notice of a locked condition, plain text and http(s) URLs only, or null when the condition is not locked.
+	 *
+	 * @param array $condition Registered condition.
+	 *
+	 * @return array|null title, text, actions ( [ label, url ] ).
+	 */
+	public static function lock_notice( array $condition ) {
+		if ( empty( $condition['locked'] ) ) {
+			return null;
+		}
+
+		$notice  = isset( $condition['locked_notice'] ) && is_array( $condition['locked_notice'] ) ? $condition['locked_notice'] : [];
+		$actions = [];
+
+		foreach ( isset( $notice['actions'] ) ? (array) $notice['actions'] : [] as $action ) {
+			if ( is_array( $action ) && ! empty( $action['label'] ) && ! empty( $action['url'] ) ) {
+				$actions[] = [
+					'label' => wp_strip_all_tags( (string) $action['label'] ),
+					'url'   => esc_url_raw( (string) $action['url'], [ 'http', 'https' ] ),
+				];
+			}
+		}
+
+		return [
+			'title'   => wp_strip_all_tags( isset( $notice['title'] ) ? (string) $notice['title'] : __( 'This condition is locked.', 'visibility-logic-elementor' ) ),
+			'text'    => wp_strip_all_tags( isset( $notice['text'] ) ? (string) $notice['text'] : '' ),
+			'actions' => $actions,
+		];
 	}
 
 	/**

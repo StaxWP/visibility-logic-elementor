@@ -988,6 +988,58 @@ if ( class_exists( '\\Stax\\VisibilityLogic\\Atomic' ) && \Stax\VisibilityLogic\
 	vle_is( 'atomic flexbox hidden: child not printed', 'absent', vle_state( $html, 'at5' ) );
 	wp_set_current_user( 0 );
 	vle_is( 'atomic flexbox, guests only: guest sees it', 'visible', vle_state( vle_render( $atomic_box ), 'afx1' ) );
+	// Locked add-on condition: notice instead of controls, props kept, saved values still apply.
+	$locked_fields = function ( $conditions ) {
+		$conditions['vle_locked'] = [
+			'label'         => 'VLE Locked',
+			'switch'        => 'vle_locked_enabled',
+			'locked'        => true,
+			'locked_notice' => [ 'title' => 'Needs a license' ],
+			'fields'        => [
+				[
+					'key'   => 'vle_locked_value',
+					'type'  => 'text',
+					'label' => 'Value',
+				],
+			],
+		];
+		return $conditions;
+	};
+	$locked_eval   = function ( $options, $settings, $item ) {
+		$settings = $item->get_settings_for_display();
+		if ( ! empty( $settings['stax_visibility_vle_locked_enabled'] ) ) {
+			$options['vle_locked'] = 'open' === $settings['stax_visibility_vle_locked_value'];
+		}
+		return $options;
+	};
+	add_filter( 'stax/visibility/condition_fields', $locked_fields );
+	add_filter( 'stax/visibility/apply_conditions', $locked_eval, 10, 3 );
+	\Stax\VisibilityLogic\Conditions::reset();
+	$locked_schema = \Stax\VisibilityLogic\Atomic::props_schema( [] );
+	vle_is( 'locked condition: props stay in the atomic schema', true, isset( $locked_schema['stax_visibility_vle_locked_enabled'], $locked_schema['stax_visibility_vle_locked_value'] ) );
+	$locked_controls = \Stax\VisibilityLogic\Atomic::controls( [] );
+	$locked_types    = array_map(
+		function ( $c ) {
+			$j = json_decode( wp_json_encode( $c ), true );
+			return $j['value']['type'] . ':' . $j['value']['bind'];
+		},
+		end( $locked_controls )->get_items()
+	);
+	vle_is( 'locked condition: a notice instead of its switch', true, in_array( 'notice:stax_visibility_vle_locked_enabled', $locked_types, true ) && ! in_array( 'switch:stax_visibility_vle_locked_enabled', $locked_types, true ) );
+	vle_is( 'locked condition: its fields have no control', false, in_array( 'text:stax_visibility_vle_locked_value', $locked_types, true ) );
+	wp_set_current_user( 0 );
+	$locked_values = [
+		'enabled'            => true,
+		'show_hide'          => 'yes',
+		'vle_locked_enabled' => true,
+		'vle_locked_value'   => 'closed',
+	];
+	vle_is( 'locked condition: saved atomic values still apply (closed)', 'absent', vle_state( vle_render( $atomic_heading( 'atl1', $locked_values ) ), 'atl1' ) );
+	vle_is( 'locked condition: saved atomic values still apply (open)', 'visible', vle_state( vle_render( $atomic_heading( 'atl2', array_merge( $locked_values, [ 'vle_locked_value' => 'open' ] ) ) ), 'atl2' ) );
+	remove_filter( 'stax/visibility/condition_fields', $locked_fields );
+	remove_filter( 'stax/visibility/apply_conditions', $locked_eval, 10 );
+	\Stax\VisibilityLogic\Conditions::reset();
+
 	$found = \Stax\VisibilityLogic\Rules::find_in_elements( [ $atomic_box, $atomic_heading( 'at6', array_merge( $guest_only, [ 'enabled' => false ] ) ) ] );
 	vle_is( 'scanner reads atomic props (enabled only)', [ 'afx1' ], wp_list_pluck( $found, 'id' ) );
 }

@@ -174,6 +174,7 @@ class Blocks {
 								'label'  => wp_strip_all_tags( (string) $condition['label'] ),
 								'switch' => $condition['switch'],
 								'pro'    => ! empty( $condition['pro'] ),
+								'locked' => Conditions::lock_notice( $condition ),
 								'fields' => self::fields_for_js( $condition['fields'] ),
 							];
 						},

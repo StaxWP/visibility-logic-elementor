@@ -208,6 +208,71 @@ if ( defined( 'STAX_VISIBILITY_PRO_VERSION' ) && class_exists( '\Stax\Visibility
 	unset( $_REQUEST['vlb_q'], $_GET['vlb_q'] );
 }
 
+WP_CLI::log( 'Locked add-on condition (no license): read-only in the editors, saved values still apply' );
+$vlb_locked_fields = function ( $conditions ) {
+	$conditions['vlb_locked'] = [
+		'label'         => 'VLB Locked',
+		'switch'        => 'vlb_locked_enabled',
+		'pro'           => true,
+		'locked'        => true,
+		'locked_notice' => [
+			'title'   => 'Needs a license',
+			'text'    => '<b>Saved rules keep working.</b>',
+			'actions' => [
+				[
+					'label' => 'Activate',
+					'url'   => 'https://example.test/activate',
+				],
+				[
+					'label' => 'Bad',
+					'url'   => 'javascript:alert(1)',
+				],
+			],
+		],
+		'fields'        => [
+			[
+				'key'   => 'vlb_locked_value',
+				'type'  => 'text',
+				'label' => 'Value',
+			],
+		],
+	];
+	return $conditions;
+};
+$vlb_locked_eval   = function ( $options, $settings, $item ) {
+	$settings = $item->get_settings_for_display();
+	if ( ! empty( $settings['stax_visibility_vlb_locked_enabled'] ) ) {
+		$options['vlb_locked'] = 'open' === $settings['stax_visibility_vlb_locked_value'];
+	}
+	return $options;
+};
+add_filter( 'stax/visibility/condition_fields', $vlb_locked_fields );
+add_filter( 'stax/visibility/apply_conditions', $vlb_locked_eval, 10, 3 );
+\Stax\VisibilityLogic\Conditions::reset();
+$vlb_cond   = \Stax\VisibilityLogic\Conditions::fields( 'blocks' );
+$vlb_notice = isset( $vlb_cond['vlb_locked'] ) ? \Stax\VisibilityLogic\Conditions::lock_notice( $vlb_cond['vlb_locked'] ) : null;
+vlb_is( 'lock notice built', 'Needs a license', $vlb_notice ? $vlb_notice['title'] : null );
+vlb_is( 'lock notice text is plain', 'Saved rules keep working.', $vlb_notice ? $vlb_notice['text'] : null );
+vlb_is( 'lock notice keeps only http(s) actions', [ 'https://example.test/activate' ], $vlb_notice ? array_values( array_filter( wp_list_pluck( $vlb_notice['actions'], 'url' ) ) ) : null );
+vlb_is( 'unlocked conditions have no notice', null, \Stax\VisibilityLogic\Conditions::lock_notice( $vlb_cond['user_role'] ) );
+$vlb_locked_values = [
+	'enabled'            => true,
+	'show_hide'          => 'yes',
+	'vlb_locked_enabled' => true,
+	'vlb_locked_value'   => 'closed',
+];
+vlb_is( 'locked condition saved values still apply (closed: hidden)', '', trim( vlb_render( vlb_p( 'LOCKED', $vlb_locked_values ) ) ) );
+vlb_is( 'locked condition saved values still apply (open: shown)', true, false !== strpos( vlb_render( vlb_p( 'LOCKED', array_merge( $vlb_locked_values, [ 'vlb_locked_value' => 'open' ] ) ) ), 'LOCKED' ) );
+global $wp_scripts;
+\Stax\VisibilityLogic\Blocks::editor_assets();
+$vlb_data = isset( $wp_scripts->registered['stax-visibility-blocks']->extra['data'] ) ? $wp_scripts->registered['stax-visibility-blocks']->extra['data'] : '';
+vlb_is( 'block editor config marks the condition locked', true, false !== strpos( $vlb_data, '"slug":"vlb_locked"' ) && false !== strpos( $vlb_data, '"title":"Needs a license"' ) );
+wp_dequeue_script( 'stax-visibility-blocks' );
+wp_dequeue_style( 'stax-visibility-blocks' );
+remove_filter( 'stax/visibility/condition_fields', $vlb_locked_fields );
+remove_filter( 'stax/visibility/apply_conditions', $vlb_locked_eval, 10 );
+\Stax\VisibilityLogic\Conditions::reset();
+
 WP_CLI::log( 'Front-end assets' );
 do_action( 'wp_enqueue_scripts' );
 vlb_is( 'no block editor script on the front end', false, wp_script_is( 'stax-visibility-blocks', 'enqueued' ) );

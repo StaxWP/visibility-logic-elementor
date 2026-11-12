@@ -23,6 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use Elementor\Modules\AtomicWidgets\Controls\Section;
 use Elementor\Modules\AtomicWidgets\Controls\Types\Chips_Control;
+use Elementor\Modules\AtomicWidgets\Controls\Types\Notice_Control;
 use Elementor\Modules\AtomicWidgets\Controls\Types\Select_Control;
 use Elementor\Modules\AtomicWidgets\Controls\Types\Switch_Control;
 use Elementor\Modules\AtomicWidgets\Controls\Types\Text_Control;
@@ -167,6 +168,15 @@ class Atomic {
 		$items = [];
 
 		foreach ( self::field_plan() as $item ) {
+			if ( ! empty( $item['locked'] ) ) {
+				// Locked condition (add-on without a license): a notice instead of its controls. Its props stay in
+				// the schema, so saved values are kept and still apply.
+				if ( isset( $item['notice'] ) && class_exists( Notice_Control::class ) ) {
+					$items[] = self::lock_control( $item['field'], $item['notice'] );
+				}
+				continue;
+			}
+
 			$items[] = self::control( $item['field'] );
 		}
 
@@ -194,6 +204,8 @@ class Atomic {
 		}
 
 		foreach ( Conditions::fields( 'atomic' ) as $condition ) {
+			$notice = Conditions::lock_notice( $condition );
+
 			$plan[] = [
 				'field'   => [
 					'key'   => $condition['switch'],
@@ -201,6 +213,8 @@ class Atomic {
 					'label' => $condition['label'],
 				],
 				'depends' => [ 'enabled' => true ],
+				'locked'  => null !== $notice,
+				'notice'  => $notice,
 			];
 
 			foreach ( $condition['fields'] as $field ) {
@@ -216,6 +230,7 @@ class Atomic {
 				$plan[] = [
 					'field'   => $field,
 					'depends' => $depends,
+					'locked'  => null !== $notice,
 				];
 			}
 		}
@@ -245,6 +260,28 @@ class Atomic {
 		}
 
 		return $manager->get();
+	}
+
+	/**
+	 * Notice shown instead of a locked condition's controls (bound to its switch prop).
+	 *
+	 * @param array $field  The condition's switch field.
+	 * @param array $notice Conditions::lock_notice().
+	 *
+	 * @return object
+	 */
+	private static function lock_control( array $field, array $notice ) {
+		$control = Notice_Control::bind_to( Singleton::SECTION_PREFIX . $field['key'] )
+			->set_label( wp_strip_all_tags( (string) $field['label'] ) )
+			->set_notice_type( 'warning' )
+			->set_heading( wp_strip_all_tags( (string) $field['label'] ) . ': ' . $notice['title'] )
+			->set_content( $notice['text'] );
+
+		if ( ! empty( $notice['actions'][0] ) ) {
+			$control->set_button_text( $notice['actions'][0]['label'] )->set_button_url( $notice['actions'][0]['url'] );
+		}
+
+		return $control;
 	}
 
 	/**
