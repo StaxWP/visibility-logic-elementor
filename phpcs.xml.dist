@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<ruleset name="Visibility Logic for Elementor">
+	<description>WordPress coding standards for Visibility Logic. Run with a phpcs that has WPCS 3 and PHPCompatibilityWP installed (not bundled).</description>
+
+	<file>conditional.php</file>
+	<file>core</file>
+	<file>tests</file>
+
+	<arg name="extensions" value="php"/>
+	<arg name="colors"/>
+	<arg value="sp"/>
+
+	<config name="minimum_wp_version" value="6.0"/>
+	<config name="testVersion" value="7.4-"/>
+
+	<rule ref="WordPress-Extra">
+		<!-- Existing public file and class names (PSR-4 style) are kept for backward compatibility. -->
+		<exclude name="WordPress.Files.FileName"/>
+		<exclude name="Universal.Arrays.DisallowShortArraySyntax"/>
+		<!-- Hook names `stax/visibility/*` are part of the public API since 2.x. -->
+		<exclude name="WordPress.NamingConventions.ValidHookName.UseUnderscores"/>
+	</rule>
+	<rule ref="WordPress-Docs">
+		<exclude name="Squiz.Commenting.FileComment.Missing"/>
+		<exclude name="Squiz.Commenting.InlineComment.InvalidEndChar"/>
+	</rule>
+	<rule ref="PHPCompatibilityWP"/>
+
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="visibility-logic-elementor"/>
+			</property>
+		</properties>
+	</rule>
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="stax_visibility"/>
+				<element value="stax_vl"/>
+				<element value="Stax\VisibilityLogic"/>
+				<element value="STAX_VISIBILITY"/>
+			</property>
+		</properties>
+		<!-- The test file runs through wp eval-file, its helpers live there only. -->
+		<exclude-pattern>tests/*</exclude-pattern>
+	</rule>
+</ruleset>
