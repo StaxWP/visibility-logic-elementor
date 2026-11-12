@@ -83,7 +83,7 @@ Edit your page with Elementor, select any widget, go to the **Visibility** tab, 
 Yes. Enable Visibility Logic on any widget, section or container, go to User Role conditions and select "Logged in users". The element will only be visible to authenticated users. Guests will see nothing (or a fallback message with Pro).
 
 = How do I schedule content to show at a specific date and time? =
-Use the **Date & Time** condition. You can set a "From" and "To" date to display content only during a specific period, a time window, or days of the week. This is useful for sales, events, promotions or limited-time offers. Times of day use the site time zone (Settings > General). Date ranges use the site time zone on new installs; sites updated from 2.x keep reading them as UTC until **Read Date FROM and Date TO in the site time zone** is turned on in Settings > Visibility Logic.
+Use the **Date & Time** condition. You can set a "From" and "To" date to display content only during a specific period, a time window, or days of the week. This is useful for sales, events, promotions or limited-time offers. Times of day use the site time zone (Settings > General). Date FROM and Date TO are read as UTC, as in every earlier version; to read them in the site time zone, turn on **Read Date FROM and Date TO in the site time zone** in Settings > Visibility Logic (this moves existing schedules by the site's UTC offset).
 
 = Does it work with Elementor containers and Flexbox? =
 Yes. Visibility Logic fully supports Elementor's Flexbox containers, classic sections, and nested containers. You can also enable "Hide when empty" on a container to automatically hide it when all child widgets are hidden by visibility conditions.
@@ -110,7 +110,7 @@ By default, hidden elements are completely removed from the page HTML. If you ne
 No. Conditions are checked on the server only for elements that have Visibility Logic turned on, once per element. No CSS or JavaScript is added to your pages, and hidden elements are removed before the page is sent to the browser.
 
 = Is it compatible with caching plugins? =
-Yes, with one rule: the visitor must reach WordPress. Since 3.0, Elementor's element cache stays on for pages with visibility rules: only the elements with rules are rendered on every request, the rest of the page comes from the cache. Full-page caches (WP Rocket, LiteSpeed Cache, Cloudflare APO and similar) store one copy of a page for everyone, so exclude pages with user, device, date or URL based rules from them, or serve logged-in users without the page cache (the default in most caching plugins).
+Yes, with one rule: the visitor must reach WordPress. Pages with visibility rules skip Elementor's element cache, as in earlier versions. New in 3.0, **Keep Elementor's element cache on for pages with rules** (Settings > Visibility Logic; on for new installs) renders only the elements with rules on every request and serves the rest of the page from the cache, which is much faster. Full-page caches (WP Rocket, LiteSpeed Cache, Cloudflare APO and similar) store one copy of a page for everyone, so exclude pages with user, device, date or URL based rules from them, or serve logged-in users without the page cache (the default in most caching plugins).
 
 = Does it work with Elementor 4 and the new atomic elements? =
 Visibility Logic needs Elementor 3.5 or newer and is tested with Elementor 3.21, 3.35 and 4.4. Widgets, sections and containers (flexbox and grid) get the Visibility tab. The new atomic elements of Elementor 4 (the V4 editor) do not have the classic panel tabs, so the Visibility tab is not available on them yet; elements inside a classic container with rules are hidden with it.
@@ -148,20 +148,21 @@ Visibility Logic Pro:
 == Changelog ==
 
 = 3.0.0 =
+Updating keeps your site working exactly as before: every saved rule renders the same, and each newer behaviour below is an option in Settings > Visibility Logic (on by default only for new installs, except the time zone option, which is always opt-in).
+
 * NEW: Settings > Visibility Logic is the single panel for the free plugin and Visibility Logic Pro (conditions, Pro settings, Pro license), redesigned with the native WordPress admin look, keyboard and screen reader friendly.
 * NEW: Clear free and Pro overview: every condition with a short description, Pro conditions marked.
 * NEW: Rules in use: list of every page, post and template with visibility rules and the conditions they use.
 * NEW: Read-only WordPress Abilities `visibility-logic/list-rules` and `visibility-logic/list-conditions` (WordPress 6.9+, MCP Adapter).
 * NEW: WP-CLI commands `wp visibility-logic rules` and `wp visibility-logic conditions`.
-* NEW: Setting to read Date FROM/TO in the site time zone (on for new installs; updated sites keep the 2.x behaviour until it is turned on).
+* NEW: Option "Keep Elementor's element cache on for pages with rules": only elements with rules are rendered per request (a 300-widget test page went from about 177 ms to 60 ms per render, and Elementor no longer rewrites its cache on every view). On for new installs, opt-in for updated sites.
+* NEW: Option "Hide when empty: count widgets placed directly in a container": fixes containers that were always hidden when their widgets sat directly in them. On for new installs, opt-in for updated sites (turning it on can make such containers appear).
+* NEW: Option to read Date FROM/TO in the site time zone instead of UTC. Opt-in for every site.
 * NEW: Filter `stax/visibility/device_type` to override the detected device (for example from a CDN header).
-* Improved: Performance. Elementor's element cache stays on for pages with rules: only elements with rules are rendered per request (a 300-widget test page went from about 177 ms to 60 ms per render, and no more cache writes on every view). Each element's rules are checked once per request, the User-Agent once per request.
-* Improved: No get_plugins() scan on front-end requests, no admin assets outside the plugin's screens, usage tracking client loaded only in the admin.
+* Improved: Each element's rules are checked once per request, the User-Agent once per request; no get_plugins() scan on front-end requests; no admin assets outside the plugin's screens; usage tracking client loaded only in the admin.
 * Improved: Compatibility with PHP 8.1 to 8.5 (no deprecations), WordPress 6.x to 7.1, Elementor 3.x and 4.x (tested with 3.21, 3.35 and 4.4) and Elementor Pro 4.4. Declares `Requires Plugins: elementor`.
-* Fix: "Hide when empty" hid a container whose widgets sit directly in it even when some of them were visible.
 * Fix: Saving the options with an expired form no longer causes a fatal error.
-* Security: Stricter checks on the editor search requests, prepared SQL, escaped admin output; the password hash and activation key are no longer offered as user fields.
-* Backward compatible: saved element settings, including 1.x settings, render the same; all 2.x hooks are unchanged.
+* Security: Stricter checks on the editor search requests, prepared SQL, escaped admin output; the password hash and activation key are no longer offered in the User Meta field list (rules saved with them keep working).
 
 = 2.5.1 =
 * Fix: Corrected the Pro/admin URL used on the settings page.

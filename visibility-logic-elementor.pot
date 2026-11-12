@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-12T06:50:16+00:00\n"
+"POT-Creation-Date: 2026-11-12T07:42:09+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: visibility-logic-elementor\n"
@@ -82,7 +82,7 @@ msgstr ""
 
 #: core/admin/layout.php:26
 #: core/admin/pages/templates/options.php:48
-#: core/admin/pages/templates/options.php:94
+#: core/admin/pages/templates/options.php:118
 msgid "Pro"
 msgstr ""
 
@@ -139,7 +139,7 @@ msgstr ""
 #: core/admin/layout.php:99
 #: core/admin/layout.php:108
 #: core/admin/layout.php:109
-#: core/admin/pages/templates/options.php:104
+#: core/admin/pages/templates/options.php:128
 msgid "(opens in a new tab)"
 msgstr ""
 
@@ -184,7 +184,7 @@ msgstr ""
 msgid "Sorry, you are not allowed to do that."
 msgstr ""
 
-#: core/admin/pages/Options.php:106
+#: core/admin/pages/Options.php:115
 #: core/admin/pages/templates/options.php:27
 #: core/admin/pages/templates/usage.php:31
 msgid "Conditions"
@@ -218,22 +218,47 @@ msgstr ""
 #. translators: %s: time zone name.
 #: core/admin/pages/templates/options.php:73
 #, php-format
-msgid "Recommended. Site time zone: %s. Versions before 3.0 read these dates as UTC; sites that update keep that until this box is checked, so check your scheduled elements after turning it on."
+msgid "Site time zone: %s. Off by default: Date FROM and Date TO are read as UTC, as in every version before 3.0, while times of day already use the site time zone. Turning it on moves existing schedules by the difference between UTC and the site time zone, so check scheduled elements after changing it."
 msgstr ""
 
-#: core/admin/pages/templates/options.php:82
-msgid "Save Changes"
+#: core/admin/pages/templates/options.php:81
+#: core/settings/GeneralVisibility.php:68
+msgid "Hide when empty"
 msgstr ""
 
-#: core/admin/pages/templates/options.php:86
-msgid "More conditions in Pro"
+#: core/admin/pages/templates/options.php:85
+msgid "Count widgets placed directly in a container"
 msgstr ""
 
 #: core/admin/pages/templates/options.php:88
+msgid "Recommended. Before 3.0, \"Hide when empty\" only looked at widgets inside inner containers or columns, so a container holding its widgets directly was always hidden. Sites that update keep that behaviour until this box is checked; containers that were hidden that way will start to show."
+msgstr ""
+
+#: core/admin/pages/templates/options.php:93
+msgid "Elementor cache"
+msgstr ""
+
+#: core/admin/pages/templates/options.php:97
+msgid "Keep Elementor's element cache on for pages with rules"
+msgstr ""
+
+#: core/admin/pages/templates/options.php:100
+msgid "Recommended, much faster. Only the elements with visibility rules are rendered on every visit; the rest of the page comes from Elementor's cache. Before 3.0 the whole page skipped the cache, so other dynamic widgets on those pages were also rendered on every visit; with this on, they follow their own Elementor cache settings. Changing it clears Elementor's element cache."
+msgstr ""
+
+#: core/admin/pages/templates/options.php:106
+msgid "Save Changes"
+msgstr ""
+
+#: core/admin/pages/templates/options.php:110
+msgid "More conditions in Pro"
+msgstr ""
+
+#: core/admin/pages/templates/options.php:112
 msgid "Visibility Logic Pro adds these to the same Visibility tab. Everything above stays free."
 msgstr ""
 
-#: core/admin/pages/templates/options.php:103
+#: core/admin/pages/templates/options.php:127
 msgid "Compare free and Pro on staxwp.com"
 msgstr ""
 
@@ -340,169 +365,169 @@ msgstr ""
 msgid "Update Elementor Now"
 msgstr ""
 
-#: core/helpers/Resources.php:195
+#: core/helpers/Resources.php:240
 #: core/settings/UserRoleVisibility.php:38
 msgid "User Role"
 msgstr ""
 
-#: core/helpers/Resources.php:200
+#: core/helpers/Resources.php:245
 #: core/settings/UserMetaVisibility.php:39
 msgid "User Meta"
 msgstr ""
 
-#: core/helpers/Resources.php:205
+#: core/helpers/Resources.php:250
 msgid "Date & Time"
 msgstr ""
 
-#: core/helpers/Resources.php:210
+#: core/helpers/Resources.php:255
 #: core/settings/BrowserTypeVisiblity.php:51
 msgid "Browser Type"
 msgstr ""
 
-#: core/helpers/Resources.php:215
+#: core/helpers/Resources.php:260
 #: core/settings/DeviceTypeVisibility.php:39
 msgid "Device Type"
 msgstr ""
 
-#: core/helpers/Resources.php:220
+#: core/helpers/Resources.php:265
 #: core/settings/AcfVisibility.php:39
 msgid "ACF Field"
 msgstr ""
 
-#: core/helpers/Resources.php:276
+#: core/helpers/Resources.php:321
 msgid "Guests, logged in users or specific roles."
 msgstr ""
 
-#: core/helpers/Resources.php:277
+#: core/helpers/Resources.php:322
 msgid "Compare a field or meta value of the logged in user."
 msgstr ""
 
-#: core/helpers/Resources.php:278
+#: core/helpers/Resources.php:323
 msgid "Date range, time of day and days of the week."
 msgstr ""
 
-#: core/helpers/Resources.php:279
+#: core/helpers/Resources.php:324
 msgid "Chrome, Firefox, Safari, Edge and more."
 msgstr ""
 
-#: core/helpers/Resources.php:280
+#: core/helpers/Resources.php:325
 msgid "Desktop, tablet or mobile, detected on the server."
 msgstr ""
 
-#: core/helpers/Resources.php:281
+#: core/helpers/Resources.php:326
 msgid "One ACF field of the current post or page."
 msgstr ""
 
-#: core/helpers/Resources.php:282
+#: core/helpers/Resources.php:327
 msgid "Visitor IP address and the referring site."
 msgstr ""
 
-#: core/helpers/Resources.php:283
+#: core/helpers/Resources.php:328
 msgid "Country or city of the visitor (MaxMind)."
 msgstr ""
 
-#: core/helpers/Resources.php:284
+#: core/helpers/Resources.php:329
 msgid "Several user meta rules combined."
 msgstr ""
 
-#: core/helpers/Resources.php:285
+#: core/helpers/Resources.php:330
 msgid "Specific posts, pages, post types and terms."
 msgstr ""
 
-#: core/helpers/Resources.php:286
+#: core/helpers/Resources.php:331
 msgid "Category, tag, author and other archive pages."
 msgstr ""
 
-#: core/helpers/Resources.php:287
+#: core/helpers/Resources.php:332
 msgid "WordPress conditional tags such as is_front_page."
 msgstr ""
 
-#: core/helpers/Resources.php:288
+#: core/helpers/Resources.php:333
 msgid "Any Elementor Pro dynamic tag value."
 msgstr ""
 
-#: core/helpers/Resources.php:289
+#: core/helpers/Resources.php:334
 msgid "Customers who bought products or hold subscriptions."
 msgstr ""
 
-#: core/helpers/Resources.php:290
+#: core/helpers/Resources.php:335
 msgid "Customers who bought Easy Digital Downloads products."
 msgstr ""
 
-#: core/helpers/Resources.php:291
+#: core/helpers/Resources.php:336
 msgid "Show text or a template in place of a hidden element."
 msgstr ""
 
-#: core/helpers/Resources.php:292
+#: core/helpers/Resources.php:337
 msgid "URL parameters such as UTM tags or campaign codes."
 msgstr ""
 
-#: core/helpers/Resources.php:293
+#: core/helpers/Resources.php:338
 msgid "Current language with WPML, Polylang or TranslatePress."
 msgstr ""
 
-#: core/helpers/Resources.php:294
+#: core/helpers/Resources.php:339
 msgid "Repeaters, options pages, user and term fields, AND/OR groups."
 msgstr ""
 
-#: core/helpers/Resources.php:306
+#: core/helpers/Resources.php:351
 msgid "IP & Referrer"
 msgstr ""
 
-#: core/helpers/Resources.php:310
+#: core/helpers/Resources.php:355
 msgid "Geo Location"
 msgstr ""
 
-#: core/helpers/Resources.php:314
+#: core/helpers/Resources.php:359
 msgid "Advanced User Meta"
 msgstr ""
 
-#: core/helpers/Resources.php:318
+#: core/helpers/Resources.php:363
 #: core/Rules.php:278
 msgid "Post & Page"
 msgstr ""
 
-#: core/helpers/Resources.php:322
+#: core/helpers/Resources.php:367
 msgid "Archive Pages"
 msgstr ""
 
-#: core/helpers/Resources.php:326
+#: core/helpers/Resources.php:371
 msgid "Conditional Tags"
 msgstr ""
 
-#: core/helpers/Resources.php:330
+#: core/helpers/Resources.php:375
 msgid "Dynamic Conditions"
 msgstr ""
 
-#: core/helpers/Resources.php:334
+#: core/helpers/Resources.php:379
 msgid "WooCommerce Users"
 msgstr ""
 
-#: core/helpers/Resources.php:338
+#: core/helpers/Resources.php:383
 msgid "EDD Users"
 msgstr ""
 
-#: core/helpers/Resources.php:342
+#: core/helpers/Resources.php:387
 msgid "Fallback"
 msgstr ""
 
-#: core/helpers/Resources.php:346
+#: core/helpers/Resources.php:391
 msgid "URL Parameters"
 msgstr ""
 
-#: core/helpers/Resources.php:350
+#: core/helpers/Resources.php:395
 msgid "Language (WPML/Polylang)"
 msgstr ""
 
-#: core/helpers/Resources.php:354
+#: core/helpers/Resources.php:399
 msgid "Advanced ACF"
 msgstr ""
 
-#: core/helpers/Resources.php:375
+#: core/helpers/Resources.php:420
 msgid "Guests"
 msgstr ""
 
-#: core/helpers/Resources.php:376
+#: core/helpers/Resources.php:421
 msgid "Logged in users"
 msgstr ""
 
@@ -706,10 +731,6 @@ msgstr ""
 
 #: core/settings/GeneralVisibility.php:53
 msgid "Enable Visibility Logic"
-msgstr ""
-
-#: core/settings/GeneralVisibility.php:68
-msgid "Hide when empty"
 msgstr ""
 
 #: core/settings/GeneralVisibility.php:69
