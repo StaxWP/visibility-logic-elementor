@@ -46,7 +46,6 @@ class ProVisibility extends Singleton {
 			$element->end_controls_section();
 		}
 	}
-
 }
 
 ProVisibility::instance();

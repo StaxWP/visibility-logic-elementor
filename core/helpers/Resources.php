@@ -1,4 +1,9 @@
 <?php
+/**
+ * Shared helpers: plugin state, condition list, visitor detection, templates.
+ *
+ * @package Stax\VisibilityLogic
+ */
 
 namespace Stax\VisibilityLogic;
 
@@ -9,31 +14,57 @@ if ( ! defined( 'ABSPATH' ) ) {
 final class Resources extends Singleton {
 
 	/**
-	 * @param $plugin_slug
+	 * Per-request cache of the visitor detection.
+	 *
+	 * @var array
+	 */
+	private static $detected = [];
+
+	/**
+	 * Whether a plugin is active on this site or network wide.
+	 *
+	 * @param string $plugin_slug Plugin basename, e.g. `elementor/elementor.php`.
 	 *
 	 * @return bool
 	 */
 	public function is_plugin_active( $plugin_slug ) {
-		$active_plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ) );
+		$active_plugins = (array) apply_filters( 'active_plugins', get_option( 'active_plugins', [] ) ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- core filter.
 
-		foreach ( $active_plugins as $plugin ) {
-			if ( $plugin === $plugin_slug ) {
-				return true;
-			}
+		if ( in_array( $plugin_slug, $active_plugins, true ) ) {
+			return true;
+		}
+
+		if ( is_multisite() ) {
+			$network = (array) get_site_option( 'active_sitewide_plugins', [] );
+
+			return isset( $network[ $plugin_slug ] );
 		}
 
 		return false;
 	}
 
 	/**
-	 * @param $plugin_path
+	 * Whether a plugin is installed.
+	 *
+	 * Checks the plugin file instead of `get_plugins()`, which reads the headers of every installed plugin and is
+	 * not loaded on the front end.
+	 *
+	 * @param string $plugin_path Plugin basename.
 	 *
 	 * @return bool
 	 */
 	public function is_plugin_installed( $plugin_path ) {
-		$plugins = get_plugins();
+		if ( $this->is_plugin_active( $plugin_path ) ) {
+			return true;
+		}
 
-		return isset( $plugins[ $plugin_path ] );
+		$plugin_path = wp_normalize_path( (string) $plugin_path );
+
+		if ( '' === $plugin_path || false !== strpos( $plugin_path, '..' ) ) {
+			return false;
+		}
+
+		return file_exists( trailingslashit( WP_PLUGIN_DIR ) . $plugin_path );
 	}
 
 	/**
@@ -50,16 +81,75 @@ final class Resources extends Singleton {
 			return;
 		}
 
-		extract( $args );
+		$file = STAX_VISIBILITY_PATH . trim( $name ) . '.php';
+
+		if ( false !== strpos( $name, '..' ) || ! file_exists( $file ) ) {
+			return;
+		}
+
+		extract( $args ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract -- template variables.
 
 		ob_start();
-		include STAX_VISIBILITY_PATH . trim( $name ) . '.php';
+		include $file;
 
 		if ( $echo ) {
-			echo ob_get_clean();
+			echo ob_get_clean(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- templates escape their output.
 		} else {
 			return ob_get_clean();
 		}
+	}
+
+	/**
+	 * Option holding the general settings of the free plugin.
+	 */
+	const SETTINGS_OPTION = 'stax_visibility_general';
+
+	/**
+	 * Default general settings.
+	 *
+	 * `site_timezone`: read Date FROM/TO in the site time zone (2.x read them as UTC). New installs get it on
+	 * (see Plugin activation), updated sites keep the 2.x behaviour until it is switched on.
+	 *
+	 * @return array
+	 */
+	public static function default_settings() {
+		return [
+			'site_timezone' => false,
+		];
+	}
+
+	/**
+	 * A general setting.
+	 *
+	 * @param string $key     Key.
+	 * @param mixed  $default Default when unknown.
+	 *
+	 * @return mixed
+	 */
+	public static function get_setting( $key, $default = null ) {
+		$settings = wp_parse_args( (array) get_option( self::SETTINGS_OPTION, [] ), self::default_settings() );
+
+		return array_key_exists( $key, $settings ) ? $settings[ $key ] : $default;
+	}
+
+	/**
+	 * Visibility Logic Pro page on staxwp.com.
+	 *
+	 * @param string $context Where the link is shown (analytics only).
+	 *
+	 * @return string
+	 */
+	public static function pro_url( $context = 'panel' ) {
+		$url = apply_filters( STAX_VISIBILITY_HOOK_PREFIX . 'admin_site_url', 'https://staxwp.com/go/visibility-logic' );
+
+		return add_query_arg(
+			[
+				'utm_source'   => 'visibility-logic-free',
+				'utm_medium'   => sanitize_key( $context ),
+				'utm_campaign' => 'upgrade',
+			],
+			$url
+		);
 	}
 
 	/**
@@ -81,7 +171,16 @@ final class Resources extends Singleton {
 	public static function is_current_page( $page ) {
 		$page = STAX_VISIBILITY_SLUG_PREFIX . $page;
 
-		return isset( $_GET['page'] ) && $_GET['page'] === $page;
+		return self::current_page() === $page;
+	}
+
+	/**
+	 * Current admin page slug (`page` query argument).
+	 *
+	 * @return string
+	 */
+	public static function current_page() {
+		return isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read only.
 	}
 
 	/**
@@ -132,15 +231,68 @@ final class Resources extends Singleton {
 			);
 		}
 
-		$options = apply_filters( 'stax/visibility/options', $options );
+		$options = apply_filters( 'stax/visibility/options', $options ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- public 2.x hook name.
 
-		$disabled_options = get_option( '_stax_visibility_disabled_options', [] );
+		$descriptions = self::get_option_descriptions();
+
+		foreach ( $options as $slug => $option ) {
+			if ( empty( $option['description'] ) && isset( $descriptions[ $slug ] ) ) {
+				$options[ $slug ]['description'] = $descriptions[ $slug ];
+			}
+		}
+
+		$disabled_options = (array) get_option( '_stax_visibility_disabled_options', [] );
 
 		foreach ( $options as $slug => $option ) {
 			$options[ $slug ]['status'] = ! isset( $disabled_options[ $slug ] );
 		}
 
 		return $options;
+	}
+
+	/**
+	 * Conditions included in the free plugin.
+	 */
+	const FREE_CONDITIONS = [ 'user-role', 'user-meta', 'date-time', 'browser-type', 'device-type', 'acf' ];
+
+	/**
+	 * Whether a condition belongs to the free plugin.
+	 *
+	 * @param string $slug Condition slug.
+	 *
+	 * @return bool
+	 */
+	public static function is_free_condition( $slug ) {
+		return in_array( $slug, self::FREE_CONDITIONS, true );
+	}
+
+	/**
+	 * Short descriptions of the conditions, shown in Settings > Visibility Logic.
+	 *
+	 * @return array
+	 */
+	public static function get_option_descriptions() {
+		return [
+			'user-role'          => __( 'Guests, logged in users or specific roles.', 'visibility-logic-elementor' ),
+			'user-meta'          => __( 'Compare a field or meta value of the logged in user.', 'visibility-logic-elementor' ),
+			'date-time'          => __( 'Date range, time of day and days of the week.', 'visibility-logic-elementor' ),
+			'browser-type'       => __( 'Chrome, Firefox, Safari, Edge and more.', 'visibility-logic-elementor' ),
+			'device-type'        => __( 'Desktop, tablet or mobile, detected on the server.', 'visibility-logic-elementor' ),
+			'acf'                => __( 'One ACF field of the current post or page.', 'visibility-logic-elementor' ),
+			'ip-referrer'        => __( 'Visitor IP address and the referring site.', 'visibility-logic-elementor' ),
+			'geo-location'       => __( 'Country or city of the visitor (MaxMind).', 'visibility-logic-elementor' ),
+			'advanced-user-meta' => __( 'Several user meta rules combined.', 'visibility-logic-elementor' ),
+			'post-page'          => __( 'Specific posts, pages, post types and terms.', 'visibility-logic-elementor' ),
+			'archive'            => __( 'Category, tag, author and other archive pages.', 'visibility-logic-elementor' ),
+			'conditional-tags'   => __( 'WordPress conditional tags such as is_front_page.', 'visibility-logic-elementor' ),
+			'dynamic-conditions' => __( 'Any Elementor Pro dynamic tag value.', 'visibility-logic-elementor' ),
+			'woocommerce-users'  => __( 'Customers who bought products or hold subscriptions.', 'visibility-logic-elementor' ),
+			'edd-users'          => __( 'Customers who bought Easy Digital Downloads products.', 'visibility-logic-elementor' ),
+			'fallback'           => __( 'Show text or a template in place of a hidden element.', 'visibility-logic-elementor' ),
+			'query-string'       => __( 'URL parameters such as UTM tags or campaign codes.', 'visibility-logic-elementor' ),
+			'language'           => __( 'Current language with WPML, Polylang or TranslatePress.', 'visibility-logic-elementor' ),
+			'advanced-acf'       => __( 'Repeaters, options pages, user and term fields, AND/OR groups.', 'visibility-logic-elementor' ),
+		];
 	}
 
 	/**
@@ -208,20 +360,20 @@ final class Resources extends Singleton {
 	/**
 	 * Get user roles
 	 *
-	 * @return void
+	 * @return array
 	 */
 	public static function get_user_roles() {
 		global $wp_roles;
 
 		if ( ! isset( $wp_roles ) ) {
-			$wp_roles = new \WP_Roles();
+			$wp_roles = new \WP_Roles(); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- same as wp_roles().
 		}
 		$all_roles      = $wp_roles->roles;
-		$editable_roles = apply_filters( 'editable_roles', $all_roles );
+		$editable_roles = apply_filters( 'editable_roles', $all_roles ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- core filter.
 
 		$data = [
-			'ecl-guest' => 'Guests',
-			'ecl-user'  => 'Logged in users',
+			'ecl-guest' => __( 'Guests', 'visibility-logic-elementor' ),
+			'ecl-user'  => __( 'Logged in users', 'visibility-logic-elementor' ),
 		];
 
 		foreach ( $editable_roles as $k => $role ) {
@@ -232,64 +384,55 @@ final class Resources extends Singleton {
 	}
 
 	/**
-	 * Get borwser type
+	 * Visitor User-Agent (sanitized).
 	 *
 	 * @return string
 	 */
+	private static function user_agent() {
+		return isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
+	}
+
+	/**
+	 * Forget the per-request visitor detection (tests).
+	 *
+	 * @return void
+	 */
+	public static function reset_cache() {
+		self::$detected = [];
+	}
+
 	/**
 	 * Get device type based on User-Agent
+	 *
+	 * Filter `stax/visibility/device_type` can change the answer (for example from a CDN device header).
 	 *
 	 * @return string desktop|tablet|mobile
 	 */
 	public static function get_device_type() {
-		if ( ! isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
-			return 'desktop';
+		if ( isset( self::$detected['device'] ) ) {
+			return self::$detected['device'];
 		}
 
-		$ua = $_SERVER['HTTP_USER_AGENT'];
+		$ua     = self::user_agent();
+		$device = 'desktop';
 
-		// Tablet detection (must come before mobile - some tablets contain "Mobile" in UA)
-		$tablet_patterns = [
-			'iPad',
-			'Android(?!.*Mobile)',  // Android without "Mobile" = tablet
-			'Kindle',
-			'Silk',
-			'PlayBook',
-			'Tablet',
-			'Nexus 7',
-			'Nexus 10',
-			'KFAPWI',
-			'SM-T',
-			'GT-P',
-		];
+		if ( '' !== $ua ) {
+			// Tablets first: some tablets contain "Mobile" in the UA. Android without "Mobile" is a tablet.
+			$tablet = '/iPad|Android(?!.*Mobile)|Kindle|Silk|PlayBook|Tablet|Nexus 7|Nexus 10|KFAPWI|SM-T|GT-P/i';
+			$mobile = '/Mobile|Android.*Mobile|iPhone|iPod|Opera Mini|Opera Mobi|Windows Phone|BlackBerry|BB10|webOS/i';
 
-		foreach ( $tablet_patterns as $pattern ) {
-			if ( preg_match( '/' . $pattern . '/i', $ua ) ) {
-				return 'tablet';
+			if ( preg_match( $tablet, $ua ) ) {
+				$device = 'tablet';
+			} elseif ( preg_match( $mobile, $ua ) ) {
+				$device = 'mobile';
 			}
 		}
 
-		// Mobile detection
-		$mobile_patterns = [
-			'Mobile',
-			'Android.*Mobile',
-			'iPhone',
-			'iPod',
-			'Opera Mini',
-			'Opera Mobi',
-			'Windows Phone',
-			'BlackBerry',
-			'BB10',
-			'webOS',
-		];
+		$device = (string) apply_filters( 'stax/visibility/device_type', $device, $ua ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- public 2.x hook name.
 
-		foreach ( $mobile_patterns as $pattern ) {
-			if ( preg_match( '/' . $pattern . '/i', $ua ) ) {
-				return 'mobile';
-			}
-		}
+		self::$detected['device'] = $device;
 
-		return 'desktop';
+		return $device;
 	}
 
 	/**
@@ -298,18 +441,33 @@ final class Resources extends Singleton {
 	 * @return string
 	 */
 	public static function get_browser_type() {
-		if ( ! isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
-			return 'is_unknown';
+		if ( isset( self::$detected['browser'] ) ) {
+			return self::$detected['browser'];
 		}
 
-		$ua = $_SERVER['HTTP_USER_AGENT'];
+		self::$detected['browser'] = self::detect_browser();
+
+		return self::$detected['browser'];
+	}
+
+	/**
+	 * Browser detection (WordPress globals from wp-includes/vars.php, Edge and Android first).
+	 *
+	 * @return string
+	 */
+	private static function detect_browser() {
+		$ua = self::user_agent();
+
+		if ( '' === $ua ) {
+			return 'is_unknown';
+		}
 
 		// Check Edge first (contains Chrome/Safari in UA string)
 		if ( stripos( $ua, 'Edge' ) !== false || stripos( $ua, 'Edg/' ) !== false ) {
 			return 'is_edge';
 		}
 
-		global $is_lynx, $is_gecko, $is_IE, $is_opera, $is_NS4, $is_safari, $is_chrome, $is_iphone;
+		global $is_lynx, $is_gecko, $is_IE, $is_opera, $is_NS4, $is_safari, $is_chrome, $is_iphone; // phpcs:ignore WordPress.NamingConventions.ValidVariableName
 
 		if ( $is_iphone ) {
 			return 'is_iphone';

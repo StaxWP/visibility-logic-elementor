@@ -1,0 +1,236 @@
+/* Settings > Visibility Logic. Native WP admin look; loaded only on the panel's pages. */
+
+.stax-vl-header {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 4px 16px;
+	margin: 0 0 8px;
+}
+
+.stax-vl .stax-vl-title {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 9px 0 4px;
+}
+
+.stax-vl-title .dashicons {
+	width: 28px;
+	height: 28px;
+	font-size: 28px;
+	color: #6e49cb;
+}
+
+.stax-vl-version {
+	margin: 0;
+	color: #646970;
+}
+
+.stax-vl-tabs {
+	margin-bottom: 20px;
+}
+
+.stax-vl-columns {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 280px;
+	gap: 24px;
+	align-items: start;
+}
+
+@media (max-width: 960px) {
+	.stax-vl-columns {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+.stax-vl-main > .stax-vl-panel {
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+	padding: 8px 24px 16px;
+}
+
+.stax-vl-main h2 {
+	font-size: 1.3em;
+	margin: 1em 0 0.5em;
+}
+
+.stax-vl-card {
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+	padding: 4px 16px 8px;
+	margin-bottom: 16px;
+}
+
+.stax-vl-card h2 {
+	font-size: 14px;
+	margin: 12px 0 8px;
+}
+
+.stax-vl-list {
+	list-style: disc;
+	margin: 0 0 12px 18px;
+}
+
+.stax-vl-links {
+	margin: 0 0 8px;
+}
+
+.stax-vl-badge {
+	display: inline-block;
+	padding: 1px 7px;
+	border-radius: 2px;
+	font-size: 11px;
+	font-weight: 600;
+	line-height: 1.6;
+	text-transform: uppercase;
+	vertical-align: middle;
+}
+
+.stax-vl-badge--pro {
+	background: #6e49cb;
+	color: #fff;
+}
+
+.stax-vl-status--ok::before,
+.stax-vl-status--warn::before {
+	font: normal 16px/1 dashicons;
+	vertical-align: -3px;
+	margin-right: 4px;
+}
+
+.stax-vl-status--ok::before {
+	content: "\f147";
+	color: #00a32a;
+}
+
+.stax-vl-status--warn::before {
+	content: "\f534";
+	color: #dba617;
+}
+
+.stax-vl-muted {
+	color: #646970;
+	font-size: 12px;
+}
+
+/* Conditions */
+
+.stax-vl-conditions {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+	gap: 12px;
+	margin: 12px 0 8px;
+	padding: 0;
+	border: 0;
+}
+
+.stax-vl-condition {
+	position: relative;
+	margin: 0;
+	padding: 12px 12px 12px 60px;
+	border: 1px solid #dcdcde;
+	border-radius: 4px;
+	background: #f6f7f7;
+	list-style: none;
+}
+
+.stax-vl-condition.is-pro,
+.stax-vl-condition.is-blocked {
+	padding-left: 12px;
+}
+
+.stax-vl-condition__name {
+	font-weight: 600;
+	color: #1d2327;
+}
+
+.stax-vl-condition__name + .stax-vl-badge {
+	margin-left: 6px;
+}
+
+.stax-vl-condition__desc,
+.stax-vl-condition__req {
+	margin: 4px 0 0;
+	color: #50575e;
+	font-size: 12px;
+}
+
+.stax-vl-condition__req {
+	color: #b32d2e;
+}
+
+/* Switch: a native checkbox, so keyboard, screen readers and forms work as usual. */
+.stax-vl .stax-vl-switch {
+	-webkit-appearance: none;
+	appearance: none;
+	position: absolute;
+	left: 12px;
+	top: 12px;
+	width: 36px;
+	height: 20px;
+	margin: 0;
+	border: 1px solid #8c8f94;
+	border-radius: 10px;
+	background: #fff;
+	box-shadow: none;
+	cursor: pointer;
+	transition: background-color 0.15s ease;
+}
+
+.stax-vl .stax-vl-switch::before {
+	content: "";
+	position: absolute;
+	top: 3px;
+	left: 3px;
+	width: 12px;
+	height: 12px;
+	margin: 0;
+	border-radius: 50%;
+	background: #8c8f94;
+	transition: transform 0.15s ease;
+}
+
+.stax-vl .stax-vl-switch:checked {
+	background: #2271b1;
+	border-color: #2271b1;
+}
+
+.stax-vl .stax-vl-switch:checked::before {
+	content: "";
+	background: #fff;
+	transform: translateX(16px);
+}
+
+.stax-vl .stax-vl-switch:focus-visible {
+	outline: 2px solid #2271b1;
+	outline-offset: 2px;
+}
+
+.stax-vl .stax-vl-condition label.stax-vl-condition__name {
+	cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.stax-vl .stax-vl-switch,
+	.stax-vl .stax-vl-switch::before {
+		transition: none;
+	}
+}
+
+/* Rules in use */
+
+.stax-vl-usage {
+	margin-top: 12px;
+}
+
+.stax-vl-usage .num {
+	text-align: right;
+	width: 90px;
+}
+
+.stax-vl-rescan {
+	margin-top: 8px;
+}

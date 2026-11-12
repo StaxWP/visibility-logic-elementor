@@ -133,9 +133,7 @@ class GeneralVisibility extends Singleton {
 				'style_transfer' => false,
 			]
 		);
-
 	}
-
 }
 
 GeneralVisibility::instance();

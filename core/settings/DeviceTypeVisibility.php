@@ -110,16 +110,16 @@ class DeviceTypeVisibility extends Singleton {
 	public function apply_conditions( $options, $settings, $item ) {
 		$settings = $item->get_settings_for_display();
 
-		if ( ! (bool) $settings[ self::SECTION_PREFIX . 'device_type_enabled' ] || empty( $settings[ self::SECTION_PREFIX . 'device_types' ] ) ) {
+		$devices = self::value( $settings, 'device_types', [] );
+
+		if ( ! self::flag( $settings, 'device_type_enabled' ) || empty( $devices ) ) {
 			return $options;
 		}
 
-		$current_device = Resources::get_device_type();
-		$options['device_type'] = in_array( $current_device, $settings[ self::SECTION_PREFIX . 'device_types' ], true );
+		$options['device_type'] = in_array( Resources::get_device_type(), (array) $devices, true );
 
 		return $options;
 	}
-
 }
 
 DeviceTypeVisibility::instance();

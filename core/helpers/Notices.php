@@ -23,7 +23,7 @@ final class Notices extends Singleton {
 				return;
 			}
 
-			$action_url   = wp_nonce_url( 'plugins.php?action=activate&amp;plugin=' . $plugin . '&amp;plugin_status=all&amp;paged=1&amp;s', 'activate-plugin_' . $plugin );
+			$action_url   = wp_nonce_url( self_admin_url( 'plugins.php?action=activate&plugin=' . $plugin . '&plugin_status=all&paged=1' ), 'activate-plugin_' . $plugin );
 			$button_label = __( 'Activate Elementor', 'visibility-logic-elementor' );
 
 		} else {
@@ -35,9 +35,13 @@ final class Notices extends Singleton {
 			$button_label = __( 'Install Elementor', 'visibility-logic-elementor' );
 		}
 
-		$button = '<p><a href="' . $action_url . '" class="button-primary">' . $button_label . '</a></p><p></p>';
-
-		printf( '<div class="%1$s"><p>%2$s</p>%3$s</div>', esc_attr( $class ), $message, $button );
+		printf(
+			'<div class="%1$s"><p>%2$s</p><p><a href="%3$s" class="button-primary">%4$s</a></p></div>',
+			esc_attr( $class ),
+			wp_kses( $message, [ 'strong' => [] ] ),
+			esc_url( $action_url ),
+			esc_html( $button_label )
+		);
 	}
 
 	/**
@@ -72,11 +76,10 @@ final class Notices extends Singleton {
 		$message .= sprintf(
 			'<span style="display: block; margin: 0.5em 0.5em 0 0; clear: both;">' .
 			'<a class="button-primary" href="%1$s">%2$s</a></span>',
-			$update_link,
-			__( 'Update Elementor Now', 'visibility-logic-elementor' )
+			esc_url( $update_link ),
+			esc_html__( 'Update Elementor Now', 'visibility-logic-elementor' )
 		);
 
-		printf( '<div class="notice notice-error"><p>%1$s</p></div>', $message );
+		printf( '<div class="notice notice-error"><p>%1$s</p></div>', wp_kses_post( $message ) );
 	}
-
 }

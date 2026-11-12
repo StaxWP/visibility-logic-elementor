@@ -1,12 +1,12 @@
 <?php
 /**
  * Meta handling trait
- * 
+ *
  * Parts of this code are adapted from:
  * Dynamic Content for Elementor by Dynamic.ooo
  * Source: dynamic-content-for-elementor/class/trait/DCE_Trait_Meta.php
  * License: GPL v2 or later
- * 
+ *
  * Specifically adapted:
  * - User meta retrieval functionality
  * - ACF field group handling
@@ -40,7 +40,7 @@ trait Meta_Trait {
 		);
 		if ( ! empty( $acf_groups ) ) {
 			foreach ( $acf_groups as $aacf_group ) {
-				$is_user_group = in_array( 'user', self::get_acf_group_locations( $aacf_group ) );
+				$is_user_group = in_array( 'user', self::get_acf_group_locations( $aacf_group ), true );
 				$aacf_meta     = maybe_unserialize( $aacf_group->post_content );
 
 				if ( $is_user_group ) {
@@ -59,8 +59,8 @@ trait Meta_Trait {
 							$aacf_meta = maybe_unserialize( $aacf->post_content );
 
 							if ( $like ) {
-								$pos_key  = stripos( $aacf->post_excerpt, $like );
-								$pos_name = stripos( $aacf->post_title, $like );
+								$pos_key  = stripos( (string) $aacf->post_excerpt, (string) $like );
+								$pos_name = stripos( (string) $aacf->post_title, (string) $like );
 								if ( false === $pos_key && false === $pos_name ) {
 									continue;
 								}
@@ -69,7 +69,7 @@ trait Meta_Trait {
 							$field_name = $aacf->post_title;
 
 							if ( $info ) {
-								$field_name .= ' [' . $aacf_meta['type'] . ']';
+								$field_name .= ' [' . ( isset( $aacf_meta['type'] ) ? $aacf_meta['type'] : '' ) . ']';
 							}
 
 							$user_metas[ $aacf->post_excerpt ]                = $field_name;
@@ -95,10 +95,12 @@ trait Meta_Trait {
 		$query = 'SELECT DISTINCT meta_key FROM ' . esc_sql( $table );
 
 		if ( $like ) {
-			$query .= " WHERE meta_key LIKE '%" . esc_sql( $like ) . "%'";
+			$query .= $wpdb->prepare( ' WHERE meta_key LIKE %s', '%' . $wpdb->esc_like( (string) $like ) . '%' );
 		}
 
-		$results = $wpdb->get_results( $query );
+		$query .= ' LIMIT 1000';
+
+		$results = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery -- table name escaped, LIKE prepared, editor-only.
 
 		if ( ! empty( $results ) ) {
 			$metas = [];
@@ -108,13 +110,13 @@ trait Meta_Trait {
 			ksort( $metas );
 			$manual_metas = $metas;
 			foreach ( $manual_metas as $ameta ) {
-				if ( substr( $ameta, 0, 1 ) == '_' ) {
+				if ( '_' === substr( $ameta, 0, 1 ) ) {
 					$ameta = $tmp = substr( $ameta, 1 );
-					if ( in_array( $tmp, $manual_metas ) ) {
+					if ( in_array( $tmp, $manual_metas, true ) ) {
 						continue;
 					}
 				}
-				if ( ! isset( $postMetas[ $ameta ] ) ) {
+				if ( '' !== $ameta ) {
 					$user_metas[ $ameta ]                 = $ameta;
 					$user_metas_grouped['META'][ $ameta ] = $ameta;
 				}
@@ -175,5 +177,4 @@ trait Meta_Trait {
 
 		return $locations;
 	}
-
 }

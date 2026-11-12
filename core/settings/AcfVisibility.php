@@ -151,9 +151,10 @@ class AcfVisibility extends Singleton {
 				[
 					'type'            => Controls_Manager::RAW_HTML,
 					'raw'             => sprintf(
-						__( 'Need user fields, multiple ACF conditions with AND/OR logic, repeater fields, or options page support? %1$sUpgrade to Pro%2$s', 'visibility-logic-elementor' ),
-						'<a href="https://staxwp.com/go/visibility-logic" target="_blank"><strong>',
-						'</strong></a>'
+						/* translators: 1: link opening tag, 2: link closing tag. */
+						__( 'User, term and options page fields, repeaters and AND/OR groups are in %1$sVisibility Logic Pro%2$s.', 'visibility-logic-elementor' ),
+						'<a href="' . esc_url( Resources::pro_url( 'editor-acf' ) ) . '" target="_blank" rel="noopener">',
+						'</a>'
 					),
 					'content_classes' => 'elementor-descriptor',
 					'condition'       => [
@@ -192,7 +193,7 @@ class AcfVisibility extends Singleton {
 	public function apply_conditions( $options, $settings, $item ) {
 		$settings = $item->get_settings_for_display();
 
-		if ( ! (bool) $settings[ self::SECTION_PREFIX . 'acf_enabled' ] ) {
+		if ( ! self::flag( $settings, 'acf_enabled' ) ) {
 			return $options;
 		}
 
@@ -201,14 +202,14 @@ class AcfVisibility extends Singleton {
 			return $options;
 		}
 
-		$field_name = $settings[ self::SECTION_PREFIX . 'acf_field' ];
+		$field_name = trim( (string) self::value( $settings, 'acf_field' ) );
 
 		if ( empty( $field_name ) ) {
 			return $options;
 		}
 
-		$condition     = isset( $settings[ self::SECTION_PREFIX . 'acf_condition' ] ) ? $settings[ self::SECTION_PREFIX . 'acf_condition' ] : 'not_empty';
-		$compare_value = isset( $settings[ self::SECTION_PREFIX . 'acf_value' ] ) ? $settings[ self::SECTION_PREFIX . 'acf_value' ] : '';
+		$condition     = (string) self::value( $settings, 'acf_condition', 'not_empty' );
+		$compare_value = (string) self::value( $settings, 'acf_value' );
 
 		// Get field value from current post/page
 		$value = get_field( $field_name );
@@ -225,30 +226,30 @@ class AcfVisibility extends Singleton {
 				break;
 			case 'equals':
 				if ( is_array( $value ) ) {
-					$result = in_array( $compare_value, $value, false );
+					$result = in_array( $compare_value, $value, false ); // phpcs:ignore WordPress.PHP.StrictInArray.FoundNonStrictFalse -- 2.x loose match (ACF may return ints).
 				} else {
-					$result = (string) $value === $compare_value;
+					$result = ( null === $value || is_scalar( $value ) ) && (string) $value === $compare_value;
 				}
 				break;
 			case 'not_equals':
 				if ( is_array( $value ) ) {
-					$result = ! in_array( $compare_value, $value, false );
+					$result = ! in_array( $compare_value, $value, false ); // phpcs:ignore WordPress.PHP.StrictInArray.FoundNonStrictFalse -- 2.x loose match (ACF may return ints).
 				} else {
-					$result = (string) $value !== $compare_value;
+					$result = ! ( null === $value || is_scalar( $value ) ) || (string) $value !== $compare_value;
 				}
 				break;
 			case 'contains':
 				if ( is_array( $value ) ) {
-					$result = in_array( $compare_value, $value, false );
+					$result = in_array( $compare_value, $value, false ); // phpcs:ignore WordPress.PHP.StrictInArray.FoundNonStrictFalse -- 2.x loose match (ACF may return ints).
 				} elseif ( is_string( $value ) ) {
 					$result = strpos( $value, $compare_value ) !== false;
 				}
 				break;
 			case 'is_true':
-				$result = ! empty( $value ) && $value !== '0' && $value !== 'false';
+				$result = ! empty( $value ) && '0' !== $value && 'false' !== $value;
 				break;
 			case 'is_false':
-				$result = empty( $value ) || $value === '0' || $value === 'false';
+				$result = empty( $value ) || '0' === $value || 'false' === $value;
 				break;
 		}
 
@@ -256,7 +257,6 @@ class AcfVisibility extends Singleton {
 
 		return $options;
 	}
-
 }
 
 AcfVisibility::instance();

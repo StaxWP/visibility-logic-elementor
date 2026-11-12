@@ -1,14 +1,14 @@
 <?php
 /**
  * Date/Time visibility conditions for Elementor
- * 
+ *
  * Parts of this code are adapted from:
  * Dynamic Content for Elementor by Dynamic.ooo
  * Source: dynamic-content-for-elementor/includes/extensions/DCE_Extension_Visibility.php
  * License: GPL v2 or later
- * 
+ *
  * Specifically adapted:
- * - Weekday handling functionality using wp_locale	
+ * - Weekday handling functionality using wp_locale
  */
 
 namespace Stax\VisibilityLogic;
@@ -72,7 +72,7 @@ class DateTimeVisibility extends Singleton {
 				'label_on'       => __( 'Yes', 'visibility-logic-elementor' ),
 				'label_off'      => __( 'No', 'visibility-logic-elementor' ),
 				'return_value'   => 'yes',
-				//'render_type'    => 'ui',
+				// 'render_type'    => 'ui',
 				'prefix_class'   => 'stax-date_time_enabled-',
 				'style_transfer' => false,
 			]
@@ -93,7 +93,7 @@ class DateTimeVisibility extends Singleton {
 				'condition'      => [
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
 				],
-				//'render_type'    => 'ui',
+				// 'render_type'    => 'ui',
 				'style_transfer' => false,
 			]
 		);
@@ -107,7 +107,7 @@ class DateTimeVisibility extends Singleton {
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
 					self::SECTION_PREFIX . 'date_time_type' => 'date',
 				],
-				//'render_type'    => 'ui',
+				// 'render_type'    => 'ui',
 				'style_transfer' => false,
 			]
 		);
@@ -121,7 +121,7 @@ class DateTimeVisibility extends Singleton {
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
 					self::SECTION_PREFIX . 'date_time_type' => 'date',
 				],
-				//'render_type'    => 'ui',
+				// 'render_type'    => 'ui',
 				'style_transfer' => false,
 			]
 		);
@@ -145,7 +145,7 @@ class DateTimeVisibility extends Singleton {
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
 					self::SECTION_PREFIX . 'date_time_type' => [ 'week_days', 'week_days_time' ],
 				],
-				//'render_type'    => 'ui',
+				// 'render_type'    => 'ui',
 				'style_transfer' => false,
 			]
 		);
@@ -174,7 +174,7 @@ class DateTimeVisibility extends Singleton {
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
 					self::SECTION_PREFIX . 'date_time_type' => [ 'time', 'week_days_time' ],
 				],
-				//'render_type'    => 'ui',
+				// 'render_type'    => 'ui',
 				'style_transfer' => false,
 			]
 		);
@@ -196,8 +196,10 @@ class DateTimeVisibility extends Singleton {
 			self::SECTION_PREFIX . 'date_info',
 			[
 				'type'           => Controls_Manager::RAW_HTML,
-				'raw'            => __( 'Use timestamps based on server time:', 'visibility-logic-elementor' ) .
-									 '<br><strong>' . wp_date( 'Y-m-d H:i' ) . '</strong>',
+				'raw'            => ( Resources::get_setting( 'site_timezone' )
+					? esc_html__( 'Dates and times use the site time zone (Settings > General). Now:', 'visibility-logic-elementor' )
+					: esc_html__( 'Times use the site time zone, dates FROM/TO use UTC (Settings > Visibility Logic can switch them to the site time zone). Site time now:', 'visibility-logic-elementor' ) )
+					. '<br><strong>' . esc_html( wp_date( 'Y-m-d H:i' ) ) . '</strong>',
 				'condition'      => [
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
 				],
@@ -218,118 +220,27 @@ class DateTimeVisibility extends Singleton {
 	public function apply_conditions( $options, $settings, $item ) {
 		$settings = $item->get_settings_for_display();
 
-		if ( ! (bool) $settings[ self::SECTION_PREFIX . 'date_time_enabled' ] ) {
+		if ( ! self::flag( $settings, 'date_time_enabled' ) ) {
 			return $options;
 		}
 
-		$options['date_time'] = false;
-		$date_time_type = isset($settings[self::SECTION_PREFIX . 'date_time_type']) ? $settings[self::SECTION_PREFIX . 'date_time_type'] : '';
-		
-		switch ( $date_time_type ) {
+		$time_week = self::value( $settings, 'time_week', [] );
+		$time_week = is_array( $time_week ) ? array_map( 'strval', $time_week ) : [];
+		$today     = (string) current_time( 'w' );
+
+		switch ( (string) self::value( $settings, 'date_time_type' ) ) {
 			case 'date':
-				$date_from    = $settings[ self::SECTION_PREFIX . 'date_from' ];
-				$date_to      = $settings[ self::SECTION_PREFIX . 'date_to' ];
-				$current_date = current_datetime()->getTimestamp();
-
-				if ( $date_from && $date_to ) {
-					if ( $current_date >= strtotime( $date_from ) && $current_date <= strtotime( $date_to ) ) {
-						$options['date_time'] = true;
-					}
-				} elseif ( $date_from && ! $date_to ) {
-					if ( $current_date >= strtotime( $date_from ) ) {
-						$options['date_time'] = true;
-					}
-				} elseif ( ! $date_from && $date_to ) {
-					if ( $current_date <= strtotime( $date_to ) ) {
-						$options['date_time'] = true;
-					}
-				}
+				$options['date_time'] = self::in_date_range( (string) self::value( $settings, 'date_from' ), (string) self::value( $settings, 'date_to' ) );
 				break;
-			case 'time';
-				$time_from = $settings[ self::SECTION_PREFIX . 'time_from' ];
-				$time_to   = $settings[ self::SECTION_PREFIX . 'time_to' ];
-
-				$current_time = strtotime( current_time( 'H:i' ) );
-
-				if ( $time_from && $time_to ) {
-					if ( $time_from > $time_to ) {
-						$time_from = strtotime( $time_from );
-						$time_to   = strtotime( $time_to );
-
-						if ( ( $current_time >= $time_from && $current_time <= strtotime( '24:00' ) ) ||
-							 ( $current_time >= strtotime( '00:00' ) && $current_time <= $time_to ) ) {
-							$options['date_time'] = true;
-						}
-					} else {
-						$time_from = strtotime( $time_from );
-						$time_to   = strtotime( $time_to );
-
-						if ( $current_time >= $time_from && $current_time <= $time_to ) {
-							$options['date_time'] = true;
-						}
-					}
-				} elseif ( $time_from && ! $time_to ) {
-					$time_from = strtotime( $time_from );
-					if ( $current_time >= $time_from ) {
-						$options['date_time'] = true;
-					}
-				} elseif ( ! $time_from && $time_to ) {
-					$time_to = strtotime( $time_to );
-					if ( $current_time <= $time_to ) {
-						$options['date_time'] = true;
-					}
-				}
+			case 'time':
+				$options['date_time'] = self::in_time_range( (string) self::value( $settings, 'time_from' ), (string) self::value( $settings, 'time_to' ) );
 				break;
 			case 'week_days':
-				if ( is_array( $settings[ self::SECTION_PREFIX . 'time_week' ] ) && in_array( current_time( 'w' ), $settings[ self::SECTION_PREFIX . 'time_week' ] ) ) {
-					$options['date_time'] = true;
-				}
+				$options['date_time'] = in_array( $today, $time_week, true );
 				break;
 			case 'week_days_time':
-				$time_matched = false;
-				$day_matched  = false;
-
-				$time_from = $settings[ self::SECTION_PREFIX . 'time_from' ];
-				$time_to   = $settings[ self::SECTION_PREFIX . 'time_to' ];
-
-				$current_time = strtotime( current_time( 'H:i' ) );
-
-				if ( $time_from && $time_to ) {
-					if ( $time_from > $time_to ) {
-						$time_from = strtotime( $time_from );
-						$time_to   = strtotime( $time_to );
-
-						if ( ( $current_time >= $time_from && $current_time <= strtotime( '24:00' ) ) ||
-							 ( $current_time >= strtotime( '00:00' ) && $current_time <= $time_to ) ) {
-							$time_matched = true;
-						}
-					} else {
-						$time_from = strtotime( $time_from );
-						$time_to   = strtotime( $time_to );
-
-						if ( $current_time >= $time_from && $current_time <= $time_to ) {
-							$time_matched = true;
-						}
-					}
-				} elseif ( $time_from && ! $time_to ) {
-					$time_from = strtotime( $time_from );
-					if ( $current_time >= $time_from ) {
-						$time_matched = true;
-					}
-				} elseif ( ! $time_from && $time_to ) {
-					$time_to = strtotime( $time_to );
-					if ( $current_time <= $time_to ) {
-						$time_matched = true;
-					}
-				}
-
-				if ( is_array( $settings[ self::SECTION_PREFIX . 'time_week' ] ) &&
-					! empty( $settings[ self::SECTION_PREFIX . 'time_week' ] ) &&
-					in_array( current_time( 'w' ), $settings[ self::SECTION_PREFIX . 'time_week' ] ) ) {
-					$day_matched = true;
-				}
-
-				$options['date_time'] = $time_matched && $day_matched;
+				$options['date_time'] = in_array( $today, $time_week, true )
+					&& self::in_time_range( (string) self::value( $settings, 'time_from' ), (string) self::value( $settings, 'time_to' ) );
 				break;
 			default:
 				$options['date_time'] = false;
@@ -338,6 +249,82 @@ class DateTimeVisibility extends Singleton {
 		return $options;
 	}
 
+	/**
+	 * Whether now is inside a date range (open ended when one side is empty, false when both are).
+	 *
+	 * Until 3.0 the dates were read as UTC. Sites that turn on "Site time zone for date ranges" in
+	 * Settings > Visibility Logic (on by default for new installs) read them in the site time zone.
+	 *
+	 * @param string $date_from Date FROM (Y-m-d H:i).
+	 * @param string $date_to   Date TO (Y-m-d H:i).
+	 *
+	 * @return bool
+	 */
+	public static function in_date_range( $date_from, $date_to ) {
+		if ( '' === $date_from && '' === $date_to ) {
+			return false;
+		}
+
+		$now  = current_datetime()->getTimestamp();
+		$from = '' === $date_from ? null : self::to_timestamp( $date_from );
+		$to   = '' === $date_to ? null : self::to_timestamp( $date_to );
+
+		return ( null === $from || ( false !== $from && $now >= $from ) )
+			&& ( null === $to || ( false !== $to && $now <= $to ) );
+	}
+
+	/**
+	 * Timestamp of a saved date.
+	 *
+	 * @param string $date Date.
+	 *
+	 * @return int|false
+	 */
+	private static function to_timestamp( $date ) {
+		if ( Resources::get_setting( 'site_timezone' ) ) {
+			try {
+				return ( new \DateTimeImmutable( $date, wp_timezone() ) )->getTimestamp();
+			} catch ( \Exception $e ) {
+				return false;
+			}
+		}
+
+		return strtotime( $date );
+	}
+
+	/**
+	 * Whether the current site time is inside a time window (HH:mm), crossing midnight when FROM > TO.
+	 *
+	 * @param string $time_from Time FROM.
+	 * @param string $time_to   Time TO.
+	 *
+	 * @return bool
+	 */
+	public static function in_time_range( $time_from, $time_to ) {
+		$current_time = strtotime( current_time( 'H:i' ) );
+
+		if ( '' !== $time_from && '' !== $time_to ) {
+			$from = strtotime( $time_from );
+			$to   = strtotime( $time_to );
+
+			if ( $time_from > $time_to ) {
+				return ( $current_time >= $from && $current_time <= strtotime( '24:00' ) )
+					|| ( $current_time >= strtotime( '00:00' ) && $current_time <= $to );
+			}
+
+			return $current_time >= $from && $current_time <= $to;
+		}
+
+		if ( '' !== $time_from ) {
+			return $current_time >= strtotime( $time_from );
+		}
+
+		if ( '' !== $time_to ) {
+			return $current_time <= strtotime( $time_to );
+		}
+
+		return false;
+	}
 }
 
 DateTimeVisibility::instance();

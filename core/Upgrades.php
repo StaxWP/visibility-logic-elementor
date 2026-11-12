@@ -73,18 +73,19 @@ class Upgrades extends Singleton {
 
 			$this->process_update_action();
 
-			if ( $this->updated === null ) {
+			if ( null === $this->updated ) {
 				$url = wp_nonce_url( add_query_arg( 'stax_visibility_db_update', '' ), 'action' );
 				?>
 
 				<div class="notice stax-visibility-notice">
 					<div class="stax-visibility-inner-message">
 						<div class="stax-visibility-message-center">
-							<h3><?php _e( 'Database update required', 'visibility-logic-elementor' ); ?></h3>
+							<h3><?php esc_html_e( 'Database update required', 'visibility-logic-elementor' ); ?></h3>
 							<p>
 								<?php
 								echo wp_kses_post(
 									sprintf(
+										/* translators: %s: update URL (unused in this sentence). */
 										__( '<strong>STAX Visibility Logic</strong> needs to update your database to the latest version.', 'visibility-logic-elementor' ),
 										esc_url( $url )
 									)
@@ -93,7 +94,7 @@ class Upgrades extends Singleton {
 							</p>
 						</div>
 						<div class="stax-visibility-msg-button-right">
-							<?php echo wp_kses_post( sprintf( __( '<a href="%s">Update now</a>', 'visibility-logic-elementor' ), esc_url( $url ) ) ); ?>
+							<?php echo wp_kses_post( sprintf( /* translators: %s: update URL. */ __( '<a href="%s">Update now</a>', 'visibility-logic-elementor' ), esc_url( $url ) ) ); ?>
 						</div>
 
 					</div>
@@ -195,7 +196,6 @@ class Upgrades extends Singleton {
 
 		// Save successful upgrades.
 		update_option( $this->option_name, $old_upgrades );
-
 	}
 
 	/**
@@ -207,18 +207,17 @@ class Upgrades extends Singleton {
 
 		if ( true === $this->updated ) {
 			echo '<div class="notice notice-success">' .
-				 '<p>' .
-				 esc_html__( 'Awesome, Visibility Logic database is now at the latest version!', 'visibility-logic-elementor' ) .
-				 '</p>
+				'<p>' .
+				esc_html__( 'Awesome, Visibility Logic database is now at the latest version!', 'visibility-logic-elementor' ) .
+				'</p>
          		</div>';
 		} elseif ( false === $this->updated ) {
 			echo '<div class="notice notice-warning">' .
-				 '<p>' .
-				 esc_html__( 'Something went wrong, please check logs.', 'visibility-logic-elementor' ) .
-				 '</p>
+				'<p>' .
+				esc_html__( 'Something went wrong, please check logs.', 'visibility-logic-elementor' ) .
+				'</p>
          		</div>';
 		}
-
 	}
 
 	/**
@@ -243,7 +242,7 @@ class Upgrades extends Singleton {
 
 		foreach ( $posts as $post ) {
 			$meta = get_post_meta( $post->ID, '_elementor_data', true );
-			$data = @json_decode( $meta, true );
+			$data = is_string( $meta ) ? json_decode( $meta, true ) : null;
 
 			if ( ! is_array( $data ) || empty( $data ) ) {
 				continue;
@@ -320,11 +319,10 @@ class Upgrades extends Singleton {
 	}
 
 	public function force_2_0_update() {
-		if ( is_admin() && isset( $_GET['stax-v-update-20'] ) ) {
+		if ( is_admin() && current_user_can( 'manage_options' ) && isset( $_GET['stax-v-update-20'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- not hooked since 2.x, kept for reference.
 			$this->_upgrade_130();
 		}
 	}
-
 }
 
 Upgrades::instance();

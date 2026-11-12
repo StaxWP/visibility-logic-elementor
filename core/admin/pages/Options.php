@@ -1,4 +1,9 @@
 <?php
+/**
+ * Settings > Visibility Logic > Conditions: turn conditions on or off, general settings, free vs Pro overview.
+ *
+ * @package Stax\VisibilityLogic
+ */
 
 namespace Stax\VisibilityLogic;
 
@@ -6,6 +11,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+/**
+ * Class Options
+ */
 class Options extends Base {
 
 	/**
@@ -25,36 +33,20 @@ class Options extends Base {
 	}
 
 	/**
-	 * Toggle options visibility
+	 * Save: conditions on/off and general settings.
 	 *
 	 * @return void
 	 */
 	public function toggle_option() {
-
-		$is_safe = true;
-
 		if ( ! current_user_can( 'manage_options' ) ) {
-			$is_safe = false;
+			wp_die( esc_html__( 'Sorry, you are not allowed to do that.', 'visibility-logic-elementor' ), 403 );
 		}
 
-		if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'stax_visibility_options_activation' ) ) {
-			$is_safe = false;
-		}
-
-		if ( ! isset( $_POST['action'] ) || 'stax_visibility_options_activation' !== $_POST['action'] ) {
-			$is_safe = false;
-		}
-
-		if ( ! $is_safe ) {
-			wp_redirect( admin_url( 'admin.php?page=' . STAX_EL_SLUG_PREFIX . $this->current_slug ) );
-			exit;
-		}
+		check_admin_referer( 'stax_visibility_options_activation' );
 
 		$disabled_options = [];
 
-		$options = Resources::get_all_widget_options( Plugin::instance()->has_pro() );
-
-		foreach ( $options as $slug => $option ) {
+		foreach ( Resources::get_all_widget_options( Plugin::instance()->has_pro() ) as $slug => $option ) {
 			if ( ! isset( $_POST[ $slug ] ) ) {
 				$disabled_options[ $slug ] = true;
 			}
@@ -62,18 +54,42 @@ class Options extends Base {
 
 		update_option( '_stax_visibility_disabled_options', $disabled_options );
 
-		wp_redirect( admin_url( 'options-general.php?page=' . STAX_VISIBILITY_SLUG_PREFIX . $this->current_slug ) );
-		exit();
+		$settings                  = wp_parse_args( (array) get_option( Resources::SETTINGS_OPTION, [] ), Resources::default_settings() );
+		$settings['site_timezone'] = ! empty( $_POST['stax_visibility_site_timezone'] );
+
+		update_option( Resources::SETTINGS_OPTION, $settings );
+
+		wp_safe_redirect( add_query_arg( 'updated', '1', Settings::url( $this->current_slug ) ) );
+		exit;
 	}
 
 	/**
 	 * Panel content
 	 */
 	public function panel_content() {
+		$options = Resources::get_all_widget_options();
+		$pro     = Plugin::instance()->has_pro();
+
+		$included = [];
+		$locked   = [];
+
+		foreach ( $options as $slug => $option ) {
+			if ( ! empty( $option['pro'] ) ) {
+				$locked[ $slug ] = $option;
+			} else {
+				$included[ $slug ] = $option;
+			}
+		}
+
 		Resources::load_template(
 			'core/admin/pages/templates/options',
 			[
-				'options' => Resources::get_all_widget_options(),
+				'options'  => $options,
+				'included' => $included,
+				'locked'   => $locked,
+				'has_pro'  => $pro,
+				'settings' => wp_parse_args( (array) get_option( Resources::SETTINGS_OPTION, [] ), Resources::default_settings() ),
+				'saved'    => isset( $_GET['updated'] ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- display only.
 			]
 		);
 	}
@@ -81,20 +97,20 @@ class Options extends Base {
 	/**
 	 * Add menu item
 	 *
-	 * @param array $menu
+	 * @param array $menu Tabs.
+	 *
 	 * @return array
 	 */
 	public function add_menu_item( $menu ) {
 		$menu[] = [
-			'name'     => __( 'Options', 'visibility-logic-elementor' ),
-			'link'     => admin_url( 'options-general.php?page=' . STAX_VISIBILITY_SLUG_PREFIX . $this->current_slug ),
+			'name'     => __( 'Conditions', 'visibility-logic-elementor' ),
+			'link'     => Settings::url( $this->current_slug ),
 			'query'    => STAX_VISIBILITY_SLUG_PREFIX . $this->current_slug,
 			'priority' => 2,
 		];
 
 		return $menu;
 	}
-
 }
 
 Options::instance();

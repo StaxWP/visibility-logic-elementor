@@ -44,5 +44,4 @@ class Base {
 	public function set_wrapper_classes() {
 		return [ $this->current_slug ];
 	}
-
 }

@@ -1,4 +1,9 @@
 <?php
+/**
+ * Base class of the plugin's singletons and condition modules.
+ *
+ * @package Stax\VisibilityLogic
+ */
 
 namespace Stax\VisibilityLogic;
 
@@ -56,7 +61,7 @@ class Singleton {
 	 */
 	final public function __clone() {
 		// Cloning instances of the class is forbidden.
-		_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin&#8217; huh?', 'visibility-logic-elementor' ), STAX_VISIBILITY_VERSION );
+		_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin&#8217; huh?', 'visibility-logic-elementor' ), esc_html( STAX_VISIBILITY_VERSION ) );
 	}
 
 	/**
@@ -67,7 +72,7 @@ class Singleton {
 	 */
 	final public function __wakeup() {
 		// Unserializing instances of the class is forbidden.
-		_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin&#8217; huh?', 'visibility-logic-elementor' ), STAX_VISIBILITY_VERSION );
+		_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin&#8217; huh?', 'visibility-logic-elementor' ), esc_html( STAX_VISIBILITY_VERSION ) );
 	}
 
 	/**
@@ -83,6 +88,35 @@ class Singleton {
 		}
 
 		return self::$instances[ $class ];
+	}
+
+	/**
+	 * Whether a visibility switch is on (`stax_visibility_<name>`), safe for missing keys.
+	 *
+	 * @param array  $settings Element settings.
+	 * @param string $name     Setting name without the prefix.
+	 *
+	 * @return bool
+	 */
+	public static function flag( $settings, $name ) {
+		return is_array( $settings ) && ! empty( $settings[ self::SECTION_PREFIX . $name ] );
+	}
+
+	/**
+	 * A visibility setting (`stax_visibility_<name>`) or a default when it is missing or null.
+	 *
+	 * @param array  $settings Element settings.
+	 * @param string $name     Setting name without the prefix.
+	 * @param mixed  $default  Default.
+	 *
+	 * @return mixed
+	 */
+	public static function value( $settings, $name, $default = '' ) {
+		if ( ! is_array( $settings ) || ! isset( $settings[ self::SECTION_PREFIX . $name ] ) ) {
+			return $default;
+		}
+
+		return $settings[ self::SECTION_PREFIX . $name ];
 	}
 
 	/**
@@ -105,5 +139,4 @@ class Singleton {
 			);
 		}
 	}
-
 }

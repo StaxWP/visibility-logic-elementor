@@ -1,12 +1,12 @@
 <?php
 /**
  * Browser type visibility conditions for Elementor
- * 
+ *
  * Parts of this code are adapted from:
  * Dynamic Content for Elementor by Dynamic.ooo
  * Source: dynamic-content-for-elementor/includes/extensions/DCE_Extension_Visibility.php
  * License: GPL v2 or later
- * 
+ *
  * Specifically adapted:
  * - Browser detection options array
  */
@@ -84,15 +84,15 @@ class BrowserTypeVisiblity extends Singleton {
 				'label'          => __( 'Browser', 'visibility-logic-elementor' ),
 				'type'           => Controls_Manager::SELECT2,
 				'options'        => [
-					'is_chrome' => 'Google Chrome',
-					'is_gecko'  => 'FireFox',
-					'is_safari' => 'Safari',
-					'is_ie'     => 'Internet Explorer',
-					'is_edge'   => 'Microsoft Edge',
-					'is_ns4'    => 'Netscape',
-					'is_opera'  => 'Opera',
-					'is_lynx'   => 'Lynx',
-					'is_iphone' => 'iPhone Safari',
+					'is_chrome'  => 'Google Chrome',
+					'is_gecko'   => 'FireFox',
+					'is_safari'  => 'Safari',
+					'is_ie'      => 'Internet Explorer',
+					'is_edge'    => 'Microsoft Edge',
+					'is_ns4'     => 'Netscape',
+					'is_opera'   => 'Opera',
+					'is_lynx'    => 'Lynx',
+					'is_iphone'  => 'iPhone Safari',
 					'is_android' => 'Android Browser',
 				],
 				'description'    => __( 'Trigger visibility for specific browsers.', 'visibility-logic-elementor' ),
@@ -117,24 +117,16 @@ class BrowserTypeVisiblity extends Singleton {
 	public function apply_conditions( $options, $settings, $item ) {
 		$settings = $item->get_settings_for_display();
 
-		if ( ! (bool) $settings[ self::SECTION_PREFIX . 'browser_type_enabled' ] || empty( $settings[ self::SECTION_PREFIX . 'browsers' ] ) ) {
+		$browsers = self::value( $settings, 'browsers', [] );
+
+		if ( ! self::flag( $settings, 'browser_type_enabled' ) || empty( $browsers ) ) {
 			return $options;
 		}
 
-		$browser_found = false;
-
-		foreach ( $settings[ self::SECTION_PREFIX . 'browsers' ] as $browser_type ) {
-			if ( Resources::get_browser_type() === $browser_type ) {
-				$browser_found = true;
-				break;
-			}
-		}
-
-		$options['browser_type'] = $browser_found;
+		$options['browser_type'] = in_array( Resources::get_browser_type(), (array) $browsers, true );
 
 		return $options;
 	}
-
 }
 
 BrowserTypeVisiblity::instance();

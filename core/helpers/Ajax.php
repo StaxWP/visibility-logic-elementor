@@ -21,5 +21,4 @@ class Ajax {
 		include_once STAX_VISIBILITY_CORE_PATH . '/helpers/modules/QueryControl.php';
 		$this->query_control = new \Stax\VisibilityLogic\Modules\QueryControl();
 	}
-
 }

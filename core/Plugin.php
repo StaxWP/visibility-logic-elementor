@@ -1,4 +1,9 @@
 <?php
+/**
+ * Plugin bootstrap and the render-time evaluation of the visibility rules.
+ *
+ * @package Stax\VisibilityLogic
+ */
 
 namespace Stax\VisibilityLogic;
 
@@ -12,19 +17,39 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Plugin extends Singleton {
 
 	/**
+	 * Minimum Elementor version.
+	 *
 	 * @var string
 	 */
-	public static $minimum_elementor_version = '2.0.0';
+	public static $minimum_elementor_version = '3.5.0';
 
 	/**
+	 * Widget types hidden in this request (their styles are enqueued when a visible widget of the type follows).
+	 *
 	 * @var array
 	 */
 	public $initiated_widgets = [];
 
 	/**
+	 * Ids of widgets that are not printed because a parent is hidden.
+	 *
 	 * @var array
 	 */
 	public $excluded_widgets = [];
+
+	/**
+	 * Result of the rule evaluation per element object in this request.
+	 *
+	 * @var array
+	 */
+	private $results = [];
+
+	/**
+	 * Documents (by id) that contain an element whose rules cannot go through Elementor's element cache.
+	 *
+	 * @var array
+	 */
+	private $uncacheable_documents = [];
 
 	/**
 	 * Plugin constructor
@@ -33,6 +58,7 @@ class Plugin extends Singleton {
 
 		require_once STAX_VISIBILITY_CORE_HELPERS_PATH . 'Resources.php';
 		require_once STAX_VISIBILITY_CORE_HELPERS_PATH . 'Notices.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'Rules.php';
 
 		if ( ! defined( 'ELEMENTOR_VERSION' ) ) {
 			add_action( 'admin_notices', [ Notices::instance(), 'elementor_notice' ] );
@@ -40,7 +66,7 @@ class Plugin extends Singleton {
 			return;
 		}
 
-		do_action( 'stax/visibility/pre_init' );
+		do_action( 'stax/visibility/pre_init' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- public 2.x hook name.
 
 		// Check for the minimum required Elementor version.
 		if ( ! version_compare( ELEMENTOR_VERSION, self::$minimum_elementor_version, '>=' ) ) {
@@ -49,10 +75,15 @@ class Plugin extends Singleton {
 			return;
 		}
 
-		require_once STAX_VISIBILITY_CORE_PATH . 'Upgrades.php';
+		if ( is_admin() ) {
+			require_once STAX_VISIBILITY_CORE_PATH . 'Upgrades.php';
+		}
+
 		require_once STAX_VISIBILITY_CORE_PATH . 'admin/pages/Base.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'admin/pages/Options.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'admin/pages/Usage.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'admin/Settings.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'Abilities.php';
 
 		add_action( 'elementor/init', [ $this, 'load_elementor_modules' ] );
 		add_action( 'elementor/init', [ $this, 'register_visibility_tab' ] );
@@ -66,14 +97,21 @@ class Plugin extends Singleton {
 		add_filter( 'elementor/frontend/widget/should_render', [ $this, 'item_should_render' ], 99999, 2 );
 		add_filter( 'elementor/frontend/repeater/should_render', [ $this, 'item_should_render' ], 99999, 2 );
 
+		// Elementor element cache: elements with rules are rendered on every request, the rest stays cached.
+		add_filter( 'elementor/element/is_dynamic_content', [ $this, 'is_dynamic_content' ], 10, 2 );
 		add_action( 'elementor/frontend/before_get_builder_content', [ $this, 'maybe_disable_document_caching' ], 99999, 2 );
 		add_action( 'elementor/frontend/get_builder_content', [ $this, 're_enable_document_caching' ], 99999, 2 );
 
-		add_action( 'wp_footer', [ $this, 'editor_show_visibility_icon' ] );
+		add_action( 'elementor/preview/enqueue_styles', [ $this, 'editor_preview_styles' ] );
 
 		add_action( 'init', [ $this, 'load_settings' ], 0 );
+		add_action( 'init', [ $this, 'maybe_upgrade' ], 1 );
 
-		do_action( 'stax/visibility/after_init' );
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+			require_once STAX_VISIBILITY_CORE_PATH . 'Cli.php';
+		}
+
+		do_action( 'stax/visibility/after_init' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- public 2.x hook name.
 	}
 
 	/**
@@ -81,7 +119,7 @@ class Plugin extends Singleton {
 	 */
 	public function register_visibility_tab() {
 		\Elementor\Controls_Manager::add_tab(
-			'stax-visibility',
+			self::VISIBILITY_TAB,
 			__( 'Visibility', 'visibility-logic-elementor' )
 		);
 	}
@@ -118,7 +156,7 @@ class Plugin extends Singleton {
 	 */
 	public function has_pro() {
 		return defined( 'STAX_VISIBILITY_PRO_VERSION' )
-			   || in_array( 'visibility-logic-elementor-pro/conditional.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) );
+			|| Resources::instance()->is_plugin_active( 'visibility-logic-elementor-pro/conditional.php' );
 	}
 
 	/**
@@ -135,7 +173,7 @@ class Plugin extends Singleton {
 
 		foreach ( $widgets as $slug => $option ) {
 			if ( isset( $option['status'], $option['class'], $option['pro'] ) &&
-				 $option['status'] && file_exists( $option['class'] ) && $option['pro'] === false ) {
+				$option['status'] && false === $option['pro'] && file_exists( $option['class'] ) ) {
 				require_once $option['class'];
 			}
 		}
@@ -144,32 +182,63 @@ class Plugin extends Singleton {
 			require_once STAX_VISIBILITY_CORE_SETTINGS_PATH . 'ProVisibility.php';
 		}
 
-		do_action( 'stax/visibility/after/load_settings' );
+		do_action( 'stax/visibility/after/load_settings' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- public 2.x hook name.
 	}
 
 	/**
-	 * Render item or not based on conditions
+	 * After an update (or a new activation): flush Elementor's element cache once.
 	 *
-	 * @param string                 $content
-	 * @param \Elementor\Widget_Base $widget
+	 * Visibility Logic 2.x kept documents with rules out of the element cache but Elementor still stored their
+	 * output, without per-request rendering of the elements with rules. 3.0 renders those elements on every
+	 * request through the cache, so the old entries must go.
 	 *
-	 * @return string
+	 * @return void
+	 */
+	public function maybe_upgrade() {
+		if ( STAX_VISIBILITY_VERSION === get_option( 'stax_visibility_version' ) ) {
+			return;
+		}
+
+		self::flush_element_cache();
+
+		update_option( 'stax_visibility_version', STAX_VISIBILITY_VERSION, true );
+	}
+
+	/**
+	 * Delete Elementor's element cache of every document (it is rebuilt on the next view).
+	 *
+	 * @return void
+	 */
+	public static function flush_element_cache() {
+		$key = defined( '\Elementor\Core\Base\Document::CACHE_META_KEY' ) ? \Elementor\Core\Base\Document::CACHE_META_KEY : '_elementor_element_cache';
+
+		delete_post_meta_by_key( $key );
+	}
+
+	/**
+	 * Render item or not based on conditions (sections and containers, before render).
+	 *
+	 * @param \Elementor\Element_Base $widget Element.
+	 *
+	 * @return void
 	 */
 	public function section_content_change( $widget ) {
 		$this->content_change( '', $widget );
 	}
 
 	/**
-	 * Hide widget content based on visibility conditions using CSS.
+	 * Replace the content of a hidden widget (fallback, hide by CSS) and keep track of hidden widget types.
 	 *
-	 * @param string                 $content
-	 * @param \Elementor\Widget_Base $widget
+	 * @param string                  $content Content.
+	 * @param \Elementor\Element_Base $widget  Element.
 	 *
 	 * @return string
 	 */
 	public function content_change( $content, $widget ) {
-		if ( ! $this->should_render( $widget ) ) {
-			if ( 'section' === $widget->get_name() || 'container' === $widget->get_name() ) {
+		$visible = $this->should_render( $widget );
+
+		if ( ! $visible ) {
+			if ( $this->is_container_like( $widget ) ) {
 				$not_rendered_widgets = $this->get_section_widgets_recursively( $widget );
 
 				$this->initiated_widgets = array_merge( $this->initiated_widgets, $not_rendered_widgets );
@@ -179,25 +248,24 @@ class Plugin extends Singleton {
 			}
 		}
 
-		if ( ! $this->should_render( $widget ) && ! \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
+		if ( ! $visible && ! $this->is_edit_mode() ) {
 			$settings = $widget->get_settings();
 
-			if ( (bool) $settings[ self::SECTION_PREFIX . 'enabled' ] ) {
-				if ( isset( $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) && (bool) $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) {
+			if ( self::flag( $settings, 'enabled' ) ) {
+				if ( self::flag( $settings, 'fallback_enabled' ) ) {
 					$fallback_content = '';
-					if ( 'text' === $settings[ self::SECTION_PREFIX . 'fallback_type' ] ) {
-						$fallback_content = wp_kses_post( $settings[ self::SECTION_PREFIX . 'fallback_text' ] );
-					} elseif ( 'template' === $settings[ self::SECTION_PREFIX . 'fallback_type' ] ) {
-						if ( $settings[ self::SECTION_PREFIX . 'fallback_template' ] ) {
-							$fallback_content = do_shortcode( '[elementor-template id="' . $settings[ self::SECTION_PREFIX . 'fallback_template' ] . '"]' );
-						}
+					$fallback_type    = self::value( $settings, 'fallback_type' );
+
+					if ( 'text' === $fallback_type ) {
+						$fallback_content = wp_kses_post( (string) self::value( $settings, 'fallback_text' ) );
+					} elseif ( 'template' === $fallback_type && self::value( $settings, 'fallback_template' ) ) {
+						$fallback_content = do_shortcode( '[elementor-template id="' . absint( self::value( $settings, 'fallback_template' ) ) . '"]' );
 					}
 
 					if ( $fallback_content ) {
 						return $fallback_content;
 					}
-				} elseif ( isset( $settings[ self::SECTION_PREFIX . 'keep_html' ] ) && (bool) $settings[ self::SECTION_PREFIX . 'keep_html' ] ) {
-
+				} elseif ( self::flag( $settings, 'keep_html' ) ) {
 					$widget->add_render_attribute( '_wrapper', 'class', 'stax-visibility-hidden' );
 					$widget->add_render_attribute( '_wrapper', 'style', 'display: none' );
 
@@ -208,23 +276,20 @@ class Plugin extends Singleton {
 			return '';
 		}
 
-		if ( ! in_array( $widget->get_name(), [ 'section', 'container', 'column' ] ) ) {
+		if ( ! empty( $this->initiated_widgets ) && ! in_array( $widget->get_name(), [ 'section', 'container', 'column' ], true ) ) {
 			$needs_print = false;
 
 			foreach ( $this->initiated_widgets as $k => $initiated_widget ) {
-				if ( $initiated_widget === $widget->get_name() && ! in_array( $widget->get_id(), $this->excluded_widgets ) ) {
+				if ( $initiated_widget === $widget->get_name() && ! in_array( $widget->get_id(), $this->excluded_widgets, true ) ) {
 					$needs_print = true;
 					unset( $this->initiated_widgets[ $k ] );
 				}
 			}
 
 			if ( $needs_print ) {
-				// Get widget styles
-				$styles = $widget->get_style_depends();
-				if ( ! empty( $styles ) ) {
-					foreach ( $styles as $style ) {
-						wp_enqueue_style( $style );
-					}
+				// Get widget styles.
+				foreach ( (array) $widget->get_style_depends() as $style ) {
+					wp_enqueue_style( $style );
 				}
 			}
 		}
@@ -235,8 +300,8 @@ class Plugin extends Singleton {
 	/**
 	 * Check if item should render
 	 *
-	 * @param bool   $should_render
-	 * @param \Elementor\Element_Base $widget
+	 * @param bool                    $should_render Elementor's answer.
+	 * @param \Elementor\Element_Base $widget        Element.
 	 *
 	 * @return boolean
 	 */
@@ -245,14 +310,8 @@ class Plugin extends Singleton {
 
 		if ( ! $this->should_render( $widget, $should_render ) ) {
 
-			// if keep html is enabled, return true
-			if ( (bool) $settings[ self::SECTION_PREFIX . 'keep_html' ] ) {
-				return true;
-			}
-
-			// if fallback is enabled, return true
-			if ( isset( $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) &&
-				 (bool) $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) {
+			// Keep HTML (hidden by CSS) or fallback content: the element is printed.
+			if ( self::flag( $settings, 'keep_html' ) || self::flag( $settings, 'fallback_enabled' ) ) {
 				return true;
 			}
 
@@ -261,11 +320,10 @@ class Plugin extends Singleton {
 
 		$should_render = true;
 
-		// Hide section if needed
-		if ( ( 'section' === $widget->get_name() || 'container' === $widget->get_name() ) &&
-			 ! (bool) $settings[ self::SECTION_PREFIX . 'enabled' ] &&
-			 isset( $settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) &&
-			 (bool) $settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) {
+		// Hide section if needed.
+		if ( $this->is_container_like( $widget ) &&
+			! self::flag( $settings, 'enabled' ) &&
+			self::flag( $settings, 'hide_when_empty' ) ) {
 
 			$should_render = ! empty( $this->check_for_empty_sections_recursively( $widget ) );
 		}
@@ -274,22 +332,85 @@ class Plugin extends Singleton {
 	}
 
 	/**
+	 * Public check: does the element pass its visibility rules for the current visitor?
+	 *
+	 * The answer is cached per element object for the request (Elementor asks several times per element).
+	 *
+	 * @param \Elementor\Element_Base $item           Element.
+	 * @param bool                    $default_render Answer when the element has no rules.
+	 *
+	 * @return bool
+	 */
+	public function is_visible( $item, $default_render = true ) {
+		return $this->should_render( $item, $default_render );
+	}
+
+	/**
+	 * Forget the cached answers (tests, long-running processes).
+	 *
+	 * @return void
+	 */
+	public function reset_cache() {
+		$this->results           = [];
+		$this->initiated_widgets = [];
+		$this->excluded_widgets  = [];
+	}
+
+	/**
+	 * Whether the element is a section or a container (the elements that can hide when empty).
+	 *
+	 * @param \Elementor\Element_Base $item Element.
+	 *
+	 * @return bool
+	 */
+	private function is_container_like( $item ) {
+		$name = $item->get_name();
+
+		return 'section' === $name || 'container' === $name;
+	}
+
+	/**
+	 * Elements one level below the columns of a section, or below the child containers of a container.
+	 *
+	 * This is the 2.x walk (children of children), with one fix: a widget placed directly in a container counts
+	 * itself (2.x skipped it, so "Hide when empty" hid such containers even with visible widgets).
+	 *
+	 * @param \Elementor\Element_Base $item Element.
+	 *
+	 * @return \Elementor\Element_Base[]
+	 */
+	private function get_leaf_children( $item ) {
+		$children = [];
+
+		foreach ( $item->get_children() as $child ) {
+			if ( 'widget' === $child->get_type() ) {
+				$children[] = $child;
+				continue;
+			}
+
+			foreach ( $child->get_children() as $grand_child ) {
+				$children[] = $grand_child;
+			}
+		}
+
+		return $children;
+	}
+
+	/**
 	 * Get section's widgets recursively
 	 *
-	 * @param object $item
+	 * @param object $item Element.
 	 *
 	 * @return array
 	 */
 	private function get_section_widgets_recursively( $item ) {
 		$elements = [];
 
-		foreach ( $item->get_children() as $column ) {
-			foreach ( $column->get_children() as $widget ) {
-				if ( 'section' === $widget->get_name() || 'container' === $widget->get_name() ) {
-					$elements = array_merge( $elements, $this->get_section_widgets_recursively( $widget ) );
-				} else {
-					$elements[ $widget->get_id() ] = method_exists( $widget, 'get_group_name' ) ? $widget->get_group_name() : $widget->get_name();
-				}
+		foreach ( $this->get_leaf_children( $item ) as $widget ) {
+			if ( $this->is_container_like( $widget ) ) {
+				$elements = array_merge( $elements, $this->get_section_widgets_recursively( $widget ) );
+			} else {
+				$elements[ $widget->get_id() ] = method_exists( $widget, 'get_group_name' ) ? $widget->get_group_name() : $widget->get_name();
 			}
 		}
 
@@ -299,36 +420,26 @@ class Plugin extends Singleton {
 	/**
 	 * Check for empty section recursively
 	 *
-	 * @param object $item
+	 * @param object $item Element.
 	 *
 	 * @return array
 	 */
 	private function check_for_empty_sections_recursively( $item ) {
 		$elements = [];
 
-		foreach ( $item->get_children() as $column ) {
-			foreach ( $column->get_children() as $widget ) {
-				$widget_settings = $widget->get_settings();
+		foreach ( $this->get_leaf_children( $item ) as $widget ) {
+			$widget_settings = $widget->get_settings();
 
-				if ( $this->should_render( $widget ) ) {
-					if ( ( 'section' === $widget->get_name() || 'container' === $widget->get_name() ) &&
-						 ! (bool) $widget_settings[ self::SECTION_PREFIX . 'enabled' ] &&
-						 isset( $widget_settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) &&
-						 (bool) $widget_settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) {
-						$elements = array_merge( $elements, $this->check_for_empty_sections_recursively( $widget ) );
-					} else {
-						$elements[] = $widget->get_name();
-					}
-				} elseif ( ! $this->should_render( $widget ) && (bool) $widget_settings[ self::SECTION_PREFIX . 'keep_html' ] ) {
-					if ( ( 'section' === $widget->get_name() || 'container' === $widget->get_name() ) &&
-						 ! (bool) $widget_settings[ self::SECTION_PREFIX . 'enabled' ] &&
-						 isset( $widget_settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) &&
-						 (bool) $widget_settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) {
-						$elements = array_merge( $elements, $this->check_for_empty_sections_recursively( $widget ) );
-					} else {
-						$elements[] = $widget->get_name();
-					}
-				}
+			if ( ! $this->should_render( $widget ) && ! self::flag( $widget_settings, 'keep_html' ) ) {
+				continue;
+			}
+
+			if ( $this->is_container_like( $widget ) &&
+				! self::flag( $widget_settings, 'enabled' ) &&
+				self::flag( $widget_settings, 'hide_when_empty' ) ) {
+				$elements = array_merge( $elements, $this->check_for_empty_sections_recursively( $widget ) );
+			} else {
+				$elements[] = $widget->get_name();
 			}
 		}
 
@@ -338,47 +449,74 @@ class Plugin extends Singleton {
 	/**
 	 * Check if conditions are matched
 	 *
-	 * @param \Elementor\Element_Base $settings
+	 * @param \Elementor\Element_Base $item           Element.
+	 * @param bool                    $default_render Answer when the element has no rules.
 	 *
 	 * @return boolean
 	 */
 	private function should_render( $item, $default_render = true ) {
 		$settings = $item->get_settings();
 
-		// older version settings fallback.
-		if ( ! isset( $settings[ self::SECTION_PREFIX . 'enabled' ] ) || ! (bool) $settings[ self::SECTION_PREFIX . 'enabled' ] ) {
+		// Fast path: no rules at all (most elements).
+		if ( ! self::flag( $settings, 'enabled' ) ) {
+			if ( empty( $settings['ecl_enabled'] ) ) {
+				return $default_render;
+			}
+
+			// Settings saved by version 1.x.
 			return $this->version_fallback_render( $settings, $default_render );
 		}
 
-		$options = apply_filters( 'stax/visibility/apply_conditions', [], $settings, $item );
+		$key = spl_object_id( $item ) . '|' . (int) get_the_ID() . '|' . ( $default_render ? 1 : 0 );
+
+		if ( isset( $this->results[ $key ] ) && $this->results[ $key ][0] === $item->get_id() ) {
+			return $this->results[ $key ][1];
+		}
+
+		$result = $this->evaluate( $settings, $item, $default_render );
+
+		$this->results[ $key ] = [ $item->get_id(), $result ];
+
+		return $result;
+	}
+
+	/**
+	 * Evaluate the rules of an element with "Enable Visibility Logic" on.
+	 *
+	 * @param array                   $settings       Raw settings.
+	 * @param \Elementor\Element_Base $item           Element.
+	 * @param bool                    $default_render Answer when no condition is active.
+	 *
+	 * @return bool
+	 */
+	private function evaluate( $settings, $item, $default_render ) {
+		$options = apply_filters( 'stax/visibility/apply_conditions', [], $settings, $item ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- public 2.x hook name.
 
 		if ( empty( $options ) ) {
 			return $default_render;
 		}
 
-		$should_render = false;
-
-		$condition_type = isset( $settings[ self::SECTION_PREFIX . 'condition_type' ] ) ? $settings[ self::SECTION_PREFIX . 'condition_type' ] : 'all';
+		$should_render  = false;
+		$condition_type = self::value( $settings, 'condition_type', 'all' );
 
 		if ( 'all' === $condition_type ) {
-			$should_render = array_reduce($options, function($carry, $status) {
-				return $carry && $status;
-			}, true);
+			$should_render = ! in_array( false, array_map( 'boolval', $options ), true );
 		} elseif ( 'one' === $condition_type ) {
-			$should_render = in_array(true, $options, true);
+			$should_render = in_array( true, $options, true );
 		}
 
-		if ( (bool) $settings[ self::SECTION_PREFIX . 'show_hide' ] ) {
+		if ( self::flag( $settings, 'show_hide' ) ) {
 			return $should_render;
 		}
-		
+
 		return ! $should_render;
 	}
 
 	/**
-	 * Version fallback render
+	 * Version fallback render (settings saved by version 1.x, `ecl_*` keys).
 	 *
-	 * @param array $settings
+	 * @param array $settings       Settings.
+	 * @param bool  $default_render Default answer.
 	 *
 	 * @return boolean
 	 */
@@ -392,11 +530,13 @@ class Plugin extends Singleton {
 		if ( 'yes' === $settings['ecl_enabled'] ) {
 
 			if ( ! empty( $settings['ecl_role_visible'] ) ) {
-				if ( in_array( 'ecl-guest', $settings['ecl_role_visible'] ) ) {
+				$visible = (array) $settings['ecl_role_visible'];
+
+				if ( in_array( 'ecl-guest', $visible, true ) ) {
 					if ( true === $user_state ) {
 						return false;
 					}
-				} elseif ( in_array( 'ecl-user', $settings['ecl_role_visible'] ) ) {
+				} elseif ( in_array( 'ecl-user', $visible, true ) ) {
 					if ( false === $user_state ) {
 						return false;
 					}
@@ -404,34 +544,25 @@ class Plugin extends Singleton {
 					if ( false === $user_state ) {
 						return false;
 					}
-					$user = wp_get_current_user();
 
-					$has_role = false;
-					foreach ( $settings['ecl_role_visible'] as $setting ) {
-						if ( in_array( $setting, (array) $user->roles ) ) {
-							$has_role = true;
-						}
-					}
-					if ( false === $has_role ) {
+					if ( ! array_intersect( $visible, (array) wp_get_current_user()->roles ) ) {
 						return false;
 					}
 				}
 			} elseif ( ! empty( $settings['ecl_role_hidden'] ) ) {
+				$hidden = (array) $settings['ecl_role_hidden'];
 
-				if ( false === $user_state && in_array( 'ecl-guest', $settings['ecl_role_hidden'], false ) ) {
+				if ( false === $user_state && in_array( 'ecl-guest', $hidden, true ) ) {
 					return false;
-				} elseif ( true === $user_state && in_array( 'ecl-user', $settings['ecl_role_hidden'], false ) ) {
+				} elseif ( true === $user_state && in_array( 'ecl-user', $hidden, true ) ) {
 					return false;
 				} else {
 					if ( false === $user_state ) {
 						return true;
 					}
-					$user = wp_get_current_user();
 
-					foreach ( $settings['ecl_role_hidden'] as $setting ) {
-						if ( in_array( $setting, (array) $user->roles, false ) ) {
-							return false;
-						}
+					if ( array_intersect( $hidden, (array) wp_get_current_user()->roles ) ) {
+						return false;
 					}
 				}
 			}
@@ -441,7 +572,16 @@ class Plugin extends Singleton {
 	}
 
 	/**
-	 * Bbefore load panel assets
+	 * Whether Elementor renders the editor (hidden elements stay visible there).
+	 *
+	 * @return bool
+	 */
+	private function is_edit_mode() {
+		return isset( \Elementor\Plugin::$instance->editor ) && \Elementor\Plugin::$instance->editor->is_edit_mode();
+	}
+
+	/**
+	 * Before load panel assets
 	 *
 	 * @return void
 	 */
@@ -468,10 +608,9 @@ class Plugin extends Singleton {
 			false
 		);
 
-		$widgets    = Resources::get_all_widget_options();
 		$js_widgets = [];
 
-		foreach ( $widgets as $type => $data ) {
+		foreach ( array_keys( Resources::get_all_widget_options() ) as $type ) {
 			if ( 'post-page' === $type ) {
 				$type = 'post';
 			}
@@ -506,95 +645,142 @@ class Plugin extends Singleton {
 	}
 
 	/**
-	 * Show icon in editor for widgets with setting enabled
+	 * Icon on elements with visibility rules, in the editor preview only.
+	 *
+	 * @return void
+	 */
+	public function editor_preview_styles() {
+		wp_register_style( 'stax-visibility-preview', false, [], STAX_VISIBILITY_VERSION );
+		wp_enqueue_style( 'stax-visibility-preview' );
+		wp_add_inline_style( 'stax-visibility-preview', self::preview_css() );
+	}
+
+	/**
+	 * Show icon in editor for widgets with setting enabled.
+	 *
+	 * Kept for backward compatibility (it was hooked to `wp_footer` before 3.0); the styles now load through
+	 * `elementor/preview/enqueue_styles`.
+	 *
+	 * @return void
 	 */
 	public function editor_show_visibility_icon() {
 		if ( ! class_exists( 'Elementor\Plugin' ) || ! \Elementor\Plugin::$instance->preview->is_preview_mode() ) {
 			return;
 		}
 
-		?>
-		<style>
-			body.elementor-editor-active .elementor-element.stax-condition-yes::before {
-				content: '\e8ed';
-				color: #6E49CB;
-				display: inline-block;
-				font-family: eicons;
-				font-size: 15px;
-				position: absolute;
-				top: 0;
-				right: 5px;
-			}
-		</style>
-		<?php
+		echo '<style>' . self::preview_css() . '</style>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static CSS.
 	}
 
 	/**
-	 * Maybe disable caching for documents with elements with visibility logic
+	 * CSS of the editor preview icon.
 	 *
-	 * @param bool $should_cache
-	 * @param \Elementor\Core\Base\Document $document
+	 * @return string
+	 */
+	private static function preview_css() {
+		return "body.elementor-editor-active .elementor-element.stax-condition-yes::before{content:'\\e8ed';color:#6E49CB;display:inline-block;font-family:eicons;font-size:15px;position:absolute;top:0;right:5px;z-index:1;}";
+	}
+
+	/**
+	 * Elementor element cache: an element with rules (or hiding when empty) must be rendered on every request.
+	 *
+	 * @param bool  $is_dynamic Elementor's answer.
+	 * @param array $raw_data   Element data.
+	 *
 	 * @return bool
 	 */
-	public function maybe_disable_document_caching( $document, $is_excerpt ) {
-		$elements_data = $document->get_elements_data();
-
-		if ( $this->has_visibility_logic( $elements_data ) ) {
-
-			// disable caching globally
-			add_filter( "get_post_metadata", [ $this, 'filter_document_cache_meta' ], 9999, 5 );
+	public function is_dynamic_content( $is_dynamic, $raw_data = [] ) {
+		if ( $is_dynamic || empty( $raw_data['settings'] ) || ! is_array( $raw_data['settings'] ) ) {
+			return $is_dynamic;
 		}
-		
+
+		return Rules::has_rules( $raw_data['settings'] ) || self::flag( $raw_data['settings'], 'hide_when_empty' );
 	}
 
-	public function re_enable_document_caching( $document, $is_excerpt ) {
-		remove_filter( "get_post_metadata", [ $this, 'filter_document_cache_meta' ], 9999, 5 );
+	/**
+	 * Disable the document cache when an element with rules cannot be rendered per request through the element
+	 * cache: Elementor without element cache support (before 3.22) or an element whose "Cache Settings" is set to
+	 * active by hand.
+	 *
+	 * @param \Elementor\Core\Base\Document $document   Document.
+	 * @param bool                          $is_excerpt Excerpt.
+	 *
+	 * @return void
+	 */
+	public function maybe_disable_document_caching( $document, $is_excerpt = false ) {
+		if ( ! is_object( $document ) || ! method_exists( $document, 'get_elements_data' ) ) {
+			return;
+		}
+
+		$id = method_exists( $document, 'get_main_id' ) ? (int) $document->get_main_id() : 0;
+
+		if ( ! isset( $this->uncacheable_documents[ $id ] ) || 0 === $id ) {
+			$legacy_cache = version_compare( ELEMENTOR_VERSION, '3.22.0', '<' );
+
+			$this->uncacheable_documents[ $id ] = $this->needs_uncached_render( (array) $document->get_elements_data(), $legacy_cache );
+		}
+
+		if ( $this->uncacheable_documents[ $id ] ) {
+			add_filter( 'get_post_metadata', [ $this, 'filter_document_cache_meta' ], 9999, 5 );
+		}
 	}
 
-	public function filter_document_cache_meta( $value, $object_id, $meta_key, $single, $meta_type ) {
+	/**
+	 * Re-enable the document cache after the document was rendered.
+	 *
+	 * @param \Elementor\Core\Base\Document $document   Document.
+	 * @param bool                          $is_excerpt Excerpt.
+	 *
+	 * @return void
+	 */
+	public function re_enable_document_caching( $document, $is_excerpt = false ) {
+		remove_filter( 'get_post_metadata', [ $this, 'filter_document_cache_meta' ], 9999 );
+	}
 
-		// Check if the constant exists before using it
-		if ( defined( '\Elementor\Core\Base\Document::CACHE_META_KEY' ) ) {
-			if ( $meta_key === \Elementor\Core\Base\Document::CACHE_META_KEY ) {
-				return false;
-			}
-		} else if ( $meta_key === '_elementor_element_cache' ) {
+	/**
+	 * Hide the element cache meta from Elementor.
+	 *
+	 * @param mixed  $value     Value.
+	 * @param int    $object_id Object id.
+	 * @param string $meta_key  Meta key.
+	 * @param bool   $single    Single.
+	 * @param string $meta_type Meta type.
+	 *
+	 * @return mixed
+	 */
+	public function filter_document_cache_meta( $value, $object_id, $meta_key, $single = false, $meta_type = 'post' ) {
+		$cache_key = defined( '\Elementor\Core\Base\Document::CACHE_META_KEY' ) ? \Elementor\Core\Base\Document::CACHE_META_KEY : '_elementor_element_cache';
+
+		if ( $meta_key === $cache_key ) {
 			return false;
 		}
+
 		return $value;
 	}
 
 	/**
-	 * Check if any element in the document has visibility logic enabled
+	 * Whether the document must skip Elementor's element cache.
 	 *
-	 * @param array $elements_data
+	 * @param array $elements     Elements data.
+	 * @param bool  $legacy_cache Elementor without per-element dynamic rendering.
+	 *
 	 * @return bool
 	 */
-	private function has_visibility_logic( $elements_data ) {
-		foreach ( $elements_data as $element_data ) {
-			if ( $this->element_has_visibility_logic( $element_data ) ) {
-				return true;
+	private function needs_uncached_render( array $elements, $legacy_cache ) {
+		foreach ( $elements as $element ) {
+			if ( ! is_array( $element ) ) {
+				continue;
 			}
-		}
-		return false;
-	}
 
-	/**
-	 * Recursively check if an element or its children have visibility logic enabled
-	 *
-	 * @param array $element_data
-	 * @return bool
-	 */
-	private function element_has_visibility_logic( $element_data ) {
-		if ( isset( $element_data['settings'][ self::SECTION_PREFIX . 'enabled' ] ) && $element_data['settings'][ self::SECTION_PREFIX . 'enabled' ] ) {
-			return true;
-		}
+			$settings = isset( $element['settings'] ) && is_array( $element['settings'] ) ? $element['settings'] : [];
 
-		if ( ! empty( $element_data['elements'] ) ) {
-			foreach ( $element_data['elements'] as $child_element ) {
-				if ( $this->element_has_visibility_logic( $child_element ) ) {
+			if ( Rules::has_rules( $settings ) || self::flag( $settings, 'hide_when_empty' ) ) {
+				if ( $legacy_cache || ( isset( $settings['_element_cache'] ) && 'no' === $settings['_element_cache'] ) ) {
 					return true;
 				}
+			}
+
+			if ( ! empty( $element['elements'] ) && $this->needs_uncached_render( (array) $element['elements'], $legacy_cache ) ) {
+				return true;
 			}
 		}
 

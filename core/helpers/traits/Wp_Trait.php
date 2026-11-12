@@ -24,13 +24,16 @@ trait Wp_Trait {
 			$user_prop = get_object_vars( $user_tmp );
 			if ( ! empty( $user_prop['data'] ) ) {
 				$user_prop_all = (array) $user_prop['data'];
-				$user_prop     = array();
+
+				// Never offer the password hash or the activation key as a condition field.
+				unset( $user_prop_all['user_pass'], $user_prop_all['user_activation_key'] );
+				$user_prop = array();
 				if ( ! empty( $meta ) && is_string( $meta ) ) {
 					foreach ( $user_prop_all as $key => $value ) {
 						if ( is_array( $value ) ) {
 							continue;
 						}
-						$pos_key  = stripos( $value, $meta );
+						$pos_key  = stripos( (string) $value, $meta );
 						$pos_name = stripos( $key, $meta );
 						if ( false === $pos_key && false === $pos_name ) {
 							continue;
@@ -62,7 +65,7 @@ trait Wp_Trait {
 			}
 
 			$pos_key = is_string( $meta ) ? stripos( 'avatar', $meta ) : false;
-			if ( empty( $meta ) || ! is_string( $meta ) || $pos_key !== false ) {
+			if ( empty( $meta ) || ! is_string( $meta ) || false !== $pos_key ) {
 				if ( $group ) {
 					$user_fields_key['USER']['avatar'] = 'Avatar';
 				} else {
@@ -70,12 +73,11 @@ trait Wp_Trait {
 				}
 			}
 
-			if ( $group ) {
+			if ( $group && isset( $user_fields_key['USER'] ) ) {
 				$user_fields_key = array_merge( array( 'USER' => $user_fields_key['USER'] ), $user_fields_key );
 			}
 		}
 
 		return $user_fields_key;
 	}
-
 }

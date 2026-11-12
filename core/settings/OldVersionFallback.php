@@ -30,24 +30,7 @@ class OldVersionFallback extends Singleton {
 	 * @return void
 	 */
 	public function register_section( $element ) {
-		$meta = get_post_meta( get_the_ID(), '_elementor_data', true );
-
-		if ( is_array( $meta ) ) {
-			$data = $meta;
-		} else {
-			$data = $meta ? @json_decode( $meta, true ) : null;
-		}
-
-		$has_old_data = false;
-
-		if ( null !== $data ) {
-			foreach ( $data as $data_item ) {
-				$item_data    = $this->check_for_old_data( $data_item, $has_old_data );
-				$has_old_data = $item_data['has_old_data'];
-			}
-		}
-
-		if ( $has_old_data ) {
+		if ( $this->document_has_old_data() ) {
 			$element->start_controls_section(
 				self::SECTION_PREFIX . 'old_version_section',
 				[
@@ -64,6 +47,45 @@ class OldVersionFallback extends Singleton {
 	}
 
 	/**
+	 * Whether the edited document has 1.x settings (checked once per request, it used to run per element).
+	 *
+	 * @return bool
+	 */
+	private function document_has_old_data() {
+		static $cache = [];
+
+		$post_id = (int) get_the_ID();
+
+		if ( isset( $cache[ $post_id ] ) ) {
+			return $cache[ $post_id ];
+		}
+
+		$meta = $post_id ? get_post_meta( $post_id, '_elementor_data', true ) : '';
+
+		if ( is_array( $meta ) ) {
+			$data = $meta;
+		} else {
+			$data = $meta ? json_decode( (string) $meta, true ) : null;
+		}
+
+		$has_old_data = false;
+
+		if ( is_array( $data ) ) {
+			foreach ( $data as $data_item ) {
+				if ( ! is_array( $data_item ) ) {
+					continue;
+				}
+				$item_data    = $this->check_for_old_data( $data_item, $has_old_data );
+				$has_old_data = $item_data['has_old_data'];
+			}
+		}
+
+		$cache[ $post_id ] = $has_old_data;
+
+		return $has_old_data;
+	}
+
+	/**
 	 * Check for old data
 	 *
 	 * @param array $item
@@ -72,10 +94,10 @@ class OldVersionFallback extends Singleton {
 	 * @return array
 	 */
 	private function check_for_old_data( $item, $has_old_data ) {
-		if ( 'column' !== $item['elType'] ) {
+		if ( isset( $item['elType'] ) && 'column' !== $item['elType'] ) {
 			if ( isset( $item['settings']['ecl_enabled'] ) ||
-				 isset( $item['settings']['ecl_role_visible'] ) ||
-				 isset( $item['settings']['ecl_role_hidden'] ) ) {
+				isset( $item['settings']['ecl_role_visible'] ) ||
+				isset( $item['settings']['ecl_role_hidden'] ) ) {
 				$has_old_data = true;
 			}
 		}
@@ -159,7 +181,6 @@ class OldVersionFallback extends Singleton {
 			]
 		);
 	}
-
 }
 
 OldVersionFallback::instance();

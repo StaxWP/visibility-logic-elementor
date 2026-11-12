@@ -221,19 +221,19 @@ class UserMetaVisibility extends Singleton {
 	public function apply_conditions( $options, $settings, $item ) {
 		$settings = $item->get_settings_for_display();
 
-		if ( ! (bool) $settings[ self::SECTION_PREFIX . 'user_meta_enabled' ] || ! is_array( $settings[ self::SECTION_PREFIX . 'user_meta_options' ] ) ) {
+		if ( ! self::flag( $settings, 'user_meta_enabled' ) || ! is_array( self::value( $settings, 'user_meta_options', null ) ) ) {
 			return $options;
 		}
 
 		$current_user       = wp_get_current_user();
 		$meta_is_consistent = true;
-		$meta_check_type    = $settings[ self::SECTION_PREFIX . 'user_meta_status' ];
-		$meta_check_value   = $settings[ self::SECTION_PREFIX . 'user_meta_value' ];
+		$meta_check_type    = (string) self::value( $settings, 'user_meta_status', 'none' );
+		$meta_check_value   = (string) self::value( $settings, 'user_meta_value' );
 
-		foreach ( $settings[ self::SECTION_PREFIX . 'user_meta_options' ] as $meta ) {
-			$user_meta = get_user_meta( $current_user->ID, $meta, true );
+		foreach ( self::value( $settings, 'user_meta_options', [] ) as $meta ) {
+			$meta = (string) $meta;
 
-			if ( isset( $current_user->{$meta} ) ) {
+			if ( '' !== $meta && isset( $current_user->{$meta} ) ) {
 				$user_meta = $current_user->{$meta};
 			} else {
 				$user_meta = get_user_meta( $current_user->ID, $meta, true );
@@ -260,8 +260,8 @@ class UserMetaVisibility extends Singleton {
 
 					$value_found = false;
 
-					foreach ( $values as $item ) {
-						if ( $item === $user_meta ) {
+					foreach ( $values as $value ) {
+						if ( $value === $user_meta ) {
 							$value_found = true;
 						}
 					}
@@ -284,7 +284,7 @@ class UserMetaVisibility extends Singleton {
 					}
 					break;
 				case 'is_between':
-					$meta_check_value_2 = $settings[ self::SECTION_PREFIX . 'user_meta_value_2' ];
+					$meta_check_value_2 = (string) self::value( $settings, 'user_meta_value_2' );
 
 					if ( ! is_numeric( $user_meta ) || ! is_numeric( $meta_check_value ) || ! is_numeric( $meta_check_value_2 ) ) {
 						$meta_is_consistent = false;
@@ -338,7 +338,6 @@ class UserMetaVisibility extends Singleton {
 
 		return $options;
 	}
-
 }
 
 UserMetaVisibility::instance();

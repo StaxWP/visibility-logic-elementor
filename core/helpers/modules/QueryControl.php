@@ -56,11 +56,17 @@ class QueryControl extends Module {
 	 * @return array
 	 */
 	public function ajax_call_filter_autocomplete( array $data ) {
-		if ( empty( $data['query_type'] ) || empty( $data['q'] ) ) {
+		if ( empty( $data['query_type'] ) || empty( $data['q'] ) || ! current_user_can( 'edit_posts' ) ) {
 			throw new \Exception( 'Bad Request' );
 		}
 
-		$results = call_user_func( [ $this, 'get_' . $data['query_type'] ], $data );
+		$method = 'get_' . sanitize_key( $data['query_type'] );
+
+		if ( 'get_name' === $method || ! method_exists( $this, $method ) ) {
+			throw new \Exception( 'Bad Request' );
+		}
+
+		$results = call_user_func( [ $this, $method ], $data );
 
 		return [
 			'results' => $results,
@@ -73,7 +79,17 @@ class QueryControl extends Module {
 	 * @return array
 	 */
 	public function ajax_call_control_value_titles( $request ) {
-		$results = call_user_func( [ $this, 'get_value_titles_for_' . $request['query_type'] ], $request );
+		if ( empty( $request['query_type'] ) || ! current_user_can( 'edit_posts' ) ) {
+			throw new \Exception( 'Bad Request' );
+		}
+
+		$method = 'get_value_titles_for_' . sanitize_key( $request['query_type'] );
+
+		if ( ! method_exists( $this, $method ) ) {
+			throw new \Exception( 'Bad Request' );
+		}
+
+		$results = call_user_func( [ $this, $method ], $request );
 
 		return $results;
 	}
@@ -128,7 +144,7 @@ class QueryControl extends Module {
 		foreach ( $ids as $aid ) {
 			$fields = \Stax\VisibilityLogic\FunctionCaller::{$function}( false, $aid );
 			foreach ( $fields as $field_key => $field_name ) {
-				if ( in_array( $field_key, $ids ) ) {
+				if ( in_array( $field_key, $ids ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict -- ids arrive as strings or ints.
 					$results[ $field_key ] = $field_name;
 				}
 			}
@@ -164,7 +180,7 @@ class QueryControl extends Module {
 
 				if ( ! empty( $fields ) ) {
 					foreach ( $fields as $field_key => $field_name ) {
-						if ( in_array( $field_key, $ids ) ) {
+						if ( in_array( $field_key, $ids ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict -- ids arrive as strings or ints.
 							$results[ $field_key ] = $field_name;
 						}
 					}
@@ -398,5 +414,4 @@ class QueryControl extends Module {
 
 		return [];
 	}
-
 }

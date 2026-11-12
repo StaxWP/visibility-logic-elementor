@@ -74,5 +74,4 @@ class Controls {
 			$controls_manager->register( new $class() );
 		}
 	}
-
 }
