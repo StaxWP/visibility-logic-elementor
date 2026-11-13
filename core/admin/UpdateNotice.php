@@ -57,7 +57,7 @@ class UpdateNotice {
 			return false;
 		}
 
-		return ! Resources::get_setting( 'element_cache' ) || ! Resources::get_setting( 'container_widgets' );
+		return ! Resources::get_setting( 'element_cache' );
 	}
 
 	/**
@@ -80,13 +80,10 @@ class UpdateNotice {
 		?>
 		<div class="notice notice-info">
 			<p><strong><?php esc_html_e( 'Visibility Logic 3.0: your site works exactly as before.', 'visibility-logic-elementor' ); ?></strong></p>
-			<p><?php esc_html_e( 'Two improvements are available as options, off on updated sites so nothing changes without you:', 'visibility-logic-elementor' ); ?></p>
+			<p><?php esc_html_e( 'Faster pages are available as an option, off on updated sites so nothing changes without you:', 'visibility-logic-elementor' ); ?></p>
 			<ul class="ul-disc">
 				<?php if ( ! Resources::get_setting( 'element_cache' ) ) : ?>
 					<li><?php esc_html_e( 'Faster pages: keep Elementor\'s element cache on for pages with visibility rules.', 'visibility-logic-elementor' ); ?></li>
-				<?php endif; ?>
-				<?php if ( ! Resources::get_setting( 'container_widgets' ) ) : ?>
-					<li><?php esc_html_e( '"Hide when empty" fix: containers holding their widgets directly are no longer always hidden (such containers may start to show).', 'visibility-logic-elementor' ); ?></li>
 				<?php endif; ?>
 			</ul>
 			<p>

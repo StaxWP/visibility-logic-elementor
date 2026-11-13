@@ -42,13 +42,13 @@ if ( ! function_exists( 'get_field' ) ) {
 
 $GLOBALS['vle_test_acf'] = [];
 
-// Settings of the run: the 2.x behaviour (what a site updating from 2.x gets), restored at the end.
+// Settings of the run: the defaults of a site updating from 2.x (2.5.2 fixes on, element cache off), restored at the end.
 $GLOBALS['vle_settings_backup'] = get_option( 'stax_visibility_general', false );
 update_option(
 	'stax_visibility_general',
 	[
-		'site_timezone'     => false,
-		'container_widgets' => false,
+		'site_timezone'     => true,
+		'container_widgets' => true,
 		'element_cache'     => false,
 	]
 );
@@ -569,7 +569,7 @@ vle_case(
 	'visible'
 );
 
-// Date FROM/TO time zone: 2.x reads them as UTC; the 3.0 setting reads them in the site time zone.
+// Date FROM/TO time zone: site time zone by default since 2.5.2; the setting unchecked reads them as UTC (2.5.1 and earlier).
 if ( class_exists( '\\Stax\\VisibilityLogic\\DateTimeVisibility' ) && method_exists( '\\Stax\\VisibilityLogic\\Resources', 'get_setting' ) ) {
 	$tz_backup  = [ get_option( 'timezone_string' ), get_option( 'gmt_offset' ) ];
 	update_option( 'timezone_string', 'Pacific/Kiritimati' ); // UTC+14.
@@ -578,7 +578,7 @@ if ( class_exists( '\\Stax\\VisibilityLogic\\DateTimeVisibility' ) && method_exi
 	$to_local   = $local_now->modify( '+1 hour' )->format( $fmt );
 	vle_setting( 'site_timezone', false );
 	vle_case(
-		'date range in site time, read as UTC (2.x): hidden',
+		'date range in site time, setting unchecked (UTC, before 2.5.2): hidden',
 		$dt(
 			[
 				'date_time_type' => 'date',
@@ -591,7 +591,7 @@ if ( class_exists( '\\Stax\\VisibilityLogic\\DateTimeVisibility' ) && method_exi
 	);
 	vle_setting( 'site_timezone', true );
 	vle_case(
-		'date range in site time, site time zone setting: visible',
+		'date range in site time, site time zone (default): visible',
 		$dt(
 			[
 				'date_time_type' => 'date',
@@ -604,7 +604,7 @@ if ( class_exists( '\\Stax\\VisibilityLogic\\DateTimeVisibility' ) && method_exi
 	);
 	update_option( 'timezone_string', $tz_backup[0] );
 	update_option( 'gmt_offset', $tz_backup[1] );
-	vle_setting( 'site_timezone', false );
+	vle_setting( 'site_timezone', true );
 }
 
 $local   = current_time( 'timestamp' ); // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested
@@ -896,28 +896,26 @@ vle_is( 'nested containers, one visible, hide when empty: shown', 'visible', vle
 $html = vle_render( $container( 'con3', [ $hidden_w, $hidden_w2 ], $hwe ) );
 vle_is( 'flat container, all hidden, hide when empty: hidden', 'absent', vle_state( $html, 'con3' ) );
 $html = vle_render( $container( 'con4', [ $hidden_w, $shown_w ], $hwe ) );
-vle_is( 'flat container, one visible, hide when empty: hidden as in 2.x (update default)', 'absent', vle_state( $html, 'con4' ) );
+vle_is( 'flat container, one visible, hide when empty: shown (2.5.2 fix, default)', 'visible', vle_state( $html, 'con4' ) );
 $html = vle_render( $container( 'con7', [ $container( 'con7a', [ $hidden_w, $shown_w ] ) ], $hwe ) );
 vle_is( 'nested container, inner flat with one visible: shown', 'visible', vle_state( $html, 'con7' ) );
 $html = vle_render( $container( 'con8', [ $container( 'con8a', [ $container( 'con8b', [ $hidden_w ] ) ] ) ], $hwe ) );
 vle_is( 'three levels, deepest container counts as content (2.x)', 'visible', vle_state( $html, 'con8' ) );
 $html = vle_render( $container( 'con9', [ vle_w( 'kh1', array_merge( $guest_show, vle_s( [ 'keep_html' => 'yes' ] ) ) ) ], $hwe ) );
-vle_is( 'flat container, only a CSS-hidden widget: hidden as in 2.x (update default)', 'absent', vle_state( $html, 'con9' ) );
+vle_is( 'flat container, only a CSS-hidden widget: kept (2.5.2 fix, default)', 'visible', vle_state( $html, 'con9' ) );
 
-// 3.0 behaviour (new installs, opt-in for updated sites).
+// container_widgets unchecked: the walk of 2.5.1 and earlier.
 if ( method_exists( '\Stax\VisibilityLogic\Resources', 'get_setting' ) ) {
-	vle_setting( 'container_widgets', true );
-	$html = vle_render( $container( 'con4', [ $hidden_w, $shown_w ], $hwe ) );
-	vle_is( 'container_widgets on: flat container, one visible: shown', 'visible', vle_state( $html, 'con4' ) );
-	$html = vle_render( $container( 'con3', [ $hidden_w, $hidden_w2 ], $hwe ) );
-	vle_is( 'container_widgets on: flat container, all hidden: hidden', 'absent', vle_state( $html, 'con3' ) );
-	$html = vle_render( $container( 'con9', [ vle_w( 'kh1', array_merge( $guest_show, vle_s( [ 'keep_html' => 'yes' ] ) ) ) ], $hwe ) );
-	vle_is( 'container_widgets on: only a CSS-hidden widget: kept', 'visible', vle_state( $html, 'con9' ) );
-	$html = vle_render( $container( 'con1', [ $container( 'con1a', [ $hidden_w ] ), $container( 'con1b', [ $hidden_w2 ] ) ], $hwe ) );
-	vle_is( 'container_widgets on: nested containers, all hidden: hidden', 'absent', vle_state( $html, 'con1' ) );
-	$html = vle_render( $section( 'sec2', [ $hidden_w, $shown_w ], $hwe ) );
-	vle_is( 'container_widgets on: sections unchanged', 'visible', vle_state( $html, 'sec2' ) );
 	vle_setting( 'container_widgets', false );
+	$html = vle_render( $container( 'con4', [ $hidden_w, $shown_w ], $hwe ) );
+	vle_is( 'container_widgets off: flat container, one visible: hidden as before 2.5.2', 'absent', vle_state( $html, 'con4' ) );
+	$html = vle_render( $container( 'con9', [ vle_w( 'kh1', array_merge( $guest_show, vle_s( [ 'keep_html' => 'yes' ] ) ) ) ], $hwe ) );
+	vle_is( 'container_widgets off: only a CSS-hidden widget: hidden as before 2.5.2', 'absent', vle_state( $html, 'con9' ) );
+	$html = vle_render( $container( 'con2', [ $container( 'con2a', [ $hidden_w ] ), $container( 'con2b', [ $shown_w ] ) ], $hwe ) );
+	vle_is( 'container_widgets off: nested containers, one visible: shown', 'visible', vle_state( $html, 'con2' ) );
+	$html = vle_render( $section( 'sec2', [ $hidden_w, $shown_w ], $hwe ) );
+	vle_is( 'container_widgets off: sections unchanged', 'visible', vle_state( $html, 'sec2' ) );
+	vle_setting( 'container_widgets', true );
 }
 
 // Element cache flag: 2.x mode marks nothing dynamic; the 3.0 mode marks elements with rules.

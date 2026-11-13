@@ -189,7 +189,7 @@ class DateTimeVisibility extends Singleton {
 				'type'           => Controls_Manager::RAW_HTML,
 				'raw'            => ( Resources::get_setting( 'site_timezone' )
 					? esc_html__( 'Dates and times use the site time zone (Settings > General). Now:', 'visibility-logic-elementor' )
-					: esc_html__( 'Times use the site time zone, dates FROM/TO use UTC (Settings > Visibility Logic can switch them to the site time zone). Site time now:', 'visibility-logic-elementor' ) )
+					: esc_html__( 'Times use the site time zone, dates FROM/TO use UTC (changed in Settings > Visibility Logic). Site time now:', 'visibility-logic-elementor' ) )
 					. '<br><strong>' . esc_html( wp_date( 'Y-m-d H:i' ) ) . '</strong>',
 				'condition'      => [
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
@@ -332,8 +332,8 @@ class DateTimeVisibility extends Singleton {
 	/**
 	 * Whether now is inside a date range (open ended when one side is empty, false when both are).
 	 *
-	 * Until 3.0 the dates were read as UTC. Sites that turn on "Site time zone for date ranges" in
-	 * Settings > Visibility Logic (on by default for new installs) read them in the site time zone.
+	 * Before 2.5.2 the dates were read as UTC. Since 2.5.2 they are read in the site time zone ("Read Date FROM and
+	 * Date TO in the site time zone" in Settings > Visibility Logic, on by default; unchecked reads UTC).
 	 *
 	 * @param string $date_from Date FROM (Y-m-d H:i).
 	 * @param string $date_to   Date TO (Y-m-d H:i).
@@ -367,15 +367,25 @@ class DateTimeVisibility extends Singleton {
 	 * @return int|false
 	 */
 	private static function to_timestamp( $date ) {
-		if ( Resources::get_setting( 'site_timezone' ) ) {
-			try {
-				return ( new \DateTimeImmutable( $date, wp_timezone() ) )->getTimestamp();
-			} catch ( \Exception $e ) {
-				return false;
-			}
+		$timezone = Resources::get_setting( 'site_timezone' ) ? wp_timezone() : new \DateTimeZone( 'UTC' );
+
+		/**
+		 * Time zone of Date FROM/TO (since 2.5.2). Return `new DateTimeZone( 'UTC' )` to read them as before 2.5.2.
+		 *
+		 * @param \DateTimeZone $timezone Site time zone, or UTC when "Read Date FROM and Date TO in the site time
+		 *                                zone" is unchecked in Settings > Visibility Logic.
+		 */
+		$filtered = apply_filters( 'stax/visibility/date_timezone', $timezone );
+
+		if ( $filtered instanceof \DateTimeZone ) {
+			$timezone = $filtered;
 		}
 
-		return strtotime( $date );
+		try {
+			return ( new \DateTimeImmutable( (string) $date, $timezone ) )->getTimestamp();
+		} catch ( \Exception $e ) {
+			return false;
+		}
 	}
 
 	/**

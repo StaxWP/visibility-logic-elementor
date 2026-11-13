@@ -400,9 +400,9 @@ class Plugin extends Singleton {
 	/**
 	 * Elements one level below the columns of a section, or below the child containers of a container.
 	 *
-	 * The 2.x walk (children of children). With the `container_widgets` setting a widget placed directly in a
-	 * container counts itself; 2.x skipped it, so "Hide when empty" always hid such a container. Sites updating
-	 * from 2.x keep the 2.x walk until they turn the setting on.
+	 * With the `container_widgets` setting (on since 2.5.2) a widget placed directly in a container counts itself;
+	 * before 2.5.2 it was skipped (children of children only), so "Hide when empty" always hid such a container.
+	 * Unchecking the setting restores that walk.
 	 *
 	 * @param \Elementor\Element_Base $item Element.
 	 *

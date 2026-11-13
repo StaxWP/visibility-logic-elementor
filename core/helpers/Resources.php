@@ -105,12 +105,14 @@ final class Resources extends Singleton {
 	const SETTINGS_OPTION = 'stax_visibility_general';
 
 	/**
-	 * Default general settings: the 2.x behaviour. An update never changes how an existing site works; each
-	 * newer behaviour is a setting in Settings > Visibility Logic.
+	 * Default general settings: the 2.x behaviour (2.5.2 and later, which already include the date time zone and
+	 * "Hide when empty" fixes). An update never changes how an existing site works; each newer behaviour is a
+	 * setting in Settings > Visibility Logic.
 	 *
-	 * - `site_timezone`: read Date FROM/TO in the site time zone (2.x: UTC). Opt-in for every site.
-	 * - `container_widgets`: "Hide when empty" counts widgets placed directly in a container (2.x skipped them,
-	 *   so such a container was always hidden). On for new installs, opt-in for updated sites.
+	 * - `site_timezone`: read Date FROM/TO in the site time zone (before 2.5.2: UTC). On for every site since 2.5.2
+	 *   (bug fix); unchecking it in Settings > Visibility Logic reads them as UTC again.
+	 * - `container_widgets`: "Hide when empty" counts widgets placed directly in a container (before 2.5.2 they were skipped,
+	 *   so such a container was always hidden). On for every site since 2.5.2 (bug fix); can be unchecked.
 	 * - `element_cache`: keep Elementor's element cache on for pages with rules and render only the elements
 	 *   with rules per request (2.x bypassed the cache for the whole page). On for new installs, opt-in for
 	 *   updated sites.
@@ -119,8 +121,8 @@ final class Resources extends Singleton {
 	 */
 	public static function default_settings() {
 		return [
-			'site_timezone'     => false,
-			'container_widgets' => false,
+			'site_timezone'     => true,
+			'container_widgets' => true,
 			'element_cache'     => false,
 		];
 	}
@@ -134,8 +136,7 @@ final class Resources extends Singleton {
 		return array_merge(
 			self::default_settings(),
 			[
-				'container_widgets' => true,
-				'element_cache'     => true,
+				'element_cache' => true,
 			]
 		);
 	}

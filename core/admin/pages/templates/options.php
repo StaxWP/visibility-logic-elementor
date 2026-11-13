@@ -70,7 +70,7 @@ defined( 'ABSPATH' ) || exit;
 					<?php
 					printf(
 						/* translators: %s: time zone name. */
-						esc_html__( 'Site time zone: %s. Off by default: Date FROM and Date TO are read as UTC, as in every version before 3.0, while times of day already use the site time zone. Turning it on moves existing schedules by the difference between UTC and the site time zone, so check scheduled elements after changing it.', 'visibility-logic-elementor' ),
+						esc_html__( 'Site time zone: %s. Recommended, on by default since 2.5.2: Date FROM and Date TO mean the site time, like the times of day. Unchecked, they are read as UTC, as in versions before 2.5.2; changing it moves existing schedules by the difference between UTC and the site time zone, so check scheduled elements after changing it.', 'visibility-logic-elementor' ),
 						'<code>' . esc_html( wp_timezone_string() ) . '</code>'
 					);
 					?>
@@ -85,7 +85,7 @@ defined( 'ABSPATH' ) || exit;
 					<?php esc_html_e( 'Count widgets placed directly in a container', 'visibility-logic-elementor' ); ?>
 				</label>
 				<p class="description">
-					<?php esc_html_e( 'Recommended. Before 3.0, "Hide when empty" only looked at widgets inside inner containers or columns, so a container holding its widgets directly was always hidden. Sites that update keep that behaviour until this box is checked; containers that were hidden that way will start to show.', 'visibility-logic-elementor' ); ?>
+					<?php esc_html_e( 'Recommended, on by default since 2.5.2. Before 2.5.2, "Hide when empty" only looked at widgets inside inner containers or columns, so a container holding its widgets directly was always hidden. Unchecked, containers are hidden that way again.', 'visibility-logic-elementor' ); ?>
 				</p>
 			</td>
 		</tr>
