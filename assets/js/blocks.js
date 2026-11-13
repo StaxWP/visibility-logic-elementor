@@ -250,15 +250,30 @@
 				labels: L,
 				context: data.context,
 				proUrl: data.proUrl,
-				search: usersSearch ? { users: usersSearch } : null,
+				search: { users: usersSearch, posts: data.postsUrl ? function ( q ) {
+					return wp.apiFetch( { path: '/wp/v2/search?type=post&per_page=20&search=' + encodeURIComponent( q ) } ).then( function ( list ) {
+						return ( list || [] ).map( function ( p ) {
+							return { value: String( p.id ), label: p.title + ' (#' + p.id + ')' };
+						} );
+					} ).catch( function () {
+						return [];
+					} );
+				} : null },
 				settings: {
 					fields: [
 						{ key: 'active', type: 'switch', label: L.active, help: L.activeHelp },
-						{ key: 'when_hidden', type: 'select', label: L.whenHidden, options: [ { value: 'remove', label: L.remove_page }, { value: 'css', label: L.keepHtml } ], show_if: { active: [ 'yes' ] } },
+						{ key: 'when_hidden', type: 'select', label: L.whenHidden, options: [ { value: 'remove', label: L.remove_page }, { value: 'css', label: L.keepHtml }, { value: 'text', label: L.fallbackText } ], show_if: { active: [ 'yes' ] } },
+						{ key: 'fallback_text', type: 'textarea', label: L.fallbackMessage, help: L.fallbackHelp, show_if: { active: [ 'yes' ], when_hidden: [ 'text' ] } },
 					],
-					values: { active: on( values.enabled ), when_hidden: on( values.keep_html ) ? 'css' : 'remove' },
+					values: { active: on( values.enabled ), when_hidden: on( values.fallback_enabled ) ? 'text' : ( on( values.keep_html ) ? 'css' : 'remove' ), fallback_text: values.fallback_text || '' },
 					onChange: function ( key, value ) {
-						write( key === 'active' ? { enabled: !! value } : { keep_html: value === 'css' } );
+						if ( key === 'active' ) {
+							write( { enabled: !! value } );
+						} else if ( key === 'when_hidden' ) {
+							write( { keep_html: value === 'css', fallback_enabled: value === 'text', fallback_type: 'text' } );
+						} else if ( key === 'fallback_text' ) {
+							write( { fallback_text: value } );
+						}
 					},
 				},
 				onChange: function ( tree ) {

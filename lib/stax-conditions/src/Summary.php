@@ -7,6 +7,7 @@
  *   {key}        value of the field, formatted (option labels; lists joined with ", "; long lists "A, B, C and 2 more")
  *   {key|or}     lists joined with " or "
  *   {key|lower}  first letter lower case
+ *   {key|after:other}  the value, plus " (next day)" when it is before the other field's value (times over midnight)
  *   [ ... ]      optional part, dropped when a placeholder inside is empty
  *   Cases: [ 'field' => 'date_time_type', 'cases' => [ 'date' => '...', '*' => '...' ] ]
  *
@@ -40,6 +41,8 @@ class Summary {
 			'short_hide' => 'Hidden: %s',
 			'short_more' => '%1$s +%2$d',
 			'users'      => '%d users',
+			'posts'      => '%d items',
+			'next_day'   => ' (next day)',
 			'rows'       => '%d rules',
 		];
 	}
@@ -199,11 +202,17 @@ class Summary {
 	 */
 	private static function placeholders( $text, $type, Registry $registry, array $values, array $labels, array $formatters, &$empty ) {
 		return preg_replace_callback(
-			'/\{([a-z0-9_]+)(?:\|([a-z]+))?\}/',
+			'/\{([a-z0-9_]+)(?:\|([a-z]+)(?::([a-z0-9_]+))?)?\}/',
 			static function ( $m ) use ( $type, $registry, $values, $labels, $formatters, &$empty ) {
 				$field = $registry->field( $type, $m[1] );
 				$value = array_key_exists( $m[1], $values ) ? $values[ $m[1] ] : null;
-				$text  = self::format( $value, $field ? $field : [ 'type' => 'text' ], $labels, $formatters, isset( $m[2] ) ? $m[2] : '' );
+				$mod   = isset( $m[2] ) ? $m[2] : '';
+				$text  = self::format( $value, $field ? $field : [ 'type' => 'text' ], $labels, $formatters, 'after' === $mod ? '' : $mod );
+
+				// {time_to|after:time_from}: "(next day)" when the value is before the other one (a range over midnight).
+				if ( 'after' === $mod && '' !== $text && ! empty( $m[3] ) && isset( $values[ $m[3] ] ) && is_scalar( $values[ $m[3] ] ) && '' !== (string) $values[ $m[3] ] && is_scalar( $value ) && (string) $value < (string) $values[ $m[3] ] ) {
+					$text .= ( $labels + self::default_labels() )['next_day'];
+				}
 
 				if ( '' === $text ) {
 					$empty = true;
@@ -242,8 +251,9 @@ class Summary {
 				break;
 
 			case 'users':
+			case 'posts':
 				$count = is_array( $value ) ? count( $value ) : 0;
-				$text  = $count ? sprintf( $labels['users'], $count ) : '';
+				$text  = $count ? sprintf( $labels[ $type ], $count ) : '';
 				break;
 
 			case 'repeater':

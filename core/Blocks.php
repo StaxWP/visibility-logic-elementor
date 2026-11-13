@@ -85,6 +85,11 @@ class Blocks {
 			return $content;
 		}
 
+		// Text fallback (free since 3.0): shown instead of the block; Keep HTML is ignored then (as in Elementor).
+		if ( ! empty( $values['fallback_enabled'] ) && ( empty( $values['fallback_type'] ) || 'text' === $values['fallback_type'] ) && '' !== trim( (string) ( isset( $values['fallback_text'] ) ? $values['fallback_text'] : '' ) ) ) {
+			return '<div class="stax-visibility-fallback">' . wp_kses_post( (string) $values['fallback_text'] ) . '</div>';
+		}
+
 		if ( ! empty( $values['keep_html'] ) ) {
 			return self::hide_with_css( $content );
 		}

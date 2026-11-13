@@ -58,12 +58,21 @@ class Singleton {
 	}
 
 	/**
-	 * Classic columns get the Visibility tab (3.0). Not with Visibility Logic Pro before 2.5: its conditions are
-	 * registered on widgets, sections and containers only.
+	 * Classic columns get the Visibility tab (3.0), also with Visibility Logic Pro 2.4 (free conditions only there).
 	 *
 	 * @return bool
 	 */
 	public static function columns_supported() {
+		return true;
+	}
+
+	/**
+	 * Whether Visibility Logic Pro registers its conditions on columns too (2.5+). With Pro 2.4 columns get the free
+	 * conditions; rules on columns are evaluated without the Pro controls (Plugin::should_render()).
+	 *
+	 * @return bool
+	 */
+	public static function pro_supports_columns() {
 		return ! defined( 'STAX_VISIBILITY_PRO_VERSION' ) || version_compare( STAX_VISIBILITY_PRO_VERSION, '2.5.0-dev', '>=' );
 	}
 

@@ -129,8 +129,9 @@ class Rule_Tree {
 					'field' => 'date_time_type',
 					'cases' => [
 						'date'           => __( 'Date is[ from {date_from}][ until {date_to}]', 'visibility-logic-elementor' ),
-						'time'           => __( 'Time of day is[ from {time_from}][ to {time_to}]', 'visibility-logic-elementor' ),
+						'time'           => __( 'Time of day is[ from {time_from}][ to {time_to|after:time_from}]', 'visibility-logic-elementor' ),
 						'week_days'      => __( 'Day of the week is[ {time_week|or}]', 'visibility-logic-elementor' ),
+						// 2.x semantics: a range over midnight applies within the selected day only, so no "next day".
 						'week_days_time' => __( 'Day is[ {time_week|or}][ from {time_from}][ to {time_to}]', 'visibility-logic-elementor' ),
 						'yearly'         => __( 'Every year[ from {date_year_from}][ {date_year_from_time}][ to {date_year_to}][ {date_year_to_time}]', 'visibility-logic-elementor' ),
 						'*'              => __( 'Date and time', 'visibility-logic-elementor' ),
@@ -162,6 +163,12 @@ class Rule_Tree {
 				'exclusive' => 'device_types',
 				'summary'   => __( 'Device[ is {device_types|or}]', 'visibility-logic-elementor' ),
 				'short'     => '{device_types}',
+			],
+			'page'         => [
+				'category' => 'page',
+				'keywords' => [ __( 'front page', 'visibility-logic-elementor' ), __( 'post type', 'visibility-logic-elementor' ), __( 'search', 'visibility-logic-elementor' ), '404', __( 'blog', 'visibility-logic-elementor' ) ],
+				'summary'  => __( 'Page[ type is {page_types|or}][ post type is {page_post_types|or}][ is one of {page_ids}]', 'visibility-logic-elementor' ),
+				'short'    => __( 'Page[: {page_types}][ {page_ids}]', 'visibility-logic-elementor' ),
 			],
 			'acf'          => [
 				'category' => 'page',
@@ -252,6 +259,9 @@ class Rule_Tree {
 			'users'      => __( '%d users', 'visibility-logic-elementor' ),
 			/* translators: %d: number of rules. */
 			'rows'       => __( '%d rules', 'visibility-logic-elementor' ),
+			/* translators: %d: number of pages or posts. */
+			'posts'      => __( '%d items', 'visibility-logic-elementor' ),
+			'next_day'   => __( ' (next day)', 'visibility-logic-elementor' ),
 		];
 	}
 
@@ -326,6 +336,18 @@ class Rule_Tree {
 			];
 		}
 
+		// Time zone next to every date and time input (V-M9).
+		$zone = sprintf(
+			/* translators: 1: time zone name, 2: current site time. */
+			__( 'Site time zone: %1$s (now %2$s).', 'visibility-logic-elementor' ),
+			wp_timezone_string(),
+			Context::local( 'Y-m-d H:i' )
+		);
+
+		foreach ( $types as $slug => $type ) {
+			$types[ $slug ]['fields'] = self::with_zone_help( (array) $type['fields'], $zone );
+		}
+
 		$registry = new Registry( $types, self::categories(), self::presets() );
 
 		if ( did_action( 'wp_loaded' ) ) {
@@ -333,6 +355,28 @@ class Rule_Tree {
 		}
 
 		return $registry;
+	}
+
+	/**
+	 * Add the time zone note to date and time fields (repeater rows included).
+	 *
+	 * @param array  $fields Fields.
+	 * @param string $zone   Note.
+	 *
+	 * @return array
+	 */
+	private static function with_zone_help( array $fields, $zone ) {
+		foreach ( $fields as $i => $field ) {
+			$type = isset( $field['type'] ) ? $field['type'] : '';
+
+			if ( in_array( $type, [ 'date', 'time' ], true ) ) {
+				$fields[ $i ]['help'] = trim( ( isset( $field['help'] ) ? $field['help'] . ' ' : '' ) . $zone );
+			} elseif ( 'repeater' === $type && ! empty( $field['fields'] ) ) {
+				$fields[ $i ]['fields'] = self::with_zone_help( (array) $field['fields'], $zone );
+			}
+		}
+
+		return $fields;
 	}
 
 	/**
@@ -543,7 +587,7 @@ class Rule_Tree {
 
 			$types[ $condition['type'] ] = true;
 
-			if ( '' === $reason && $type && self::uses_new_options( $condition, $type ) ) {
+			if ( '' === $reason && $type && ( ( ! empty( $type['since'] ) && version_compare( $type['since'], self::SINCE, '>=' ) ) || self::uses_new_options( $condition, $type ) ) ) {
 				$reason = 'new';
 			}
 		}
@@ -581,6 +625,17 @@ class Rule_Tree {
 			}
 
 			$value = $condition['values'][ $field['key'] ];
+
+			// Rows of a repeater: the same check per row.
+			if ( 'repeater' === ( isset( $field['type'] ) ? $field['type'] : '' ) && is_array( $value ) && ! empty( $field['fields'] ) ) {
+				foreach ( $value as $row ) {
+					if ( is_array( $row ) && self::uses_new_options( [ 'values' => $row ], [ 'fields' => $field['fields'] ] ) ) {
+						return true;
+					}
+				}
+
+				continue;
+			}
 
 			if ( ! empty( $field['since'] ) && version_compare( $field['since'], self::SINCE, '>=' ) && $value !== Registry::field_default( $field ) && ! \StaxWP\Conditions\V1\Operators::is_empty( $value ) ) {
 				return true;
@@ -790,6 +845,19 @@ class Rule_Tree {
 				/* translators: 1: user names, 2: number of other users. */
 				return $more > 0 ? sprintf( __( '%1$s and %2$d more', 'visibility-logic-elementor' ), implode( ', ', $names ), $more ) : implode( ', ', $names );
 			},
+			'posts' => static function ( $value ) {
+				$names = [];
+
+				foreach ( array_slice( (array) $value, 0, 3 ) as $id ) {
+					$title   = get_the_title( (int) $id );
+					$names[] = '' !== $title ? $title : '#' . (int) $id;
+				}
+
+				$more = count( (array) $value ) - count( $names );
+
+				/* translators: 1: titles, 2: number of other items. */
+				return $more > 0 ? sprintf( __( '%1$s and %2$d more', 'visibility-logic-elementor' ), implode( ', ', $names ), $more ) : implode( ', ', $names );
+			},
 		];
 	}
 
@@ -992,6 +1060,14 @@ class Rule_Tree {
 			'remove_page'     => __( 'Remove it from the page', 'visibility-logic-elementor' ),
 			'keepHtml'        => __( 'Keep the HTML, hide with CSS', 'visibility-logic-elementor' ),
 			'fallback'        => __( 'Show other content (Pro)', 'visibility-logic-elementor' ),
+			'fallbackText'    => __( 'Show a message instead', 'visibility-logic-elementor' ),
+			'fallbackTpl'     => __( 'Show an Elementor template instead', 'visibility-logic-elementor' ),
+			'fallbackTplPro'  => __( 'Show an Elementor template instead (Pro)', 'visibility-logic-elementor' ),
+			'fallbackMessage' => __( 'Message', 'visibility-logic-elementor' ),
+			'fallbackHelp'    => __( 'Shown to visitors who do not see the element. Basic HTML is allowed.', 'visibility-logic-elementor' ),
+			'fallbackChoose'  => __( 'Template', 'visibility-logic-elementor' ),
+			'proColumns'      => __( 'Pro conditions on columns need Visibility Logic Pro 2.5 or newer.', 'visibility-logic-elementor' ),
+			'searchPosts'     => __( 'Search pages and posts', 'visibility-logic-elementor' ),
 			'hideEmpty'       => __( 'Hide this container when everything inside is hidden', 'visibility-logic-elementor' ),
 			'classic'         => __( 'Classic settings', 'visibility-logic-elementor' ),
 			'classicShow'     => __( 'Show the classic settings', 'visibility-logic-elementor' ),

@@ -82,9 +82,14 @@
 			{ key: 'when_hidden', type: 'select', label: L.whenHidden, options: [
 				{ value: 'remove', label: L.remove_page },
 				{ value: 'css', label: L.keepHtml },
-				{ value: 'fallback', label: L.fallback, disabled: ! data.fallback },
+				{ value: 'text', label: L.fallbackText },
+				{ value: 'template', label: data.fallback ? L.fallbackTpl : L.fallbackTplPro, disabled: ! data.fallback },
 			], show_if: { active: [ 'yes' ] } },
+			{ key: 'fallback_text', type: 'textarea', label: L.fallbackMessage, help: L.fallbackHelp, show_if: { active: [ 'yes' ], when_hidden: [ 'text' ] } },
 		];
+		if ( data.fallback && ( data.templates || [] ).length ) {
+			fields.push( { key: 'fallback_template', type: 'select', label: L.fallbackChoose, options: [ { value: '', label: L.fallbackChoose } ].concat( data.templates ), show_if: { active: [ 'yes' ], when_hidden: [ 'template' ] } } );
+		}
 		if ( isContainerLike( container ) ) {
 			fields.push( { key: 'hide_when_empty', type: 'switch', label: L.hideEmpty, show_if: { active: [ '' ] } } );
 		}
@@ -94,8 +99,10 @@
 	function settingsValues( values ) {
 		return {
 			active: on( values.enabled ),
-			when_hidden: on( values.fallback_enabled ) ? 'fallback' : ( on( values.keep_html ) ? 'css' : 'remove' ),
+			when_hidden: on( values.fallback_enabled ) ? ( values.fallback_type === 'template' ? 'template' : 'text' ) : ( on( values.keep_html ) ? 'css' : 'remove' ),
 			hide_when_empty: on( values.hide_when_empty ),
+			fallback_text: values.fallback_text || '',
+			fallback_template: values.fallback_template ? String( values.fallback_template ) : '',
 		};
 	}
 
@@ -115,6 +122,36 @@
 		} catch ( e ) {
 			return false;
 		}
+	}
+
+	var postsSearch = data.postsUrl ? function ( q ) {
+		return window.fetch( data.postsUrl + '?type=post&per_page=20&search=' + encodeURIComponent( q ), {
+			headers: { 'X-WP-Nonce': data.restNonce },
+			credentials: 'same-origin',
+		} ).then( function ( r ) {
+			return r.ok ? r.json() : [];
+		} ).then( function ( list ) {
+			return ( list || [] ).map( function ( p ) {
+				return { value: String( p.id ), label: p.title + ' (#' + p.id + ')' };
+			} );
+		} );
+	} : null;
+
+	// Columns with Visibility Logic Pro before 2.5: Pro conditions are not registered on columns.
+	var columnRegistry = null;
+	function registryFor( container ) {
+		var type = container && container.model ? container.model.get( 'elType' ) : '';
+		if ( type !== 'column' || ! data.proColumnsLocked ) {
+			return data.registry;
+		}
+		if ( ! columnRegistry ) {
+			columnRegistry = Object.assign( {}, data.registry, {
+				types: data.registry.types.map( function ( t ) {
+					return t.pro ? Object.assign( {}, t, { locked: true, lock: { title: L.proColumns, text: '', actions: [] } } ) : t;
+				} ),
+			} );
+		}
+		return columnRegistry;
 	}
 
 	var usersSearch = data.usersUrl ? function ( q ) {
@@ -297,12 +334,12 @@
 				this.flush = flush;
 
 				this.builder = SC.createBuilder( mount, {
-					registry: data.registry,
+					registry: registryFor( container ),
 					value: treeOf( values ),
 					labels: L,
 					context: data.context,
 					proUrl: data.proUrl,
-					search: usersSearch ? { users: usersSearch } : null,
+					search: { users: usersSearch, posts: postsSearch },
 					settings: {
 						fields: settingsFields( container ),
 						values: settingsValues( values ),
@@ -312,7 +349,18 @@
 								changes.enabled = value ? 'yes' : '';
 							} else if ( key === 'when_hidden' ) {
 								changes.keep_html = value === 'css' ? 'yes' : '';
-								changes.fallback_enabled = value === 'fallback' ? 'yes' : '';
+								changes.fallback_enabled = value === 'text' || value === 'template' ? 'yes' : '';
+								if ( value === 'text' || value === 'template' ) {
+									changes.fallback_type = value;
+								}
+							} else if ( key === 'fallback_text' || key === 'fallback_template' ) {
+								clearTimeout( view.textTimer );
+								view.textTimer = setTimeout( function () {
+									var c = {};
+									c[ key ] = value;
+									apply( container, c );
+								}, 300 );
+								return;
 							} else if ( key === 'hide_when_empty' ) {
 								changes.hide_when_empty = value ? 'yes' : '';
 							}

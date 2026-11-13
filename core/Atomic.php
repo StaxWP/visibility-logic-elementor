@@ -134,6 +134,7 @@ class Atomic {
 				case 'multiselect':
 				case 'list':
 				case 'users':
+				case 'posts':
 					$prop = String_Array_Prop_Type::make();
 					break;
 				default:
@@ -311,6 +312,7 @@ class Atomic {
 
 			case 'list':
 			case 'users':
+			case 'posts':
 				return Chips_Control::bind_to( $bind )->set_label( $label )->set_free_chips( true );
 
 			case 'textarea':

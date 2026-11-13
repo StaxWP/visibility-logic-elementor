@@ -243,6 +243,7 @@ class Conditions {
 					break;
 				case 'list':
 				case 'users':
+				case 'posts':
 					$value = is_array( $value ) ? $value : array_filter( array_map( 'trim', explode( ',', (string) $value ) ), 'strlen' );
 					$value = array_values( array_map( 'strval', array_filter( $value, 'is_scalar' ) ) );
 					break;

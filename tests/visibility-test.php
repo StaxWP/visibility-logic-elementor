@@ -1233,8 +1233,8 @@ if ( class_exists( '\\Stax\\VisibilityLogic\\Abilities' ) ) {
 	WP_CLI::log( 'Abilities' );
 	$conditions = \Stax\VisibilityLogic\Abilities::list_conditions();
 	vle_is(
-		'list-conditions has the 6 free conditions',
-		6,
+		'list-conditions has the 7 free conditions (Page since 3.0)',
+		7,
 		count(
 			array_filter(
 				$conditions['conditions'],

@@ -453,7 +453,9 @@ $ok( 6 <= count( $registry->presets() ), 'registry: built-in presets' );
 $pro_types = array_filter( $registry->types(), static function ( $t ) {
 	return ! empty( $t['pro'] );
 } );
-$ok( count( $pro_types ) >= 5, 'registry: Pro conditions listed (locked without Pro, editable with Pro)', count( $pro_types ) );
+if ( \Stax\VisibilityLogic\Singleton::pro_supports_columns() ) { // No Pro, or Pro 2.5+ (Pro 2.4 conditions have no builder fields: read-only).
+	$ok( count( $pro_types ) >= 5, 'registry: Pro conditions listed (locked without Pro, editable with Pro)', count( $pro_types ) );
+}
 if ( ! defined( 'STAX_VISIBILITY_PRO_VERSION' ) ) {
 	$locked = array_filter( $pro_types, static function ( $t ) {
 		return ! empty( $t['locked'] );
@@ -511,6 +513,67 @@ if ( did_action( 'elementor/loaded' ) ) {
 }
 
 // ---------------------------------------------------------------------------------------------------------------
+$section( '5b. B7 Page condition, B3 text fallback, V-M9 wording' );
+
+$page_id = wp_insert_post( [ 'post_type' => 'page', 'post_status' => 'publish', 'post_title' => 'VLT page' ] );
+$post_id = wp_insert_post( [ 'post_type' => 'post', 'post_status' => 'publish', 'post_title' => 'VLT post' ] );
+$page_t  = static function ( array $values ) use ( $tree_of, $cond ) {
+	return $tree_of( 'show', [ [ $cond( 'page', $values ) ] ] );
+};
+$go = static function ( $query ) {
+	$GLOBALS['wp_query'] = new WP_Query( $query );
+	$GLOBALS['wp_the_query'] = $GLOBALS['wp_query'];
+	if ( $GLOBALS['wp_query']->have_posts() && ( is_singular() ) ) {
+		$GLOBALS['wp_query']->the_post();
+	}
+};
+$go( [ 'page_id' => $page_id ] );
+$ok( true === $stored_eval( $page_t( [ 'page_types' => [ 'page' ] ] ) ) && false === $stored_eval( $page_t( [ 'page_types' => [ 'single', 'search' ] ] ) ), 'B7 page type on a page' );
+$ok( true === $stored_eval( $page_t( [ 'page_post_types' => [ 'page' ] ] ) ) && false === $stored_eval( $page_t( [ 'page_post_types' => [ 'post' ] ] ) ), 'B7 post type on a page' );
+$ok( true === $stored_eval( $page_t( [ 'page_ids' => [ (string) $page_id ] ] ) ) && false === $stored_eval( $page_t( [ 'page_ids' => [ (string) $post_id ] ] ) ), 'B7 specific page' );
+$ok( false === $stored_eval( $page_t( [ 'page_types' => [ 'page' ], 'page_ids' => [ (string) $post_id ] ] ) ), 'B7 every part that is set must match' );
+$go( [ 'p' => $post_id ] );
+$ok( true === $stored_eval( $page_t( [ 'page_types' => [ 'single' ], 'page_post_types' => [ 'post' ] ] ) ), 'B7 single post' );
+$go( [ 's' => 'zzz-no-result' ] );
+$ok( true === $stored_eval( $page_t( [ 'page_types' => [ 'search' ] ] ) ) && false === $stored_eval( $page_t( [ 'page_types' => [ 'front' ] ] ) ), 'B7 search results' );
+// Inside a loop the loop item counts.
+$go( [ 'post_type' => 'post', 'p' => $post_id ] );
+$GLOBALS['post'] = get_post( $post_id );
+setup_postdata( $GLOBALS['post'] );
+$ok( true === $stored_eval( $page_t( [ 'page_ids' => [ (string) $post_id ] ] ) ), 'B7 loop item' );
+wp_reset_postdata();
+$ok( true === $stored_eval( $page_t( [] ) ), 'B7 empty Page condition does not apply' );
+$a = Rule_Tree::analyze( $page_t( [ 'page_types' => [ 'page' ] ] ) );
+$ok( ! $a['flat'] && 'new' === $a['reason'], 'B7 rules with Page are stored as trees (2.x fails closed)' );
+$ok( 'Shown only when Page type is Page or Search results' === Rule_Tree::sentence( $page_t( [ 'page_types' => [ 'page', 'search' ] ] ) ), 'B7 summary', Rule_Tree::sentence( $page_t( [ 'page_types' => [ 'page', 'search' ] ] ) ) );
+$ok( false !== strpos( Rule_Tree::sentence( $page_t( [ 'page_ids' => [ (string) $page_id ] ] ) ), 'VLT page' ), 'B7 summary shows page titles' );
+wp_delete_post( $page_id, true );
+wp_delete_post( $post_id, true );
+$GLOBALS['wp_query'] = new WP_Query();
+
+// B3 text fallback.
+wp_set_current_user( 0 );
+$fb = [ 'blockName' => 'core/paragraph', 'attrs' => [ Blocks::ATTRIBUTE => [ 'enabled' => true, 'show_hide' => 'yes', 'user_role_enabled' => true, 'user_role_conditions' => [ 'ecl-user' ], 'fallback_enabled' => true, 'fallback_type' => 'text', 'fallback_text' => 'Please <strong>log in</strong><script>x</script>' ] ] ];
+$out = Blocks::render_block( '<p>secret</p>', $fb );
+$ok( false === strpos( $out, 'secret' ) && false !== strpos( $out, 'Please <strong>log in</strong>' ) && false === strpos( $out, '<script' ), 'B3 block: guest sees the sanitized message', $out );
+wp_set_current_user( $sub_id );
+$ok( '<p>secret</p>' === Blocks::render_block( '<p>secret</p>', $fb ), 'B3 block: member sees the block' );
+wp_set_current_user( 0 );
+$fb['attrs'][ Blocks::ATTRIBUTE ]['keep_html'] = true;
+$ok( false === strpos( Blocks::render_block( '<p>secret</p>', $fb ), 'secret' ), 'B3 block: Keep HTML ignored when a message shows' );
+if ( did_action( 'elementor/loaded' ) ) {
+	$fbw = $widget( 'fb1', $p( [ 'enabled' => 'yes', 'show_hide' => 'yes', 'user_role_enabled' => 'yes', 'user_role_conditions' => [ 'ecl-user' ], 'fallback_enabled' => 'yes', 'fallback_type' => 'text', 'fallback_text' => 'Members only' ] ) );
+	$html = $render( $fbw );
+	$ok( false !== strpos( $html, 'Members only' ) && false === strpos( $html, 'T fb1' ), 'B3 Elementor: guest sees the message', $html );
+}
+
+// V-M9 wording.
+$mid = $tree_of( 'show', [ [ $cond( 'date_time', [ 'date_time_type' => 'time', 'time_from' => '22:00', 'time_to' => '02:00' ] ) ] ] );
+$ok( 'Shown only when Time of day is from 22:00 to 02:00 (next day)' === Rule_Tree::sentence( $mid ), 'V-M9 ranges over midnight say "next day"', Rule_Tree::sentence( $mid ) );
+$df = Rule_Tree::registry( true )->field( 'date_time', 'date_from' );
+$ok( false !== strpos( $df['help'], 'Site time zone: ' . wp_timezone_string() ), 'V-M9 time zone note on date fields', $df['help'] );
+
+// ---------------------------------------------------------------------------------------------------------------
 $section( '6. Golden file for the JS twin (assets/js/rule-map.js)' );
 
 $golden = [ 'registry' => Rule_Tree::registry()->to_array(), 'since' => Rule_Tree::SINCE, 'cases' => [] ];
@@ -529,6 +592,31 @@ foreach ( array_slice( $matrix, 0, 60, true ) as $label => $settings ) {
 foreach ( $cases as $label => $case ) {
 	$values = $unprefix( $base );
 	$golden['cases'][] = [ 'label' => 'edit: ' . $label, 'values' => $values, 'edited' => $case[0], 'analyze' => Rule_Tree::analyze( $case[0] ), 'storage' => Rule_Tree::to_storage( $case[0], $values, '' ) ];
+}
+// Summaries and warnings: the same text in PHP and JS for every free condition (no user or page ids: their names
+// come from the site).
+$golden['context']   = [ 'now' => '2026-11-13 12:00', 'cache' => true ];
+$golden['labels']    = Rule_Tree::labels();
+$golden['summaries'] = [];
+$summary_trees       = [
+	$tree_of( 'show', [ [ $role_sub, $dev_mob ], [ $role_ed ] ] ),
+	$tree_of( 'hide', [ [ $yearly ] ] ),
+	$mid,
+	$tree_of( 'show', [ [ $cond( 'date_time', [ 'date_time_type' => 'week_days_time', 'time_week' => [ '1', '5' ], 'time_from' => '22:00', 'time_to' => '02:00' ] ) ] ] ),
+	$tree_of( 'show', [ [ $cond( 'date_time', [ 'date_time_type' => 'date', 'date_from' => '2026-01-01 00:00', 'date_to' => '2026-02-01 00:00' ] ) ] ] ),
+	$tree_of( 'show', [ [ $meta_ci ], [ $cond( 'acf', [ 'acf_field' => 'promo', 'acf_condition' => 'starts_with', 'acf_value' => 'Sum' ] ) ] ] ),
+	$tree_of( 'show', [ [ $cond( 'user_role', [ 'user_role_by' => 'capability', 'user_role_caps' => [ 'edit_posts', 'manage_options' ] ] ) ] ] ),
+	$tree_of( 'show', [ [ $cond( 'page', [ 'page_types' => [ 'front', '404' ], 'page_post_types' => [ 'post' ] ] ) ] ] ),
+	$tree_of( 'show', [ [ $cond( 'browser_type', [ 'browsers' => [ 'is_chrome', 'is_safari' ] ] ), $cond( 'device_type', [ 'device_types' => [ 'mobile' ] ] ), $cond( 'device_type', [ 'device_types' => [ 'desktop' ] ] ) ] ] ),
+	$tree_of( 'show', [ [ $cond( 'user_role', [] ) ] ], true ),
+];
+foreach ( $summary_trees as $st ) {
+	$golden['summaries'][] = [
+		'tree'     => $st,
+		'sentence' => Rule_Tree::sentence( $st ),
+		'short'    => Rule_Tree::short( $st ),
+		'warnings' => wp_list_pluck( \StaxWP\Conditions\V1\Warnings::check( $st, Rule_Tree::registry(), $golden['context'] ), 'code' ),
+	];
 }
 $golden_file = dirname( __FILE__ ) . '/fixtures/rule-map.golden.json';
 wp_mkdir_p( dirname( $golden_file ) );

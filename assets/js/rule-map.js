@@ -124,6 +124,11 @@
 				return false;
 			}
 			var value = condition.values[ field.key ];
+			if ( field.type === 'repeater' && Array.isArray( value ) && field.fields ) {
+				return value.some( function ( row ) {
+					return row && typeof row === 'object' && usesNewOptions( { values: row }, { fields: field.fields }, since );
+				} );
+			}
 			if ( field.since && versionGte( field.since, since ) && ! same( value, fieldDefault( field ) ) && ! isEmptyValue( value ) ) {
 				return true;
 			}
@@ -150,7 +155,7 @@
 				reason = 'repeat';
 			}
 			types[ condition.type ] = true;
-			if ( reason === '' && type && usesNewOptions( condition, type, since ) ) {
+			if ( reason === '' && type && ( ( type.since && versionGte( type.since, since ) ) || usesNewOptions( condition, type, since ) ) ) {
 				reason = 'new';
 			}
 		} );

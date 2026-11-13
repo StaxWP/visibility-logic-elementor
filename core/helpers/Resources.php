@@ -267,6 +267,11 @@ final class Resources extends Singleton {
 				'pro'   => false,
 				'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'AcfVisibility.php',
 			],
+			'page'         => [
+				'name'  => __( 'Page', 'visibility-logic-elementor' ),
+				'pro'   => false,
+				'class' => STAX_VISIBILITY_CORE_SETTINGS_PATH . 'PageVisibility.php',
+			],
 
 		];
 
@@ -299,7 +304,7 @@ final class Resources extends Singleton {
 	/**
 	 * Conditions included in the free plugin.
 	 */
-	const FREE_CONDITIONS = [ 'user-role', 'user-meta', 'date-time', 'browser-type', 'device-type', 'acf' ];
+	const FREE_CONDITIONS = [ 'user-role', 'user-meta', 'date-time', 'browser-type', 'device-type', 'acf', 'page' ];
 
 	/**
 	 * Whether a condition belongs to the free plugin.
@@ -325,6 +330,7 @@ final class Resources extends Singleton {
 			'browser-type'       => __( 'Chrome, Firefox, Safari, Edge and more.', 'visibility-logic-elementor' ),
 			'device-type'        => __( 'Desktop, tablet or mobile, detected on the server.', 'visibility-logic-elementor' ),
 			'acf'                => __( 'One ACF field of the current post or page.', 'visibility-logic-elementor' ),
+			'page'               => __( 'Page type, post type or specific pages (rule builder).', 'visibility-logic-elementor' ),
 			'ip-referrer'        => __( 'Visitor IP address and the referring site.', 'visibility-logic-elementor' ),
 			'geo-location'       => __( 'Country or city of the visitor (MaxMind).', 'visibility-logic-elementor' ),
 			'advanced-user-meta' => __( 'Adds AND/OR rule groups to User Meta.', 'visibility-logic-elementor' ),

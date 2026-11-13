@@ -21,7 +21,7 @@
  *       'tree'     => true,                   // false: cannot be stored in a tree (only in a plugin's legacy format)
  *   ]
  *
- * Field: key, type (switch|select|multiselect|text|textarea|number|date|time|list|users|repeater), label, options
+ * Field: key, type (switch|select|multiselect|text|textarea|number|date|time|list|users|posts|repeater; users and posts are ids picked through a search callback), label, options
  * ( value => label ), locked_options ( values listed but disabled ), default, placeholder, help, show_if
  * ( [ other_key => [ values ] ] ), required, since (version that added the field), options_since ( value => version ),
  * fields (repeater rows), summary_options ( value => wording used in summaries ).
@@ -216,7 +216,7 @@ class Registry {
 			return false;
 		}
 
-		return in_array( $type, [ 'multiselect', 'list', 'users', 'repeater' ], true ) ? [] : '';
+		return in_array( $type, [ 'multiselect', 'list', 'users', 'posts', 'repeater' ], true ) ? [] : '';
 	}
 
 	/**

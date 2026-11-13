@@ -109,6 +109,18 @@ class Rest {
 		$data['restNonce'] = wp_create_nonce( 'wp_rest' );
 		$data['explainUrl'] = rest_url( self::NS . '/explain' );
 		$data['previewCountry'] = Preview::country_enabled();
+		$data['postsUrl']       = rest_url( 'wp/v2/search' );
+		$data['proColumnsLocked'] = defined( 'STAX_VISIBILITY_PRO_VERSION' ) && ! Singleton::pro_supports_columns();
+		$data['templates']      = [];
+
+		if ( $data['fallback'] ) {
+			foreach ( get_posts( [ 'post_type' => 'elementor_library', 'post_status' => 'publish', 'numberposts' => 100, 'orderby' => 'title', 'order' => 'ASC' ] ) as $template ) {
+				$data['templates'][] = [
+					'value' => (string) $template->ID,
+					'label' => get_the_title( $template ) . ' (#' . $template->ID . ')',
+				];
+			}
+		}
 		$data['roles']      = [];
 
 		foreach ( wp_roles()->get_names() as $slug => $name ) {

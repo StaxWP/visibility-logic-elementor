@@ -203,6 +203,11 @@ class Plugin extends Singleton {
 			require_once STAX_VISIBILITY_CORE_SETTINGS_PATH . 'ProVisibility.php';
 		}
 
+		// Text fallback (free since 3.0): Pro registers its own Fallback section (text and template).
+		if ( ! defined( 'STAX_VISIBILITY_PRO_VERSION' ) ) {
+			require_once STAX_VISIBILITY_CORE_SETTINGS_PATH . 'FallbackText.php';
+		}
+
 		do_action( 'stax/visibility/after/load_settings' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- public 2.x hook name.
 	}
 
@@ -296,11 +301,12 @@ class Plugin extends Singleton {
 			if ( self::flag( $settings, 'enabled' ) ) {
 				if ( self::flag( $settings, 'fallback_enabled' ) ) {
 					$fallback_content = '';
-					$fallback_type    = self::value( $settings, 'fallback_type' );
+					$fallback_type    = (string) self::value( $settings, 'fallback_type' );
+					$fallback_type    = '' === $fallback_type ? 'text' : $fallback_type;
 
 					if ( 'text' === $fallback_type ) {
 						$fallback_content = wp_kses_post( (string) self::value( $settings, 'fallback_text' ) );
-					} elseif ( 'template' === $fallback_type && self::value( $settings, 'fallback_template' ) ) {
+					} elseif ( 'template' === $fallback_type && self::value( $settings, 'fallback_template' ) && shortcode_exists( 'elementor-template' ) ) {
 						$fallback_content = do_shortcode( '[elementor-template id="' . esc_attr( self::value( $settings, 'fallback_template' ) ) . '"]' );
 					}
 
@@ -525,6 +531,19 @@ class Plugin extends Singleton {
 		}
 
 		$target = $atomic ? new Condition_Item( $settings, $item->get_id(), $item->get_name(), 'atomic' ) : $item;
+
+		// Columns with Visibility Logic Pro 2.4 (its controls are not registered on columns): the switches of every
+		// condition default to off, so Pro 2.4 modules read defined values.
+		if ( ! $atomic && 'column' === $item->get_name() && ! self::pro_supports_columns() ) {
+			$defaults = [];
+
+			foreach ( array_keys( Resources::get_all_widget_options() ) as $slug ) {
+				$defaults[ self::SECTION_PREFIX . ( 'post-page' === $slug ? 'post' : str_replace( '-', '_', $slug ) ) . '_enabled' ] = '';
+			}
+
+			$settings = array_merge( $defaults, $settings );
+			$target   = new Condition_Item( $settings, $item->get_id(), $item->get_name(), 'element' );
+		}
 		$result = Conditions::evaluate( $settings, $target, $default_render );
 
 		$this->results[ $key ] = [ $item->get_id(), $result ];
