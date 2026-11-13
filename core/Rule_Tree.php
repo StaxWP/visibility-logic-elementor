@@ -317,7 +317,8 @@ class Rule_Tree {
 		// Conditions of the 2.x list without builder fields: Pro conditions without Pro (listed, locked) and older
 		// add-on conditions (read-only: edited in the classic sections).
 		foreach ( $by_slug as $base => $option ) {
-			if ( isset( $switches[ $base . '_enabled' ] ) || isset( $types[ $base ] ) ) {
+			// Fallback is element output ("When hidden"), not a condition.
+			if ( 'fallback' === $base || isset( $switches[ $base . '_enabled' ] ) || isset( $types[ $base ] ) ) {
 				continue;
 			}
 

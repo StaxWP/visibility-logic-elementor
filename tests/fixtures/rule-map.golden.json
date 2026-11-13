@@ -2,6 +2,61 @@
     "registry": {
         "types": [
             {
+                "label": "Saved rule set",
+                "switch": "rule_set_enabled",
+                "pro": true,
+                "fields": [
+                    {
+                        "key": "rule_set_id",
+                        "type": "select",
+                        "label": "Rule set",
+                        "options": [
+                            {
+                                "value": "",
+                                "label": "Choose a rule set"
+                            }
+                        ],
+                        "default": "",
+                        "since": "3.0.0",
+                        "required": true,
+                        "builders": [
+                            "rules"
+                        ],
+                        "help": "Edit sets in Settings > Visibility Logic > Rule sets."
+                    }
+                ],
+                "category": "other",
+                "keywords": [
+                    "preset",
+                    "saved",
+                    "reuse"
+                ],
+                "summary": "Rule set[ \"{rule_set_id}\"]",
+                "short": "[{rule_set_id}]",
+                "locked": true,
+                "builders": [
+                    "rules"
+                ],
+                "lock": {
+                    "title": "Activate Visibility Logic Pro to edit these conditions",
+                    "text": "Saved Pro conditions keep working on your site. Add your license key to change them.",
+                    "actions": [
+                        {
+                            "label": "Activate",
+                            "url": "http://vl3.test/wp-admin/options-general.php?page=stax-visibility-license"
+                        },
+                        {
+                            "label": "Get a license",
+                            "url": "https://staxwp.com/visibility-logic-for-elementor/#pricing"
+                        }
+                    ]
+                },
+                "disabled": false,
+                "visitor": false,
+                "tree": true,
+                "slug": "rule_set"
+            },
+            {
                 "category": "who",
                 "keywords": [
                     "member",
@@ -426,7 +481,7 @@
                             ]
                         },
                         "since": "3.0.0",
-                        "help": "Site time zone: +00:00 (now 2026-11-13 18:57)."
+                        "help": "Site time zone: +00:00 (now 2026-11-13 19:05)."
                     },
                     {
                         "key": "date_year_to",
@@ -452,7 +507,7 @@
                             ]
                         },
                         "since": "3.0.0",
-                        "help": "Site time zone: +00:00 (now 2026-11-13 18:57)."
+                        "help": "Site time zone: +00:00 (now 2026-11-13 19:05)."
                     },
                     {
                         "key": "date_from",
@@ -463,7 +518,7 @@
                                 "date"
                             ]
                         },
-                        "help": "Site time zone: +00:00 (now 2026-11-13 18:57)."
+                        "help": "Site time zone: +00:00 (now 2026-11-13 19:05)."
                     },
                     {
                         "key": "date_to",
@@ -474,7 +529,7 @@
                                 "date"
                             ]
                         },
-                        "help": "Site time zone: +00:00 (now 2026-11-13 18:57)."
+                        "help": "Site time zone: +00:00 (now 2026-11-13 19:05)."
                     },
                     {
                         "key": "time_week",
@@ -528,7 +583,7 @@
                                 "week_days_time"
                             ]
                         },
-                        "help": "Site time zone: +00:00 (now 2026-11-13 18:57)."
+                        "help": "Site time zone: +00:00 (now 2026-11-13 19:05)."
                     },
                     {
                         "key": "time_to",
@@ -541,7 +596,7 @@
                                 "week_days_time"
                             ]
                         },
-                        "help": "Site time zone: +00:00 (now 2026-11-13 18:57)."
+                        "help": "Site time zone: +00:00 (now 2026-11-13 19:05)."
                     }
                 ],
                 "lock": null,
@@ -875,37 +930,2279 @@
             },
             {
                 "label": "IP & Referrer",
-                "category": "where",
-                "fields": [],
                 "switch": "ip_referrer_enabled",
-                "pro": false,
-                "locked": false,
-                "readonly": true,
-                "hidden": true,
-                "tree": false,
-                "keywords": [],
-                "summary": "",
-                "short": "",
+                "pro": true,
+                "fields": [
+                    {
+                        "key": "remote_ip",
+                        "type": "text",
+                        "label": "Remote IP",
+                        "placeholder": "1.1.1.1, 8.8.8.8",
+                        "help": "IPs who will be able to view this element, separated by commas."
+                    },
+                    {
+                        "key": "referrer_list",
+                        "type": "textarea",
+                        "label": "Referral sites URLs or domains",
+                        "help": "List of referral websites (one per line)."
+                    },
+                    {
+                        "key": "referrer_match_type",
+                        "type": "select",
+                        "label": "Referrer Match Type",
+                        "options": [
+                            {
+                                "value": "domain",
+                                "label": "Match Domain"
+                            },
+                            {
+                                "value": "strict",
+                                "label": "Match Exact URL"
+                            },
+                            {
+                                "value": "contains",
+                                "label": "Contains"
+                            }
+                        ],
+                        "default": "domain"
+                    }
+                ],
+                "category": "where",
+                "keywords": [
+                    "ip",
+                    "referrer",
+                    "came from"
+                ],
+                "visitor": true,
+                "summary": "Visitor[ IP is {remote_ip}][ came from {referrer_list}]",
+                "short": "IP / referrer",
+                "locked": true,
+                "lock": {
+                    "title": "Activate Visibility Logic Pro to edit these conditions",
+                    "text": "Saved Pro conditions keep working on your site. Add your license key to change them.",
+                    "actions": [
+                        {
+                            "label": "Activate",
+                            "url": "http://vl3.test/wp-admin/options-general.php?page=stax-visibility-license"
+                        },
+                        {
+                            "label": "Get a license",
+                            "url": "https://staxwp.com/visibility-logic-for-elementor/#pricing"
+                        }
+                    ]
+                },
                 "disabled": false,
-                "visitor": false,
+                "tree": true,
                 "slug": "ip_referrer"
             },
             {
                 "label": "Geo Location",
-                "category": "where",
-                "fields": [],
                 "switch": "geo_location_enabled",
-                "pro": false,
-                "locked": false,
-                "readonly": true,
+                "pro": true,
+                "fields": [
+                    {
+                        "key": "geo_location_type",
+                        "type": "select",
+                        "label": "Location Type",
+                        "options": [
+                            {
+                                "value": "country",
+                                "label": "Country"
+                            },
+                            {
+                                "value": "city",
+                                "label": "City"
+                            }
+                        ],
+                        "default": "country"
+                    },
+                    {
+                        "key": "geo_location_countries",
+                        "type": "list",
+                        "label": "Countries",
+                        "help": "Two-letter country codes, separated by commas (for example US, DE, RO).",
+                        "show_if": {
+                            "geo_location_type": [
+                                "country"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "geo_location_cities",
+                        "type": "list",
+                        "label": "Cities",
+                        "help": "City|country code pairs, separated by commas (for example Berlin|DE, Cluj-Napoca|RO).",
+                        "show_if": {
+                            "geo_location_type": [
+                                "city"
+                            ]
+                        }
+                    }
+                ],
+                "category": "where",
+                "keywords": [
+                    "country",
+                    "city",
+                    "geo",
+                    "location"
+                ],
+                "visitor": true,
+                "summary": {
+                    "field": "geo_location_type",
+                    "cases": {
+                        "city": "Visitor city[ is {geo_location_cities|or}]",
+                        "*": "Visitor country[ is {geo_location_countries|or}]"
+                    }
+                },
+                "short": "[{geo_location_countries}]",
+                "locked": true,
+                "lock": {
+                    "title": "Activate Visibility Logic Pro to edit these conditions",
+                    "text": "Saved Pro conditions keep working on your site. Add your license key to change them.",
+                    "actions": [
+                        {
+                            "label": "Activate",
+                            "url": "http://vl3.test/wp-admin/options-general.php?page=stax-visibility-license"
+                        },
+                        {
+                            "label": "Get a license",
+                            "url": "https://staxwp.com/visibility-logic-for-elementor/#pricing"
+                        }
+                    ]
+                },
+                "disabled": false,
+                "tree": true,
+                "slug": "geo_location"
+            },
+            {
+                "label": "User meta rule group",
+                "switch": "user_meta_rules_enabled",
+                "pro": true,
+                "fields": [
+                    {
+                        "key": "user_meta_rules_logic",
+                        "type": "select",
+                        "label": "Rule",
+                        "options": [
+                            {
+                                "value": "and",
+                                "label": "AND"
+                            },
+                            {
+                                "value": "or",
+                                "label": "OR"
+                            }
+                        ],
+                        "default": "and"
+                    },
+                    {
+                        "key": "user_meta_rules",
+                        "type": "repeater",
+                        "label": "Rules",
+                        "builders": [
+                            "rules"
+                        ],
+                        "fields": [
+                            {
+                                "key": "stax_visibility_advanced_user_meta_options",
+                                "type": "list",
+                                "label": "Meta keys"
+                            },
+                            {
+                                "key": "stax_visibility_advanced_user_meta_status",
+                                "type": "select",
+                                "label": "Meta Condition",
+                                "options": [
+                                    {
+                                        "value": "none",
+                                        "label": "None"
+                                    },
+                                    {
+                                        "value": "empty",
+                                        "label": "Empty"
+                                    },
+                                    {
+                                        "value": "not_empty",
+                                        "label": "Not empty"
+                                    },
+                                    {
+                                        "value": "specific_value",
+                                        "label": "Is equal to"
+                                    },
+                                    {
+                                        "value": "specific_value_multiple",
+                                        "label": "Is equal to one of"
+                                    },
+                                    {
+                                        "value": "not_specific_value",
+                                        "label": "Not equal to"
+                                    },
+                                    {
+                                        "value": "contain",
+                                        "label": "Contains"
+                                    },
+                                    {
+                                        "value": "not_contain",
+                                        "label": "Does not contain"
+                                    },
+                                    {
+                                        "value": "is_between",
+                                        "label": "Between"
+                                    },
+                                    {
+                                        "value": "less_than",
+                                        "label": "Less than"
+                                    },
+                                    {
+                                        "value": "greater_than",
+                                        "label": "Greater than"
+                                    },
+                                    {
+                                        "value": "is_array",
+                                        "label": "Is array"
+                                    },
+                                    {
+                                        "value": "is_array_and_contains",
+                                        "label": "Is array and contains"
+                                    }
+                                ],
+                                "default": "none"
+                            },
+                            {
+                                "key": "stax_visibility_advanced_user_meta_value",
+                                "type": "text",
+                                "label": "Condition Value"
+                            },
+                            {
+                                "key": "stax_visibility_advanced_user_meta_value_2",
+                                "type": "text",
+                                "label": "Condition Value 2",
+                                "show_if": {
+                                    "stax_visibility_advanced_user_meta_status": [
+                                        "is_between"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "category": "who",
+                "visitor": true,
+                "summary": "User meta rule group[ ({user_meta_rules}, {user_meta_rules_logic})]",
+                "locked": true,
                 "hidden": true,
-                "tree": false,
+                "builders": [
+                    "rules"
+                ],
+                "lock": {
+                    "title": "Activate Visibility Logic Pro to edit these conditions",
+                    "text": "Saved Pro conditions keep working on your site. Add your license key to change them.",
+                    "actions": [
+                        {
+                            "label": "Activate",
+                            "url": "http://vl3.test/wp-admin/options-general.php?page=stax-visibility-license"
+                        },
+                        {
+                            "label": "Get a license",
+                            "url": "https://staxwp.com/visibility-logic-for-elementor/#pricing"
+                        }
+                    ]
+                },
+                "disabled": false,
                 "keywords": [],
-                "summary": "",
                 "short": "",
+                "tree": true,
+                "slug": "user_meta_rules"
+            },
+            {
+                "label": "Posts & Pages",
+                "switch": "post_enabled",
+                "pro": true,
+                "fields": [
+                    {
+                        "key": "custom_post_type",
+                        "type": "multiselect",
+                        "label": "Post Type",
+                        "options": [
+                            {
+                                "value": "post",
+                                "label": "Posts"
+                            },
+                            {
+                                "value": "e-floating-buttons",
+                                "label": "Floating Elements"
+                            },
+                            {
+                                "value": "product",
+                                "label": "Products"
+                            }
+                        ]
+                    },
+                    {
+                        "key": "specific_post",
+                        "type": "list",
+                        "label": "Post/Page IDs",
+                        "help": "Post or page IDs, separated by commas."
+                    },
+                    {
+                        "key": "taxonomy",
+                        "type": "select",
+                        "label": "Taxonomy",
+                        "options": [
+                            {
+                                "value": "",
+                                "label": "None"
+                            },
+                            {
+                                "value": "category",
+                                "label": "Categories (category)"
+                            },
+                            {
+                                "value": "post_tag",
+                                "label": "Tags (post_tag)"
+                            },
+                            {
+                                "value": "nav_menu",
+                                "label": "Navigation Menus (nav_menu)"
+                            },
+                            {
+                                "value": "link_category",
+                                "label": "Link Categories (link_category)"
+                            },
+                            {
+                                "value": "post_format",
+                                "label": "Formats (post_format)"
+                            },
+                            {
+                                "value": "wp_theme",
+                                "label": "Themes (wp_theme)"
+                            },
+                            {
+                                "value": "wp_template_part_area",
+                                "label": "Template Part Areas (wp_template_part_area)"
+                            },
+                            {
+                                "value": "wp_pattern_category",
+                                "label": "Pattern Categories (wp_pattern_category)"
+                            },
+                            {
+                                "value": "elementor_library_type",
+                                "label": "Type (elementor_library_type)"
+                            },
+                            {
+                                "value": "elementor_library_category",
+                                "label": "Categories (elementor_library_category)"
+                            },
+                            {
+                                "value": "action-group",
+                                "label": "Action Group (action-group)"
+                            },
+                            {
+                                "value": "product_brand",
+                                "label": "Product brands (product_brand)"
+                            },
+                            {
+                                "value": "product_type",
+                                "label": "Product type (product_type)"
+                            },
+                            {
+                                "value": "product_visibility",
+                                "label": "Product visibility (product_visibility)"
+                            },
+                            {
+                                "value": "product_cat",
+                                "label": "Product categories (product_cat)"
+                            },
+                            {
+                                "value": "product_tag",
+                                "label": "Product tags (product_tag)"
+                            },
+                            {
+                                "value": "product_shipping_class",
+                                "label": "Product shipping classes (product_shipping_class)"
+                            },
+                            {
+                                "value": "pos_product_visibility",
+                                "label": "POS Product visibility (pos_product_visibility)"
+                            }
+                        ]
+                    },
+                    {
+                        "key": "taxonomy_term_category",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "taxonomy": [
+                                "category"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "taxonomy_term_post_tag",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "taxonomy": [
+                                "post_tag"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "taxonomy_term_nav_menu",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "taxonomy": [
+                                "nav_menu"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "taxonomy_term_link_category",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "taxonomy": [
+                                "link_category"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "taxonomy_term_post_format",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "taxonomy": [
+                                "post_format"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "taxonomy_term_wp_theme",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "taxonomy": [
+                                "wp_theme"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "taxonomy_term_wp_template_part_area",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "taxonomy": [
+                                "wp_template_part_area"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "taxonomy_term_wp_pattern_category",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "taxonomy": [
+                                "wp_pattern_category"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "taxonomy_term_elementor_library_type",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "taxonomy": [
+                                "elementor_library_type"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "taxonomy_term_elementor_library_category",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "taxonomy": [
+                                "elementor_library_category"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "taxonomy_term_action-group",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "taxonomy": [
+                                "action-group"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "taxonomy_term_product_brand",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "taxonomy": [
+                                "product_brand"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "taxonomy_term_product_type",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "taxonomy": [
+                                "product_type"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "taxonomy_term_product_visibility",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "taxonomy": [
+                                "product_visibility"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "taxonomy_term_product_cat",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "taxonomy": [
+                                "product_cat"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "taxonomy_term_product_tag",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "taxonomy": [
+                                "product_tag"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "taxonomy_term_product_shipping_class",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "taxonomy": [
+                                "product_shipping_class"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "taxonomy_term_pos_product_visibility",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "taxonomy": [
+                                "pos_product_visibility"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "post_meta",
+                        "type": "list",
+                        "label": "Meta",
+                        "help": "Meta keys, separated by commas."
+                    },
+                    {
+                        "key": "post_meta_status",
+                        "type": "select",
+                        "label": "Meta Condition",
+                        "options": [
+                            {
+                                "value": "any",
+                                "label": "Any Value"
+                            },
+                            {
+                                "value": "empty",
+                                "label": "Empty"
+                            },
+                            {
+                                "value": "not_empty",
+                                "label": "Not empty"
+                            },
+                            {
+                                "value": "specific_value",
+                                "label": "Is equal to"
+                            },
+                            {
+                                "value": "specific_value_multiple",
+                                "label": "Is equal to one of"
+                            },
+                            {
+                                "value": "not_specific_value",
+                                "label": "Not equal to"
+                            },
+                            {
+                                "value": "contain",
+                                "label": "Contains"
+                            },
+                            {
+                                "value": "not_contain",
+                                "label": "Does not contain"
+                            },
+                            {
+                                "value": "is_between",
+                                "label": "Between"
+                            },
+                            {
+                                "value": "less_than",
+                                "label": "Less than"
+                            },
+                            {
+                                "value": "greater_than",
+                                "label": "Greater than"
+                            },
+                            {
+                                "value": "is_array",
+                                "label": "Is array"
+                            },
+                            {
+                                "value": "is_array_and_contains",
+                                "label": "Is array and contains"
+                            }
+                        ],
+                        "default": "any"
+                    },
+                    {
+                        "key": "post_meta_value",
+                        "type": "textarea",
+                        "label": "Meta Condition Value",
+                        "show_if": {
+                            "post_meta_status": [
+                                "specific_value",
+                                "specific_value_multiple",
+                                "not_specific_value",
+                                "contain",
+                                "not_contain",
+                                "is_between",
+                                "less_than",
+                                "greater_than",
+                                "is_array_and_contains"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "post_meta_value_2",
+                        "type": "textarea",
+                        "label": "Meta Condition Value 2",
+                        "show_if": {
+                            "post_meta_status": [
+                                "is_between"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "post_parent",
+                        "type": "switch",
+                        "label": "Is Parent"
+                    },
+                    {
+                        "key": "post_root",
+                        "type": "switch",
+                        "label": "Is Root"
+                    },
+                    {
+                        "key": "post_leaf",
+                        "type": "switch",
+                        "label": "Is Leaf"
+                    },
+                    {
+                        "key": "post_node",
+                        "type": "switch",
+                        "label": "Is Node"
+                    },
+                    {
+                        "key": "post_node_level",
+                        "type": "text",
+                        "label": "Node level"
+                    },
+                    {
+                        "key": "post_sibling",
+                        "type": "switch",
+                        "label": "Has Siblings"
+                    },
+                    {
+                        "key": "post_friend",
+                        "type": "switch",
+                        "label": "Has Term Buddies"
+                    },
+                    {
+                        "key": "post_friend_terms",
+                        "type": "list",
+                        "label": "Terms where find Buddies",
+                        "help": "Term IDs, separated by commas."
+                    },
+                    {
+                        "key": "post_with_param",
+                        "type": "text",
+                        "label": "With Parameter",
+                        "help": "Name of the parameter passed in GET or POST."
+                    },
+                    {
+                        "key": "post_param_status",
+                        "type": "select",
+                        "label": "Parameter Status",
+                        "options": [
+                            {
+                                "value": "not",
+                                "label": "Not isset"
+                            },
+                            {
+                                "value": "isset",
+                                "label": "Isset"
+                            },
+                            {
+                                "value": "value",
+                                "label": "Definited value"
+                            }
+                        ],
+                        "default": "isset"
+                    },
+                    {
+                        "key": "post_param_value",
+                        "type": "text",
+                        "label": "Parameter Value",
+                        "show_if": {
+                            "post_param_status": [
+                                "value"
+                            ]
+                        }
+                    }
+                ],
+                "category": "page",
+                "keywords": [
+                    "post type",
+                    "page",
+                    "meta"
+                ],
+                "summary": "Post or page[ type is {custom_post_type|or}][ is {specific_post|or}]",
+                "short": "Posts & pages",
+                "locked": true,
+                "lock": {
+                    "title": "Activate Visibility Logic Pro to edit these conditions",
+                    "text": "Saved Pro conditions keep working on your site. Add your license key to change them.",
+                    "actions": [
+                        {
+                            "label": "Activate",
+                            "url": "http://vl3.test/wp-admin/options-general.php?page=stax-visibility-license"
+                        },
+                        {
+                            "label": "Get a license",
+                            "url": "https://staxwp.com/visibility-logic-for-elementor/#pricing"
+                        }
+                    ]
+                },
                 "disabled": false,
                 "visitor": false,
-                "slug": "geo_location"
+                "tree": true,
+                "slug": "post"
+            },
+            {
+                "label": "Archive Pages",
+                "switch": "archive_enabled",
+                "pro": true,
+                "fields": [
+                    {
+                        "key": "archive_custom_post_type",
+                        "type": "multiselect",
+                        "label": "Post Type Archive",
+                        "options": [
+                            {
+                                "value": "post",
+                                "label": "Posts"
+                            },
+                            {
+                                "value": "e-floating-buttons",
+                                "label": "Floating Elements"
+                            },
+                            {
+                                "value": "product",
+                                "label": "Products"
+                            }
+                        ]
+                    },
+                    {
+                        "key": "archive_taxonomy",
+                        "type": "select",
+                        "label": "Taxonomy Archive",
+                        "options": [
+                            {
+                                "value": "",
+                                "label": "None"
+                            },
+                            {
+                                "value": "category",
+                                "label": "Categories (category)"
+                            },
+                            {
+                                "value": "post_tag",
+                                "label": "Tags (post_tag)"
+                            },
+                            {
+                                "value": "nav_menu",
+                                "label": "Navigation Menus (nav_menu)"
+                            },
+                            {
+                                "value": "link_category",
+                                "label": "Link Categories (link_category)"
+                            },
+                            {
+                                "value": "post_format",
+                                "label": "Formats (post_format)"
+                            },
+                            {
+                                "value": "wp_theme",
+                                "label": "Themes (wp_theme)"
+                            },
+                            {
+                                "value": "wp_template_part_area",
+                                "label": "Template Part Areas (wp_template_part_area)"
+                            },
+                            {
+                                "value": "wp_pattern_category",
+                                "label": "Pattern Categories (wp_pattern_category)"
+                            },
+                            {
+                                "value": "elementor_library_type",
+                                "label": "Type (elementor_library_type)"
+                            },
+                            {
+                                "value": "elementor_library_category",
+                                "label": "Categories (elementor_library_category)"
+                            },
+                            {
+                                "value": "action-group",
+                                "label": "Action Group (action-group)"
+                            },
+                            {
+                                "value": "product_brand",
+                                "label": "Product brands (product_brand)"
+                            },
+                            {
+                                "value": "product_type",
+                                "label": "Product type (product_type)"
+                            },
+                            {
+                                "value": "product_visibility",
+                                "label": "Product visibility (product_visibility)"
+                            },
+                            {
+                                "value": "product_cat",
+                                "label": "Product categories (product_cat)"
+                            },
+                            {
+                                "value": "product_tag",
+                                "label": "Product tags (product_tag)"
+                            },
+                            {
+                                "value": "product_shipping_class",
+                                "label": "Product shipping classes (product_shipping_class)"
+                            },
+                            {
+                                "value": "pos_product_visibility",
+                                "label": "POS Product visibility (pos_product_visibility)"
+                            }
+                        ]
+                    },
+                    {
+                        "key": "archive_taxonomy_term_category",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "archive_taxonomy": [
+                                "category"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "archive_taxonomy_term_post_tag",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "archive_taxonomy": [
+                                "post_tag"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "archive_taxonomy_term_nav_menu",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "archive_taxonomy": [
+                                "nav_menu"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "archive_taxonomy_term_link_category",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "archive_taxonomy": [
+                                "link_category"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "archive_taxonomy_term_post_format",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "archive_taxonomy": [
+                                "post_format"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "archive_taxonomy_term_wp_theme",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "archive_taxonomy": [
+                                "wp_theme"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "archive_taxonomy_term_wp_template_part_area",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "archive_taxonomy": [
+                                "wp_template_part_area"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "archive_taxonomy_term_wp_pattern_category",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "archive_taxonomy": [
+                                "wp_pattern_category"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "archive_taxonomy_term_elementor_library_type",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "archive_taxonomy": [
+                                "elementor_library_type"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "archive_taxonomy_term_elementor_library_category",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "archive_taxonomy": [
+                                "elementor_library_category"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "archive_taxonomy_term_action-group",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "archive_taxonomy": [
+                                "action-group"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "archive_taxonomy_term_product_brand",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "archive_taxonomy": [
+                                "product_brand"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "archive_taxonomy_term_product_type",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "archive_taxonomy": [
+                                "product_type"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "archive_taxonomy_term_product_visibility",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "archive_taxonomy": [
+                                "product_visibility"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "archive_taxonomy_term_product_cat",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "archive_taxonomy": [
+                                "product_cat"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "archive_taxonomy_term_product_tag",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "archive_taxonomy": [
+                                "product_tag"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "archive_taxonomy_term_product_shipping_class",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "archive_taxonomy": [
+                                "product_shipping_class"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "archive_taxonomy_term_pos_product_visibility",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "archive_taxonomy": [
+                                "pos_product_visibility"
+                            ]
+                        }
+                    }
+                ],
+                "category": "page",
+                "keywords": [
+                    "category",
+                    "taxonomy",
+                    "term"
+                ],
+                "summary": "Archive[ of {archive_custom_post_type|or}]",
+                "short": "Archive",
+                "locked": true,
+                "lock": {
+                    "title": "Activate Visibility Logic Pro to edit these conditions",
+                    "text": "Saved Pro conditions keep working on your site. Add your license key to change them.",
+                    "actions": [
+                        {
+                            "label": "Activate",
+                            "url": "http://vl3.test/wp-admin/options-general.php?page=stax-visibility-license"
+                        },
+                        {
+                            "label": "Get a license",
+                            "url": "https://staxwp.com/visibility-logic-for-elementor/#pricing"
+                        }
+                    ]
+                },
+                "disabled": false,
+                "visitor": false,
+                "tree": true,
+                "slug": "archive"
+            },
+            {
+                "label": "Conditional Tags",
+                "switch": "conditional_tags_enabled",
+                "pro": true,
+                "fields": [
+                    {
+                        "key": "conditional_tags_post",
+                        "type": "multiselect",
+                        "label": "Post",
+                        "options": [
+                            {
+                                "value": "is_sticky",
+                                "label": "Is Sticky"
+                            },
+                            {
+                                "value": "is_post_type_hierarchical",
+                                "label": "Is Hierarchical Post Type"
+                            },
+                            {
+                                "value": "is_post_type_archive",
+                                "label": "Is Post Type Archive"
+                            },
+                            {
+                                "value": "comments_open",
+                                "label": "Comments open"
+                            },
+                            {
+                                "value": "pings_open",
+                                "label": "Pings open"
+                            },
+                            {
+                                "value": "has_tag",
+                                "label": "Has Tags"
+                            },
+                            {
+                                "value": "has_term",
+                                "label": "Has Terms"
+                            },
+                            {
+                                "value": "has_excerpt",
+                                "label": "Has Excerpt"
+                            },
+                            {
+                                "value": "has_post_thumbnail",
+                                "label": "Has Post Thumbnail"
+                            },
+                            {
+                                "value": "has_nav_menu",
+                                "label": "Has Nav menu"
+                            }
+                        ]
+                    },
+                    {
+                        "key": "conditional_tags_site",
+                        "type": "multiselect",
+                        "label": "Site",
+                        "options": [
+                            {
+                                "value": "is_dynamic_sidebar",
+                                "label": "Dynamic sidebar"
+                            },
+                            {
+                                "value": "is_active_sidebar",
+                                "label": "Active sidebar"
+                            },
+                            {
+                                "value": "is_rtl",
+                                "label": "RTL"
+                            },
+                            {
+                                "value": "is_multisite",
+                                "label": "Multisite"
+                            },
+                            {
+                                "value": "is_main_site",
+                                "label": "Main site"
+                            },
+                            {
+                                "value": "is_child_theme",
+                                "label": "Child theme"
+                            },
+                            {
+                                "value": "is_customize_preview",
+                                "label": "Customize preview"
+                            },
+                            {
+                                "value": "is_multi_author",
+                                "label": "Multi author"
+                            },
+                            {
+                                "value": "is feed",
+                                "label": "Feed"
+                            },
+                            {
+                                "value": "is_trackback",
+                                "label": "Trackback"
+                            }
+                        ]
+                    },
+                    {
+                        "key": "conditional_tags_page",
+                        "type": "multiselect",
+                        "label": "Page",
+                        "options": [
+                            {
+                                "value": "is_front_page",
+                                "label": "Front Page"
+                            },
+                            {
+                                "value": "is_home",
+                                "label": "Home"
+                            },
+                            {
+                                "value": "is_404",
+                                "label": "404 Not Found"
+                            },
+                            {
+                                "value": "is_single",
+                                "label": "Single"
+                            },
+                            {
+                                "value": "is_page",
+                                "label": "Page"
+                            },
+                            {
+                                "value": "is_attachment",
+                                "label": "Attachment"
+                            },
+                            {
+                                "value": "is_preview",
+                                "label": "Preview"
+                            },
+                            {
+                                "value": "is_admin",
+                                "label": "Admin"
+                            },
+                            {
+                                "value": "is_page_template",
+                                "label": "Page Template"
+                            },
+                            {
+                                "value": "is_comments_popup",
+                                "label": "Comments Popup"
+                            },
+                            {
+                                "value": "is_woocommerce",
+                                "label": "A Woocommerce Page"
+                            },
+                            {
+                                "value": "is_shop",
+                                "label": "Shop"
+                            },
+                            {
+                                "value": "is_product",
+                                "label": "Product"
+                            },
+                            {
+                                "value": "is_product_taxonomy",
+                                "label": "Product Taxonomy"
+                            },
+                            {
+                                "value": "is_product_category",
+                                "label": "Product Category"
+                            },
+                            {
+                                "value": "is_product_tag",
+                                "label": "Product Tag"
+                            },
+                            {
+                                "value": "is_cart",
+                                "label": "Cart"
+                            },
+                            {
+                                "value": "is_checkout",
+                                "label": "Checkout"
+                            },
+                            {
+                                "value": "is_add_payment_method_page",
+                                "label": "Add Payment method"
+                            },
+                            {
+                                "value": "is_checkout_pay_page",
+                                "label": "Checkout Pay"
+                            },
+                            {
+                                "value": "is_account_page",
+                                "label": "Account page"
+                            },
+                            {
+                                "value": "is_edit_account_page",
+                                "label": "Edit Account"
+                            },
+                            {
+                                "value": "is_lost_password_page",
+                                "label": "Lost password"
+                            },
+                            {
+                                "value": "is_view_order_page",
+                                "label": "Order summary"
+                            },
+                            {
+                                "value": "is_order_received_page",
+                                "label": "Order complete"
+                            }
+                        ]
+                    },
+                    {
+                        "key": "conditional_tags_archive",
+                        "type": "multiselect",
+                        "label": "Archive",
+                        "options": [
+                            {
+                                "value": "is_blog",
+                                "label": "Home blog (latest posts)"
+                            },
+                            {
+                                "value": "posts_page",
+                                "label": "Posts page"
+                            },
+                            {
+                                "value": "is_tax",
+                                "label": "Taxonomy"
+                            },
+                            {
+                                "value": "is_category",
+                                "label": "Category"
+                            },
+                            {
+                                "value": "is_tag",
+                                "label": "Tag"
+                            },
+                            {
+                                "value": "is_author",
+                                "label": "Author"
+                            },
+                            {
+                                "value": "is_date",
+                                "label": "Date"
+                            },
+                            {
+                                "value": "is_year",
+                                "label": "Year"
+                            },
+                            {
+                                "value": "is_month",
+                                "label": "Month"
+                            },
+                            {
+                                "value": "is_day",
+                                "label": "Day"
+                            },
+                            {
+                                "value": "is_time",
+                                "label": "Time"
+                            },
+                            {
+                                "value": "is_new_day",
+                                "label": "New Day"
+                            },
+                            {
+                                "value": "is_search",
+                                "label": "Search"
+                            },
+                            {
+                                "value": "is_paged",
+                                "label": "Paged"
+                            },
+                            {
+                                "value": "is_main_query",
+                                "label": "Main Query"
+                            },
+                            {
+                                "value": "in_the_loop",
+                                "label": "In the Loop"
+                            }
+                        ]
+                    }
+                ],
+                "category": "page",
+                "keywords": [
+                    "is_front_page",
+                    "home",
+                    "search",
+                    "404"
+                ],
+                "summary": "Conditional tags",
+                "locked": true,
+                "lock": {
+                    "title": "Activate Visibility Logic Pro to edit these conditions",
+                    "text": "Saved Pro conditions keep working on your site. Add your license key to change them.",
+                    "actions": [
+                        {
+                            "label": "Activate",
+                            "url": "http://vl3.test/wp-admin/options-general.php?page=stax-visibility-license"
+                        },
+                        {
+                            "label": "Get a license",
+                            "url": "https://staxwp.com/visibility-logic-for-elementor/#pricing"
+                        }
+                    ]
+                },
+                "disabled": false,
+                "short": "",
+                "visitor": false,
+                "tree": true,
+                "slug": "conditional_tags"
+            },
+            {
+                "label": "WooCommerce Users",
+                "switch": "woocommerce_users_enabled",
+                "pro": true,
+                "fields": [
+                    {
+                        "key": "woocommerce_users_selection",
+                        "type": "select",
+                        "label": "Condition",
+                        "options": [
+                            {
+                                "value": "any",
+                                "label": "User has purchased any product"
+                            },
+                            {
+                                "value": "product",
+                                "label": "User has purchased specific product"
+                            },
+                            {
+                                "value": "product_variation",
+                                "label": "User has purchased specific product variation"
+                            }
+                        ],
+                        "default": "any"
+                    },
+                    {
+                        "key": "woocommerce_users_product_condition",
+                        "type": "select",
+                        "label": "Products Condition",
+                        "options": [
+                            {
+                                "value": "one",
+                                "label": "At least one"
+                            },
+                            {
+                                "value": "all",
+                                "label": "All"
+                            }
+                        ],
+                        "default": "one",
+                        "show_if": {
+                            "woocommerce_users_selection": [
+                                "product",
+                                "product_variation"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "woocommerce_users_product",
+                        "type": "list",
+                        "label": "Product",
+                        "help": "IDs, separated by commas.",
+                        "show_if": {
+                            "woocommerce_users_selection": [
+                                "product"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "woocommerce_users_product_variation",
+                        "type": "list",
+                        "label": "Product Variation",
+                        "help": "IDs, separated by commas.",
+                        "show_if": {
+                            "woocommerce_users_selection": [
+                                "product_variation"
+                            ]
+                        }
+                    }
+                ],
+                "category": "shop",
+                "keywords": [
+                    "woocommerce",
+                    "customer",
+                    "purchase",
+                    "subscription"
+                ],
+                "visitor": true,
+                "summary": "WooCommerce customer[: {woocommerce_users_selection|lower}][ {woocommerce_users_product}]",
+                "short": "WooCommerce",
+                "locked": true,
+                "lock": {
+                    "title": "Activate Visibility Logic Pro to edit these conditions",
+                    "text": "Saved Pro conditions keep working on your site. Add your license key to change them.",
+                    "actions": [
+                        {
+                            "label": "Activate",
+                            "url": "http://vl3.test/wp-admin/options-general.php?page=stax-visibility-license"
+                        },
+                        {
+                            "label": "Get a license",
+                            "url": "https://staxwp.com/visibility-logic-for-elementor/#pricing"
+                        }
+                    ]
+                },
+                "disabled": false,
+                "tree": true,
+                "slug": "woocommerce_users"
+            },
+            {
+                "label": "Request (URL, form, cookie, header)",
+                "switch": "query_string_enabled",
+                "pro": true,
+                "fields": [
+                    {
+                        "key": "query_string_logic",
+                        "type": "select",
+                        "label": "Conditions Logic",
+                        "options": [
+                            {
+                                "value": "and",
+                                "label": "AND (all must match)"
+                            },
+                            {
+                                "value": "or",
+                                "label": "OR (at least one)"
+                            }
+                        ],
+                        "default": "and"
+                    },
+                    {
+                        "key": "query_string_conditions",
+                        "type": "repeater",
+                        "label": "Parameters",
+                        "builders": [
+                            "rules"
+                        ],
+                        "required": true,
+                        "fields": [
+                            {
+                                "key": "param_source",
+                                "type": "select",
+                                "label": "Source",
+                                "options": [
+                                    {
+                                        "value": "",
+                                        "label": "URL or form (any)"
+                                    },
+                                    {
+                                        "value": "get",
+                                        "label": "URL parameter"
+                                    },
+                                    {
+                                        "value": "post",
+                                        "label": "Form field (POST)"
+                                    },
+                                    {
+                                        "value": "cookie",
+                                        "label": "Cookie"
+                                    },
+                                    {
+                                        "value": "header",
+                                        "label": "HTTP header"
+                                    }
+                                ],
+                                "default": "",
+                                "options_since": {
+                                    "get": "3.0.0",
+                                    "post": "3.0.0",
+                                    "cookie": "3.0.0",
+                                    "header": "3.0.0"
+                                }
+                            },
+                            {
+                                "key": "param_name",
+                                "type": "text",
+                                "label": "Name",
+                                "placeholder": "utm_source"
+                            },
+                            {
+                                "key": "param_condition",
+                                "type": "select",
+                                "label": "Condition",
+                                "options": [
+                                    {
+                                        "value": "exists",
+                                        "label": "Exists (is set)"
+                                    },
+                                    {
+                                        "value": "not_exists",
+                                        "label": "Does not exist"
+                                    },
+                                    {
+                                        "value": "equals",
+                                        "label": "Equals"
+                                    },
+                                    {
+                                        "value": "not_equals",
+                                        "label": "Not equals"
+                                    },
+                                    {
+                                        "value": "contains",
+                                        "label": "Contains"
+                                    },
+                                    {
+                                        "value": "not_contains",
+                                        "label": "Does not contain"
+                                    },
+                                    {
+                                        "value": "empty",
+                                        "label": "Is empty"
+                                    },
+                                    {
+                                        "value": "not_empty",
+                                        "label": "Is not empty"
+                                    },
+                                    {
+                                        "value": "regex",
+                                        "label": "Matches regex"
+                                    }
+                                ],
+                                "default": "exists"
+                            },
+                            {
+                                "key": "param_value",
+                                "type": "text",
+                                "label": "Value",
+                                "show_if": {
+                                    "param_condition": [
+                                        "equals",
+                                        "not_equals",
+                                        "contains",
+                                        "not_contains",
+                                        "regex"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "category": "where",
+                "visitor": true,
+                "keywords": [
+                    "utm",
+                    "query string",
+                    "cookie",
+                    "header",
+                    "consent",
+                    "form"
+                ],
+                "summary": "Request values[ ({query_string_conditions}, {query_string_logic})]",
+                "short": "Request",
+                "locked": true,
+                "builders": [
+                    "rules"
+                ],
+                "lock": {
+                    "title": "Activate Visibility Logic Pro to edit these conditions",
+                    "text": "Saved Pro conditions keep working on your site. Add your license key to change them.",
+                    "actions": [
+                        {
+                            "label": "Activate",
+                            "url": "http://vl3.test/wp-admin/options-general.php?page=stax-visibility-license"
+                        },
+                        {
+                            "label": "Get a license",
+                            "url": "https://staxwp.com/visibility-logic-for-elementor/#pricing"
+                        }
+                    ]
+                },
+                "disabled": false,
+                "tree": true,
+                "slug": "query_string"
+            },
+            {
+                "label": "Shop (cart and product)",
+                "switch": "shop_enabled",
+                "pro": true,
+                "fields": [
+                    {
+                        "key": "shop_check",
+                        "type": "select",
+                        "label": "Check",
+                        "options": [
+                            {
+                                "value": "cart_empty",
+                                "label": "Cart is empty"
+                            },
+                            {
+                                "value": "cart_not_empty",
+                                "label": "Cart is not empty"
+                            },
+                            {
+                                "value": "cart_total",
+                                "label": "Cart total is between"
+                            },
+                            {
+                                "value": "product_in_cart",
+                                "label": "Product is in the cart"
+                            },
+                            {
+                                "value": "category_in_cart",
+                                "label": "Product category is in the cart"
+                            },
+                            {
+                                "value": "product_type",
+                                "label": "Current product type is"
+                            },
+                            {
+                                "value": "on_sale",
+                                "label": "Current product is on sale"
+                            },
+                            {
+                                "value": "in_stock",
+                                "label": "Current product is in stock"
+                            },
+                            {
+                                "value": "featured",
+                                "label": "Current product is featured"
+                            }
+                        ],
+                        "default": "cart_not_empty"
+                    },
+                    {
+                        "key": "shop_min",
+                        "type": "number",
+                        "label": "From (cart total)",
+                        "show_if": {
+                            "shop_check": [
+                                "cart_total"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "shop_max",
+                        "type": "number",
+                        "label": "To (empty: no limit)",
+                        "show_if": {
+                            "shop_check": [
+                                "cart_total"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "shop_products",
+                        "type": "posts",
+                        "label": "Products",
+                        "show_if": {
+                            "shop_check": [
+                                "product_in_cart"
+                            ]
+                        },
+                        "required": true
+                    },
+                    {
+                        "key": "shop_categories",
+                        "type": "multiselect",
+                        "label": "Categories",
+                        "options": [
+                            {
+                                "value": "15",
+                                "label": "Uncategorized"
+                            }
+                        ],
+                        "show_if": {
+                            "shop_check": [
+                                "category_in_cart"
+                            ]
+                        },
+                        "required": true
+                    },
+                    {
+                        "key": "shop_product_types",
+                        "type": "multiselect",
+                        "label": "Product types",
+                        "options": [
+                            {
+                                "value": "simple",
+                                "label": "Simple"
+                            },
+                            {
+                                "value": "variable",
+                                "label": "Variable"
+                            },
+                            {
+                                "value": "grouped",
+                                "label": "Grouped"
+                            },
+                            {
+                                "value": "external",
+                                "label": "External"
+                            }
+                        ],
+                        "show_if": {
+                            "shop_check": [
+                                "product_type"
+                            ]
+                        },
+                        "required": true
+                    }
+                ],
+                "category": "shop",
+                "keywords": [
+                    "woocommerce",
+                    "cart",
+                    "product",
+                    "sale",
+                    "stock"
+                ],
+                "visitor": true,
+                "summary": {
+                    "field": "shop_check",
+                    "cases": {
+                        "cart_total": "Cart total is[ from {shop_min}][ to {shop_max}]",
+                        "product_in_cart": "Product in the cart[ is one of {shop_products}]",
+                        "category_in_cart": "Product category in the cart[ is {shop_categories|or}]",
+                        "product_type": "Current product type[ is {shop_product_types|or}]",
+                        "*": "{shop_check}"
+                    }
+                },
+                "short": "Shop",
+                "locked": true,
+                "since": "3.0.0",
+                "builders": [
+                    "rules"
+                ],
+                "lock": {
+                    "title": "Activate Visibility Logic Pro to edit these conditions",
+                    "text": "Saved Pro conditions keep working on your site. Add your license key to change them.",
+                    "actions": [
+                        {
+                            "label": "Activate",
+                            "url": "http://vl3.test/wp-admin/options-general.php?page=stax-visibility-license"
+                        },
+                        {
+                            "label": "Get a license",
+                            "url": "https://staxwp.com/visibility-logic-for-elementor/#pricing"
+                        }
+                    ]
+                },
+                "disabled": false,
+                "tree": true,
+                "slug": "shop"
+            },
+            {
+                "label": "A/B split",
+                "switch": "split_enabled",
+                "pro": true,
+                "fields": [
+                    {
+                        "key": "split_from",
+                        "type": "number",
+                        "label": "From (% of visitors)",
+                        "default": "0"
+                    },
+                    {
+                        "key": "split_to",
+                        "type": "number",
+                        "label": "To (% of visitors)",
+                        "default": "50",
+                        "help": "Variant A 0 to 50, variant B 50 to 100, with the same group name."
+                    },
+                    {
+                        "key": "split_group",
+                        "type": "text",
+                        "label": "Group name",
+                        "placeholder": "hero"
+                    }
+                ],
+                "category": "other",
+                "keywords": [
+                    "ab",
+                    "test",
+                    "percentage",
+                    "random",
+                    "variant"
+                ],
+                "visitor": true,
+                "summary": "Visitors from {split_from}% to {split_to}%[ (group {split_group})]",
+                "short": "Split {split_from}-{split_to}%",
+                "locked": true,
+                "since": "3.0.0",
+                "builders": [
+                    "rules"
+                ],
+                "lock": {
+                    "title": "Activate Visibility Logic Pro to edit these conditions",
+                    "text": "Saved Pro conditions keep working on your site. Add your license key to change them.",
+                    "actions": [
+                        {
+                            "label": "Activate",
+                            "url": "http://vl3.test/wp-admin/options-general.php?page=stax-visibility-license"
+                        },
+                        {
+                            "label": "Get a license",
+                            "url": "https://staxwp.com/visibility-logic-for-elementor/#pricing"
+                        }
+                    ]
+                },
+                "disabled": false,
+                "tree": true,
+                "slug": "split"
+            },
+            {
+                "label": "Term and post details",
+                "switch": "content_details_enabled",
+                "pro": true,
+                "fields": [
+                    {
+                        "key": "details_check",
+                        "type": "select",
+                        "label": "Check",
+                        "options": [
+                            {
+                                "value": "term_top_level",
+                                "label": "Archive term is top level"
+                            },
+                            {
+                                "value": "term_has_children",
+                                "label": "Archive term has children"
+                            },
+                            {
+                                "value": "term_has_parent",
+                                "label": "Archive term has a parent"
+                            },
+                            {
+                                "value": "term_has_posts",
+                                "label": "Archive term has posts"
+                            },
+                            {
+                                "value": "post_format",
+                                "label": "Post format is"
+                            },
+                            {
+                                "value": "post_has_parent",
+                                "label": "Post has a parent"
+                            },
+                            {
+                                "value": "author_is",
+                                "label": "Author is"
+                            },
+                            {
+                                "value": "author_is_visitor",
+                                "label": "The visitor is the author"
+                            }
+                        ],
+                        "default": "term_has_posts"
+                    },
+                    {
+                        "key": "details_formats",
+                        "type": "multiselect",
+                        "label": "Formats",
+                        "options": [
+                            {
+                                "value": "standard",
+                                "label": "Standard"
+                            },
+                            {
+                                "value": "aside",
+                                "label": "Aside"
+                            },
+                            {
+                                "value": "chat",
+                                "label": "Chat"
+                            },
+                            {
+                                "value": "gallery",
+                                "label": "Gallery"
+                            },
+                            {
+                                "value": "link",
+                                "label": "Link"
+                            },
+                            {
+                                "value": "image",
+                                "label": "Image"
+                            },
+                            {
+                                "value": "quote",
+                                "label": "Quote"
+                            },
+                            {
+                                "value": "status",
+                                "label": "Status"
+                            },
+                            {
+                                "value": "video",
+                                "label": "Video"
+                            },
+                            {
+                                "value": "audio",
+                                "label": "Audio"
+                            }
+                        ],
+                        "show_if": {
+                            "details_check": [
+                                "post_format"
+                            ]
+                        },
+                        "required": true
+                    },
+                    {
+                        "key": "details_authors",
+                        "type": "users",
+                        "label": "Authors",
+                        "show_if": {
+                            "details_check": [
+                                "author_is"
+                            ]
+                        },
+                        "required": true
+                    }
+                ],
+                "category": "page",
+                "keywords": [
+                    "term",
+                    "category",
+                    "author",
+                    "post format",
+                    "parent"
+                ],
+                "summary": {
+                    "field": "details_check",
+                    "cases": {
+                        "post_format": "Post format[ is {details_formats|or}]",
+                        "author_is": "Author[ is {details_authors}]",
+                        "*": "{details_check}"
+                    }
+                },
+                "locked": true,
+                "since": "3.0.0",
+                "builders": [
+                    "rules"
+                ],
+                "lock": {
+                    "title": "Activate Visibility Logic Pro to edit these conditions",
+                    "text": "Saved Pro conditions keep working on your site. Add your license key to change them.",
+                    "actions": [
+                        {
+                            "label": "Activate",
+                            "url": "http://vl3.test/wp-admin/options-general.php?page=stax-visibility-license"
+                        },
+                        {
+                            "label": "Get a license",
+                            "url": "https://staxwp.com/visibility-logic-for-elementor/#pricing"
+                        }
+                    ]
+                },
+                "disabled": false,
+                "short": "",
+                "visitor": false,
+                "tree": true,
+                "slug": "content_details"
+            },
+            {
+                "label": "ACF rule group",
+                "switch": "acf_rules_enabled",
+                "pro": true,
+                "fields": [
+                    {
+                        "key": "acf_rules_logic",
+                        "type": "select",
+                        "label": "Conditions Logic",
+                        "options": [
+                            {
+                                "value": "and",
+                                "label": "AND (all must match)"
+                            },
+                            {
+                                "value": "or",
+                                "label": "OR (at least one)"
+                            }
+                        ],
+                        "default": "and"
+                    },
+                    {
+                        "key": "acf_rules",
+                        "type": "repeater",
+                        "label": "Rules",
+                        "builders": [
+                            "rules"
+                        ],
+                        "fields": [
+                            {
+                                "key": "acf_source",
+                                "type": "select",
+                                "label": "Field Source",
+                                "options": [
+                                    {
+                                        "value": "post",
+                                        "label": "Current Post"
+                                    },
+                                    {
+                                        "value": "user",
+                                        "label": "Current User"
+                                    },
+                                    {
+                                        "value": "options",
+                                        "label": "Options Page"
+                                    },
+                                    {
+                                        "value": "term",
+                                        "label": "Current Term (Archive)"
+                                    },
+                                    {
+                                        "value": "specific",
+                                        "label": "Specific Post ID"
+                                    }
+                                ],
+                                "default": "post"
+                            },
+                            {
+                                "key": "acf_post_id",
+                                "type": "text",
+                                "label": "Post ID",
+                                "show_if": {
+                                    "acf_source": [
+                                        "specific"
+                                    ]
+                                }
+                            },
+                            {
+                                "key": "acf_field",
+                                "type": "text",
+                                "label": "Field Name"
+                            },
+                            {
+                                "key": "acf_condition",
+                                "type": "select",
+                                "label": "Condition",
+                                "options": [
+                                    {
+                                        "value": "empty",
+                                        "label": "Is empty"
+                                    },
+                                    {
+                                        "value": "not_empty",
+                                        "label": "Is not empty"
+                                    },
+                                    {
+                                        "value": "equals",
+                                        "label": "Equals"
+                                    },
+                                    {
+                                        "value": "not_equals",
+                                        "label": "Not equals"
+                                    },
+                                    {
+                                        "value": "contains",
+                                        "label": "Contains"
+                                    },
+                                    {
+                                        "value": "not_contains",
+                                        "label": "Does not contain"
+                                    },
+                                    {
+                                        "value": "greater_than",
+                                        "label": "Greater than"
+                                    },
+                                    {
+                                        "value": "less_than",
+                                        "label": "Less than"
+                                    },
+                                    {
+                                        "value": "between",
+                                        "label": "Between"
+                                    },
+                                    {
+                                        "value": "is_true",
+                                        "label": "Is true"
+                                    },
+                                    {
+                                        "value": "is_false",
+                                        "label": "Is false"
+                                    },
+                                    {
+                                        "value": "date_before",
+                                        "label": "Date is before"
+                                    },
+                                    {
+                                        "value": "date_after",
+                                        "label": "Date is after"
+                                    },
+                                    {
+                                        "value": "has_rows",
+                                        "label": "Has rows (repeater)"
+                                    },
+                                    {
+                                        "value": "no_rows",
+                                        "label": "Has no rows (repeater)"
+                                    },
+                                    {
+                                        "value": "array_contains",
+                                        "label": "Array contains"
+                                    },
+                                    {
+                                        "value": "regex",
+                                        "label": "Matches regex"
+                                    }
+                                ],
+                                "default": "not_empty"
+                            },
+                            {
+                                "key": "acf_value",
+                                "type": "text",
+                                "label": "Value"
+                            },
+                            {
+                                "key": "acf_value_2",
+                                "type": "text",
+                                "label": "Value 2 (upper bound)",
+                                "show_if": {
+                                    "acf_condition": [
+                                        "between"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "category": "page",
+                "summary": "ACF rule group[ ({acf_rules}, {acf_rules_logic})]",
+                "locked": true,
+                "hidden": true,
+                "builders": [
+                    "rules"
+                ],
+                "lock": {
+                    "title": "Activate Visibility Logic Pro to edit these conditions",
+                    "text": "Saved Pro conditions keep working on your site. Add your license key to change them.",
+                    "actions": [
+                        {
+                            "label": "Activate",
+                            "url": "http://vl3.test/wp-admin/options-general.php?page=stax-visibility-license"
+                        },
+                        {
+                            "label": "Get a license",
+                            "url": "https://staxwp.com/visibility-logic-for-elementor/#pricing"
+                        }
+                    ]
+                },
+                "disabled": false,
+                "keywords": [],
+                "short": "",
+                "visitor": false,
+                "tree": true,
+                "slug": "acf_rules"
             },
             {
                 "label": "Advanced User Meta",
@@ -925,57 +3222,6 @@
                 "slug": "advanced_user_meta"
             },
             {
-                "label": "Posts & Pages",
-                "category": "page",
-                "fields": [],
-                "switch": "post_enabled",
-                "pro": false,
-                "locked": false,
-                "readonly": true,
-                "hidden": true,
-                "tree": false,
-                "keywords": [],
-                "summary": "",
-                "short": "",
-                "disabled": false,
-                "visitor": false,
-                "slug": "post"
-            },
-            {
-                "label": "Archive Pages",
-                "category": "page",
-                "fields": [],
-                "switch": "archive_enabled",
-                "pro": false,
-                "locked": false,
-                "readonly": true,
-                "hidden": true,
-                "tree": false,
-                "keywords": [],
-                "summary": "",
-                "short": "",
-                "disabled": false,
-                "visitor": false,
-                "slug": "archive"
-            },
-            {
-                "label": "Conditional Tags",
-                "category": "page",
-                "fields": [],
-                "switch": "conditional_tags_enabled",
-                "pro": false,
-                "locked": false,
-                "readonly": true,
-                "hidden": true,
-                "tree": false,
-                "keywords": [],
-                "summary": "",
-                "short": "",
-                "disabled": false,
-                "visitor": false,
-                "slug": "conditional_tags"
-            },
-            {
                 "label": "Dynamic Conditions",
                 "category": "page",
                 "fields": [],
@@ -993,23 +3239,6 @@
                 "slug": "dynamic_conditions"
             },
             {
-                "label": "WooCommerce Users",
-                "category": "shop",
-                "fields": [],
-                "switch": "woocommerce_users_enabled",
-                "pro": false,
-                "locked": false,
-                "readonly": true,
-                "hidden": true,
-                "tree": false,
-                "keywords": [],
-                "summary": "",
-                "short": "",
-                "disabled": false,
-                "visitor": false,
-                "slug": "woocommerce_users"
-            },
-            {
                 "label": "EDD Users",
                 "category": "shop",
                 "fields": [],
@@ -1025,40 +3254,6 @@
                 "disabled": false,
                 "visitor": false,
                 "slug": "edd_users"
-            },
-            {
-                "label": "Fallback",
-                "category": "other",
-                "fields": [],
-                "switch": "fallback_enabled",
-                "pro": false,
-                "locked": false,
-                "readonly": true,
-                "hidden": true,
-                "tree": false,
-                "keywords": [],
-                "summary": "",
-                "short": "",
-                "disabled": false,
-                "visitor": false,
-                "slug": "fallback"
-            },
-            {
-                "label": "URL Parameters",
-                "category": "where",
-                "fields": [],
-                "switch": "query_string_enabled",
-                "pro": false,
-                "locked": false,
-                "readonly": true,
-                "hidden": true,
-                "tree": false,
-                "keywords": [],
-                "summary": "",
-                "short": "",
-                "disabled": false,
-                "visitor": false,
-                "slug": "query_string"
             },
             {
                 "label": "Language",
@@ -2479,8 +4674,8 @@
                 "condition_type": "all",
                 "date_time_enabled": "yes",
                 "date_time_type": "date",
-                "date_from": "2026-11-12 18:57",
-                "date_to": "2026-11-14 18:57"
+                "date_from": "2026-11-12 19:05",
+                "date_to": "2026-11-14 19:05"
             },
             "tree": {
                 "v": 1,
@@ -2494,8 +4689,8 @@
                                 "type": "date_time",
                                 "values": {
                                     "date_time_type": "date",
-                                    "date_from": "2026-11-12 18:57",
-                                    "date_to": "2026-11-14 18:57"
+                                    "date_from": "2026-11-12 19:05",
+                                    "date_to": "2026-11-14 19:05"
                                 }
                             }
                         ]
@@ -2517,8 +4712,8 @@
                 "condition_type": "one",
                 "date_time_enabled": "yes",
                 "date_time_type": "date",
-                "date_from": "2026-11-12 18:57",
-                "date_to": "2026-11-14 18:57"
+                "date_from": "2026-11-12 19:05",
+                "date_to": "2026-11-14 19:05"
             },
             "tree": {
                 "v": 1,
@@ -2532,8 +4727,8 @@
                                 "type": "date_time",
                                 "values": {
                                     "date_time_type": "date",
-                                    "date_from": "2026-11-12 18:57",
-                                    "date_to": "2026-11-14 18:57"
+                                    "date_from": "2026-11-12 19:05",
+                                    "date_to": "2026-11-14 19:05"
                                 }
                             }
                         ]
@@ -2555,8 +4750,8 @@
                 "condition_type": "all",
                 "date_time_enabled": "yes",
                 "date_time_type": "date",
-                "date_from": "2026-11-12 18:57",
-                "date_to": "2026-11-14 18:57"
+                "date_from": "2026-11-12 19:05",
+                "date_to": "2026-11-14 19:05"
             },
             "tree": {
                 "v": 1,
@@ -2570,8 +4765,8 @@
                                 "type": "date_time",
                                 "values": {
                                     "date_time_type": "date",
-                                    "date_from": "2026-11-12 18:57",
-                                    "date_to": "2026-11-14 18:57"
+                                    "date_from": "2026-11-12 19:05",
+                                    "date_to": "2026-11-14 19:05"
                                 }
                             }
                         ]
@@ -2593,8 +4788,8 @@
                 "condition_type": "one",
                 "date_time_enabled": "yes",
                 "date_time_type": "date",
-                "date_from": "2026-11-12 18:57",
-                "date_to": "2026-11-14 18:57"
+                "date_from": "2026-11-12 19:05",
+                "date_to": "2026-11-14 19:05"
             },
             "tree": {
                 "v": 1,
@@ -2608,8 +4803,8 @@
                                 "type": "date_time",
                                 "values": {
                                     "date_time_type": "date",
-                                    "date_from": "2026-11-12 18:57",
-                                    "date_to": "2026-11-14 18:57"
+                                    "date_from": "2026-11-12 19:05",
+                                    "date_to": "2026-11-14 19:05"
                                 }
                             }
                         ]

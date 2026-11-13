@@ -176,7 +176,10 @@ Updating keeps your site working exactly as before: every saved rule renders the
 * NEW: Date & Time: "Every year, FROM/TO day" (seasonal content, ranges over the year end, 29 February handled).
 * NEW: User Role: specific users, "has capability", and "must have all selected roles".
 * NEW: "Hidden on the live site (draft)" for any element.
-* NEW: Classic Elementor columns have the Visibility tab.
+* NEW: Page condition (free): page type (front page, blog, single post, page, archive, search results, 404), post type and specific pages or posts; inside a loop the loop item is checked. Taxonomies, meta and archive details stay in Pro.
+* NEW: Text fallback (free): "When hidden: show a message instead" for Elementor elements and blocks (basic HTML, sanitized). The Elementor template fallback stays in Pro and is chosen in the same place.
+* NEW: Summaries say "(next day)" for time ranges over midnight, and every date and time field shows the site time zone and the current site time.
+* NEW: Classic Elementor columns have the Visibility tab (with Visibility Logic Pro 2.4, columns get the free conditions; Pro conditions on columns need Pro 2.5).
 * NEW: More operators for User Meta and ACF Field: equal (ignore case), not equal (ignore case), starts with, ends with, less or equal, greater or equal, is not one of. The existing operators answer exactly as before.
 * Backward compatibility: saved rules are not migrated and render the same (checked by an equivalence suite of 26,568 old-vs-new cases). A rule edited in the builder is still saved in the 2.x format when 2.x can express it; rules that 2.x cannot express (groups, the same condition twice, draft, the new options) are saved in a new format, and their 2.x settings show the element to administrators only, so going back to 2.x never shows restricted content to everyone.
 * NEW: Read-only WordPress Abilities `visibility-logic/list-rules` and `visibility-logic/list-conditions` (WordPress 6.9+, MCP Adapter).

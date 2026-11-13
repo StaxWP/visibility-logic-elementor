@@ -1143,7 +1143,7 @@ if ( class_exists( '\Stax\VisibilityLogic\Pro_Teaser' ) ) {
 	$controls = $widget->get_controls();
 	$cond     = isset( $controls['stax_visibility_acf_condition'] ) ? $controls['stax_visibility_acf_condition'] : [];
 	// Elementor leaves labels and options out of the front-end control stack: they are read from the module.
-	list( $ops, $ops_locked ) = \Stax\VisibilityLogic\AcfVisibility::all_condition_options();
+	list( $ops, $ops_locked ) = \Stax\VisibilityLogic\AcfVisibility::all_condition_options( true ); // The classic control keeps the 2.x operators.
 	vle_is( 'acf condition control lists the free operators unlocked', true, isset( $ops['equals'] ) && ! in_array( 'equals', $ops_locked, true ) && $ops_locked === array_values( (array) $cond['locked_options'] ) );
 	vle_is( 'acf condition control is a stax_select', 'stax_select', isset( $cond['type'] ) ? $cond['type'] : '' );
 

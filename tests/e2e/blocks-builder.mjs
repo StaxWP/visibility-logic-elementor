@@ -105,6 +105,16 @@ try {
 	check( 'yearly summary', s2 === 'Shown only when Every year from 01-01 to 12-31', s2 );
 	await shot( 'blocks-2-yearly' );
 
+	// 4b. B3 text fallback on the members paragraph.
+	panel = await selectBlock( 1 );
+	await panel.locator( '.stxc-settings select' ).first().selectOption( 'text' );
+	await page.waitForTimeout( 300 );
+	await panel.locator( '.stxc-settings textarea' ).fill( 'Log in to read more' );
+	await page.waitForTimeout( 700 );
+	a = await attrs( 1 );
+	check( 'block: text fallback', a.fallback_enabled === true && a.fallback_text === 'Log in to read more', a );
+	await shot( 'blocks-4-fallback-text' );
+
 	// 5. List View badges.
 	await page.evaluate( () => wp.data.dispatch( 'core/editor' ).setIsListViewOpened( true ) );
 	await page.waitForTimeout( 1200 );
@@ -122,6 +132,7 @@ try {
 		const html = await ( await ctx.get( link ) ).text();
 		await ctx.dispose();
 		check( `live page, ${ name }: logged in or mobile`, members === ( html.indexOf( 'Members paragraph' ) !== -1 ) );
+		check( `live page, ${ name }: message instead of the hidden paragraph`, members !== ( html.indexOf( 'Log in to read more' ) !== -1 ) );
 		check( `live page, ${ name }: yearly whole-year range shown`, html.indexOf( 'Offer paragraph' ) !== -1 );
 		check( `live page, ${ name }: plain paragraph`, html.indexOf( 'Plain paragraph' ) !== -1 );
 	}

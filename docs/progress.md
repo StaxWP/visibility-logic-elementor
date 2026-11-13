@@ -23,19 +23,21 @@ Plan: second-brain `Projects/staxwp/docs/2026-11-13-majors-ux-rethink.md` (V-M1 
 - V-M8 Rules overview (first tab): one row per element, rule in words, warnings (ended, starts later, never true, condition off, draft, visitor rule on a cached site), filters, cache check (`Cache_Check`). Server-rendered table (DataViews deferred, see below).
 - V-M9 field UX: chips for list values (meta keys, capabilities, typed values), "is empty / is not empty" operators, help with the site time zone on yearly ranges; midnight ranges keep the 2.x note.
 - V-M11 readme (3.0.0 changelog, upgrade notice), update notice links to Rules; POT regenerated. Docs on staxwp.com and wp.org screenshots: not done (see below).
-- B1 yearly period, B2 specific users / capability / all roles, B4 draft, B5 columns (also with Pro 2.5; not with Pro 2.4), B6 operators.
+- B1 yearly period, B2 specific users / capability / all roles, B4 draft, B5 columns (with Pro 2.4 too: free conditions on columns, Pro ones locked there with a one-line reason; evaluated without Pro's missing controls), B6 operators.
+- B7 Page condition (free; builder-only, stored as a tree so 2.x fails closed), B3 text fallback (free: Elementor controls only without Pro, blocks too; "When hidden" in the builder offers remove / CSS / message / template (Pro)).
+- V-M9 finished: "(next day)" in summaries for time ranges over midnight (`{time_to|after:time_from}`), site time zone and current site time on every date and time field.
 
 ## Tests
 
 - `tests/rule-tree-test.php`: equivalence suite (370 rules x 24 visitor contexts = 26,568 old-vs-new checks: tree, stored tree, default true/false, round trip, downgrade), storage decisions, B1/B2/B4/B6, groups, explain, overview, rendering (blocks, Elementor, columns); writes the golden file for the JS twin.
 - `tests/js/rule-map.test.cjs` (node): JS mapping = PHP mapping on the golden file.
-- `tests/visibility-test.php`, `tests/blocks-test.php`: unchanged 2.x suites still green.
+- `tests/visibility-test.php`, `tests/blocks-test.php`: 2.x suites still green (with and without Pro, and with Pro 2.4.3).
+- Summaries and warnings of the real registry are written to the golden file and checked by the JS test with the bundled package (PHP and JS identical).
 - E2E (`tests/e2e/`, Playwright + axe-core on a scratch site): `rule-builder.mjs` (Elementor), `blocks-builder.mjs`, `admin-screens.mjs`, `setup.php` (fixtures). `section-scroll.mjs` is from 3.0 RC.
 
 ## Remaining
 
-- Midnight ranges in the summary ("22:00 to 02:00 next day") and a time zone note on every date field.
 - Elementor 4 atomic panel on the builder (V-L4, when Elementor's V4 API allows custom controls).
 - DataViews rules screen (approved build step; 3.0 ships the server-rendered table).
 - Docs on staxwp.com and wp.org screenshots (V-M11).
-- Not in scope until Gabriel decides: B3, B7, B10, B11, Pro backlog items.
+- Decided for later: Dynamic Visibility importer (3.1), DataViews rules screen (3.1), click-to-reveal, view limits, popups (Pro 2.6).

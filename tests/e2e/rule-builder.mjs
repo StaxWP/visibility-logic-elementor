@@ -173,6 +173,33 @@ try {
 	s = await settings( 'e2ew1' );
 	check( 'draft: tree with draft, rules on', s.enabled === 'yes' && s.rules && s.rules.draft === true, s );
 
+	// 7b. B3 text fallback through "When hidden" on the "Hide on mobile" heading.
+	await select( 'e2ew3' );
+	await builder().locator( '.stxc-settings select' ).first().selectOption( 'text' );
+	await page.waitForTimeout( 300 );
+	await builder().locator( '.stxc-settings textarea' ).fill( 'Mobile offer soon' );
+	await page.waitForTimeout( 900 );
+	s = await settings( 'e2ew3' );
+	check( 'When hidden: show a message (text fallback)', s.fallback_enabled === 'yes' && s.fallback_type === 'text' && s.fallback_text === 'Mobile offer soon', s );
+	await shot( 'elementor-7-fallback-text' );
+
+	// 7c. B7 Page condition from the picker (category "Page and content"), on the draft heading.
+	await select( 'e2ew1' );
+	await builder().locator( '.stxc-add' ).first().click();
+	await builder().locator( '.stxc-cat', { hasText: 'Page and content' } ).click();
+	const pageTypes = await builder().locator( '.stxc-option' ).allInnerTexts();
+	check( 'picker category "Page and content" lists Page (free) and the Pro page conditions', pageTypes.some( ( t ) => t.trim() === 'Page' ) && pageTypes.length >= 2, pageTypes );
+	await shot( 'elementor-8-picker-page-category' );
+	await builder().locator( '.stxc-option', { hasText: /^Page$/ } ).first().click();
+	await builder().locator( '.stxc-cond.is-open .stxc-check', { hasText: 'Front page' } ).locator( 'input' ).check();
+	await page.waitForTimeout( 800 );
+	s = await settings( 'e2ew1' );
+	check( 'Page condition stored in the tree (3.0 condition)', !! ( s.rules && JSON.stringify( s.rules ).indexOf( '"page_types":["front"]' ) !== -1 ), s.rules );
+	await builder().locator( '.stxc-add' ).first().click();
+	await builder().locator( '.stxc-cat', { hasText: 'Shop' } ).click();
+	await shot( 'elementor-9-picker-shop-pro' );
+	await page.keyboard.press( 'Escape' );
+
 	// 8. Classic settings toggle.
 	await builder().locator( '.stax-vl-classic-toggle' ).click();
 	const classicVisible = await page.locator( '.elementor-control-stax_visibility_show_hide' ).isVisible();
@@ -222,7 +249,8 @@ try {
 		await ctx.dispose();
 		check( `live page, ${ name }: draft heading absent`, html.indexOf( 'data-id="e2ew1"' ) === -1 );
 		check( `live page, ${ name }: (logged in and Chrome) or mobile`, w2 === ( html.indexOf( 'data-id="e2ew2"' ) !== -1 ) );
-		check( `live page, ${ name }: hide on mobile`, w3 === ( html.indexOf( 'data-id="e2ew3"' ) !== -1 ) );
+		check( `live page, ${ name }: hide on mobile`, w3 === ( html.indexOf( 'Summer offer' ) !== -1 ) );
+		check( `live page, ${ name }: the message replaces the hidden heading`, w3 !== ( html.indexOf( 'Mobile offer soon' ) !== -1 ) );
 	}
 
 	// 11. Front end as the administrator: admin bar "why hidden" and "View this page as".

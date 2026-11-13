@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-13T17:35:00+00:00\n"
+"POT-Creation-Date: 2026-11-13T19:07:25+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: visibility-logic-elementor\n"
@@ -83,7 +83,7 @@ msgstr ""
 #: core/admin/layout.php:26
 #: core/admin/pages/templates/options.php:48
 #: core/admin/pages/templates/options.php:118
-#: core/Rule_Tree.php:954
+#: core/Rule_Tree.php:1023
 msgid "Pro"
 msgstr ""
 
@@ -399,6 +399,9 @@ msgid "Rule"
 msgstr ""
 
 #: core/admin/pages/templates/usage.php:130
+#: core/helpers/Resources.php:271
+#: core/settings/PageVisibility.php:44
+#: core/settings/PageVisibility.php:77
 msgid "Page"
 msgstr ""
 
@@ -484,28 +487,28 @@ msgstr ""
 msgid "Dismiss"
 msgstr ""
 
-#: core/Atomic.php:186
+#: core/Atomic.php:187
 #: core/Plugin.php:142
 msgid "Visibility"
 msgstr ""
 
-#: core/Blocks.php:174
-#: core/Rule_Tree.php:927
+#: core/Blocks.php:179
+#: core/Rule_Tree.php:996
 #: core/settings/GeneralVisibility.php:37
 #: core/settings/GeneralVisibility.php:55
 msgid "Visibility rules"
 msgstr ""
 
-#: core/Blocks.php:175
+#: core/Blocks.php:180
 msgid "Rules apply on the live site; the editor always shows the block."
 msgstr ""
 
-#: core/Blocks.php:176
+#: core/Blocks.php:181
 msgid "WordPress block visibility: hidden everywhere."
 msgstr ""
 
 #. translators: %s: device names.
-#: core/Blocks.php:178
+#: core/Blocks.php:183
 #, php-format
 msgid "WordPress block visibility: hidden on %s."
 msgstr ""
@@ -520,13 +523,13 @@ msgid "When the conditions are met"
 msgstr ""
 
 #: core/Conditions.php:68
-#: core/Rule_Tree.php:930
+#: core/Rule_Tree.php:999
 #: core/settings/GeneralVisibility.php:105
 msgid "Hide"
 msgstr ""
 
 #: core/Conditions.php:69
-#: core/Rule_Tree.php:929
+#: core/Rule_Tree.php:998
 #: core/settings/GeneralVisibility.php:106
 msgid "Show"
 msgstr ""
@@ -536,7 +539,7 @@ msgid "Conditions to meet"
 msgstr ""
 
 #: core/Conditions.php:78
-#: core/Rule_Tree.php:951
+#: core/Rule_Tree.php:1020
 #: core/settings/GeneralVisibility.php:122
 msgid "All"
 msgstr ""
@@ -653,12 +656,12 @@ msgid "ACF fields of users, terms and options pages, AND/OR rule groups, posts a
 msgstr ""
 
 #: core/helpers/Pro_Teaser.php:146
-#: core/Rule_Tree.php:958
+#: core/Rule_Tree.php:1027
 msgid "Learn more"
 msgstr ""
 
 #: core/helpers/Pro_Teaser.php:155
-#: core/Rule_Tree.php:955
+#: core/Rule_Tree.php:1024
 msgid "Pro feature"
 msgstr ""
 
@@ -702,140 +705,145 @@ msgstr ""
 msgid "ACF Field"
 msgstr ""
 
-#: core/helpers/Resources.php:322
+#: core/helpers/Resources.php:327
 msgid "Guests, logged in users or specific roles."
 msgstr ""
 
-#: core/helpers/Resources.php:323
+#: core/helpers/Resources.php:328
 msgid "Compare a field or meta value of the logged in user."
 msgstr ""
 
-#: core/helpers/Resources.php:324
+#: core/helpers/Resources.php:329
 msgid "Date range, time of day and days of the week."
 msgstr ""
 
-#: core/helpers/Resources.php:325
+#: core/helpers/Resources.php:330
 msgid "Chrome, Firefox, Safari, Edge and more."
 msgstr ""
 
-#: core/helpers/Resources.php:326
+#: core/helpers/Resources.php:331
 msgid "Desktop, tablet or mobile, detected on the server."
 msgstr ""
 
-#: core/helpers/Resources.php:327
+#: core/helpers/Resources.php:332
 msgid "One ACF field of the current post or page."
 msgstr ""
 
-#: core/helpers/Resources.php:328
-msgid "Visitor IP address and the referring site."
-msgstr ""
-
-#: core/helpers/Resources.php:329
-msgid "Country or city of the visitor (MaxMind)."
-msgstr ""
-
-#: core/helpers/Resources.php:330
-msgid "Adds AND/OR rule groups to User Meta."
-msgstr ""
-
-#: core/helpers/Resources.php:331
-msgid "Specific posts, pages, post types and terms."
-msgstr ""
-
-#: core/helpers/Resources.php:332
-msgid "Category, tag, author and other archive pages."
-msgstr ""
-
 #: core/helpers/Resources.php:333
-msgid "WordPress conditional tags such as is_front_page."
+msgid "Page type, post type or specific pages (rule builder)."
 msgstr ""
 
 #: core/helpers/Resources.php:334
-msgid "Any Elementor Pro dynamic tag value."
+msgid "Visitor IP address and the referring site."
 msgstr ""
 
 #: core/helpers/Resources.php:335
-msgid "Customers who bought products or hold subscriptions."
+msgid "Country or city of the visitor (MaxMind)."
 msgstr ""
 
 #: core/helpers/Resources.php:336
-msgid "Customers who bought Easy Digital Downloads products."
+msgid "Adds AND/OR rule groups to User Meta."
 msgstr ""
 
 #: core/helpers/Resources.php:337
-msgid "Show text or a template in place of a hidden element."
+msgid "Specific posts, pages, post types and terms."
 msgstr ""
 
 #: core/helpers/Resources.php:338
-msgid "URL parameters such as UTM tags or campaign codes."
+msgid "Category, tag, author and other archive pages."
 msgstr ""
 
 #: core/helpers/Resources.php:339
-msgid "Current language with WPML, Polylang or TranslatePress."
+msgid "WordPress conditional tags such as is_front_page."
 msgstr ""
 
 #: core/helpers/Resources.php:340
+msgid "Any Elementor Pro dynamic tag value."
+msgstr ""
+
+#: core/helpers/Resources.php:341
+msgid "Customers who bought products or hold subscriptions."
+msgstr ""
+
+#: core/helpers/Resources.php:342
+msgid "Customers who bought Easy Digital Downloads products."
+msgstr ""
+
+#: core/helpers/Resources.php:343
+msgid "Show text or a template in place of a hidden element."
+msgstr ""
+
+#: core/helpers/Resources.php:344
+msgid "URL parameters such as UTM tags or campaign codes."
+msgstr ""
+
+#: core/helpers/Resources.php:345
+msgid "Current language with WPML, Polylang or TranslatePress."
+msgstr ""
+
+#: core/helpers/Resources.php:346
 msgid "Adds user, term, options page and specific post fields, more operators and AND/OR rule groups to ACF Field."
 msgstr ""
 
-#: core/helpers/Resources.php:352
+#: core/helpers/Resources.php:358
 msgid "IP & Referrer"
 msgstr ""
 
-#: core/helpers/Resources.php:356
+#: core/helpers/Resources.php:362
 msgid "Geo Location"
 msgstr ""
 
-#: core/helpers/Resources.php:360
+#: core/helpers/Resources.php:366
 msgid "Advanced User Meta"
 msgstr ""
 
-#: core/helpers/Resources.php:364
+#: core/helpers/Resources.php:370
 #: core/Rules.php:469
 msgid "Post & Page"
 msgstr ""
 
-#: core/helpers/Resources.php:368
+#: core/helpers/Resources.php:374
 msgid "Archive Pages"
 msgstr ""
 
-#: core/helpers/Resources.php:372
+#: core/helpers/Resources.php:378
 msgid "Conditional Tags"
 msgstr ""
 
-#: core/helpers/Resources.php:376
+#: core/helpers/Resources.php:382
 msgid "Dynamic Conditions"
 msgstr ""
 
-#: core/helpers/Resources.php:380
+#: core/helpers/Resources.php:386
 msgid "WooCommerce Users"
 msgstr ""
 
-#: core/helpers/Resources.php:384
+#: core/helpers/Resources.php:390
 msgid "EDD Users"
 msgstr ""
 
-#: core/helpers/Resources.php:388
+#: core/helpers/Resources.php:394
+#: core/settings/FallbackText.php:47
 msgid "Fallback"
 msgstr ""
 
-#: core/helpers/Resources.php:392
+#: core/helpers/Resources.php:398
 msgid "URL Parameters"
 msgstr ""
 
-#: core/helpers/Resources.php:396
+#: core/helpers/Resources.php:402
 msgid "Language (WPML/Polylang)"
 msgstr ""
 
-#: core/helpers/Resources.php:400
+#: core/helpers/Resources.php:406
 msgid "Advanced ACF"
 msgstr ""
 
-#: core/helpers/Resources.php:421
+#: core/helpers/Resources.php:427
 msgid "Guests"
 msgstr ""
 
-#: core/helpers/Resources.php:422
+#: core/helpers/Resources.php:428
 msgid "Logged in users"
 msgstr ""
 
@@ -856,24 +864,24 @@ msgid "Hidden"
 msgstr ""
 
 #: core/Preview.php:339
-#: core/Rest.php:145
-#: core/Rule_Tree.php:245
+#: core/Rest.php:157
+#: core/Rule_Tree.php:252
 msgid "yes"
 msgstr ""
 
 #: core/Preview.php:339
-#: core/Rest.php:146
-#: core/Rule_Tree.php:246
+#: core/Rest.php:158
+#: core/Rule_Tree.php:253
 msgid "no"
 msgstr ""
 
 #: core/Preview.php:339
-#: core/Rest.php:147
+#: core/Rest.php:159
 msgid "does not apply here"
 msgstr ""
 
 #: core/Preview.php:356
-#: core/Rest.php:144
+#: core/Rest.php:156
 msgid "Hidden on the live site (draft)."
 msgstr ""
 
@@ -882,13 +890,13 @@ msgid "View this page as"
 msgstr ""
 
 #: core/Preview.php:377
-#: core/Rest.php:124
+#: core/Rest.php:136
 msgid "Guest"
 msgstr ""
 
 #. translators: %s: role name.
 #: core/Preview.php:381
-#: core/Rest.php:126
+#: core/Rest.php:138
 #, php-format
 msgid "Role: %s"
 msgstr ""
@@ -917,108 +925,108 @@ msgstr ""
 msgid "%1$s (#%2$d)"
 msgstr ""
 
-#: core/Rest.php:122
+#: core/Rest.php:134
 msgid "Preview as"
 msgstr ""
 
-#: core/Rest.php:123
+#: core/Rest.php:135
 msgid "Me (no preview)"
 msgstr ""
 
-#: core/Rest.php:127
+#: core/Rest.php:139
 msgid "A specific user"
 msgstr ""
 
-#: core/Rest.php:128
+#: core/Rest.php:140
 msgid "User"
 msgstr ""
 
-#: core/Rest.php:129
+#: core/Rest.php:141
 #: core/settings/DeviceTypeVisibility.php:72
 #: core/settings/DeviceTypeVisibility.php:126
 msgid "Device"
 msgstr ""
 
-#: core/Rest.php:130
+#: core/Rest.php:142
 msgid "This device"
 msgstr ""
 
-#: core/Rest.php:131
+#: core/Rest.php:143
 #: core/settings/DeviceTypeVisibility.php:105
 msgid "Desktop"
 msgstr ""
 
-#: core/Rest.php:132
+#: core/Rest.php:144
 #: core/settings/DeviceTypeVisibility.php:106
 msgid "Tablet"
 msgstr ""
 
-#: core/Rest.php:133
+#: core/Rest.php:145
 #: core/settings/DeviceTypeVisibility.php:107
 msgid "Mobile"
 msgstr ""
 
-#: core/Rest.php:134
-#: core/Rule_Tree.php:136
+#: core/Rest.php:146
+#: core/Rule_Tree.php:137
 msgid "Date and time"
 msgstr ""
 
-#: core/Rest.php:135
+#: core/Rest.php:147
 msgid "Empty: now (site time zone)."
 msgstr ""
 
-#: core/Rest.php:136
+#: core/Rest.php:148
 msgid "Country"
 msgstr ""
 
-#: core/Rest.php:137
+#: core/Rest.php:149
 msgid "Two-letter code, for example DE."
 msgstr ""
 
-#: core/Rest.php:138
+#: core/Rest.php:150
 msgid "Preview as and why"
 msgstr ""
 
 #. translators: %s: who the page is previewed for.
-#: core/Rest.php:140
+#: core/Rest.php:152
 #, php-format
 msgid "Shown for %s"
 msgstr ""
 
 #. translators: %s: who the page is previewed for.
-#: core/Rest.php:142
+#: core/Rest.php:154
 #, php-format
 msgid "Hidden for %s"
 msgstr ""
 
-#: core/Rest.php:143
+#: core/Rest.php:155
 msgid "No rule applies: shown."
 msgstr ""
 
 #. translators: %d: group number.
-#: core/Rest.php:149
-#: core/Rule_Tree.php:947
+#: core/Rest.php:161
+#: core/Rule_Tree.php:1016
 #, php-format
 msgid "Group %d"
 msgstr ""
 
-#: core/Rest.php:150
+#: core/Rest.php:162
 msgid "The rule matches."
 msgstr ""
 
-#: core/Rest.php:151
+#: core/Rest.php:163
 msgid "The rule does not match."
 msgstr ""
 
-#: core/Rest.php:152
+#: core/Rest.php:164
 msgid "Action: show when it matches."
 msgstr ""
 
-#: core/Rest.php:153
+#: core/Rest.php:165
 msgid "Action: hide when it matches."
 msgstr ""
 
-#: core/Rest.php:154
+#: core/Rest.php:166
 msgid "Rules are off for this element."
 msgstr ""
 
@@ -1112,7 +1120,7 @@ msgid "field"
 msgstr ""
 
 #: core/Rule_Tree.php:117
-#: core/Rule_Tree.php:168
+#: core/Rule_Tree.php:175
 msgid "custom field"
 msgstr ""
 
@@ -1153,400 +1161,475 @@ msgid "Date is[ from {date_from}][ until {date_to}]"
 msgstr ""
 
 #: core/Rule_Tree.php:132
-msgid "Time of day is[ from {time_from}][ to {time_to}]"
+msgid "Time of day is[ from {time_from}][ to {time_to|after:time_from}]"
 msgstr ""
 
 #: core/Rule_Tree.php:133
 msgid "Day of the week is[ {time_week|or}]"
 msgstr ""
 
-#: core/Rule_Tree.php:134
+#: core/Rule_Tree.php:135
 msgid "Day is[ {time_week|or}][ from {time_from}][ to {time_to}]"
 msgstr ""
 
-#: core/Rule_Tree.php:135
+#: core/Rule_Tree.php:136
 msgid "Every year[ from {date_year_from}][ {date_year_from_time}][ to {date_year_to}][ {date_year_to_time}]"
 msgstr ""
 
-#: core/Rule_Tree.php:142
+#: core/Rule_Tree.php:143
 msgid "[until {date_to}]"
 msgstr ""
 
-#: core/Rule_Tree.php:143
+#: core/Rule_Tree.php:144
 msgid "[{time_from}-{time_to}]"
 msgstr ""
 
-#: core/Rule_Tree.php:145
+#: core/Rule_Tree.php:146
 msgid "Every year[ {date_year_from}-{date_year_to}]"
 msgstr ""
 
-#: core/Rule_Tree.php:146
+#: core/Rule_Tree.php:147
 msgid "Schedule"
 msgstr ""
 
-#: core/Rule_Tree.php:155
+#: core/Rule_Tree.php:156
 msgid "Browser[ is {browsers|or}]"
 msgstr ""
 
-#: core/Rule_Tree.php:160
+#: core/Rule_Tree.php:161
 msgid "mobile"
 msgstr ""
 
-#: core/Rule_Tree.php:160
+#: core/Rule_Tree.php:161
 msgid "tablet"
 msgstr ""
 
-#: core/Rule_Tree.php:160
+#: core/Rule_Tree.php:161
 msgid "desktop"
 msgstr ""
 
-#: core/Rule_Tree.php:160
+#: core/Rule_Tree.php:161
 msgid "phone"
 msgstr ""
 
-#: core/Rule_Tree.php:163
+#: core/Rule_Tree.php:164
 msgid "Device[ is {device_types|or}]"
 msgstr ""
 
-#: core/Rule_Tree.php:168
-msgid "meta"
+#: core/Rule_Tree.php:169
+msgid "front page"
 msgstr ""
 
 #: core/Rule_Tree.php:169
-msgid "ACF field[ {acf_field}] {acf_condition|lower}[ {acf_value}][ and {acf_value_2}]"
+msgid "post type"
+msgstr ""
+
+#: core/Rule_Tree.php:169
+msgid "search"
+msgstr ""
+
+#: core/Rule_Tree.php:169
+msgid "blog"
 msgstr ""
 
 #: core/Rule_Tree.php:170
+msgid "Page[ type is {page_types|or}][ post type is {page_post_types|or}][ is one of {page_ids}]"
+msgstr ""
+
+#: core/Rule_Tree.php:171
+msgid "Page[: {page_types}][ {page_ids}]"
+msgstr ""
+
+#: core/Rule_Tree.php:175
+msgid "meta"
+msgstr ""
+
+#: core/Rule_Tree.php:176
+msgid "ACF field[ {acf_field}] {acf_condition|lower}[ {acf_value}][ and {acf_value_2}]"
+msgstr ""
+
+#: core/Rule_Tree.php:177
 msgid "ACF[ {acf_field}]"
 msgstr ""
 
-#: core/Rule_Tree.php:190
+#: core/Rule_Tree.php:197
 msgid "Logged-in members only"
 msgstr ""
 
-#: core/Rule_Tree.php:191
+#: core/Rule_Tree.php:198
 msgid "Hidden from guests"
 msgstr ""
 
-#: core/Rule_Tree.php:196
+#: core/Rule_Tree.php:203
 msgid "Guests only"
 msgstr ""
 
-#: core/Rule_Tree.php:197
+#: core/Rule_Tree.php:204
 msgid "Hidden from logged-in users"
 msgstr ""
 
-#: core/Rule_Tree.php:202
+#: core/Rule_Tree.php:209
 msgid "Hide on mobile"
 msgstr ""
 
-#: core/Rule_Tree.php:203
+#: core/Rule_Tree.php:210
 msgid "Phones, detected on the server"
 msgstr ""
 
-#: core/Rule_Tree.php:208
+#: core/Rule_Tree.php:215
 msgid "Only during a date range"
 msgstr ""
 
-#: core/Rule_Tree.php:209
+#: core/Rule_Tree.php:216
 msgid "Pick the start and end"
 msgstr ""
 
-#: core/Rule_Tree.php:214
+#: core/Rule_Tree.php:221
 msgid "Business hours"
 msgstr ""
 
-#: core/Rule_Tree.php:215
+#: core/Rule_Tree.php:222
 msgid "Monday to Friday, 9:00 to 17:00"
 msgstr ""
 
-#: core/Rule_Tree.php:220
+#: core/Rule_Tree.php:227
 msgid "Administrators only"
 msgstr ""
 
-#: core/Rule_Tree.php:221
+#: core/Rule_Tree.php:228
 msgid "Work in progress content"
 msgstr ""
 
 #. translators: %s: the conditions of the rule.
-#: core/Rule_Tree.php:236
+#: core/Rule_Tree.php:243
 #, php-format
 msgid "Shown only when %s"
 msgstr ""
 
 #. translators: %s: the conditions of the rule.
-#: core/Rule_Tree.php:238
+#: core/Rule_Tree.php:245
 #, php-format
 msgid "Hidden when %s"
 msgstr ""
 
-#: core/Rule_Tree.php:239
+#: core/Rule_Tree.php:246
 msgid " and "
 msgstr ""
 
-#: core/Rule_Tree.php:240
+#: core/Rule_Tree.php:247
 msgid " or "
 msgstr ""
 
-#: core/Rule_Tree.php:241
+#: core/Rule_Tree.php:248
 msgid "Hidden on the live site (draft)"
 msgstr ""
 
-#: core/Rule_Tree.php:242
+#: core/Rule_Tree.php:249
 msgid "No conditions yet"
 msgstr ""
 
 #. translators: 1: first items, 2: number of other items.
 #. translators: 1: user names, 2: number of other users.
-#: core/Rule_Tree.php:244
-#: core/Rule_Tree.php:791
+#. translators: 1: titles, 2: number of other items.
+#: core/Rule_Tree.php:251
+#: core/Rule_Tree.php:847
+#: core/Rule_Tree.php:860
 #, php-format
 msgid "%1$s and %2$d more"
 msgstr ""
 
 #. translators: %s: short rule label.
-#: core/Rule_Tree.php:249
+#: core/Rule_Tree.php:256
 #, php-format
 msgid "Hidden: %s"
 msgstr ""
 
 #. translators: %d: number of users.
-#: core/Rule_Tree.php:252
+#: core/Rule_Tree.php:259
 #, php-format
 msgid "%d users"
 msgstr ""
 
 #. translators: %d: number of rules.
-#: core/Rule_Tree.php:254
+#: core/Rule_Tree.php:261
 #, php-format
 msgid "%d rules"
 msgstr ""
 
-#: core/Rule_Tree.php:873
+#. translators: %d: number of pages or posts.
+#: core/Rule_Tree.php:263
+#, php-format
+msgid "%d items"
+msgstr ""
+
+#: core/Rule_Tree.php:264
+msgid " (next day)"
+msgstr ""
+
+#. translators: 1: time zone name, 2: current site time.
+#: core/Rule_Tree.php:343
+#, php-format
+msgid "Site time zone: %1$s (now %2$s)."
+msgstr ""
+
+#: core/Rule_Tree.php:942
 msgid "Hidden on the live site: visitors never see this element."
 msgstr ""
 
 #. translators: %s: condition name.
-#: core/Rule_Tree.php:876
-#: core/Rule_Tree.php:975
+#: core/Rule_Tree.php:945
+#: core/Rule_Tree.php:1044
 #, php-format
 msgid "%s needs a Pro license; it is kept and still applies."
 msgstr ""
 
 #. translators: %s: condition name.
-#: core/Rule_Tree.php:879
-#: core/Rule_Tree.php:977
+#: core/Rule_Tree.php:948
+#: core/Rule_Tree.php:1046
 #, php-format
 msgid "%s is turned off in the settings; it does not apply."
 msgstr ""
 
 #. translators: %s: condition name.
-#: core/Rule_Tree.php:882
-#: core/Rule_Tree.php:979
+#: core/Rule_Tree.php:951
+#: core/Rule_Tree.php:1048
 #, php-format
 msgid "%s is not complete yet."
 msgstr ""
 
 #. translators: 1: condition name, 2: date.
-#: core/Rule_Tree.php:885
-#: core/Rule_Tree.php:981
+#: core/Rule_Tree.php:954
+#: core/Rule_Tree.php:1050
 #, php-format
 msgid "The date range of %1$s ended on %2$s."
 msgstr ""
 
 #. translators: 1: condition name, 2: date.
-#: core/Rule_Tree.php:888
-#: core/Rule_Tree.php:983
+#: core/Rule_Tree.php:957
+#: core/Rule_Tree.php:1052
 #, php-format
 msgid "%1$s starts on %2$s."
 msgstr ""
 
 #. translators: %s: condition name.
-#: core/Rule_Tree.php:891
-#: core/Rule_Tree.php:985
+#: core/Rule_Tree.php:960
+#: core/Rule_Tree.php:1054
 #, php-format
 msgid "This group can never be true: %s conflicts with another condition."
 msgstr ""
 
-#: core/Rule_Tree.php:893
+#: core/Rule_Tree.php:962
 msgid "This rule depends on the visitor. If this page is cached for everyone, visitors may see the wrong version."
 msgstr ""
 
-#: core/Rule_Tree.php:928
+#: core/Rule_Tree.php:997
 msgid "Action"
 msgstr ""
 
-#: core/Rule_Tree.php:931
+#: core/Rule_Tree.php:1000
 msgid "this element when"
 msgstr ""
 
-#: core/Rule_Tree.php:932
+#: core/Rule_Tree.php:1001
 msgid "All of these"
 msgstr ""
 
 #. translators: %d: group number.
-#: core/Rule_Tree.php:934
+#: core/Rule_Tree.php:1003
 #, php-format
 msgid "Group %d: all of these"
 msgstr ""
 
-#: core/Rule_Tree.php:935
+#: core/Rule_Tree.php:1004
 msgid "or"
 msgstr ""
 
-#: core/Rule_Tree.php:936
+#: core/Rule_Tree.php:1005
 msgid "Add condition"
 msgstr ""
 
-#: core/Rule_Tree.php:937
+#: core/Rule_Tree.php:1006
 msgid "Add \"or\" group"
 msgstr ""
 
 #. translators: %d: group number.
-#: core/Rule_Tree.php:939
+#: core/Rule_Tree.php:1008
 #, php-format
 msgid "Remove group %d"
 msgstr ""
 
-#: core/Rule_Tree.php:940
+#: core/Rule_Tree.php:1009
 msgid "Edit"
 msgstr ""
 
-#: core/Rule_Tree.php:941
+#: core/Rule_Tree.php:1010
 msgid "Remove"
 msgstr ""
 
 #. translators: %s: condition summary.
-#: core/Rule_Tree.php:943
+#: core/Rule_Tree.php:1012
 #, php-format
 msgid "Remove condition: %s"
 msgstr ""
 
-#: core/Rule_Tree.php:944
+#: core/Rule_Tree.php:1013
 msgid "Duplicate"
 msgstr ""
 
-#: core/Rule_Tree.php:945
+#: core/Rule_Tree.php:1014
 msgid "Move to"
 msgstr ""
 
-#: core/Rule_Tree.php:948
+#: core/Rule_Tree.php:1017
 msgid "New \"or\" group"
 msgstr ""
 
-#: core/Rule_Tree.php:949
+#: core/Rule_Tree.php:1018
 msgid "Visitors never see this element; you still see it in the editor."
 msgstr ""
 
-#: core/Rule_Tree.php:950
+#: core/Rule_Tree.php:1019
 msgid "Search conditions"
 msgstr ""
 
-#: core/Rule_Tree.php:952
+#: core/Rule_Tree.php:1021
 msgid "Start from a preset"
 msgstr ""
 
-#: core/Rule_Tree.php:953
+#: core/Rule_Tree.php:1022
 msgid "Close"
 msgstr ""
 
 #. translators: %s: condition name.
-#: core/Rule_Tree.php:957
+#: core/Rule_Tree.php:1026
 #, php-format
 msgid "%s needs Visibility Logic Pro."
 msgstr ""
 
-#: core/Rule_Tree.php:959
+#: core/Rule_Tree.php:1028
 msgid "No condition matches your search."
 msgstr ""
 
-#: core/Rule_Tree.php:960
+#: core/Rule_Tree.php:1029
 msgid "This condition is edited in the classic settings."
 msgstr ""
 
-#: core/Rule_Tree.php:961
+#: core/Rule_Tree.php:1030
 msgid "Add"
 msgstr ""
 
 #. translators: %s: value.
-#: core/Rule_Tree.php:963
+#: core/Rule_Tree.php:1032
 #, php-format
 msgid "Remove %s"
 msgstr ""
 
-#: core/Rule_Tree.php:964
+#: core/Rule_Tree.php:1033
 msgid "Add rule"
 msgstr ""
 
 #. translators: %d: rule number.
-#: core/Rule_Tree.php:966
+#: core/Rule_Tree.php:1035
 #, php-format
 msgid "Remove rule %d"
 msgstr ""
 
 #. translators: %d: rule number.
-#: core/Rule_Tree.php:968
+#: core/Rule_Tree.php:1037
 #, php-format
 msgid "Rule %d"
 msgstr ""
 
-#: core/Rule_Tree.php:969
+#: core/Rule_Tree.php:1038
 msgid "Search users"
 msgstr ""
 
-#: core/Rule_Tree.php:970
+#: core/Rule_Tree.php:1039
 msgid "No users found."
 msgstr ""
 
-#: core/Rule_Tree.php:971
+#: core/Rule_Tree.php:1040
 msgid "Filter options"
 msgstr ""
 
-#: core/Rule_Tree.php:989
+#: core/Rule_Tree.php:1058
 msgid "Rules on"
 msgstr ""
 
-#: core/Rule_Tree.php:990
+#: core/Rule_Tree.php:1059
 msgid "Turn off to keep the rule without applying it."
 msgstr ""
 
-#: core/Rule_Tree.php:991
+#: core/Rule_Tree.php:1060
 msgid "When hidden"
 msgstr ""
 
-#: core/Rule_Tree.php:992
+#: core/Rule_Tree.php:1061
 msgid "Remove it from the page"
 msgstr ""
 
-#: core/Rule_Tree.php:993
+#: core/Rule_Tree.php:1062
 msgid "Keep the HTML, hide with CSS"
 msgstr ""
 
-#: core/Rule_Tree.php:994
+#: core/Rule_Tree.php:1063
 msgid "Show other content (Pro)"
 msgstr ""
 
-#: core/Rule_Tree.php:995
+#: core/Rule_Tree.php:1064
+msgid "Show a message instead"
+msgstr ""
+
+#: core/Rule_Tree.php:1065
+msgid "Show an Elementor template instead"
+msgstr ""
+
+#: core/Rule_Tree.php:1066
+msgid "Show an Elementor template instead (Pro)"
+msgstr ""
+
+#: core/Rule_Tree.php:1067
+#: core/settings/FallbackText.php:94
+msgid "Message"
+msgstr ""
+
+#: core/Rule_Tree.php:1068
+msgid "Shown to visitors who do not see the element. Basic HTML is allowed."
+msgstr ""
+
+#: core/Rule_Tree.php:1069
+msgid "Template"
+msgstr ""
+
+#: core/Rule_Tree.php:1070
+msgid "Pro conditions on columns need Visibility Logic Pro 2.5 or newer."
+msgstr ""
+
+#: core/Rule_Tree.php:1071
+msgid "Search pages and posts"
+msgstr ""
+
+#: core/Rule_Tree.php:1072
 msgid "Hide this container when everything inside is hidden"
 msgstr ""
 
-#: core/Rule_Tree.php:996
+#: core/Rule_Tree.php:1073
 msgid "Classic settings"
 msgstr ""
 
-#: core/Rule_Tree.php:997
+#: core/Rule_Tree.php:1074
 msgid "Show the classic settings"
 msgstr ""
 
-#: core/Rule_Tree.php:998
+#: core/Rule_Tree.php:1075
 msgid "Hide the classic settings"
 msgstr ""
 
-#: core/Rule_Tree.php:999
+#: core/Rule_Tree.php:1076
 msgid "This rule uses a condition the builder cannot store in groups. Keep one group, or edit it in the classic settings."
 msgstr ""
 
-#: core/Rule_Tree.php:1000
+#: core/Rule_Tree.php:1077
 msgid "Saved in the 3.0 format. Visibility Logic 2.x would show this element to administrators only."
 msgstr ""
 
@@ -1872,6 +1955,22 @@ msgstr ""
 msgid "Detected on the server from the User-Agent."
 msgstr ""
 
+#: core/settings/FallbackText.php:67
+msgid "Show a message when hidden"
+msgstr ""
+
+#: core/settings/FallbackText.php:78
+msgid "Content"
+msgstr ""
+
+#: core/settings/FallbackText.php:81
+msgid "Text"
+msgstr ""
+
+#: core/settings/FallbackText.php:82
+msgid "Elementor template"
+msgstr ""
+
 #: core/settings/GeneralVisibility.php:82
 msgid "This will hide the entire section if all the widgets inside it are hidden because of Visiblity conditions. Please note that this won't apply if any of the widgets inside the section is hidden via CSS."
 msgstr ""
@@ -1922,6 +2021,46 @@ msgstr ""
 
 #: core/settings/OldVersionFallback.php:178
 msgid "This is a backwards compatibility for version 1.2.0. If you want to use the new version please enable the option in General tab."
+msgstr ""
+
+#: core/settings/PageVisibility.php:41
+msgid "Front page"
+msgstr ""
+
+#: core/settings/PageVisibility.php:42
+msgid "Blog (posts page)"
+msgstr ""
+
+#: core/settings/PageVisibility.php:43
+msgid "Single post"
+msgstr ""
+
+#: core/settings/PageVisibility.php:45
+msgid "Archive"
+msgstr ""
+
+#: core/settings/PageVisibility.php:46
+msgid "Search results"
+msgstr ""
+
+#: core/settings/PageVisibility.php:47
+msgid "Not found (404)"
+msgstr ""
+
+#: core/settings/PageVisibility.php:84
+msgid "Page type is"
+msgstr ""
+
+#: core/settings/PageVisibility.php:90
+msgid "Post type is"
+msgstr ""
+
+#: core/settings/PageVisibility.php:96
+msgid "Specific pages or posts"
+msgstr ""
+
+#: core/settings/PageVisibility.php:97
+msgid "Inside a loop, the loop item is checked."
 msgstr ""
 
 #: core/settings/UserMetaVisibility.php:74
@@ -2057,8 +2196,8 @@ msgstr ""
 msgid "The visitor needs at least one of them. Guests never match."
 msgstr ""
 
-#: core/Singleton.php:81
-#: core/Singleton.php:92
+#: core/Singleton.php:90
+#: core/Singleton.php:101
 msgid "Cheatin&#8217; huh?"
 msgstr ""
 

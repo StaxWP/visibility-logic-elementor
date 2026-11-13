@@ -450,6 +450,7 @@ $ok( in_array( 'incomplete', $codes, true ), 'warning: incomplete', $codes );
 $registry = Rule_Tree::registry( true );
 $ok( 'who' === $registry->type( 'user_role' )['category'] && 'when' === $registry->type( 'date_time' )['category'] && 'device' === $registry->type( 'device_type' )['category'], 'registry: task categories' );
 $ok( 6 <= count( $registry->presets() ), 'registry: built-in presets' );
+$ok( null === $registry->type( 'fallback' ) && 1 === count( \StaxWP\Conditions\V1\Tree::conditions( Rule_Tree::legacy_to_tree( $p( [ 'enabled' => 'yes', 'device_type_enabled' => 'yes', 'device_types' => [ 'mobile' ], 'fallback_enabled' => 'yes', 'fallback_text' => 'x' ] ) ) ) ), 'the fallback is not a condition' );
 $pro_types = array_filter( $registry->types(), static function ( $t ) {
 	return ! empty( $t['pro'] );
 } );
