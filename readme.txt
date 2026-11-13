@@ -173,6 +173,10 @@ Updating keeps your site working exactly as before: every saved rule renders the
 * NEW: Option "Hide when empty: count widgets placed directly in a container" (on since 2.5.2): unchecking it restores the pre-2.5.2 behaviour.
 * NEW: Option to read Date FROM/TO in the site time zone (on since 2.5.2): unchecking it reads them as UTC, as before 2.5.2.
 * NEW: Filter `stax/visibility/device_type` to override the detected device (for example from a CDN header).
+* NEW: One section per subject in the Elementor panel: with Visibility Logic Pro 2.5+, "Advanced ACF" and "Advanced User Meta" are part of the ACF Field and User Meta sections (more field sources and operators in the same rule, plus an AND/OR rule group). Saved rules keep working exactly as before and move into the merged section the next time the page is saved in Elementor.
+* Improved: Pro options are shown quietly: Pro sources and operators are listed disabled with "(Pro)" in their label, and a single "More conditions in Pro" line with one link replaces the empty Pro sections at the end of the Visibility tab (and the link in the block editor). Nothing Pro is shown when Pro is active.
+* Fix: Opening a section in the Visibility tab no longer scrolls the panel back to the top; the opened section stays where you clicked it.
+* Fix: Notices inside the Visibility tab (for example "Advanced Custom Fields plugin is not active") were white on a light panel; they now use the panel's muted text color.
 * Improved: Each element's rules are checked once per request, the User-Agent once per request; no get_plugins() scan on front-end requests; no admin assets outside the plugin's screens; usage tracking client loaded only in the admin.
 * Improved: Compatibility with PHP 8.1 to 8.5 (no deprecations), WordPress 6.x to 7.1, Elementor 3.x and 4.x (tested with 3.21, 3.35 and 4.4) and Elementor Pro 4.4. The Elementor editor uses Elementor's own Select2 (the second copy bundled until 2.5.1 is gone).
 * Removed: the Appsero usage tracker (SDK, opt-in notice, stored options and scheduled event).

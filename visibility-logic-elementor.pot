@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-13T06:36:52+00:00\n"
+"POT-Creation-Date: 2026-11-13T16:14:30+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: visibility-logic-elementor\n"
@@ -256,6 +256,7 @@ msgid "Save Changes"
 msgstr ""
 
 #: core/admin/pages/templates/options.php:110
+#: core/helpers/Pro_Teaser.php:137
 msgid "More conditions in Pro"
 msgstr ""
 
@@ -377,7 +378,7 @@ msgstr ""
 
 #: core/Atomic.php:185
 #: core/Blocks.php:187
-#: core/Plugin.php:130
+#: core/Plugin.php:131
 msgid "Visibility"
 msgstr ""
 
@@ -389,48 +390,48 @@ msgstr ""
 msgid "Rules apply on the live site; the editor always shows the block."
 msgstr ""
 
-#: core/Conditions.php:59
+#: core/Conditions.php:60
 #: core/settings/GeneralVisibility.php:53
 msgid "Enable Visibility Logic"
 msgstr ""
 
-#: core/Conditions.php:64
+#: core/Conditions.php:65
 msgid "When the conditions are met"
 msgstr ""
 
-#: core/Conditions.php:66
+#: core/Conditions.php:67
 #: core/settings/GeneralVisibility.php:92
 msgid "Hide"
 msgstr ""
 
-#: core/Conditions.php:67
+#: core/Conditions.php:68
 #: core/settings/GeneralVisibility.php:93
 msgid "Show"
 msgstr ""
 
-#: core/Conditions.php:74
+#: core/Conditions.php:75
 msgid "Conditions to meet"
 msgstr ""
 
-#: core/Conditions.php:76
+#: core/Conditions.php:77
 #: core/settings/GeneralVisibility.php:109
 msgid "All"
 msgstr ""
 
-#: core/Conditions.php:77
+#: core/Conditions.php:78
 #: core/settings/GeneralVisibility.php:110
 msgid "At least one"
 msgstr ""
 
-#: core/Conditions.php:84
+#: core/Conditions.php:85
 msgid "Keep HTML, hide with CSS"
 msgstr ""
 
-#: core/Conditions.php:85
+#: core/Conditions.php:86
 msgid "The hidden element stays in the page source with display: none."
 msgstr ""
 
-#: core/Conditions.php:168
+#: core/Conditions.php:169
 msgid "This condition is locked."
 msgstr ""
 
@@ -456,6 +457,29 @@ msgstr ""
 
 #: core/helpers/Notices.php:80
 msgid "Update Elementor Now"
+msgstr ""
+
+#. translators: %s: name of an option that needs Visibility Logic Pro.
+#: core/helpers/Pro_Teaser.php:79
+#, php-format
+msgid "%s (Pro)"
+msgstr ""
+
+#: core/helpers/Pro_Teaser.php:128
+msgid "ACF fields of users, terms and options pages, AND/OR rule groups, posts and pages, archives, WooCommerce and EDD customers, location, language, URL parameters and fallback content."
+msgstr ""
+
+#: core/helpers/Pro_Teaser.php:146
+msgid "Learn more"
+msgstr ""
+
+#: core/helpers/Pro_Teaser.php:155
+msgid "Pro feature"
+msgstr ""
+
+#: core/helpers/Pro_Teaser.php:164
+#: core/helpers/Pro_Teaser.php:190
+msgid "PRO"
 msgstr ""
 
 #: core/helpers/Resources.php:241
@@ -489,7 +513,7 @@ msgstr ""
 
 #: core/helpers/Resources.php:266
 #: core/settings/AcfVisibility.php:40
-#: core/settings/AcfVisibility.php:203
+#: core/settings/AcfVisibility.php:345
 msgid "ACF Field"
 msgstr ""
 
@@ -526,7 +550,7 @@ msgid "Country or city of the visitor (MaxMind)."
 msgstr ""
 
 #: core/helpers/Resources.php:330
-msgid "Several user meta rules combined."
+msgid "Adds AND/OR rule groups to User Meta."
 msgstr ""
 
 #: core/helpers/Resources.php:331
@@ -566,7 +590,7 @@ msgid "Current language with WPML, Polylang or TranslatePress."
 msgstr ""
 
 #: core/helpers/Resources.php:340
-msgid "Repeaters, options pages, user and term fields, AND/OR groups."
+msgid "Adds user, term, options page and specific post fields, more operators and AND/OR rule groups to ACF Field."
 msgstr ""
 
 #: core/helpers/Resources.php:352
@@ -630,6 +654,14 @@ msgstr ""
 msgid "Logged in users"
 msgstr ""
 
+#: core/Rules.php:391
+msgid "ACF Field (rule group)"
+msgstr ""
+
+#: core/Rules.php:392
+msgid "User Meta (rule group)"
+msgstr ""
+
 #: core/settings/AcfVisibility.php:58
 #: core/settings/BrowserTypeVisiblity.php:71
 #: core/settings/DateTimeVisibility.php:70
@@ -665,77 +697,151 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: core/settings/AcfVisibility.php:72
+#: core/settings/AcfVisibility.php:76
+#: core/settings/AcfVisibility.php:99
+#: core/settings/AcfVisibility.php:297
 msgid "Field Source"
 msgstr ""
 
-#: core/settings/AcfVisibility.php:83
+#: core/settings/AcfVisibility.php:87
 msgid "Checks ACF fields on the current post/page."
 msgstr ""
 
-#: core/settings/AcfVisibility.php:95
-#: core/settings/AcfVisibility.php:209
+#: core/settings/AcfVisibility.php:116
+#: core/settings/AcfVisibility.php:308
+msgid "Post ID"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:130
+#: core/settings/AcfVisibility.php:316
 msgid "Field Name"
 msgstr ""
 
-#: core/settings/AcfVisibility.php:97
+#: core/settings/AcfVisibility.php:132
 msgid "e.g. my_custom_field"
 msgstr ""
 
-#: core/settings/AcfVisibility.php:98
+#: core/settings/AcfVisibility.php:133
 msgid "Enter the ACF field name or key."
 msgstr ""
 
-#: core/settings/AcfVisibility.php:110
-#: core/settings/AcfVisibility.php:216
+#: core/settings/AcfVisibility.php:147
+#: core/settings/AcfVisibility.php:323
 msgid "Condition"
 msgstr ""
 
-#: core/settings/AcfVisibility.php:125
-#: core/settings/AcfVisibility.php:223
+#: core/settings/AcfVisibility.php:163
+#: core/settings/AcfVisibility.php:331
 msgid "Value"
 msgstr ""
 
-#. translators: 1: link opening tag, 2: link closing tag.
-#: core/settings/AcfVisibility.php:148
-#, php-format
-msgid "User, term and options page fields, repeaters and AND/OR groups are in %1$sVisibility Logic Pro%2$s."
+#: core/settings/AcfVisibility.php:179
+#: core/settings/AcfVisibility.php:339
+msgid "Value 2 (upper bound)"
 msgstr ""
 
-#: core/settings/AcfVisibility.php:166
+#: core/settings/AcfVisibility.php:197
 msgid "Advanced Custom Fields plugin is not active. This condition will have no effect."
 msgstr ""
 
-#: core/settings/AcfVisibility.php:184
+#: core/settings/AcfVisibility.php:215
 msgid "Is empty"
 msgstr ""
 
-#: core/settings/AcfVisibility.php:185
+#: core/settings/AcfVisibility.php:216
 msgid "Is not empty"
 msgstr ""
 
-#: core/settings/AcfVisibility.php:186
+#: core/settings/AcfVisibility.php:217
 msgid "Equals"
 msgstr ""
 
-#: core/settings/AcfVisibility.php:187
+#: core/settings/AcfVisibility.php:218
 msgid "Not equals"
 msgstr ""
 
-#: core/settings/AcfVisibility.php:188
+#: core/settings/AcfVisibility.php:219
 #: core/settings/UserMetaVisibility.php:212
 msgid "Contains"
 msgstr ""
 
-#: core/settings/AcfVisibility.php:189
+#: core/settings/AcfVisibility.php:220
 msgid "Is true"
 msgstr ""
 
-#: core/settings/AcfVisibility.php:190
+#: core/settings/AcfVisibility.php:221
 msgid "Is false"
 msgstr ""
 
-#: core/settings/AcfVisibility.php:211
+#: core/settings/AcfVisibility.php:232
+#: core/settings/UserMetaVisibility.php:213
+msgid "Does not contain"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:233
+#: core/settings/UserMetaVisibility.php:216
+msgid "Greater than"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:234
+#: core/settings/UserMetaVisibility.php:215
+msgid "Less than"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:235
+#: core/settings/UserMetaVisibility.php:214
+msgid "Between"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:236
+msgid "Date is before"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:237
+msgid "Date is after"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:238
+msgid "Has rows (repeater)"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:239
+msgid "Has no rows (repeater)"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:240
+msgid "Array contains"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:241
+msgid "Matches regex"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:261
+msgid "Current Post"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:263
+msgid "Current User"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:264
+msgid "Archive Term"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:265
+msgid "Options Page"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:266
+msgid "Specific Post ID"
+msgstr ""
+
+#: core/settings/AcfVisibility.php:318
+msgid "ACF field name or key."
+msgstr ""
+
+#: core/settings/AcfVisibility.php:318
 msgid "ACF field of the current post or page."
 msgstr ""
 
@@ -958,22 +1064,6 @@ msgstr ""
 msgid "Not equal to"
 msgstr ""
 
-#: core/settings/UserMetaVisibility.php:213
-msgid "Does not contain"
-msgstr ""
-
-#: core/settings/UserMetaVisibility.php:214
-msgid "Between"
-msgstr ""
-
-#: core/settings/UserMetaVisibility.php:215
-msgid "Less than"
-msgstr ""
-
-#: core/settings/UserMetaVisibility.php:216
-msgid "Greater than"
-msgstr ""
-
 #: core/settings/UserMetaVisibility.php:217
 msgid "Is array"
 msgstr ""
@@ -1025,8 +1115,4 @@ msgstr ""
 
 #: core/Upgrades.php:217
 msgid "Something went wrong, please check logs."
-msgstr ""
-
-#: assets/js/blocks.js:193
-msgid "More conditions in Visibility Logic Pro"
 msgstr ""
