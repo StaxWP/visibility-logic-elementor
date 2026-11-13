@@ -502,7 +502,7 @@ class Rule_Tree {
 
 		// Switches that no registered condition owns (an add-on that is not active): kept as read-only conditions.
 		foreach ( $settings as $key => $value ) {
-			if ( ! is_string( $key ) || 0 !== strpos( $key, $prefix ) || ! self::on( $settings, $key ) ) {
+			if ( ! is_string( $key ) || ( '' !== $prefix && 0 !== strpos( $key, $prefix ) ) || ! self::on( $settings, $key ) ) {
 				continue;
 			}
 
@@ -722,7 +722,7 @@ class Rule_Tree {
 
 		// Switches of conditions no registered type owns: off unless the tree still has them.
 		foreach ( $settings as $key => $value ) {
-			if ( ! is_string( $key ) || 0 !== strpos( $key, $prefix ) || ! self::on( $settings, $key ) ) {
+			if ( ! is_string( $key ) || ( '' !== $prefix && 0 !== strpos( $key, $prefix ) ) || ! self::on( $settings, $key ) ) {
 				continue;
 			}
 
@@ -751,7 +751,7 @@ class Rule_Tree {
 		$out = [];
 
 		foreach ( $settings as $key => $value ) {
-			if ( is_string( $key ) && 0 === strpos( $key, $prefix ) && preg_match( '/^([a-z0-9_]+)_enabled$/', substr( $key, strlen( $prefix ) ), $m ) && 'fallback' !== $m[1] && self::on( $settings, $key ) ) {
+			if ( is_string( $key ) && ( '' === $prefix || 0 === strpos( $key, $prefix ) ) && preg_match( '/^([a-z0-9_]+)_enabled$/', substr( $key, strlen( $prefix ) ), $m ) && 'fallback' !== $m[1] && self::on( $settings, $key ) ) {
 				$out[ $key ] = '';
 			}
 		}
