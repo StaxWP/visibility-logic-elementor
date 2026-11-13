@@ -52,7 +52,7 @@ try {
 
 	const wrapper = page.locator( '#elementor-panel-content-wrapper' );
 	const headings = page.locator( '#elementor-controls .elementor-control-type-section .elementor-panel-heading' );
-	const titles = await page.locator( '#elementor-controls .elementor-control-type-section .elementor-panel-heading-title' ).allInnerTexts();
+	const titles = await page.locator( '#elementor-controls .elementor-control-type-section .elementor-panel-heading-title:visible' ).allInnerTexts();
 	const wanted = process.env.VL_SECTIONS ? process.env.VL_SECTIONS.split( ',' ).map( ( s ) => s.trim() ) : titles.slice( -3 );
 	const panelBox = await wrapper.boundingBox();
 
@@ -85,7 +85,8 @@ try {
 
 		check( `"${ title }" opens`, open );
 		check( `"${ title }" heading stays in view`, inView, { before, after, yBefore, yAfter: box && box.y } );
-		check( `"${ title }" panel did not jump to the top`, before === 0 || after > 0, { before, after } );
+		// The bug: the panel jumped to the top and the opened heading ended up lower (often below the fold).
+		check( `"${ title }" heading did not move down`, box && box.y <= yBefore + 2, { before, after, yBefore, yAfter: box && box.y } );
 
 		if ( SHOTS ) {
 			await page.screenshot( { path: `${ SHOTS }/section-scroll-${ title.replace( /\W+/g, '-' ).toLowerCase() }.png` } );

@@ -1105,6 +1105,89 @@ if ( defined( 'STAX_VISIBILITY_PRO_VERSION' ) && class_exists( '\Stax\Visibility
 	unset( $_REQUEST['vle_q'], $_GET['vle_q'] );
 }
 
+if ( class_exists( '\Stax\VisibilityLogic\Pro_Teaser' ) ) {
+	$has_pro = defined( 'STAX_VISIBILITY_PRO_VERSION' );
+	WP_CLI::log( 'Merged ACF Field / User Meta sections and PRO marks (' . ( $has_pro ? 'Pro active' : 'free only' ) . ')' );
+
+	$GLOBALS['vle_test_acf'] = [
+		'vle_color' => 'red',
+		'vle_count' => '7',
+	];
+	$acf_rule = function ( array $rule ) {
+		return vle_s(
+			array_merge(
+				[
+					'enabled'     => 'yes',
+					'show_hide'   => 'yes',
+					'acf_enabled' => 'yes',
+				],
+				$rule
+			)
+		);
+	};
+
+	// A 2.x free rule (no acf_source saved) and one saved with acf_source = post: same as before.
+	if ( ! class_exists( 'ACF' ) ) {
+		vle_case( 'acf 2.x rule without acf_source', $acf_rule( [ 'acf_field' => 'vle_color', 'acf_condition' => 'equals', 'acf_value' => 'red' ] ), 0, 'visible' );
+		vle_case( 'acf rule with acf_source post', $acf_rule( [ 'acf_source' => 'post', 'acf_field' => 'vle_color', 'acf_condition' => 'equals', 'acf_value' => 'blue' ] ), 0, 'absent' );
+
+		// Saved with a Pro operator (Pro active when it was saved): evaluated by Pro, never without it.
+		$pro_op = $acf_rule( [ 'acf_field' => 'vle_count', 'acf_condition' => 'greater_than', 'acf_value' => '9' ] );
+		vle_case( 'acf rule with a Pro operator: ' . ( $has_pro ? 'evaluated by Pro' : 'never runs without Pro' ), $pro_op, 0, $has_pro ? 'absent' : 'visible' );
+		$pro_src = $acf_rule( [ 'acf_source' => 'options', 'acf_field' => 'vle_none', 'acf_condition' => 'not_empty' ] );
+		vle_case( 'acf rule with a Pro source: ' . ( $has_pro ? 'evaluated by Pro' : 'never runs without Pro' ), $pro_src, 0, $has_pro ? 'absent' : 'visible' );
+	}
+
+	// Elementor controls of the merged section.
+	$widget   = \Elementor\Plugin::$instance->elements_manager->create_element_instance( vle_w( 'ctl' ) );
+	$controls = $widget->get_controls();
+	$cond     = isset( $controls['stax_visibility_acf_condition'] ) ? $controls['stax_visibility_acf_condition'] : [];
+	// Elementor leaves labels and options out of the front-end control stack: they are read from the module.
+	list( $ops, $ops_locked ) = \Stax\VisibilityLogic\AcfVisibility::all_condition_options();
+	vle_is( 'acf condition control lists the free operators unlocked', true, isset( $ops['equals'] ) && ! in_array( 'equals', $ops_locked, true ) && $ops_locked === array_values( (array) $cond['locked_options'] ) );
+	vle_is( 'acf condition control is a stax_select', 'stax_select', isset( $cond['type'] ) ? $cond['type'] : '' );
+
+	if ( ! $has_pro ) {
+		vle_is( 'free only: Pro operators listed, disabled, labelled (Pro)', [ true, 'Matches regex (Pro)' ], [ in_array( 'regex', (array) $cond['locked_options'], true ), $ops['regex'] ] );
+		vle_is( 'free only: Pro sources listed, disabled', [ 'user', 'term', 'options', 'specific' ], array_values( (array) $controls['stax_visibility_acf_source']['locked_options'] ) );
+		vle_is( 'free only: one "More conditions in Pro" section', true, isset( $controls['stax_visibility_more_pro'] ) );
+		vle_is(
+			'free only: no empty section per Pro condition (2.x)',
+			[],
+			array_values(
+				array_filter(
+					array_keys( $controls ),
+					function ( $k ) {
+						return 0 === strpos( $k, 'stax_visibility_pro_' );
+					}
+				)
+			)
+		);
+		vle_is( 'free only: no Pro controls registered (nothing to save)', [ false, false, false ], [ isset( $controls['stax_visibility_acf_post_id'] ), isset( $controls['stax_visibility_acf_rules'] ), isset( $controls['stax_visibility_user_meta_rules'] ) ] );
+
+		$html = \Stax\VisibilityLogic\Pro_Teaser::more_html( 'editor' );
+		vle_is( 'PRO mark: text PRO, aria-label "Pro feature"', 1, preg_match( '#<span class="stax-vl-pro" role="img" aria-label="Pro feature">PRO</span>#', $html ) );
+		vle_is( 'PRO line: exactly one link, product page with UTM', [ 1, 1 ], [ substr_count( $html, '<a ' ), preg_match( '#https://staxwp\.com/visibility-logic-for-elementor/\?utm_source=visibility-logic-free&(amp;|\#038;)?utm_medium=editor&(amp;|\#038;)?utm_campaign=upgrade\#pricing#', $html ) ] );
+		vle_is( 'block editor gets the PRO line data', true, is_array( \Stax\VisibilityLogic\Pro_Teaser::for_js() ) );
+
+		$fields = \Stax\VisibilityLogic\Conditions::fields( 'blocks' );
+		$list   = [];
+		foreach ( $fields['acf']['fields'] as $f ) {
+			if ( 'acf_condition' === $f['key'] ) {
+				$list = \Stax\VisibilityLogic\Conditions::option_list( $f['options'], $f['locked_options'] );
+			}
+		}
+		$regex = array_values( wp_list_filter( $list, [ 'value' => 'regex' ] ) );
+		$equal = array_values( wp_list_filter( $list, [ 'value' => 'equals' ] ) );
+		vle_is( 'block editor: Pro operator disabled, free one enabled', [ true, false ], [ ! empty( $regex[0]['disabled'] ), ! empty( $equal[0]['disabled'] ) ] );
+	} else {
+		vle_is( 'Pro active: no PRO marks', [ false, false, null ], [ isset( $controls['stax_visibility_more_pro'] ), false !== strpos( implode( ' ', $ops ), '(Pro)' ), \Stax\VisibilityLogic\Pro_Teaser::for_js() ] );
+	}
+
+	vle_is( 'scanner labels the rule groups', [ 'ACF Field (rule group)', 'User Meta (rule group)' ], [ \Stax\VisibilityLogic\Rules::condition_label( 'acf_rules' ), \Stax\VisibilityLogic\Rules::condition_label( 'user_meta_rules' ) ] );
+	$GLOBALS['vle_test_acf'] = [];
+}
+
 if ( class_exists( '\Stax\VisibilityLogic\Rules' ) ) {
 	WP_CLI::log( 'Rules scanner' );
 	$tree  = [
