@@ -23,7 +23,7 @@ class Rules {
 	/**
 	 * Transient holding the last scan.
 	 */
-	const CACHE_KEY = 'stax_visibility_rules_index';
+	const CACHE_KEY = 'stax_visibility_rules_index_v3';
 
 	/**
 	 * Most documents returned by one scan.
@@ -200,7 +200,7 @@ class Rules {
 					'legacy'     => ! $current,
 					'keep_html'  => $current && Singleton::flag( $settings, 'keep_html' ),
 					'fallback'   => $current && Singleton::flag( $settings, 'fallback_enabled' ),
-				];
+				] + self::rule_details( $current ? $settings : null );
 			}
 
 			if ( ! empty( $element['elements'] ) ) {
@@ -209,6 +209,35 @@ class Rules {
 		}
 
 		return $found;
+	}
+
+	/**
+	 * Rule details of an element for the overview, the abilities and WP-CLI: the rule as a tree, its sentence,
+	 * whether it is stored as a tree (3.0 format) and whether it is a draft.
+	 *
+	 * @param array|null $settings Classic (prefixed) settings, null for 1.x settings.
+	 *
+	 * @return array{tree:array|null,summary:string,stored:bool,draft:bool}
+	 */
+	public static function rule_details( $settings ) {
+		if ( null === $settings ) {
+			return [
+				'tree'    => null,
+				'summary' => __( 'Visibility Logic 1.x settings (user roles)', 'visibility-logic-elementor' ),
+				'stored'  => false,
+				'draft'   => false,
+			];
+		}
+
+		$stored = Rule_Tree::stored( $settings );
+		$tree   = $stored ? $stored : Rule_Tree::legacy_to_tree( $settings );
+
+		return [
+			'tree'    => $tree,
+			'summary' => Rule_Tree::sentence( $tree ),
+			'stored'  => null !== $stored,
+			'draft'   => ! empty( $tree['draft'] ),
+		];
 	}
 
 	/**
@@ -347,6 +376,58 @@ class Rules {
 		set_transient( self::CACHE_KEY, $index, 12 * HOUR_IN_SECONDS );
 
 		return $index;
+	}
+
+	/**
+	 * One row per element for the Rules overview, with its sentence and warnings, filtered.
+	 *
+	 * @param array $index   Rules::index() result.
+	 * @param array $filters editor (elementor|blocks), condition (slug), status (problems|draft|tree|<warning code>).
+	 *
+	 * @return array[]
+	 */
+	public static function overview_rows( array $index, array $filters = [] ) {
+		$rows = [];
+
+		foreach ( $index['documents'] as $doc ) {
+			$builder = isset( $doc['builder'] ) ? $doc['builder'] : 'elementor';
+
+			if ( ! empty( $filters['editor'] ) && $filters['editor'] !== $builder ) {
+				continue;
+			}
+
+			foreach ( $doc['elements'] as $element ) {
+				if ( ! empty( $filters['condition'] ) && ! in_array( $filters['condition'], (array) $element['conditions'], true ) ) {
+					continue;
+				}
+
+				$tree     = isset( $element['tree'] ) && is_array( $element['tree'] ) ? $element['tree'] : null;
+				$warnings = $tree ? Rule_Tree::warnings( $tree ) : [];
+				$codes    = wp_list_pluck( $warnings, 'code' );
+				$stored   = ! empty( $element['stored'] );
+				$status   = isset( $filters['status'] ) ? (string) $filters['status'] : '';
+
+				if ( '' !== $status ) {
+					$problems = array_diff( $codes, [ 'cache', 'draft' ] );
+
+					if ( ( 'problems' === $status && ! $problems ) || ( 'tree' === $status && ! $stored ) || ( ! in_array( $status, [ 'problems', 'tree' ], true ) && ! in_array( $status, $codes, true ) ) ) {
+						continue;
+					}
+				}
+
+				$rows[] = [
+					'doc'      => $doc,
+					'builder'  => $builder,
+					'element'  => $element,
+					'summary'  => isset( $element['summary'] ) ? $element['summary'] : '',
+					'warnings' => array_map( [ Rule_Tree::class, 'warning_text' ], $warnings ),
+					'codes'    => $codes,
+					'stored'   => $stored,
+				];
+			}
+		}
+
+		return $rows;
 	}
 
 	/**

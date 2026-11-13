@@ -107,6 +107,49 @@ class Rest {
 		$data['fallback'] = defined( 'STAX_VISIBILITY_PRO_VERSION' ) && ! empty( $options['fallback']['status'] );
 		$data['usersUrl']  = current_user_can( 'list_users' ) ? rest_url( self::NS . '/users' ) : '';
 		$data['restNonce'] = wp_create_nonce( 'wp_rest' );
+		$data['explainUrl'] = rest_url( self::NS . '/explain' );
+		$data['roles']      = [];
+
+		foreach ( wp_roles()->get_names() as $slug => $name ) {
+			$data['roles'][] = [
+				'value' => (string) $slug,
+				'label' => translate_user_role( $name ),
+			];
+		}
+
+		$data['preview'] = [
+			'previewAs'  => __( 'Preview as', 'visibility-logic-elementor' ),
+			'me'         => __( 'Me (no preview)', 'visibility-logic-elementor' ),
+			'guest'      => __( 'Guest', 'visibility-logic-elementor' ),
+			/* translators: %s: role name. */
+			'role'       => __( 'Role: %s', 'visibility-logic-elementor' ),
+			'user'       => __( 'A specific user', 'visibility-logic-elementor' ),
+			'userId'     => __( 'User', 'visibility-logic-elementor' ),
+			'device'     => __( 'Device', 'visibility-logic-elementor' ),
+			'anyDevice'  => __( 'This device', 'visibility-logic-elementor' ),
+			'desktop'    => __( 'Desktop', 'visibility-logic-elementor' ),
+			'tablet'     => __( 'Tablet', 'visibility-logic-elementor' ),
+			'mobile'     => __( 'Mobile', 'visibility-logic-elementor' ),
+			'time'       => __( 'Date and time', 'visibility-logic-elementor' ),
+			'timeHelp'   => __( 'Empty: now (site time zone).', 'visibility-logic-elementor' ),
+			'why'        => __( 'Preview as and why', 'visibility-logic-elementor' ),
+			/* translators: %s: who the page is previewed for. */
+			'visible'    => __( 'Shown for %s', 'visibility-logic-elementor' ),
+			/* translators: %s: who the page is previewed for. */
+			'hidden'     => __( 'Hidden for %s', 'visibility-logic-elementor' ),
+			'noRule'     => __( 'No rule applies: shown.', 'visibility-logic-elementor' ),
+			'draft'      => __( 'Hidden on the live site (draft).', 'visibility-logic-elementor' ),
+			'met'        => __( 'yes', 'visibility-logic-elementor' ),
+			'notMet'     => __( 'no', 'visibility-logic-elementor' ),
+			'skipped'    => __( 'does not apply here', 'visibility-logic-elementor' ),
+			/* translators: %d: group number. */
+			'group'      => __( 'Group %d', 'visibility-logic-elementor' ),
+			'matched'    => __( 'The rule matches.', 'visibility-logic-elementor' ),
+			'notMatched' => __( 'The rule does not match.', 'visibility-logic-elementor' ),
+			'actionShow' => __( 'Action: show when it matches.', 'visibility-logic-elementor' ),
+			'actionHide' => __( 'Action: hide when it matches.', 'visibility-logic-elementor' ),
+			'off'        => __( 'Rules are off for this element.', 'visibility-logic-elementor' ),
+		];
 
 		return $data;
 	}

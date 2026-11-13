@@ -260,7 +260,7 @@ class Blocks {
 					'legacy'     => false,
 					'keep_html'  => Singleton::flag( $settings, 'keep_html' ),
 					'fallback'   => false,
-				];
+				] + Rules::rule_details( $settings );
 			}
 
 			if ( ! empty( $block['innerBlocks'] ) ) {

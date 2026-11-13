@@ -67,3 +67,5 @@
 .stax-vl-panel .stxc textarea { min-height: 32px; border: 1px solid #949494; border-radius: 2px; padding: 4px 8px; font-size: 13px; }
 .stax-vl-panel .stax-vl-core { margin: 0 0 8px; padding: 6px 8px; background: #f0f0f0; font-size: 12px; }
 .stax-vl-list-badge { margin-inline-start: 6px; padding: 0 6px; max-width: 50%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; border-radius: 8px; background: #6e49cb; color: #fff; font-size: 10px; line-height: 16px; font-weight: 600; }
+.stax-vl-panel .stax-vl-preview { margin: 0 0 12px; }
+.stax-vl-panel .stax-vl-preview > summary { cursor: pointer; font-weight: 600; padding: 4px 0; }

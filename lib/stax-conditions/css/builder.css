@@ -68,3 +68,12 @@
 .stxc-builder.is-draft .stxc-groups { opacity: .6; }
 .stxc-settings { margin: 0 0 8px; padding: 0 0 6px; border-bottom: 1px solid var(--stxc-border); }
 .stxc button:focus-visible, .stxc input:focus-visible, .stxc select:focus-visible, .stxc textarea:focus-visible { outline: 2px solid var(--stxc-accent); outline-offset: 1px; }
+.stxc-preview { padding: 8px; border: 1px solid var(--stxc-border); border-radius: 4px; background: var(--stxc-soft); }
+.stxc-preview-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.stxc-trace { margin-top: 8px; padding: 8px 10px; border-left: 3px solid #00a32a; background: var(--stxc-soft); }
+.stxc-trace.is-hidden { border-left-color: #d63638; }
+.stxc-trace-head { margin: 0 0 4px; font-weight: 600; }
+.stxc-trace-groups, .stxc-trace-groups ul { margin: 0; padding-left: 16px; }
+.stxc-trace-c.is-met .stxc-trace-mark { color: #007017; }
+.stxc-trace-c.is-not-met .stxc-trace-mark { color: #b32d2e; }
+.stxc-trace-group { font-weight: 600; }

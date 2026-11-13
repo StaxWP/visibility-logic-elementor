@@ -400,6 +400,37 @@ $ok( true === $stored_eval( $who( [ 'user_role_conditions' => [ 'ecl-guest' ] ] 
 Context::reset();
 $ok( get_current_user_id() === $row[0], 'preview never changes the current user' );
 
+// Preview as / why hidden (REST explain).
+wp_set_current_user( $adm_id );
+\Stax\VisibilityLogic\Preview::simulate( [ 'as' => 'guest', 'device' => 'mobile' ] );
+$explained = \Stax\VisibilityLogic\Preview::explain( [ 'enabled' => true, 'rules' => $t ] + Rule_Tree::fail_closed( [], '' ), 'x1', 'heading' );
+Context::reset();
+$ok( false === $explained['visible'] && 'not_matched' === $explained['reason'] && 2 === count( $explained['groups'] ) && 'User role is Subscriber' === $explained['groups'][0]['conditions'][0]['text'] && true === $explained['groups'][0]['conditions'][1]['result'], 'explain: guest on mobile, trace in words', $explained );
+\Stax\VisibilityLogic\Preview::simulate( [ 'as' => 'role:editor' ] );
+$explained = \Stax\VisibilityLogic\Preview::explain( [ 'enabled' => true, 'rules' => $t ], 'x1', 'heading' );
+Context::reset();
+$ok( true === $explained['visible'] && 'matched' === $explained['reason'], 'explain: role editor matches the second group' );
+$ok( true === \Stax\VisibilityLogic\Preview::explain( [ 'enabled' => false ] )['visible'], 'explain: rules off' );
+$ok( $adm_id === get_current_user_id(), 'explain never changes the current user' );
+$req = new WP_REST_Request( 'POST', '/visibility-logic/v1/explain' );
+$req->set_param( 'context', [ 'as' => 'user', 'user' => $sub_id ] );
+wp_set_current_user( $ed_id );
+$ok( false === \Stax\VisibilityLogic\Preview::can_explain( $req ), 'explain: simulating a specific user needs list_users' );
+$req->set_param( 'context', [ 'as' => 'guest' ] );
+$ok( true === \Stax\VisibilityLogic\Preview::can_explain( $req ), 'explain: editors may preview as guest' );
+wp_set_current_user( $sub_id );
+$ok( false === \Stax\VisibilityLogic\Preview::can_explain( $req ), 'explain: subscribers may not' );
+
+// Rules overview rows.
+$rows = \Stax\VisibilityLogic\Rules::overview_rows(
+	[ 'documents' => [ [ 'id' => 1, 'title' => 'P', 'post_type' => 'page', 'builder' => 'elementor', 'status' => 'publish', 'elements' => [
+		[ 'id' => 'a', 'type' => 'heading', 'conditions' => [ 'date_time' ], 'tree' => $tree_of( 'show', [ [ $cond( 'date_time', [ 'date_time_type' => 'date', 'date_to' => '2020-01-01 00:00' ] ) ] ] ), 'summary' => 's1', 'stored' => false ],
+		[ 'id' => 'b', 'type' => 'heading', 'conditions' => [ 'user_role' ], 'tree' => $tree_of( 'show', [ [ $role_sub ] ], true ), 'summary' => 's2', 'stored' => true ],
+	] ] ] ],
+	[ 'status' => 'problems' ]
+);
+$ok( 1 === count( $rows ) && 'a' === $rows[0]['element']['id'] && in_array( 'expired', $rows[0]['codes'], true ), 'overview: "Needs attention" filter keeps the expired rule, not the draft', $rows );
+
 // ---------------------------------------------------------------------------------------------------------------
 $section( '4. Summaries, warnings, registry' );
 

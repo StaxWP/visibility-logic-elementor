@@ -53,10 +53,22 @@ class Usage extends Base {
 	 * Panel content.
 	 */
 	public function panel_content() {
+		// Filters (read only, no nonce needed: they only narrow the list).
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		$filters = [
+			'editor'    => isset( $_GET['editor'] ) ? sanitize_key( wp_unslash( $_GET['editor'] ) ) : '',
+			'condition' => isset( $_GET['condition'] ) ? sanitize_key( wp_unslash( $_GET['condition'] ) ) : '',
+			'status'    => isset( $_GET['status'] ) ? sanitize_key( wp_unslash( $_GET['status'] ) ) : '',
+		];
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
 		Resources::load_template(
 			'core/admin/pages/templates/usage',
 			[
-				'index' => Rules::index(),
+				'index'   => Rules::index(),
+				'rows'    => Rules::overview_rows( Rules::index(), $filters ),
+				'filters' => $filters,
+				'caches'  => Cache_Check::detect(),
 			]
 		);
 	}
@@ -70,10 +82,10 @@ class Usage extends Base {
 	 */
 	public function add_menu_item( $menu ) {
 		$menu[] = [
-			'name'     => __( 'Rules in use', 'visibility-logic-elementor' ),
+			'name'     => __( 'Rules', 'visibility-logic-elementor' ),
 			'link'     => Settings::url( $this->current_slug ),
 			'query'    => STAX_VISIBILITY_SLUG_PREFIX . $this->current_slug,
-			'priority' => 20,
+			'priority' => 1,
 		];
 
 		return $menu;

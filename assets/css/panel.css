@@ -270,3 +270,7 @@
 
 .elementor-control-type-stax_rule_builder .elementor-control-field.stax-vl-rb-field { display: block; }
 .elementor-control-type-stax_rule_builder .stax-vl-rb { width: 100%; }
+
+.stax-vl-preview { margin: 0 0 10px; }
+.stax-vl-preview > summary { cursor: pointer; font-weight: 600; padding: 4px 0; min-height: 24px; }
+.stax-vl-preview > summary:focus-visible { outline: 2px solid #6e49cb; outline-offset: 1px; }

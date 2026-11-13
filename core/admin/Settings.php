@@ -34,6 +34,11 @@ class Settings {
 	const MAIN_PAGE = 'stax-visibility-options';
 
 	/**
+	 * Page that Settings > Visibility Logic opens (3.0: the Rules overview, the daily screen).
+	 */
+	const RULES_PAGE = 'stax-visibility-usage';
+
+	/**
 	 * Current tab slug (kept for 2.x compatibility, see current_slug()).
 	 *
 	 * @var string
@@ -78,7 +83,7 @@ class Settings {
 			__( 'Visibility Logic for Elementor and the Block Editor', 'visibility-logic-elementor' ),
 			__( 'Visibility Logic', 'visibility-logic-elementor' ),
 			'manage_options',
-			self::MAIN_PAGE,
+			self::RULES_PAGE,
 			[ $this, 'settings_template' ]
 		);
 	}
@@ -151,7 +156,7 @@ class Settings {
 	 */
 	public function highlight_menu( $submenu_file ) {
 		if ( $this->is_panel_page() ) {
-			return self::MAIN_PAGE;
+			return self::RULES_PAGE;
 		}
 
 		return $submenu_file;
@@ -165,7 +170,7 @@ class Settings {
 	 * @return array
 	 */
 	public function plugin_action_links( $links ) {
-		array_unshift( $links, '<a href="' . esc_url( self::url() ) . '">' . esc_html__( 'Settings', 'visibility-logic-elementor' ) . '</a>' );
+		array_unshift( $links, '<a href="' . esc_url( self::url( 'usage' ) ) . '">' . esc_html__( 'Settings', 'visibility-logic-elementor' ) . '</a>' );
 
 		return $links;
 	}

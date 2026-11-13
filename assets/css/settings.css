@@ -234,3 +234,21 @@
 .stax-vl-rescan {
 	margin-top: 8px;
 }
+
+/* 3.0 Rules overview */
+.stax-vl-stats { display: flex; gap: 16px; margin: 12px 0; padding: 0; list-style: none; }
+.stax-vl-stats li { margin: 0; padding: 6px 10px; border: 1px solid #dcdcde; border-radius: 4px; background: #fff; }
+.stax-vl-stats li.is-warning { border-color: #dba617; background: #fcf9e8; }
+.stax-vl-cache { margin: 12px 0 16px; padding: 10px 14px; border-left: 4px solid #72aee6; background: #fff; }
+.stax-vl-cache h3 { margin: 0 0 6px; font-size: 14px; }
+.stax-vl-cache p { margin: 0 0 6px; }
+.stax-vl-cache-list { margin: 0; padding-left: 18px; list-style: disc; }
+.stax-vl-filters { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin: 12px 0; }
+.stax-vl-filters label { font-weight: 600; }
+.stax-vl-usage .stax-vl-rule { max-width: 460px; }
+.stax-vl-warnings { margin: 0; padding: 0; list-style: none; }
+.stax-vl-warnings li { margin: 0 0 4px; padding-left: 8px; border-left: 3px solid #dba617; }
+.stax-vl-warnings li.stax-vl-w-expired, .stax-vl-warnings li.stax-vl-w-never { border-left-color: #d63638; }
+.stax-vl-warnings li.stax-vl-w-cache { border-left-color: #72aee6; }
+.stax-vl-ok { color: #007017; font-weight: 600; }
+.stax-vl-muted { color: #50575e; font-size: 12px; }

@@ -66,6 +66,7 @@ class Plugin extends Singleton {
 		require_once STAX_VISIBILITY_CORE_PATH . 'Rule_Tree.php';
 		require_once STAX_VISIBILITY_CORE_HELPERS_PATH . 'Cache_Check.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'Rest.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'Preview.php';
 
 		Rule_Tree::load_package();
 

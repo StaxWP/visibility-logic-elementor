@@ -126,6 +126,78 @@
 		} );
 	} : null;
 
+	// ---- Preview as and why hidden ----
+	var preview = { ctx: { as: 'me' }, results: {}, open: false, timer: null, views: [] };
+	var PL = data.preview || {};
+
+	function previewActive() {
+		return preview.ctx && ( preview.ctx.as !== 'me' || preview.ctx.device || preview.ctx.time );
+	}
+
+	function allWithRules() {
+		var list = [];
+		try {
+			eachContainer( elementor.getPreviewContainer(), function ( c ) {
+				if ( c.settings && c.model && on( c.settings.get( P + 'enabled' ) ) ) {
+					list.push( c );
+				}
+			} );
+		} catch ( e ) {}
+		return list;
+	}
+
+	function runExplain() {
+		clearTimeout( preview.timer );
+		preview.timer = setTimeout( function () {
+			var containers = allWithRules();
+			if ( ! previewActive() ) {
+				preview.results = {};
+				applyGhosts( containers );
+				return;
+			}
+			window.fetch( data.explainUrl, {
+				method: 'POST',
+				credentials: 'same-origin',
+				headers: { 'Content-Type': 'application/json', 'X-WP-Nonce': data.restNonce },
+				body: JSON.stringify( {
+					post_id: elementor.config.document.id,
+					context: preview.ctx,
+					elements: containers.map( function ( c ) {
+						return { id: c.id, name: c.model.get( 'widgetType' ) || c.model.get( 'elType' ), values: valuesOf( c ) };
+					} ),
+				} ),
+			} ).then( function ( r ) {
+				return r.ok ? r.json() : [];
+			} ).then( function ( list ) {
+				preview.results = {};
+				( list || [] ).forEach( function ( item ) {
+					preview.results[ item.id ] = item;
+				} );
+				applyGhosts( containers );
+				preview.views.forEach( function ( v ) {
+					v.renderTrace && v.renderTrace();
+				} );
+			} );
+		}, 200 );
+	}
+
+	function applyGhosts( containers ) {
+		var who = SC.contextLabel( preview.ctx, { roles: data.roles }, PL );
+		containers.forEach( function ( c ) {
+			var result = preview.results[ c.id ];
+			var hidden = !! ( result && ! result.visible && previewActive() );
+			if ( c.view && c.view.el ) {
+				c.view.el.classList.toggle( 'stax-vl-ghost', hidden );
+				if ( hidden ) {
+					c.view.el.setAttribute( 'data-stax-vl', SC.summary.sprintf( PL.hidden || 'Hidden for %s', who ) );
+				}
+			}
+		} );
+		if ( ! previewActive() ) {
+			scheduleLabels();
+		}
+	}
+
 	function makeView() {
 		return elementor.modules.controls.BaseData.extend( {
 			onRender: function () {
@@ -147,6 +219,49 @@
 				var values = valuesOf( container );
 				var timer = null;
 				var pending = null;
+
+				// Preview as and why (shared across elements while the editor is open).
+				var details = document.createElement( 'details' );
+				details.className = 'stax-vl-preview';
+				details.open = preview.open;
+				var summaryEl = document.createElement( 'summary' );
+				summaryEl.textContent = PL.why || 'Preview as and why';
+				var barBox = document.createElement( 'div' );
+				var traceBox = document.createElement( 'div' );
+				details.appendChild( summaryEl );
+				details.appendChild( barBox );
+				details.appendChild( traceBox );
+				details.addEventListener( 'toggle', function () {
+					preview.open = details.open;
+				} );
+				mount.parentNode.insertBefore( details, mount );
+
+				this.previewBar = SC.createPreviewBar( barBox, {
+					roles: data.roles || [],
+					users: !! data.usersUrl,
+					search: usersSearch,
+					value: preview.ctx,
+					labels: PL,
+					onChange: function ( ctx ) {
+						preview.ctx = ctx;
+						runExplain();
+					},
+				} );
+
+				this.renderTrace = function () {
+					var result = preview.results[ container.id ];
+					if ( ! previewActive() || ! result ) {
+						traceBox.textContent = '';
+						return;
+					}
+					if ( result.reason === 'off' ) {
+						traceBox.textContent = PL.off || '';
+						return;
+					}
+					SC.renderTrace( traceBox, Object.assign( { who: SC.contextLabel( preview.ctx, { roles: data.roles }, PL ) }, result ), PL );
+				};
+				preview.views.push( this );
+				this.renderTrace();
 				var status = document.createElement( 'p' );
 				status.className = 'stax-vl-rb-status';
 				status.setAttribute( 'role', 'status' );
@@ -173,6 +288,9 @@
 
 					status.textContent = RuleMap.analyze( tree, data.registry, data.since ).flat ? '' : L.treeNote;
 					apply( container, changes );
+					if ( previewActive() ) {
+						runExplain();
+					}
 				};
 
 				this.flush = flush;
@@ -240,6 +358,10 @@
 			},
 
 			onBeforeDestroy: function () {
+				var self = this;
+				preview.views = preview.views.filter( function ( v ) {
+					return v !== self;
+				} );
 				if ( this.flush ) {
 					this.flush();
 				}
@@ -319,7 +441,9 @@
 			} );
 			var text = ( warnings.length ? '⚠ ' : '' ) + short;
 
-			el.setAttribute( 'data-stax-vl', text );
+			if ( ! el.classList.contains( 'stax-vl-ghost' ) ) {
+				el.setAttribute( 'data-stax-vl', text );
+			}
 			el.setAttribute( 'data-stax-vl-title', full );
 
 			if ( row ) {

@@ -78,6 +78,120 @@
 		return SC.summary.short( treeOf( values ), data.registry, L );
 	}
 
+	// ---- Preview as and why hidden: a small store, so the canvas re-renders when results change ----
+	var PL = data.preview || {};
+	var STORE = 'stax-visibility/preview';
+	wp.data.register( wp.data.createReduxStore( STORE, {
+		reducer: function ( state, action ) {
+			state = state || { ctx: { as: 'me' }, results: {}, open: false };
+			if ( action.type === 'SET' ) {
+				return Object.assign( {}, state, action.patch );
+			}
+			return state;
+		},
+		actions: {
+			set: function ( patch ) {
+				return { type: 'SET', patch: patch };
+			},
+		},
+		selectors: {
+			get: function ( state ) {
+				return state;
+			},
+		},
+	} ) );
+
+	function previewActive( ctx ) {
+		return ctx && ( ctx.as !== 'me' || ctx.device || ctx.time );
+	}
+
+	function collect( blocks, out ) {
+		( blocks || [] ).forEach( function ( b ) {
+			var v = b.attributes && b.attributes[ ATTR ];
+			if ( v && on( v.enabled ) ) {
+				out.push( { id: b.clientId, name: b.name, values: v } );
+			}
+			collect( b.innerBlocks, out );
+		} );
+		return out;
+	}
+
+	var explainTimer = null;
+	function runExplain() {
+		clearTimeout( explainTimer );
+		explainTimer = setTimeout( function () {
+			var state = wp.data.select( STORE ).get();
+			if ( ! previewActive( state.ctx ) ) {
+				wp.data.dispatch( STORE ).set( { results: {} } );
+				return;
+			}
+			wp.apiFetch( {
+				url: data.explainUrl,
+				method: 'POST',
+				data: {
+					post_id: wp.data.select( 'core/editor' ) ? wp.data.select( 'core/editor' ).getCurrentPostId() : 0,
+					context: state.ctx,
+					elements: collect( wp.data.select( 'core/block-editor' ).getBlocks(), [] ),
+				},
+			} ).then( function ( list ) {
+				var results = {};
+				( list || [] ).forEach( function ( item ) {
+					results[ item.id ] = item;
+				} );
+				wp.data.dispatch( STORE ).set( { results: results } );
+			} ).catch( function () {} );
+		}, 250 );
+	}
+
+	function PreviewBox( props ) {
+		var barRef = useRef( null );
+		var traceRef = useRef( null );
+		var state = wp.data.useSelect( function ( select ) {
+			return select( STORE ).get();
+		}, [] );
+
+		useEffect( function () {
+			var bar = SC.createPreviewBar( barRef.current, {
+				roles: data.roles || [],
+				users: !! data.usersUrl,
+				search: usersSearch,
+				value: wp.data.select( STORE ).get().ctx,
+				labels: PL,
+				onChange: function ( ctx ) {
+					wp.data.dispatch( STORE ).set( { ctx: ctx } );
+					runExplain();
+				},
+			} );
+			return function () {
+				bar.destroy();
+			};
+		}, [] );
+
+		useEffect( function () {
+			var result = state.results[ props.clientId ];
+			if ( ! traceRef.current ) {
+				return;
+			}
+			if ( ! previewActive( state.ctx ) || ! result ) {
+				traceRef.current.textContent = '';
+				return;
+			}
+			SC.renderTrace( traceRef.current, Object.assign( { who: SC.contextLabel( state.ctx, { roles: data.roles }, PL ) }, result ), PL );
+		}, [ state, props.clientId ] );
+
+		return el( 'details', {
+			className: 'stax-vl-preview',
+			open: state.open,
+			onToggle: function ( e ) {
+				wp.data.dispatch( STORE ).set( { open: e.target.open } );
+			},
+		},
+			el( 'summary', null, PL.why ),
+			el( 'div', { ref: barRef } ),
+			el( 'div', { ref: traceRef } )
+		);
+	}
+
 	var usersSearch = data.usersUrl ? function ( q ) {
 		return wp.apiFetch( { url: data.usersUrl + '?search=' + encodeURIComponent( q ) } ).catch( function () {
 			return [];
@@ -126,6 +240,7 @@
 					api.current.setSettings( { active: true, when_hidden: on( values2.keep_html ) ? 'css' : 'remove' } );
 				}
 				write( changes );
+				runExplain();
 			}
 
 			api.current = SC.createBuilder( mount.current, {
@@ -165,6 +280,7 @@
 		var note = ! SC.tree.isEmpty( tree ) && ! RuleMap.analyze( tree, data.registry, data.since ).flat ? L.treeNote : '';
 
 		return el( Fragment, null,
+			el( PreviewBox, { clientId: props.clientId } ),
 			core ? el( 'p', { className: 'stax-vl-core' }, core ) : null,
 			el( 'div', { ref: mount, className: 'stax-vl-builder' } ),
 			note ? el( 'p', { className: 'stax-vl-note' }, note ) : null,
@@ -196,15 +312,20 @@
 	wp.hooks.addFilter( 'editor.BlockListBlock', 'stax-visibility/badge', wp.compose.createHigherOrderComponent( function ( BlockListBlock ) {
 		return function ( props ) {
 			var values = props.attributes && props.attributes[ ATTR ];
+			var preview = wp.data.useSelect( function ( select ) {
+				return select( STORE ).get();
+			}, [] );
 			if ( ! values || ! on( values.enabled ) ) {
 				return el( BlockListBlock, props );
 			}
+			var result = preview.results[ props.clientId ];
+			var ghost = !! ( result && ! result.visible && previewActive( preview.ctx ) );
 			var wrapperProps = Object.assign( {}, props.wrapperProps, {
-				'data-stax-vl': shortOf( values ),
+				'data-stax-vl': ghost ? SC.summary.sprintf( PL.hidden || 'Hidden for %s', SC.contextLabel( preview.ctx, { roles: data.roles }, PL ) ) : shortOf( values ),
 				'data-stax-vl-title': SC.summary.sentence( treeOf( values ), data.registry, L ),
 			} );
 			return el( BlockListBlock, Object.assign( {}, props, {
-				className: ( props.className ? props.className + ' ' : '' ) + 'stax-vl-has-rules',
+				className: ( props.className ? props.className + ' ' : '' ) + 'stax-vl-has-rules' + ( ghost ? ' stax-vl-ghost' : '' ),
 				wrapperProps: wrapperProps,
 			} ) );
 		};

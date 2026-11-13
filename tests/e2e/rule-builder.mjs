@@ -192,6 +192,26 @@ try {
 	await select( 'e2ew2' );
 	await shot( 'elementor-5-navigator' );
 
+	// 9b. Preview as guest on desktop: the members heading is ghosted, the trace says why.
+	await select( 'e2ew2' );
+	await page.locator( '.stax-vl-preview > summary' ).click();
+	await page.locator( '.stax-vl-preview select' ).first().selectOption( 'guest' );
+	await page.locator( '.stax-vl-preview select' ).nth( 1 ).selectOption( 'desktop' );
+	await page.waitForTimeout( 1500 );
+	const ghost = await page.frameLocator( '#elementor-preview-iframe' ).locator( '[data-id="e2ew2"]' ).evaluate( ( el ) => [ el.classList.contains( 'stax-vl-ghost' ), el.getAttribute( 'data-stax-vl' ) ] );
+	check( 'preview as guest: hidden element ghosted with "Hidden for Guest"', ghost[ 0 ] && ghost[ 1 ].indexOf( 'Hidden for Guest' ) === 0, ghost );
+	const trace = await page.locator( '.stax-vl-preview .stxc-trace' ).innerText();
+	check( 'why hidden: trace lists each condition', trace.indexOf( 'Hidden for Guest' ) === 0 && trace.indexOf( 'User role is Logged in users: no' ) !== -1 && trace.indexOf( 'Device is Mobile: no' ) !== -1, trace );
+	await shot( 'elementor-6-preview-as-why' );
+	await page.locator( '.stax-vl-preview select' ).nth( 1 ).selectOption( 'mobile' );
+	await page.waitForTimeout( 1500 );
+	const ghostMobile = await page.frameLocator( '#elementor-preview-iframe' ).locator( '[data-id="e2ew2"]' ).evaluate( ( el ) => el.classList.contains( 'stax-vl-ghost' ) );
+	const ghostOffer = await page.frameLocator( '#elementor-preview-iframe' ).locator( '[data-id="e2ew3"]' ).evaluate( ( el ) => el.classList.contains( 'stax-vl-ghost' ) );
+	check( 'preview as guest on mobile: members shown, "hide on mobile" ghosted', ! ghostMobile && ghostOffer, [ ghostMobile, ghostOffer ] );
+	await page.locator( '.stax-vl-preview select' ).first().selectOption( 'me' );
+	await page.locator( '.stax-vl-preview select' ).nth( 1 ).selectOption( '' );
+	await page.waitForTimeout( 1000 );
+
 	// 10. Save and check the live page.
 	await page.evaluate( () => $e.run( 'document/save/update' ) );
 	await page.waitForTimeout( 4000 );
@@ -204,6 +224,24 @@ try {
 		check( `live page, ${ name }: (logged in and Chrome) or mobile`, w2 === ( html.indexOf( 'data-id="e2ew2"' ) !== -1 ) );
 		check( `live page, ${ name }: hide on mobile`, w3 === ( html.indexOf( 'data-id="e2ew3"' ) !== -1 ) );
 	}
+
+	// 11. Front end as the administrator: admin bar "why hidden" and "View this page as".
+	await page.goto( link );
+	const bar = await page.locator( '#wp-admin-bar-stax-vl > .ab-item' ).innerText();
+	check( 'admin bar: "Visibility: 1 hidden here" (the draft)', bar.indexOf( 'Visibility: 1 hidden here' ) !== -1, bar );
+	const items = await page.locator( '#wp-admin-bar-stax-vl .ab-submenu .ab-item' ).allTextContents();
+	check( 'admin bar: the reason of each element', items.some( ( t ) => t.indexOf( 'Hidden: Heading #e2ew1' ) === 0 ) && items.some( ( t ) => t.indexOf( 'Hidden on the live site (draft).' ) !== -1 ), items.slice( 0, 12 ) );
+	const asGuest = await page.locator( '#wp-admin-bar-stax-vl-as-guest a' ).getAttribute( 'href' );
+	await page.goto( asGuest );
+	const html = await page.content();
+	const bar2 = await page.locator( '#wp-admin-bar-stax-vl > .ab-item' ).innerText();
+	check( 'view as guest: members heading hidden for the admin too', html.indexOf( 'data-id="e2ew2"' ) === -1 && bar2.indexOf( 'viewing as Guest' ) !== -1, bar2 );
+	await page.hover( '#wp-admin-bar-stax-vl' );
+	await page.waitForTimeout( 400 );
+	await shot( 'frontend-admin-bar-why' );
+	const forged = await page.goto( link + ( link.indexOf( '?' ) === -1 ? '?' : '&' ) + 'stax_vl_as=guest&_stax_vl=bad' );
+	const forgedHtml = await page.content();
+	check( 'view as: an invalid nonce changes nothing', forgedHtml.indexOf( 'data-id="e2ew2"' ) !== -1 && forged.ok() );
 
 	check( 'no JavaScript errors', errors.length === 0, errors );
 } catch ( e ) {
