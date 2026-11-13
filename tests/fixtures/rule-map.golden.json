@@ -1,0 +1,5310 @@
+{
+    "registry": {
+        "types": [
+            {
+                "category": "who",
+                "keywords": [
+                    "member",
+                    "logged in",
+                    "guest",
+                    "user",
+                    "capability"
+                ],
+                "visitor": true,
+                "exclusive": "user_role_conditions",
+                "summary": {
+                    "field": "user_role_by",
+                    "cases": {
+                        "users": "Visitor is one of[ {user_role_users}]",
+                        "capability": "Visitor has the capability[ {user_role_caps|or}]",
+                        "*": "User role[ is {user_role_conditions|or}]"
+                    }
+                },
+                "short": {
+                    "field": "user_role_by",
+                    "cases": {
+                        "users": "Specific users",
+                        "capability": "[{user_role_caps}]",
+                        "*": "{user_role_conditions}"
+                    }
+                },
+                "label": "User Role",
+                "switch": "user_role_enabled",
+                "fields": [
+                    {
+                        "key": "user_role_by",
+                        "type": "select",
+                        "label": "Check",
+                        "options": [
+                            {
+                                "value": "roles",
+                                "label": "Roles"
+                            },
+                            {
+                                "value": "users",
+                                "label": "Specific users"
+                            },
+                            {
+                                "value": "capability",
+                                "label": "Capability"
+                            }
+                        ],
+                        "default": "roles",
+                        "options_since": {
+                            "users": "3.0.0",
+                            "capability": "3.0.0"
+                        }
+                    },
+                    {
+                        "key": "user_role_conditions",
+                        "type": "multiselect",
+                        "label": "Roles",
+                        "options": [
+                            {
+                                "value": "ecl-guest",
+                                "label": "Guests"
+                            },
+                            {
+                                "value": "ecl-user",
+                                "label": "Logged in users"
+                            },
+                            {
+                                "value": "editor",
+                                "label": "Editor"
+                            },
+                            {
+                                "value": "author",
+                                "label": "Author"
+                            },
+                            {
+                                "value": "contributor",
+                                "label": "Contributor"
+                            },
+                            {
+                                "value": "subscriber",
+                                "label": "Subscriber"
+                            },
+                            {
+                                "value": "customer",
+                                "label": "Customer"
+                            },
+                            {
+                                "value": "shop_manager",
+                                "label": "Shop manager"
+                            }
+                        ],
+                        "show_if": {
+                            "user_role_by": [
+                                "roles"
+                            ]
+                        },
+                        "required": true
+                    },
+                    {
+                        "key": "user_role_match",
+                        "type": "select",
+                        "label": "Visitor must have",
+                        "options": [
+                            {
+                                "value": "any",
+                                "label": "Any of the selected roles"
+                            },
+                            {
+                                "value": "all",
+                                "label": "All of the selected roles"
+                            }
+                        ],
+                        "default": "any",
+                        "options_since": {
+                            "all": "3.0.0"
+                        },
+                        "show_if": {
+                            "user_role_by": [
+                                "roles"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "user_role_users",
+                        "type": "users",
+                        "label": "Users",
+                        "help": "Saved as user IDs. Guests never match.",
+                        "show_if": {
+                            "user_role_by": [
+                                "users"
+                            ]
+                        },
+                        "since": "3.0.0",
+                        "required": true
+                    },
+                    {
+                        "key": "user_role_caps",
+                        "type": "list",
+                        "label": "Capabilities",
+                        "placeholder": "edit_posts",
+                        "help": "The visitor needs at least one of them. Guests never match.",
+                        "show_if": {
+                            "user_role_by": [
+                                "capability"
+                            ]
+                        },
+                        "since": "3.0.0",
+                        "required": true
+                    }
+                ],
+                "locked": false,
+                "disabled": false,
+                "pro": false,
+                "tree": true,
+                "slug": "user_role"
+            },
+            {
+                "category": "who",
+                "keywords": [
+                    "profile",
+                    "field",
+                    "custom field"
+                ],
+                "visitor": true,
+                "summary": "User meta[ {user_meta_options}] {user_meta_status|lower}[ {user_meta_value}][ and {user_meta_value_2}]",
+                "short": "User meta[ {user_meta_options}]",
+                "label": "User Meta",
+                "switch": "user_meta_enabled",
+                "fields": [
+                    {
+                        "key": "user_meta_options",
+                        "required": true,
+                        "type": "list",
+                        "label": "Meta keys",
+                        "placeholder": "first_name, billing_country",
+                        "help": "User fields or meta keys, separated by commas. Each one must meet the condition."
+                    },
+                    {
+                        "key": "user_meta_status",
+                        "type": "select",
+                        "label": "Meta Condition",
+                        "options": [
+                            {
+                                "value": "none",
+                                "label": "None"
+                            },
+                            {
+                                "value": "empty",
+                                "label": "Empty"
+                            },
+                            {
+                                "value": "not_empty",
+                                "label": "Not empty"
+                            },
+                            {
+                                "value": "specific_value",
+                                "label": "Is equal to"
+                            },
+                            {
+                                "value": "specific_value_multiple",
+                                "label": "Is equal to one of"
+                            },
+                            {
+                                "value": "not_specific_value",
+                                "label": "Not equal to"
+                            },
+                            {
+                                "value": "contain",
+                                "label": "Contains"
+                            },
+                            {
+                                "value": "not_contain",
+                                "label": "Does not contain"
+                            },
+                            {
+                                "value": "is_between",
+                                "label": "Between"
+                            },
+                            {
+                                "value": "less_than",
+                                "label": "Less than"
+                            },
+                            {
+                                "value": "greater_than",
+                                "label": "Greater than"
+                            },
+                            {
+                                "value": "is_array",
+                                "label": "Is array"
+                            },
+                            {
+                                "value": "is_array_and_contains",
+                                "label": "Is array and contains"
+                            },
+                            {
+                                "value": "equals_ci",
+                                "label": "Is equal to (ignore case)"
+                            },
+                            {
+                                "value": "not_equals_ci",
+                                "label": "Not equal to (ignore case)"
+                            },
+                            {
+                                "value": "starts_with",
+                                "label": "Starts with"
+                            },
+                            {
+                                "value": "ends_with",
+                                "label": "Ends with"
+                            },
+                            {
+                                "value": "lte",
+                                "label": "Less than or equal to"
+                            },
+                            {
+                                "value": "gte",
+                                "label": "Greater than or equal to"
+                            },
+                            {
+                                "value": "not_in",
+                                "label": "Is not one of"
+                            }
+                        ],
+                        "default": "none",
+                        "options_since": {
+                            "equals_ci": "3.0.0",
+                            "not_equals_ci": "3.0.0",
+                            "starts_with": "3.0.0",
+                            "ends_with": "3.0.0",
+                            "lte": "3.0.0",
+                            "gte": "3.0.0",
+                            "not_in": "3.0.0"
+                        }
+                    },
+                    {
+                        "key": "user_meta_value",
+                        "type": "textarea",
+                        "label": "Condition Value",
+                        "help": "Comma separated for \"Is equal to one of\" and \"Is array and contains\".",
+                        "show_if": {
+                            "user_meta_status": [
+                                "specific_value",
+                                "specific_value_multiple",
+                                "not_specific_value",
+                                "contain",
+                                "not_contain",
+                                "is_between",
+                                "less_than",
+                                "greater_than",
+                                "is_array_and_contains",
+                                "equals_ci",
+                                "not_equals_ci",
+                                "starts_with",
+                                "ends_with",
+                                "lte",
+                                "gte",
+                                "not_in"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "user_meta_value_2",
+                        "type": "textarea",
+                        "label": "Condition Value 2",
+                        "show_if": {
+                            "user_meta_status": [
+                                "is_between"
+                            ]
+                        }
+                    }
+                ],
+                "locked": false,
+                "disabled": false,
+                "pro": false,
+                "tree": true,
+                "slug": "user_meta"
+            },
+            {
+                "category": "when",
+                "keywords": [
+                    "schedule",
+                    "time",
+                    "day",
+                    "week",
+                    "season",
+                    "yearly"
+                ],
+                "visitor": true,
+                "expires": {
+                    "field": "date_to",
+                    "when": {
+                        "date_time_type": [
+                            "date"
+                        ]
+                    }
+                },
+                "starts": {
+                    "field": "date_from",
+                    "when": {
+                        "date_time_type": [
+                            "date"
+                        ]
+                    }
+                },
+                "summary": {
+                    "field": "date_time_type",
+                    "cases": {
+                        "date": "Date is[ from {date_from}][ until {date_to}]",
+                        "time": "Time of day is[ from {time_from}][ to {time_to}]",
+                        "week_days": "Day of the week is[ {time_week|or}]",
+                        "week_days_time": "Day is[ {time_week|or}][ from {time_from}][ to {time_to}]",
+                        "yearly": "Every year[ from {date_year_from}][ {date_year_from_time}][ to {date_year_to}][ {date_year_to_time}]",
+                        "*": "Date and time"
+                    }
+                },
+                "short": {
+                    "field": "date_time_type",
+                    "cases": {
+                        "date": "[until {date_to}]",
+                        "time": "[{time_from}-{time_to}]",
+                        "week_days": "[{time_week}]",
+                        "yearly": "Every year[ {date_year_from}-{date_year_to}]",
+                        "*": "Schedule"
+                    }
+                },
+                "label": "Date & Time",
+                "switch": "date_time_enabled",
+                "fields": [
+                    {
+                        "key": "date_time_type",
+                        "type": "select",
+                        "label": "Select Type:",
+                        "options": [
+                            {
+                                "value": "date",
+                                "label": "Date FROM/TO"
+                            },
+                            {
+                                "value": "time",
+                                "label": "Time FROM/TO"
+                            },
+                            {
+                                "value": "week_days",
+                                "label": "Week Days"
+                            },
+                            {
+                                "value": "week_days_time",
+                                "label": "Week Days + Time FROM/TO"
+                            },
+                            {
+                                "value": "yearly",
+                                "label": "Every year, FROM/TO day"
+                            }
+                        ],
+                        "default": "date",
+                        "options_since": {
+                            "yearly": "3.0.0"
+                        }
+                    },
+                    {
+                        "key": "date_year_from",
+                        "type": "text",
+                        "label": "Every year FROM (month-day)",
+                        "placeholder": "12-20",
+                        "show_if": {
+                            "date_time_type": [
+                                "yearly"
+                            ]
+                        },
+                        "since": "3.0.0"
+                    },
+                    {
+                        "key": "date_year_from_time",
+                        "type": "time",
+                        "label": "FROM time (optional)",
+                        "placeholder": "HH:mm",
+                        "show_if": {
+                            "date_time_type": [
+                                "yearly"
+                            ]
+                        },
+                        "since": "3.0.0"
+                    },
+                    {
+                        "key": "date_year_to",
+                        "type": "text",
+                        "label": "Every year TO (month-day)",
+                        "placeholder": "01-11",
+                        "help": "Ranges over the year end work (20 Dec to 11 Jan). 29 Feb counts as 28 Feb in other years.",
+                        "show_if": {
+                            "date_time_type": [
+                                "yearly"
+                            ]
+                        },
+                        "since": "3.0.0"
+                    },
+                    {
+                        "key": "date_year_to_time",
+                        "type": "time",
+                        "label": "TO time (optional)",
+                        "placeholder": "HH:mm",
+                        "show_if": {
+                            "date_time_type": [
+                                "yearly"
+                            ]
+                        },
+                        "since": "3.0.0"
+                    },
+                    {
+                        "key": "date_from",
+                        "type": "date",
+                        "label": "Date FROM",
+                        "show_if": {
+                            "date_time_type": [
+                                "date"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "date_to",
+                        "type": "date",
+                        "label": "Date TO",
+                        "show_if": {
+                            "date_time_type": [
+                                "date"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "time_week",
+                        "type": "multiselect",
+                        "label": "Days of the WEEK",
+                        "options": [
+                            {
+                                "value": "0",
+                                "label": "Sunday"
+                            },
+                            {
+                                "value": "1",
+                                "label": "Monday"
+                            },
+                            {
+                                "value": "2",
+                                "label": "Tuesday"
+                            },
+                            {
+                                "value": "3",
+                                "label": "Wednesday"
+                            },
+                            {
+                                "value": "4",
+                                "label": "Thursday"
+                            },
+                            {
+                                "value": "5",
+                                "label": "Friday"
+                            },
+                            {
+                                "value": "6",
+                                "label": "Saturday"
+                            }
+                        ],
+                        "show_if": {
+                            "date_time_type": [
+                                "week_days",
+                                "week_days_time"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "time_from",
+                        "type": "time",
+                        "label": "Time FROM",
+                        "placeholder": "HH:mm",
+                        "show_if": {
+                            "date_time_type": [
+                                "time",
+                                "week_days_time"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "time_to",
+                        "type": "time",
+                        "label": "Time TO",
+                        "placeholder": "HH:mm",
+                        "show_if": {
+                            "date_time_type": [
+                                "time",
+                                "week_days_time"
+                            ]
+                        }
+                    }
+                ],
+                "locked": false,
+                "disabled": false,
+                "pro": false,
+                "tree": true,
+                "slug": "date_time"
+            },
+            {
+                "category": "device",
+                "keywords": [
+                    "chrome",
+                    "safari",
+                    "firefox",
+                    "edge"
+                ],
+                "visitor": true,
+                "exclusive": "browsers",
+                "summary": "Browser[ is {browsers|or}]",
+                "short": "{browsers}",
+                "label": "Browser Type",
+                "switch": "browser_type_enabled",
+                "fields": [
+                    {
+                        "key": "browsers",
+                        "type": "multiselect",
+                        "label": "Browser",
+                        "options": [
+                            {
+                                "value": "is_chrome",
+                                "label": "Google Chrome"
+                            },
+                            {
+                                "value": "is_gecko",
+                                "label": "FireFox"
+                            },
+                            {
+                                "value": "is_safari",
+                                "label": "Safari"
+                            },
+                            {
+                                "value": "is_ie",
+                                "label": "Internet Explorer"
+                            },
+                            {
+                                "value": "is_edge",
+                                "label": "Microsoft Edge"
+                            },
+                            {
+                                "value": "is_ns4",
+                                "label": "Netscape"
+                            },
+                            {
+                                "value": "is_opera",
+                                "label": "Opera"
+                            },
+                            {
+                                "value": "is_lynx",
+                                "label": "Lynx"
+                            },
+                            {
+                                "value": "is_iphone",
+                                "label": "iPhone Safari"
+                            },
+                            {
+                                "value": "is_android",
+                                "label": "Android Browser"
+                            }
+                        ]
+                    }
+                ],
+                "locked": false,
+                "disabled": false,
+                "pro": false,
+                "tree": true,
+                "slug": "browser_type"
+            },
+            {
+                "category": "device",
+                "keywords": [
+                    "mobile",
+                    "tablet",
+                    "desktop",
+                    "phone"
+                ],
+                "visitor": true,
+                "exclusive": "device_types",
+                "summary": "Device[ is {device_types|or}]",
+                "short": "{device_types}",
+                "label": "Device Type",
+                "switch": "device_type_enabled",
+                "fields": [
+                    {
+                        "key": "device_types",
+                        "type": "multiselect",
+                        "label": "Device",
+                        "options": [
+                            {
+                                "value": "desktop",
+                                "label": "Desktop"
+                            },
+                            {
+                                "value": "tablet",
+                                "label": "Tablet"
+                            },
+                            {
+                                "value": "mobile",
+                                "label": "Mobile"
+                            }
+                        ],
+                        "help": "Detected on the server from the User-Agent."
+                    }
+                ],
+                "locked": false,
+                "disabled": false,
+                "pro": false,
+                "tree": true,
+                "slug": "device_type"
+            },
+            {
+                "category": "page",
+                "keywords": [
+                    "advanced custom fields",
+                    "custom field",
+                    "meta"
+                ],
+                "summary": "ACF field[ {acf_field}] {acf_condition|lower}[ {acf_value}][ and {acf_value_2}]",
+                "short": "ACF[ {acf_field}]",
+                "label": "ACF Field",
+                "switch": "acf_enabled",
+                "fields": [
+                    {
+                        "key": "acf_field",
+                        "required": true,
+                        "type": "text",
+                        "label": "Field Name",
+                        "placeholder": "my_custom_field",
+                        "help": "ACF field of the current post or page."
+                    },
+                    {
+                        "key": "acf_condition",
+                        "type": "select",
+                        "label": "Condition",
+                        "options": [
+                            {
+                                "value": "empty",
+                                "label": "Is empty"
+                            },
+                            {
+                                "value": "not_empty",
+                                "label": "Is not empty"
+                            },
+                            {
+                                "value": "equals",
+                                "label": "Equals"
+                            },
+                            {
+                                "value": "not_equals",
+                                "label": "Not equals"
+                            },
+                            {
+                                "value": "contains",
+                                "label": "Contains"
+                            },
+                            {
+                                "value": "is_true",
+                                "label": "Is true"
+                            },
+                            {
+                                "value": "is_false",
+                                "label": "Is false"
+                            },
+                            {
+                                "value": "equals_ci",
+                                "label": "Equals (ignore case)"
+                            },
+                            {
+                                "value": "not_equals_ci",
+                                "label": "Not equals (ignore case)"
+                            },
+                            {
+                                "value": "starts_with",
+                                "label": "Starts with"
+                            },
+                            {
+                                "value": "ends_with",
+                                "label": "Ends with"
+                            },
+                            {
+                                "value": "not_in",
+                                "label": "Is not one of"
+                            }
+                        ],
+                        "default": "not_empty",
+                        "options_since": {
+                            "equals_ci": "3.0.0",
+                            "not_equals_ci": "3.0.0",
+                            "starts_with": "3.0.0",
+                            "ends_with": "3.0.0",
+                            "not_in": "3.0.0",
+                            "lte": "3.0.0",
+                            "gte": "3.0.0"
+                        }
+                    },
+                    {
+                        "key": "acf_value",
+                        "type": "text",
+                        "label": "Value",
+                        "show_if": {
+                            "acf_condition": [
+                                "equals",
+                                "not_equals",
+                                "contains",
+                                "not_contains",
+                                "greater_than",
+                                "less_than",
+                                "between",
+                                "date_before",
+                                "date_after",
+                                "array_contains",
+                                "regex",
+                                "equals_ci",
+                                "not_equals_ci",
+                                "starts_with",
+                                "ends_with",
+                                "not_in",
+                                "lte",
+                                "gte"
+                            ]
+                        }
+                    }
+                ],
+                "locked": false,
+                "disabled": false,
+                "pro": false,
+                "visitor": false,
+                "tree": true,
+                "slug": "acf"
+            },
+            {
+                "label": "IP & Referrer",
+                "switch": "ip_referrer_enabled",
+                "pro": true,
+                "fields": [
+                    {
+                        "key": "remote_ip",
+                        "type": "text",
+                        "label": "Remote IP",
+                        "placeholder": "1.1.1.1, 8.8.8.8",
+                        "help": "IPs who will be able to view this element, separated by commas."
+                    },
+                    {
+                        "key": "referrer_list",
+                        "type": "textarea",
+                        "label": "Referral sites URLs or domains",
+                        "help": "List of referral websites (one per line)."
+                    },
+                    {
+                        "key": "referrer_match_type",
+                        "type": "select",
+                        "label": "Referrer Match Type",
+                        "options": [
+                            {
+                                "value": "domain",
+                                "label": "Match Domain"
+                            },
+                            {
+                                "value": "strict",
+                                "label": "Match Exact URL"
+                            },
+                            {
+                                "value": "contains",
+                                "label": "Contains"
+                            }
+                        ],
+                        "default": "domain"
+                    }
+                ],
+                "locked": true,
+                "disabled": false,
+                "category": "other",
+                "keywords": [],
+                "summary": "",
+                "short": "",
+                "visitor": false,
+                "tree": true,
+                "slug": "ip_referrer"
+            },
+            {
+                "label": "Geo Location",
+                "switch": "geo_location_enabled",
+                "pro": true,
+                "fields": [
+                    {
+                        "key": "geo_location_type",
+                        "type": "select",
+                        "label": "Location Type",
+                        "options": [
+                            {
+                                "value": "country",
+                                "label": "Country"
+                            },
+                            {
+                                "value": "city",
+                                "label": "City"
+                            }
+                        ],
+                        "default": "country"
+                    },
+                    {
+                        "key": "geo_location_countries",
+                        "type": "list",
+                        "label": "Countries",
+                        "help": "Two-letter country codes, separated by commas (for example US, DE, RO).",
+                        "show_if": {
+                            "geo_location_type": [
+                                "country"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "geo_location_cities",
+                        "type": "list",
+                        "label": "Cities",
+                        "help": "City|country code pairs, separated by commas (for example Berlin|DE, Cluj-Napoca|RO).",
+                        "show_if": {
+                            "geo_location_type": [
+                                "city"
+                            ]
+                        }
+                    }
+                ],
+                "locked": true,
+                "disabled": false,
+                "category": "other",
+                "keywords": [],
+                "summary": "",
+                "short": "",
+                "visitor": false,
+                "tree": true,
+                "slug": "geo_location"
+            },
+            {
+                "label": "Posts & Pages",
+                "switch": "post_enabled",
+                "pro": true,
+                "fields": [
+                    {
+                        "key": "custom_post_type",
+                        "type": "multiselect",
+                        "label": "Post Type",
+                        "options": [
+                            {
+                                "value": "post",
+                                "label": "Posts"
+                            },
+                            {
+                                "value": "e-floating-buttons",
+                                "label": "Floating Elements"
+                            },
+                            {
+                                "value": "product",
+                                "label": "Products"
+                            }
+                        ]
+                    },
+                    {
+                        "key": "specific_post",
+                        "type": "list",
+                        "label": "Post/Page IDs",
+                        "help": "Post or page IDs, separated by commas."
+                    },
+                    {
+                        "key": "taxonomy",
+                        "type": "select",
+                        "label": "Taxonomy",
+                        "options": [
+                            {
+                                "value": "",
+                                "label": "None"
+                            },
+                            {
+                                "value": "category",
+                                "label": "Categories (category)"
+                            },
+                            {
+                                "value": "post_tag",
+                                "label": "Tags (post_tag)"
+                            },
+                            {
+                                "value": "nav_menu",
+                                "label": "Navigation Menus (nav_menu)"
+                            },
+                            {
+                                "value": "link_category",
+                                "label": "Link Categories (link_category)"
+                            },
+                            {
+                                "value": "post_format",
+                                "label": "Formats (post_format)"
+                            },
+                            {
+                                "value": "wp_theme",
+                                "label": "Themes (wp_theme)"
+                            },
+                            {
+                                "value": "wp_template_part_area",
+                                "label": "Template Part Areas (wp_template_part_area)"
+                            },
+                            {
+                                "value": "wp_pattern_category",
+                                "label": "Pattern Categories (wp_pattern_category)"
+                            },
+                            {
+                                "value": "elementor_library_type",
+                                "label": "Type (elementor_library_type)"
+                            },
+                            {
+                                "value": "elementor_library_category",
+                                "label": "Categories (elementor_library_category)"
+                            },
+                            {
+                                "value": "product_brand",
+                                "label": "Product brands (product_brand)"
+                            },
+                            {
+                                "value": "product_type",
+                                "label": "Product type (product_type)"
+                            },
+                            {
+                                "value": "product_visibility",
+                                "label": "Product visibility (product_visibility)"
+                            },
+                            {
+                                "value": "product_cat",
+                                "label": "Product categories (product_cat)"
+                            },
+                            {
+                                "value": "product_tag",
+                                "label": "Product tags (product_tag)"
+                            },
+                            {
+                                "value": "product_shipping_class",
+                                "label": "Product shipping classes (product_shipping_class)"
+                            },
+                            {
+                                "value": "pos_product_visibility",
+                                "label": "POS Product visibility (pos_product_visibility)"
+                            }
+                        ]
+                    },
+                    {
+                        "key": "taxonomy_term_category",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "taxonomy": [
+                                "category"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "taxonomy_term_post_tag",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "taxonomy": [
+                                "post_tag"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "taxonomy_term_nav_menu",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "taxonomy": [
+                                "nav_menu"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "taxonomy_term_link_category",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "taxonomy": [
+                                "link_category"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "taxonomy_term_post_format",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "taxonomy": [
+                                "post_format"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "taxonomy_term_wp_theme",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "taxonomy": [
+                                "wp_theme"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "taxonomy_term_wp_template_part_area",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "taxonomy": [
+                                "wp_template_part_area"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "taxonomy_term_wp_pattern_category",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "taxonomy": [
+                                "wp_pattern_category"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "taxonomy_term_elementor_library_type",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "taxonomy": [
+                                "elementor_library_type"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "taxonomy_term_elementor_library_category",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "taxonomy": [
+                                "elementor_library_category"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "taxonomy_term_product_brand",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "taxonomy": [
+                                "product_brand"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "taxonomy_term_product_type",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "taxonomy": [
+                                "product_type"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "taxonomy_term_product_visibility",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "taxonomy": [
+                                "product_visibility"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "taxonomy_term_product_cat",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "taxonomy": [
+                                "product_cat"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "taxonomy_term_product_tag",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "taxonomy": [
+                                "product_tag"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "taxonomy_term_product_shipping_class",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "taxonomy": [
+                                "product_shipping_class"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "taxonomy_term_pos_product_visibility",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "taxonomy": [
+                                "pos_product_visibility"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "post_meta",
+                        "type": "list",
+                        "label": "Meta",
+                        "help": "Meta keys, separated by commas."
+                    },
+                    {
+                        "key": "post_meta_status",
+                        "type": "select",
+                        "label": "Meta Condition",
+                        "options": [
+                            {
+                                "value": "any",
+                                "label": "Any Value"
+                            },
+                            {
+                                "value": "empty",
+                                "label": "Empty"
+                            },
+                            {
+                                "value": "not_empty",
+                                "label": "Not empty"
+                            },
+                            {
+                                "value": "specific_value",
+                                "label": "Is equal to"
+                            },
+                            {
+                                "value": "specific_value_multiple",
+                                "label": "Is equal to one of"
+                            },
+                            {
+                                "value": "not_specific_value",
+                                "label": "Not equal to"
+                            },
+                            {
+                                "value": "contain",
+                                "label": "Contains"
+                            },
+                            {
+                                "value": "not_contain",
+                                "label": "Does not contain"
+                            },
+                            {
+                                "value": "is_between",
+                                "label": "Between"
+                            },
+                            {
+                                "value": "less_than",
+                                "label": "Less than"
+                            },
+                            {
+                                "value": "greater_than",
+                                "label": "Greater than"
+                            },
+                            {
+                                "value": "is_array",
+                                "label": "Is array"
+                            },
+                            {
+                                "value": "is_array_and_contains",
+                                "label": "Is array and contains"
+                            }
+                        ],
+                        "default": "any"
+                    },
+                    {
+                        "key": "post_meta_value",
+                        "type": "textarea",
+                        "label": "Meta Condition Value",
+                        "show_if": {
+                            "post_meta_status": [
+                                "specific_value",
+                                "specific_value_multiple",
+                                "not_specific_value",
+                                "contain",
+                                "not_contain",
+                                "is_between",
+                                "less_than",
+                                "greater_than",
+                                "is_array_and_contains"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "post_meta_value_2",
+                        "type": "textarea",
+                        "label": "Meta Condition Value 2",
+                        "show_if": {
+                            "post_meta_status": [
+                                "is_between"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "post_parent",
+                        "type": "switch",
+                        "label": "Is Parent"
+                    },
+                    {
+                        "key": "post_root",
+                        "type": "switch",
+                        "label": "Is Root"
+                    },
+                    {
+                        "key": "post_leaf",
+                        "type": "switch",
+                        "label": "Is Leaf"
+                    },
+                    {
+                        "key": "post_node",
+                        "type": "switch",
+                        "label": "Is Node"
+                    },
+                    {
+                        "key": "post_node_level",
+                        "type": "text",
+                        "label": "Node level"
+                    },
+                    {
+                        "key": "post_sibling",
+                        "type": "switch",
+                        "label": "Has Siblings"
+                    },
+                    {
+                        "key": "post_friend",
+                        "type": "switch",
+                        "label": "Has Term Buddies"
+                    },
+                    {
+                        "key": "post_friend_terms",
+                        "type": "list",
+                        "label": "Terms where find Buddies",
+                        "help": "Term IDs, separated by commas."
+                    },
+                    {
+                        "key": "post_with_param",
+                        "type": "text",
+                        "label": "With Parameter",
+                        "help": "Name of the parameter passed in GET or POST."
+                    },
+                    {
+                        "key": "post_param_status",
+                        "type": "select",
+                        "label": "Parameter Status",
+                        "options": [
+                            {
+                                "value": "not",
+                                "label": "Not isset"
+                            },
+                            {
+                                "value": "isset",
+                                "label": "Isset"
+                            },
+                            {
+                                "value": "value",
+                                "label": "Definited value"
+                            }
+                        ],
+                        "default": "isset"
+                    },
+                    {
+                        "key": "post_param_value",
+                        "type": "text",
+                        "label": "Parameter Value",
+                        "show_if": {
+                            "post_param_status": [
+                                "value"
+                            ]
+                        }
+                    }
+                ],
+                "locked": true,
+                "disabled": false,
+                "category": "other",
+                "keywords": [],
+                "summary": "",
+                "short": "",
+                "visitor": false,
+                "tree": true,
+                "slug": "post"
+            },
+            {
+                "label": "Archive Pages",
+                "switch": "archive_enabled",
+                "pro": true,
+                "fields": [
+                    {
+                        "key": "archive_custom_post_type",
+                        "type": "multiselect",
+                        "label": "Post Type Archive",
+                        "options": [
+                            {
+                                "value": "post",
+                                "label": "Posts"
+                            },
+                            {
+                                "value": "e-floating-buttons",
+                                "label": "Floating Elements"
+                            },
+                            {
+                                "value": "product",
+                                "label": "Products"
+                            }
+                        ]
+                    },
+                    {
+                        "key": "archive_taxonomy",
+                        "type": "select",
+                        "label": "Taxonomy Archive",
+                        "options": [
+                            {
+                                "value": "",
+                                "label": "None"
+                            },
+                            {
+                                "value": "category",
+                                "label": "Categories (category)"
+                            },
+                            {
+                                "value": "post_tag",
+                                "label": "Tags (post_tag)"
+                            },
+                            {
+                                "value": "nav_menu",
+                                "label": "Navigation Menus (nav_menu)"
+                            },
+                            {
+                                "value": "link_category",
+                                "label": "Link Categories (link_category)"
+                            },
+                            {
+                                "value": "post_format",
+                                "label": "Formats (post_format)"
+                            },
+                            {
+                                "value": "wp_theme",
+                                "label": "Themes (wp_theme)"
+                            },
+                            {
+                                "value": "wp_template_part_area",
+                                "label": "Template Part Areas (wp_template_part_area)"
+                            },
+                            {
+                                "value": "wp_pattern_category",
+                                "label": "Pattern Categories (wp_pattern_category)"
+                            },
+                            {
+                                "value": "elementor_library_type",
+                                "label": "Type (elementor_library_type)"
+                            },
+                            {
+                                "value": "elementor_library_category",
+                                "label": "Categories (elementor_library_category)"
+                            },
+                            {
+                                "value": "product_brand",
+                                "label": "Product brands (product_brand)"
+                            },
+                            {
+                                "value": "product_type",
+                                "label": "Product type (product_type)"
+                            },
+                            {
+                                "value": "product_visibility",
+                                "label": "Product visibility (product_visibility)"
+                            },
+                            {
+                                "value": "product_cat",
+                                "label": "Product categories (product_cat)"
+                            },
+                            {
+                                "value": "product_tag",
+                                "label": "Product tags (product_tag)"
+                            },
+                            {
+                                "value": "product_shipping_class",
+                                "label": "Product shipping classes (product_shipping_class)"
+                            },
+                            {
+                                "value": "pos_product_visibility",
+                                "label": "POS Product visibility (pos_product_visibility)"
+                            }
+                        ]
+                    },
+                    {
+                        "key": "archive_taxonomy_term_category",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "archive_taxonomy": [
+                                "category"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "archive_taxonomy_term_post_tag",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "archive_taxonomy": [
+                                "post_tag"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "archive_taxonomy_term_nav_menu",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "archive_taxonomy": [
+                                "nav_menu"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "archive_taxonomy_term_link_category",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "archive_taxonomy": [
+                                "link_category"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "archive_taxonomy_term_post_format",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "archive_taxonomy": [
+                                "post_format"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "archive_taxonomy_term_wp_theme",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "archive_taxonomy": [
+                                "wp_theme"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "archive_taxonomy_term_wp_template_part_area",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "archive_taxonomy": [
+                                "wp_template_part_area"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "archive_taxonomy_term_wp_pattern_category",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "archive_taxonomy": [
+                                "wp_pattern_category"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "archive_taxonomy_term_elementor_library_type",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "archive_taxonomy": [
+                                "elementor_library_type"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "archive_taxonomy_term_elementor_library_category",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "archive_taxonomy": [
+                                "elementor_library_category"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "archive_taxonomy_term_product_brand",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "archive_taxonomy": [
+                                "product_brand"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "archive_taxonomy_term_product_type",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "archive_taxonomy": [
+                                "product_type"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "archive_taxonomy_term_product_visibility",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "archive_taxonomy": [
+                                "product_visibility"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "archive_taxonomy_term_product_cat",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "archive_taxonomy": [
+                                "product_cat"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "archive_taxonomy_term_product_tag",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "archive_taxonomy": [
+                                "product_tag"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "archive_taxonomy_term_product_shipping_class",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "archive_taxonomy": [
+                                "product_shipping_class"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "archive_taxonomy_term_pos_product_visibility",
+                        "type": "multiselect",
+                        "label": "Terms",
+                        "options": [],
+                        "show_if": {
+                            "archive_taxonomy": [
+                                "pos_product_visibility"
+                            ]
+                        }
+                    }
+                ],
+                "locked": true,
+                "disabled": false,
+                "category": "other",
+                "keywords": [],
+                "summary": "",
+                "short": "",
+                "visitor": false,
+                "tree": true,
+                "slug": "archive"
+            },
+            {
+                "label": "Conditional Tags",
+                "switch": "conditional_tags_enabled",
+                "pro": true,
+                "fields": [
+                    {
+                        "key": "conditional_tags_post",
+                        "type": "multiselect",
+                        "label": "Post",
+                        "options": [
+                            {
+                                "value": "is_sticky",
+                                "label": "Is Sticky"
+                            },
+                            {
+                                "value": "is_post_type_hierarchical",
+                                "label": "Is Hierarchical Post Type"
+                            },
+                            {
+                                "value": "is_post_type_archive",
+                                "label": "Is Post Type Archive"
+                            },
+                            {
+                                "value": "comments_open",
+                                "label": "Comments open"
+                            },
+                            {
+                                "value": "pings_open",
+                                "label": "Pings open"
+                            },
+                            {
+                                "value": "has_tag",
+                                "label": "Has Tags"
+                            },
+                            {
+                                "value": "has_term",
+                                "label": "Has Terms"
+                            },
+                            {
+                                "value": "has_excerpt",
+                                "label": "Has Excerpt"
+                            },
+                            {
+                                "value": "has_post_thumbnail",
+                                "label": "Has Post Thumbnail"
+                            },
+                            {
+                                "value": "has_nav_menu",
+                                "label": "Has Nav menu"
+                            }
+                        ]
+                    },
+                    {
+                        "key": "conditional_tags_site",
+                        "type": "multiselect",
+                        "label": "Site",
+                        "options": [
+                            {
+                                "value": "is_dynamic_sidebar",
+                                "label": "Dynamic sidebar"
+                            },
+                            {
+                                "value": "is_active_sidebar",
+                                "label": "Active sidebar"
+                            },
+                            {
+                                "value": "is_rtl",
+                                "label": "RTL"
+                            },
+                            {
+                                "value": "is_multisite",
+                                "label": "Multisite"
+                            },
+                            {
+                                "value": "is_main_site",
+                                "label": "Main site"
+                            },
+                            {
+                                "value": "is_child_theme",
+                                "label": "Child theme"
+                            },
+                            {
+                                "value": "is_customize_preview",
+                                "label": "Customize preview"
+                            },
+                            {
+                                "value": "is_multi_author",
+                                "label": "Multi author"
+                            },
+                            {
+                                "value": "is feed",
+                                "label": "Feed"
+                            },
+                            {
+                                "value": "is_trackback",
+                                "label": "Trackback"
+                            }
+                        ]
+                    },
+                    {
+                        "key": "conditional_tags_page",
+                        "type": "multiselect",
+                        "label": "Page",
+                        "options": [
+                            {
+                                "value": "is_front_page",
+                                "label": "Front Page"
+                            },
+                            {
+                                "value": "is_home",
+                                "label": "Home"
+                            },
+                            {
+                                "value": "is_404",
+                                "label": "404 Not Found"
+                            },
+                            {
+                                "value": "is_single",
+                                "label": "Single"
+                            },
+                            {
+                                "value": "is_page",
+                                "label": "Page"
+                            },
+                            {
+                                "value": "is_attachment",
+                                "label": "Attachment"
+                            },
+                            {
+                                "value": "is_preview",
+                                "label": "Preview"
+                            },
+                            {
+                                "value": "is_admin",
+                                "label": "Admin"
+                            },
+                            {
+                                "value": "is_page_template",
+                                "label": "Page Template"
+                            },
+                            {
+                                "value": "is_comments_popup",
+                                "label": "Comments Popup"
+                            },
+                            {
+                                "value": "is_woocommerce",
+                                "label": "A Woocommerce Page"
+                            },
+                            {
+                                "value": "is_shop",
+                                "label": "Shop"
+                            },
+                            {
+                                "value": "is_product",
+                                "label": "Product"
+                            },
+                            {
+                                "value": "is_product_taxonomy",
+                                "label": "Product Taxonomy"
+                            },
+                            {
+                                "value": "is_product_category",
+                                "label": "Product Category"
+                            },
+                            {
+                                "value": "is_product_tag",
+                                "label": "Product Tag"
+                            },
+                            {
+                                "value": "is_cart",
+                                "label": "Cart"
+                            },
+                            {
+                                "value": "is_checkout",
+                                "label": "Checkout"
+                            },
+                            {
+                                "value": "is_add_payment_method_page",
+                                "label": "Add Payment method"
+                            },
+                            {
+                                "value": "is_checkout_pay_page",
+                                "label": "Checkout Pay"
+                            },
+                            {
+                                "value": "is_account_page",
+                                "label": "Account page"
+                            },
+                            {
+                                "value": "is_edit_account_page",
+                                "label": "Edit Account"
+                            },
+                            {
+                                "value": "is_lost_password_page",
+                                "label": "Lost password"
+                            },
+                            {
+                                "value": "is_view_order_page",
+                                "label": "Order summary"
+                            },
+                            {
+                                "value": "is_order_received_page",
+                                "label": "Order complete"
+                            }
+                        ]
+                    },
+                    {
+                        "key": "conditional_tags_archive",
+                        "type": "multiselect",
+                        "label": "Archive",
+                        "options": [
+                            {
+                                "value": "is_blog",
+                                "label": "Home blog (latest posts)"
+                            },
+                            {
+                                "value": "posts_page",
+                                "label": "Posts page"
+                            },
+                            {
+                                "value": "is_tax",
+                                "label": "Taxonomy"
+                            },
+                            {
+                                "value": "is_category",
+                                "label": "Category"
+                            },
+                            {
+                                "value": "is_tag",
+                                "label": "Tag"
+                            },
+                            {
+                                "value": "is_author",
+                                "label": "Author"
+                            },
+                            {
+                                "value": "is_date",
+                                "label": "Date"
+                            },
+                            {
+                                "value": "is_year",
+                                "label": "Year"
+                            },
+                            {
+                                "value": "is_month",
+                                "label": "Month"
+                            },
+                            {
+                                "value": "is_day",
+                                "label": "Day"
+                            },
+                            {
+                                "value": "is_time",
+                                "label": "Time"
+                            },
+                            {
+                                "value": "is_new_day",
+                                "label": "New Day"
+                            },
+                            {
+                                "value": "is_search",
+                                "label": "Search"
+                            },
+                            {
+                                "value": "is_paged",
+                                "label": "Paged"
+                            },
+                            {
+                                "value": "is_main_query",
+                                "label": "Main Query"
+                            },
+                            {
+                                "value": "in_the_loop",
+                                "label": "In the Loop"
+                            }
+                        ]
+                    }
+                ],
+                "locked": true,
+                "disabled": false,
+                "category": "other",
+                "keywords": [],
+                "summary": "",
+                "short": "",
+                "visitor": false,
+                "tree": true,
+                "slug": "conditional_tags"
+            },
+            {
+                "label": "WooCommerce Users",
+                "switch": "woocommerce_users_enabled",
+                "pro": true,
+                "fields": [
+                    {
+                        "key": "woocommerce_users_selection",
+                        "type": "select",
+                        "label": "Condition",
+                        "options": [
+                            {
+                                "value": "any",
+                                "label": "User has purchased any product"
+                            },
+                            {
+                                "value": "product",
+                                "label": "User has purchased specific product"
+                            },
+                            {
+                                "value": "product_variation",
+                                "label": "User has purchased specific product variation"
+                            }
+                        ],
+                        "default": "any"
+                    },
+                    {
+                        "key": "woocommerce_users_product_condition",
+                        "type": "select",
+                        "label": "Products Condition",
+                        "options": [
+                            {
+                                "value": "one",
+                                "label": "At least one"
+                            },
+                            {
+                                "value": "all",
+                                "label": "All"
+                            }
+                        ],
+                        "default": "one",
+                        "show_if": {
+                            "woocommerce_users_selection": [
+                                "product",
+                                "product_variation"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "woocommerce_users_product",
+                        "type": "list",
+                        "label": "Product",
+                        "help": "IDs, separated by commas.",
+                        "show_if": {
+                            "woocommerce_users_selection": [
+                                "product"
+                            ]
+                        }
+                    },
+                    {
+                        "key": "woocommerce_users_product_variation",
+                        "type": "list",
+                        "label": "Product Variation",
+                        "help": "IDs, separated by commas.",
+                        "show_if": {
+                            "woocommerce_users_selection": [
+                                "product_variation"
+                            ]
+                        }
+                    }
+                ],
+                "locked": true,
+                "disabled": false,
+                "category": "other",
+                "keywords": [],
+                "summary": "",
+                "short": "",
+                "visitor": false,
+                "tree": true,
+                "slug": "woocommerce_users"
+            },
+            {
+                "label": "Advanced User Meta",
+                "category": "who",
+                "fields": [],
+                "switch": "advanced_user_meta_enabled",
+                "pro": false,
+                "locked": false,
+                "readonly": true,
+                "hidden": true,
+                "tree": false,
+                "keywords": [],
+                "summary": "",
+                "short": "",
+                "disabled": false,
+                "visitor": false,
+                "slug": "advanced_user_meta"
+            },
+            {
+                "label": "Dynamic Conditions",
+                "category": "page",
+                "fields": [],
+                "switch": "dynamic_conditions_enabled",
+                "pro": false,
+                "locked": false,
+                "readonly": true,
+                "hidden": true,
+                "tree": false,
+                "keywords": [],
+                "summary": "",
+                "short": "",
+                "disabled": false,
+                "visitor": false,
+                "slug": "dynamic_conditions"
+            },
+            {
+                "label": "EDD Users",
+                "category": "shop",
+                "fields": [],
+                "switch": "edd_users_enabled",
+                "pro": false,
+                "locked": false,
+                "readonly": true,
+                "hidden": true,
+                "tree": false,
+                "keywords": [],
+                "summary": "",
+                "short": "",
+                "disabled": false,
+                "visitor": false,
+                "slug": "edd_users"
+            },
+            {
+                "label": "Fallback",
+                "category": "other",
+                "fields": [],
+                "switch": "fallback_enabled",
+                "pro": false,
+                "locked": false,
+                "readonly": true,
+                "hidden": true,
+                "tree": false,
+                "keywords": [],
+                "summary": "",
+                "short": "",
+                "disabled": false,
+                "visitor": false,
+                "slug": "fallback"
+            },
+            {
+                "label": "URL Parameters",
+                "category": "where",
+                "fields": [],
+                "switch": "query_string_enabled",
+                "pro": false,
+                "locked": false,
+                "readonly": true,
+                "hidden": true,
+                "tree": false,
+                "keywords": [],
+                "summary": "",
+                "short": "",
+                "disabled": false,
+                "visitor": false,
+                "slug": "query_string"
+            },
+            {
+                "label": "Language",
+                "category": "where",
+                "fields": [],
+                "switch": "language_enabled",
+                "pro": false,
+                "locked": false,
+                "readonly": true,
+                "hidden": true,
+                "tree": false,
+                "keywords": [],
+                "summary": "",
+                "short": "",
+                "disabled": false,
+                "visitor": false,
+                "slug": "language"
+            },
+            {
+                "label": "Advanced ACF",
+                "category": "page",
+                "fields": [],
+                "switch": "advanced_acf_enabled",
+                "pro": false,
+                "locked": false,
+                "readonly": true,
+                "hidden": true,
+                "tree": false,
+                "keywords": [],
+                "summary": "",
+                "short": "",
+                "disabled": false,
+                "visitor": false,
+                "slug": "advanced_acf"
+            }
+        ],
+        "categories": [
+            {
+                "slug": "who",
+                "label": "Who"
+            },
+            {
+                "slug": "when",
+                "label": "When"
+            },
+            {
+                "slug": "device",
+                "label": "Device and browser"
+            },
+            {
+                "slug": "page",
+                "label": "Page and content"
+            },
+            {
+                "slug": "shop",
+                "label": "Shop"
+            },
+            {
+                "slug": "where",
+                "label": "Where from"
+            },
+            {
+                "slug": "other",
+                "label": "Other"
+            }
+        ],
+        "presets": [
+            {
+                "label": "Logged-in members only",
+                "description": "Hidden from guests",
+                "action": "show",
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "type": "user_role",
+                                "values": {
+                                    "user_role_conditions": [
+                                        "ecl-user"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "slug": "members"
+            },
+            {
+                "label": "Guests only",
+                "description": "Hidden from logged-in users",
+                "action": "show",
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "type": "user_role",
+                                "values": {
+                                    "user_role_conditions": [
+                                        "ecl-guest"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "slug": "guests"
+            },
+            {
+                "label": "Hide on mobile",
+                "description": "Phones, detected on the server",
+                "action": "hide",
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "type": "device_type",
+                                "values": {
+                                    "device_types": [
+                                        "mobile"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "slug": "no_mobile"
+            },
+            {
+                "label": "Only during a date range",
+                "description": "Pick the start and end",
+                "action": "show",
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "type": "date_time",
+                                "values": {
+                                    "date_time_type": "date"
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "slug": "dates"
+            },
+            {
+                "label": "Business hours",
+                "description": "Monday to Friday, 9:00 to 17:00",
+                "action": "show",
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "type": "date_time",
+                                "values": {
+                                    "date_time_type": "week_days_time",
+                                    "time_week": [
+                                        "1",
+                                        "2",
+                                        "3",
+                                        "4",
+                                        "5"
+                                    ],
+                                    "time_from": "09:00",
+                                    "time_to": "17:00"
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "slug": "hours"
+            },
+            {
+                "label": "Administrators only",
+                "description": "Work in progress content",
+                "action": "show",
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "type": "user_role",
+                                "values": {
+                                    "user_role_conditions": [
+                                        "administrator"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "slug": "admins"
+            }
+        ]
+    },
+    "since": "3.0.0",
+    "cases": [
+        {
+            "label": "role_guest|show|all",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "yes",
+                "condition_type": "all",
+                "user_role_enabled": "yes",
+                "user_role_conditions": [
+                    "ecl-guest"
+                ]
+            },
+            "tree": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "user_role",
+                                "values": {
+                                    "user_role_conditions": [
+                                        "ecl-guest"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "role_guest|show|one",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "yes",
+                "condition_type": "one",
+                "user_role_enabled": "yes",
+                "user_role_conditions": [
+                    "ecl-guest"
+                ]
+            },
+            "tree": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "user_role",
+                                "values": {
+                                    "user_role_conditions": [
+                                        "ecl-guest"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "role_guest|hide|all",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "all",
+                "user_role_enabled": "yes",
+                "user_role_conditions": [
+                    "ecl-guest"
+                ]
+            },
+            "tree": {
+                "v": 1,
+                "action": "hide",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "user_role",
+                                "values": {
+                                    "user_role_conditions": [
+                                        "ecl-guest"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "role_guest|hide|one",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "one",
+                "user_role_enabled": "yes",
+                "user_role_conditions": [
+                    "ecl-guest"
+                ]
+            },
+            "tree": {
+                "v": 1,
+                "action": "hide",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "user_role",
+                                "values": {
+                                    "user_role_conditions": [
+                                        "ecl-guest"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "role_user|show|all",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "yes",
+                "condition_type": "all",
+                "user_role_enabled": "yes",
+                "user_role_conditions": [
+                    "ecl-user"
+                ]
+            },
+            "tree": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "user_role",
+                                "values": {
+                                    "user_role_conditions": [
+                                        "ecl-user"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "role_user|show|one",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "yes",
+                "condition_type": "one",
+                "user_role_enabled": "yes",
+                "user_role_conditions": [
+                    "ecl-user"
+                ]
+            },
+            "tree": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "user_role",
+                                "values": {
+                                    "user_role_conditions": [
+                                        "ecl-user"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "role_user|hide|all",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "all",
+                "user_role_enabled": "yes",
+                "user_role_conditions": [
+                    "ecl-user"
+                ]
+            },
+            "tree": {
+                "v": 1,
+                "action": "hide",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "user_role",
+                                "values": {
+                                    "user_role_conditions": [
+                                        "ecl-user"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "role_user|hide|one",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "one",
+                "user_role_enabled": "yes",
+                "user_role_conditions": [
+                    "ecl-user"
+                ]
+            },
+            "tree": {
+                "v": 1,
+                "action": "hide",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "user_role",
+                                "values": {
+                                    "user_role_conditions": [
+                                        "ecl-user"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "role_sub|show|all",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "yes",
+                "condition_type": "all",
+                "user_role_enabled": "yes",
+                "user_role_conditions": [
+                    "subscriber"
+                ]
+            },
+            "tree": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "user_role",
+                                "values": {
+                                    "user_role_conditions": [
+                                        "subscriber"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "role_sub|show|one",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "yes",
+                "condition_type": "one",
+                "user_role_enabled": "yes",
+                "user_role_conditions": [
+                    "subscriber"
+                ]
+            },
+            "tree": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "user_role",
+                                "values": {
+                                    "user_role_conditions": [
+                                        "subscriber"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "role_sub|hide|all",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "all",
+                "user_role_enabled": "yes",
+                "user_role_conditions": [
+                    "subscriber"
+                ]
+            },
+            "tree": {
+                "v": 1,
+                "action": "hide",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "user_role",
+                                "values": {
+                                    "user_role_conditions": [
+                                        "subscriber"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "role_sub|hide|one",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "one",
+                "user_role_enabled": "yes",
+                "user_role_conditions": [
+                    "subscriber"
+                ]
+            },
+            "tree": {
+                "v": 1,
+                "action": "hide",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "user_role",
+                                "values": {
+                                    "user_role_conditions": [
+                                        "subscriber"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "role_ed_adm|show|all",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "yes",
+                "condition_type": "all",
+                "user_role_enabled": "yes",
+                "user_role_conditions": [
+                    "editor",
+                    "administrator"
+                ]
+            },
+            "tree": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "user_role",
+                                "values": {
+                                    "user_role_conditions": [
+                                        "editor",
+                                        "administrator"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "role_ed_adm|show|one",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "yes",
+                "condition_type": "one",
+                "user_role_enabled": "yes",
+                "user_role_conditions": [
+                    "editor",
+                    "administrator"
+                ]
+            },
+            "tree": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "user_role",
+                                "values": {
+                                    "user_role_conditions": [
+                                        "editor",
+                                        "administrator"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "role_ed_adm|hide|all",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "all",
+                "user_role_enabled": "yes",
+                "user_role_conditions": [
+                    "editor",
+                    "administrator"
+                ]
+            },
+            "tree": {
+                "v": 1,
+                "action": "hide",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "user_role",
+                                "values": {
+                                    "user_role_conditions": [
+                                        "editor",
+                                        "administrator"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "role_ed_adm|hide|one",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "one",
+                "user_role_enabled": "yes",
+                "user_role_conditions": [
+                    "editor",
+                    "administrator"
+                ]
+            },
+            "tree": {
+                "v": 1,
+                "action": "hide",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "user_role",
+                                "values": {
+                                    "user_role_conditions": [
+                                        "editor",
+                                        "administrator"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "role_empty|show|all",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "yes",
+                "condition_type": "all",
+                "user_role_enabled": "yes",
+                "user_role_conditions": []
+            },
+            "tree": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "user_role",
+                                "values": {
+                                    "user_role_conditions": []
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "role_empty|show|one",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "yes",
+                "condition_type": "one",
+                "user_role_enabled": "yes",
+                "user_role_conditions": []
+            },
+            "tree": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "user_role",
+                                "values": {
+                                    "user_role_conditions": []
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "role_empty|hide|all",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "all",
+                "user_role_enabled": "yes",
+                "user_role_conditions": []
+            },
+            "tree": {
+                "v": 1,
+                "action": "hide",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "user_role",
+                                "values": {
+                                    "user_role_conditions": []
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "role_empty|hide|one",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "one",
+                "user_role_enabled": "yes",
+                "user_role_conditions": []
+            },
+            "tree": {
+                "v": 1,
+                "action": "hide",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "user_role",
+                                "values": {
+                                    "user_role_conditions": []
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "dev_mobile|show|all",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "yes",
+                "condition_type": "all",
+                "device_type_enabled": "yes",
+                "device_types": [
+                    "mobile"
+                ]
+            },
+            "tree": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "device_type",
+                                "values": {
+                                    "device_types": [
+                                        "mobile"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "dev_mobile|show|one",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "yes",
+                "condition_type": "one",
+                "device_type_enabled": "yes",
+                "device_types": [
+                    "mobile"
+                ]
+            },
+            "tree": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "device_type",
+                                "values": {
+                                    "device_types": [
+                                        "mobile"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "dev_mobile|hide|all",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "all",
+                "device_type_enabled": "yes",
+                "device_types": [
+                    "mobile"
+                ]
+            },
+            "tree": {
+                "v": 1,
+                "action": "hide",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "device_type",
+                                "values": {
+                                    "device_types": [
+                                        "mobile"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "dev_mobile|hide|one",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "one",
+                "device_type_enabled": "yes",
+                "device_types": [
+                    "mobile"
+                ]
+            },
+            "tree": {
+                "v": 1,
+                "action": "hide",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "device_type",
+                                "values": {
+                                    "device_types": [
+                                        "mobile"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "dev_desk_tab|show|all",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "yes",
+                "condition_type": "all",
+                "device_type_enabled": "yes",
+                "device_types": [
+                    "desktop",
+                    "tablet"
+                ]
+            },
+            "tree": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "device_type",
+                                "values": {
+                                    "device_types": [
+                                        "desktop",
+                                        "tablet"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "dev_desk_tab|show|one",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "yes",
+                "condition_type": "one",
+                "device_type_enabled": "yes",
+                "device_types": [
+                    "desktop",
+                    "tablet"
+                ]
+            },
+            "tree": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "device_type",
+                                "values": {
+                                    "device_types": [
+                                        "desktop",
+                                        "tablet"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "dev_desk_tab|hide|all",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "all",
+                "device_type_enabled": "yes",
+                "device_types": [
+                    "desktop",
+                    "tablet"
+                ]
+            },
+            "tree": {
+                "v": 1,
+                "action": "hide",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "device_type",
+                                "values": {
+                                    "device_types": [
+                                        "desktop",
+                                        "tablet"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "dev_desk_tab|hide|one",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "one",
+                "device_type_enabled": "yes",
+                "device_types": [
+                    "desktop",
+                    "tablet"
+                ]
+            },
+            "tree": {
+                "v": 1,
+                "action": "hide",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "device_type",
+                                "values": {
+                                    "device_types": [
+                                        "desktop",
+                                        "tablet"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "browser|show|all",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "yes",
+                "condition_type": "all",
+                "browser_type_enabled": "yes",
+                "browsers": [
+                    "is_chrome"
+                ]
+            },
+            "tree": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "browser_type",
+                                "values": {
+                                    "browsers": [
+                                        "is_chrome"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "browser|show|one",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "yes",
+                "condition_type": "one",
+                "browser_type_enabled": "yes",
+                "browsers": [
+                    "is_chrome"
+                ]
+            },
+            "tree": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "browser_type",
+                                "values": {
+                                    "browsers": [
+                                        "is_chrome"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "browser|hide|all",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "all",
+                "browser_type_enabled": "yes",
+                "browsers": [
+                    "is_chrome"
+                ]
+            },
+            "tree": {
+                "v": 1,
+                "action": "hide",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "browser_type",
+                                "values": {
+                                    "browsers": [
+                                        "is_chrome"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "browser|hide|one",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "one",
+                "browser_type_enabled": "yes",
+                "browsers": [
+                    "is_chrome"
+                ]
+            },
+            "tree": {
+                "v": 1,
+                "action": "hide",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "browser_type",
+                                "values": {
+                                    "browsers": [
+                                        "is_chrome"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "date_now|show|all",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "yes",
+                "condition_type": "all",
+                "date_time_enabled": "yes",
+                "date_time_type": "date",
+                "date_from": "2026-11-12 17:01",
+                "date_to": "2026-11-14 17:01"
+            },
+            "tree": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "date_time",
+                                "values": {
+                                    "date_time_type": "date",
+                                    "date_from": "2026-11-12 17:01",
+                                    "date_to": "2026-11-14 17:01"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "date_now|show|one",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "yes",
+                "condition_type": "one",
+                "date_time_enabled": "yes",
+                "date_time_type": "date",
+                "date_from": "2026-11-12 17:01",
+                "date_to": "2026-11-14 17:01"
+            },
+            "tree": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "date_time",
+                                "values": {
+                                    "date_time_type": "date",
+                                    "date_from": "2026-11-12 17:01",
+                                    "date_to": "2026-11-14 17:01"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "date_now|hide|all",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "all",
+                "date_time_enabled": "yes",
+                "date_time_type": "date",
+                "date_from": "2026-11-12 17:01",
+                "date_to": "2026-11-14 17:01"
+            },
+            "tree": {
+                "v": 1,
+                "action": "hide",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "date_time",
+                                "values": {
+                                    "date_time_type": "date",
+                                    "date_from": "2026-11-12 17:01",
+                                    "date_to": "2026-11-14 17:01"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "date_now|hide|one",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "one",
+                "date_time_enabled": "yes",
+                "date_time_type": "date",
+                "date_from": "2026-11-12 17:01",
+                "date_to": "2026-11-14 17:01"
+            },
+            "tree": {
+                "v": 1,
+                "action": "hide",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "date_time",
+                                "values": {
+                                    "date_time_type": "date",
+                                    "date_from": "2026-11-12 17:01",
+                                    "date_to": "2026-11-14 17:01"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "date_past|show|all",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "yes",
+                "condition_type": "all",
+                "date_time_enabled": "yes",
+                "date_time_type": "date",
+                "date_from": "2020-01-01 00:00",
+                "date_to": "2020-02-01 00:00"
+            },
+            "tree": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "date_time",
+                                "values": {
+                                    "date_time_type": "date",
+                                    "date_from": "2020-01-01 00:00",
+                                    "date_to": "2020-02-01 00:00"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "date_past|show|one",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "yes",
+                "condition_type": "one",
+                "date_time_enabled": "yes",
+                "date_time_type": "date",
+                "date_from": "2020-01-01 00:00",
+                "date_to": "2020-02-01 00:00"
+            },
+            "tree": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "date_time",
+                                "values": {
+                                    "date_time_type": "date",
+                                    "date_from": "2020-01-01 00:00",
+                                    "date_to": "2020-02-01 00:00"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "date_past|hide|all",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "all",
+                "date_time_enabled": "yes",
+                "date_time_type": "date",
+                "date_from": "2020-01-01 00:00",
+                "date_to": "2020-02-01 00:00"
+            },
+            "tree": {
+                "v": 1,
+                "action": "hide",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "date_time",
+                                "values": {
+                                    "date_time_type": "date",
+                                    "date_from": "2020-01-01 00:00",
+                                    "date_to": "2020-02-01 00:00"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "date_past|hide|one",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "one",
+                "date_time_enabled": "yes",
+                "date_time_type": "date",
+                "date_from": "2020-01-01 00:00",
+                "date_to": "2020-02-01 00:00"
+            },
+            "tree": {
+                "v": 1,
+                "action": "hide",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "date_time",
+                                "values": {
+                                    "date_time_type": "date",
+                                    "date_from": "2020-01-01 00:00",
+                                    "date_to": "2020-02-01 00:00"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "week_today|show|all",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "yes",
+                "condition_type": "all",
+                "date_time_enabled": "yes",
+                "date_time_type": "week_days",
+                "time_week": [
+                    "5"
+                ]
+            },
+            "tree": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "date_time",
+                                "values": {
+                                    "date_time_type": "week_days",
+                                    "time_week": [
+                                        "5"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "week_today|show|one",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "yes",
+                "condition_type": "one",
+                "date_time_enabled": "yes",
+                "date_time_type": "week_days",
+                "time_week": [
+                    "5"
+                ]
+            },
+            "tree": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "date_time",
+                                "values": {
+                                    "date_time_type": "week_days",
+                                    "time_week": [
+                                        "5"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "week_today|hide|all",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "all",
+                "date_time_enabled": "yes",
+                "date_time_type": "week_days",
+                "time_week": [
+                    "5"
+                ]
+            },
+            "tree": {
+                "v": 1,
+                "action": "hide",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "date_time",
+                                "values": {
+                                    "date_time_type": "week_days",
+                                    "time_week": [
+                                        "5"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "week_today|hide|one",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "one",
+                "date_time_enabled": "yes",
+                "date_time_type": "week_days",
+                "time_week": [
+                    "5"
+                ]
+            },
+            "tree": {
+                "v": 1,
+                "action": "hide",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "date_time",
+                                "values": {
+                                    "date_time_type": "week_days",
+                                    "time_week": [
+                                        "5"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "week_other|show|all",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "yes",
+                "condition_type": "all",
+                "date_time_enabled": "yes",
+                "date_time_type": "week_days",
+                "time_week": [
+                    "1"
+                ]
+            },
+            "tree": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "date_time",
+                                "values": {
+                                    "date_time_type": "week_days",
+                                    "time_week": [
+                                        "1"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "week_other|show|one",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "yes",
+                "condition_type": "one",
+                "date_time_enabled": "yes",
+                "date_time_type": "week_days",
+                "time_week": [
+                    "1"
+                ]
+            },
+            "tree": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "date_time",
+                                "values": {
+                                    "date_time_type": "week_days",
+                                    "time_week": [
+                                        "1"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "week_other|hide|all",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "all",
+                "date_time_enabled": "yes",
+                "date_time_type": "week_days",
+                "time_week": [
+                    "1"
+                ]
+            },
+            "tree": {
+                "v": 1,
+                "action": "hide",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "date_time",
+                                "values": {
+                                    "date_time_type": "week_days",
+                                    "time_week": [
+                                        "1"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "week_other|hide|one",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "one",
+                "date_time_enabled": "yes",
+                "date_time_type": "week_days",
+                "time_week": [
+                    "1"
+                ]
+            },
+            "tree": {
+                "v": 1,
+                "action": "hide",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "date_time",
+                                "values": {
+                                    "date_time_type": "week_days",
+                                    "time_week": [
+                                        "1"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "meta_name|show|all",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "yes",
+                "condition_type": "all",
+                "user_meta_enabled": "yes",
+                "user_meta_options": [
+                    "first_name"
+                ],
+                "user_meta_status": "not_empty"
+            },
+            "tree": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "user_meta",
+                                "values": {
+                                    "user_meta_options": [
+                                        "first_name"
+                                    ],
+                                    "user_meta_status": "not_empty"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "meta_name|show|one",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "yes",
+                "condition_type": "one",
+                "user_meta_enabled": "yes",
+                "user_meta_options": [
+                    "first_name"
+                ],
+                "user_meta_status": "not_empty"
+            },
+            "tree": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "user_meta",
+                                "values": {
+                                    "user_meta_options": [
+                                        "first_name"
+                                    ],
+                                    "user_meta_status": "not_empty"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "meta_name|hide|all",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "all",
+                "user_meta_enabled": "yes",
+                "user_meta_options": [
+                    "first_name"
+                ],
+                "user_meta_status": "not_empty"
+            },
+            "tree": {
+                "v": 1,
+                "action": "hide",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "user_meta",
+                                "values": {
+                                    "user_meta_options": [
+                                        "first_name"
+                                    ],
+                                    "user_meta_status": "not_empty"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "meta_name|hide|one",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "one",
+                "user_meta_enabled": "yes",
+                "user_meta_options": [
+                    "first_name"
+                ],
+                "user_meta_status": "not_empty"
+            },
+            "tree": {
+                "v": 1,
+                "action": "hide",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "user_meta",
+                                "values": {
+                                    "user_meta_options": [
+                                        "first_name"
+                                    ],
+                                    "user_meta_status": "not_empty"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "meta_level|show|all",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "yes",
+                "condition_type": "all",
+                "user_meta_enabled": "yes",
+                "user_meta_options": [
+                    "vlt_level"
+                ],
+                "user_meta_status": "greater_than",
+                "user_meta_value": "5"
+            },
+            "tree": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "user_meta",
+                                "values": {
+                                    "user_meta_options": [
+                                        "vlt_level"
+                                    ],
+                                    "user_meta_status": "greater_than",
+                                    "user_meta_value": "5"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "meta_level|show|one",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "yes",
+                "condition_type": "one",
+                "user_meta_enabled": "yes",
+                "user_meta_options": [
+                    "vlt_level"
+                ],
+                "user_meta_status": "greater_than",
+                "user_meta_value": "5"
+            },
+            "tree": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "user_meta",
+                                "values": {
+                                    "user_meta_options": [
+                                        "vlt_level"
+                                    ],
+                                    "user_meta_status": "greater_than",
+                                    "user_meta_value": "5"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "meta_level|hide|all",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "all",
+                "user_meta_enabled": "yes",
+                "user_meta_options": [
+                    "vlt_level"
+                ],
+                "user_meta_status": "greater_than",
+                "user_meta_value": "5"
+            },
+            "tree": {
+                "v": 1,
+                "action": "hide",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "user_meta",
+                                "values": {
+                                    "user_meta_options": [
+                                        "vlt_level"
+                                    ],
+                                    "user_meta_status": "greater_than",
+                                    "user_meta_value": "5"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "meta_level|hide|one",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "one",
+                "user_meta_enabled": "yes",
+                "user_meta_options": [
+                    "vlt_level"
+                ],
+                "user_meta_status": "greater_than",
+                "user_meta_value": "5"
+            },
+            "tree": {
+                "v": 1,
+                "action": "hide",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "user_meta",
+                                "values": {
+                                    "user_meta_options": [
+                                        "vlt_level"
+                                    ],
+                                    "user_meta_status": "greater_than",
+                                    "user_meta_value": "5"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "acf_promo|show|all",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "yes",
+                "condition_type": "all",
+                "acf_enabled": "yes",
+                "acf_field": "promo",
+                "acf_condition": "contains",
+                "acf_value": "Sale"
+            },
+            "tree": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "acf",
+                                "values": {
+                                    "acf_field": "promo",
+                                    "acf_condition": "contains",
+                                    "acf_value": "Sale"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "acf_promo|show|one",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "yes",
+                "condition_type": "one",
+                "acf_enabled": "yes",
+                "acf_field": "promo",
+                "acf_condition": "contains",
+                "acf_value": "Sale"
+            },
+            "tree": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "acf",
+                                "values": {
+                                    "acf_field": "promo",
+                                    "acf_condition": "contains",
+                                    "acf_value": "Sale"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "acf_promo|hide|all",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "all",
+                "acf_enabled": "yes",
+                "acf_field": "promo",
+                "acf_condition": "contains",
+                "acf_value": "Sale"
+            },
+            "tree": {
+                "v": 1,
+                "action": "hide",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "acf",
+                                "values": {
+                                    "acf_field": "promo",
+                                    "acf_condition": "contains",
+                                    "acf_value": "Sale"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "acf_promo|hide|one",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "one",
+                "acf_enabled": "yes",
+                "acf_field": "promo",
+                "acf_condition": "contains",
+                "acf_value": "Sale"
+            },
+            "tree": {
+                "v": 1,
+                "action": "hide",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "l0",
+                                "type": "acf",
+                                "values": {
+                                    "acf_field": "promo",
+                                    "acf_condition": "contains",
+                                    "acf_value": "Sale"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": []
+        },
+        {
+            "label": "edit: one group, two conditions",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "all",
+                "browser_type_enabled": "yes",
+                "browsers": [
+                    "is_safari"
+                ]
+            },
+            "edited": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "n1",
+                                "type": "user_role",
+                                "values": {
+                                    "user_role_conditions": [
+                                        "subscriber"
+                                    ]
+                                }
+                            },
+                            {
+                                "id": "n2",
+                                "type": "device_type",
+                                "values": {
+                                    "device_types": [
+                                        "mobile"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": {
+                "show_hide": "yes",
+                "user_role_enabled": "yes",
+                "user_role_conditions": [
+                    "subscriber"
+                ],
+                "browser_type_enabled": "",
+                "device_type_enabled": "yes",
+                "device_types": [
+                    "mobile"
+                ]
+            }
+        },
+        {
+            "label": "edit: one condition per group",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "all",
+                "browser_type_enabled": "yes",
+                "browsers": [
+                    "is_safari"
+                ]
+            },
+            "edited": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "n1",
+                                "type": "user_role",
+                                "values": {
+                                    "user_role_conditions": [
+                                        "subscriber"
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "conditions": [
+                            {
+                                "id": "n2",
+                                "type": "device_type",
+                                "values": {
+                                    "device_types": [
+                                        "mobile"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": {
+                "show_hide": "yes",
+                "condition_type": "one",
+                "user_role_enabled": "yes",
+                "user_role_conditions": [
+                    "subscriber"
+                ],
+                "browser_type_enabled": "",
+                "device_type_enabled": "yes",
+                "device_types": [
+                    "mobile"
+                ]
+            }
+        },
+        {
+            "label": "edit: (A and B) or C",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "all",
+                "browser_type_enabled": "yes",
+                "browsers": [
+                    "is_safari"
+                ]
+            },
+            "edited": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "n1",
+                                "type": "user_role",
+                                "values": {
+                                    "user_role_conditions": [
+                                        "subscriber"
+                                    ]
+                                }
+                            },
+                            {
+                                "id": "n2",
+                                "type": "device_type",
+                                "values": {
+                                    "device_types": [
+                                        "mobile"
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "conditions": [
+                            {
+                                "id": "n7",
+                                "type": "browser_type",
+                                "values": {
+                                    "browsers": [
+                                        "is_chrome"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": false,
+                "reason": "groups",
+                "storable": true
+            },
+            "storage": {
+                "rules": {
+                    "v": 1,
+                    "action": "show",
+                    "draft": false,
+                    "groups": [
+                        {
+                            "conditions": [
+                                {
+                                    "id": "n1",
+                                    "type": "user_role",
+                                    "values": {
+                                        "user_role_conditions": [
+                                            "subscriber"
+                                        ]
+                                    }
+                                },
+                                {
+                                    "id": "n2",
+                                    "type": "device_type",
+                                    "values": {
+                                        "device_types": [
+                                            "mobile"
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "conditions": [
+                                {
+                                    "id": "n7",
+                                    "type": "browser_type",
+                                    "values": {
+                                        "browsers": [
+                                            "is_chrome"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "browser_type_enabled": "",
+                "show_hide": "yes",
+                "user_role_enabled": "yes",
+                "user_role_conditions": [
+                    "administrator"
+                ]
+            }
+        },
+        {
+            "label": "edit: same condition twice",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "all",
+                "browser_type_enabled": "yes",
+                "browsers": [
+                    "is_safari"
+                ]
+            },
+            "edited": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "n1",
+                                "type": "user_role",
+                                "values": {
+                                    "user_role_conditions": [
+                                        "subscriber"
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "conditions": [
+                            {
+                                "id": "n3",
+                                "type": "user_role",
+                                "values": {
+                                    "user_role_conditions": [
+                                        "editor"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": false,
+                "reason": "repeat",
+                "storable": true
+            },
+            "storage": {
+                "rules": {
+                    "v": 1,
+                    "action": "show",
+                    "draft": false,
+                    "groups": [
+                        {
+                            "conditions": [
+                                {
+                                    "id": "n1",
+                                    "type": "user_role",
+                                    "values": {
+                                        "user_role_conditions": [
+                                            "subscriber"
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "conditions": [
+                                {
+                                    "id": "n3",
+                                    "type": "user_role",
+                                    "values": {
+                                        "user_role_conditions": [
+                                            "editor"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "browser_type_enabled": "",
+                "show_hide": "yes",
+                "user_role_enabled": "yes",
+                "user_role_conditions": [
+                    "administrator"
+                ]
+            }
+        },
+        {
+            "label": "edit: draft",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "all",
+                "browser_type_enabled": "yes",
+                "browsers": [
+                    "is_safari"
+                ]
+            },
+            "edited": {
+                "v": 1,
+                "action": "show",
+                "draft": true,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "n1",
+                                "type": "user_role",
+                                "values": {
+                                    "user_role_conditions": [
+                                        "subscriber"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": false,
+                "reason": "draft",
+                "storable": true
+            },
+            "storage": {
+                "rules": {
+                    "v": 1,
+                    "action": "show",
+                    "draft": true,
+                    "groups": [
+                        {
+                            "conditions": [
+                                {
+                                    "id": "n1",
+                                    "type": "user_role",
+                                    "values": {
+                                        "user_role_conditions": [
+                                            "subscriber"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "browser_type_enabled": "",
+                "show_hide": "yes",
+                "user_role_enabled": "yes",
+                "user_role_conditions": [
+                    "administrator"
+                ]
+            }
+        },
+        {
+            "label": "edit: B1 yearly (3.0 option)",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "all",
+                "browser_type_enabled": "yes",
+                "browsers": [
+                    "is_safari"
+                ]
+            },
+            "edited": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "n4",
+                                "type": "date_time",
+                                "values": {
+                                    "date_time_type": "yearly",
+                                    "date_year_from": "12-20",
+                                    "date_year_to": "01-11"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": false,
+                "reason": "new",
+                "storable": true
+            },
+            "storage": {
+                "rules": {
+                    "v": 1,
+                    "action": "show",
+                    "draft": false,
+                    "groups": [
+                        {
+                            "conditions": [
+                                {
+                                    "id": "n4",
+                                    "type": "date_time",
+                                    "values": {
+                                        "date_time_type": "yearly",
+                                        "date_year_from": "12-20",
+                                        "date_year_to": "01-11"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "browser_type_enabled": "",
+                "show_hide": "yes",
+                "user_role_enabled": "yes",
+                "user_role_conditions": [
+                    "administrator"
+                ]
+            }
+        },
+        {
+            "label": "edit: B2 specific users (3.0 option)",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "all",
+                "browser_type_enabled": "yes",
+                "browsers": [
+                    "is_safari"
+                ]
+            },
+            "edited": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "n5",
+                                "type": "user_role",
+                                "values": {
+                                    "user_role_by": "users",
+                                    "user_role_users": [
+                                        "1"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": false,
+                "reason": "new",
+                "storable": true
+            },
+            "storage": {
+                "rules": {
+                    "v": 1,
+                    "action": "show",
+                    "draft": false,
+                    "groups": [
+                        {
+                            "conditions": [
+                                {
+                                    "id": "n5",
+                                    "type": "user_role",
+                                    "values": {
+                                        "user_role_by": "users",
+                                        "user_role_users": [
+                                            "1"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "browser_type_enabled": "",
+                "show_hide": "yes",
+                "user_role_enabled": "yes",
+                "user_role_conditions": [
+                    "administrator"
+                ]
+            }
+        },
+        {
+            "label": "edit: B6 ignore case (3.0 operator)",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "all",
+                "browser_type_enabled": "yes",
+                "browsers": [
+                    "is_safari"
+                ]
+            },
+            "edited": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "n6",
+                                "type": "user_meta",
+                                "values": {
+                                    "user_meta_options": [
+                                        "first_name"
+                                    ],
+                                    "user_meta_status": "equals_ci",
+                                    "user_meta_value": "ana"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": false,
+                "reason": "new",
+                "storable": true
+            },
+            "storage": {
+                "rules": {
+                    "v": 1,
+                    "action": "show",
+                    "draft": false,
+                    "groups": [
+                        {
+                            "conditions": [
+                                {
+                                    "id": "n6",
+                                    "type": "user_meta",
+                                    "values": {
+                                        "user_meta_options": [
+                                            "first_name"
+                                        ],
+                                        "user_meta_status": "equals_ci",
+                                        "user_meta_value": "ana"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "browser_type_enabled": "",
+                "show_hide": "yes",
+                "user_role_enabled": "yes",
+                "user_role_conditions": [
+                    "administrator"
+                ]
+            }
+        },
+        {
+            "label": "edit: empty group ignored",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "all",
+                "browser_type_enabled": "yes",
+                "browsers": [
+                    "is_safari"
+                ]
+            },
+            "edited": {
+                "v": 1,
+                "action": "hide",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "n1",
+                                "type": "user_role",
+                                "values": {
+                                    "user_role_conditions": [
+                                        "subscriber"
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "conditions": []
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": {
+                "user_role_enabled": "yes",
+                "user_role_conditions": [
+                    "subscriber"
+                ],
+                "browser_type_enabled": ""
+            }
+        },
+        {
+            "label": "edit: roles mode set to default",
+            "values": {
+                "enabled": "yes",
+                "show_hide": "",
+                "condition_type": "all",
+                "browser_type_enabled": "yes",
+                "browsers": [
+                    "is_safari"
+                ]
+            },
+            "edited": {
+                "v": 1,
+                "action": "show",
+                "draft": false,
+                "groups": [
+                    {
+                        "conditions": [
+                            {
+                                "id": "n8",
+                                "type": "user_role",
+                                "values": {
+                                    "user_role_by": "roles",
+                                    "user_role_match": "any",
+                                    "user_role_conditions": [
+                                        "ecl-guest"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "analyze": {
+                "flat": true,
+                "reason": "",
+                "storable": true
+            },
+            "storage": {
+                "show_hide": "yes",
+                "user_role_enabled": "yes",
+                "user_role_by": "roles",
+                "user_role_match": "any",
+                "user_role_conditions": [
+                    "ecl-guest"
+                ],
+                "browser_type_enabled": ""
+            }
+        }
+    ]
+}

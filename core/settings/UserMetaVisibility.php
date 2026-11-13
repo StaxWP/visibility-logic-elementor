@@ -90,7 +90,7 @@ class UserMetaVisibility extends Singleton {
 				'type'           => Controls_Manager::SELECT2,
 				'label'          => __( 'Meta Condition', 'visibility-logic-elementor' ),
 				'description'    => __( 'Select the condition that must be met by the meta', 'visibility-logic-elementor' ),
-				'options'        => self::status_options(),
+				'options'        => self::status_options( true ),
 				'default'        => 'none',
 				'label_block'    => true,
 				'condition'      => [
@@ -201,8 +201,8 @@ class UserMetaVisibility extends Singleton {
 	 *
 	 * @return array
 	 */
-	public static function status_options() {
-		return [
+	public static function status_options( $legacy = false ) {
+		$options = [
 			'none'                    => __( 'None', 'visibility-logic-elementor' ),
 			'empty'                   => __( 'Empty', 'visibility-logic-elementor' ),
 			'not_empty'               => __( 'Not empty', 'visibility-logic-elementor' ),
@@ -216,6 +216,29 @@ class UserMetaVisibility extends Singleton {
 			'greater_than'            => __( 'Greater than', 'visibility-logic-elementor' ),
 			'is_array'                => __( 'Is array', 'visibility-logic-elementor' ),
 			'is_array_and_contains'   => __( 'Is array and contains', 'visibility-logic-elementor' ),
+		];
+
+		if ( ! $legacy ) {
+			$options += self::new_status_options();
+		}
+
+		return $options;
+	}
+
+	/**
+	 * Operators added in 3.0 (shared operator library), evaluated by StaxWP\Conditions\V1\Operators.
+	 *
+	 * @return array
+	 */
+	public static function new_status_options() {
+		return [
+			'equals_ci'     => __( 'Is equal to (ignore case)', 'visibility-logic-elementor' ),
+			'not_equals_ci' => __( 'Not equal to (ignore case)', 'visibility-logic-elementor' ),
+			'starts_with'   => __( 'Starts with', 'visibility-logic-elementor' ),
+			'ends_with'     => __( 'Ends with', 'visibility-logic-elementor' ),
+			'lte'           => __( 'Less than or equal to', 'visibility-logic-elementor' ),
+			'gte'           => __( 'Greater than or equal to', 'visibility-logic-elementor' ),
+			'not_in'        => __( 'Is not one of', 'visibility-logic-elementor' ),
 		];
 	}
 
@@ -233,6 +256,7 @@ class UserMetaVisibility extends Singleton {
 			'fields' => [
 				[
 					'key'         => 'user_meta_options',
+					'required'    => true,
 					'type'        => 'list',
 					'label'       => __( 'Meta keys', 'visibility-logic-elementor' ),
 					'placeholder' => 'first_name, billing_country',
@@ -242,15 +266,16 @@ class UserMetaVisibility extends Singleton {
 					'key'     => 'user_meta_status',
 					'type'    => 'select',
 					'label'   => __( 'Meta Condition', 'visibility-logic-elementor' ),
-					'options' => self::status_options(),
-					'default' => 'none',
+					'options'       => self::status_options(),
+					'default'       => 'none',
+					'options_since' => array_fill_keys( array_keys( self::new_status_options() ), '3.0.0' ),
 				],
 				[
 					'key'     => 'user_meta_value',
 					'type'    => 'textarea',
 					'label'   => __( 'Condition Value', 'visibility-logic-elementor' ),
 					'help'    => __( 'Comma separated for "Is equal to one of" and "Is array and contains".', 'visibility-logic-elementor' ),
-					'show_if' => [ 'user_meta_status' => [ 'specific_value', 'specific_value_multiple', 'not_specific_value', 'contain', 'not_contain', 'is_between', 'less_than', 'greater_than', 'is_array_and_contains' ] ],
+					'show_if' => [ 'user_meta_status' => array_merge( [ 'specific_value', 'specific_value_multiple', 'not_specific_value', 'contain', 'not_contain', 'is_between', 'less_than', 'greater_than', 'is_array_and_contains' ], array_keys( self::new_status_options() ) ) ],
 				],
 				[
 					'key'     => 'user_meta_value_2',
@@ -280,7 +305,7 @@ class UserMetaVisibility extends Singleton {
 			return $options;
 		}
 
-		$current_user       = wp_get_current_user();
+		$current_user       = Context::user();
 		$meta_is_consistent = true;
 		$meta_check_type    = (string) self::value( $settings, 'user_meta_status', 'none' );
 		$meta_check_raw     = self::value( $settings, 'user_meta_value', null ); // Strict comparisons use the saved value as 2.x did.
@@ -386,6 +411,14 @@ class UserMetaVisibility extends Singleton {
 					}
 					break;
 				default:
+					// 3.0 operators from the shared library (2.x operators above keep their exact 2.x results).
+					if ( array_key_exists( $meta_check_type, self::new_status_options() ) ) {
+						list( $matches ) = \StaxWP\Conditions\V1\Operators::compare( $meta_check_type, $user_meta, $meta_check_value );
+
+						if ( ! $matches ) {
+							$meta_is_consistent = false;
+						}
+					}
 			}
 		}
 

@@ -19,7 +19,8 @@
  *       ],
  *   ]
  * Field keys are setting names without the `stax_visibility_` prefix. Types: switch, select, multiselect, text,
- * textarea, date (Y-m-d H:i), time (HH:mm), list (comma separated, stored as an array). Optional: default,
+ * textarea, date (Y-m-d H:i), time (HH:mm), list (comma separated, stored as an array), users (user ids), repeater
+ * (rows of `fields`, rule builder only). Optional: default,
  * placeholder, help, show_if ( [ 'other_key' => [ values ] ] ), builders ( [ 'blocks', 'atomic' ] ), locked_options
  * (select values listed but disabled: Pro options without Pro, see Pro_Teaser).
  * Condition-level, optional: `locked` (bool, an add-on without a license: the editors show the condition read-only,
@@ -232,8 +233,12 @@ class Conditions {
 					$value = is_array( $value ) ? array_values( array_map( 'strval', $value ) ) : ( null === $value || '' === $value ? [] : [ (string) $value ] );
 					break;
 				case 'list':
+				case 'users':
 					$value = is_array( $value ) ? $value : array_filter( array_map( 'trim', explode( ',', (string) $value ) ), 'strlen' );
-					$value = array_values( array_map( 'strval', $value ) );
+					$value = array_values( array_map( 'strval', array_filter( $value, 'is_scalar' ) ) );
+					break;
+				case 'repeater':
+					$value = is_array( $value ) ? array_values( array_filter( $value, 'is_array' ) ) : [];
 					break;
 				case 'date':
 					$value = null === $value ? '' : str_replace( 'T', ' ', (string) $value );
@@ -312,6 +317,27 @@ class Conditions {
 			}
 
 			return self::version_fallback_render( $settings, $default_render );
+		}
+
+		// Rule built in the 3.0 rule builder and stored as a tree (groups, draft, 3.0 options).
+		$tree = Rule_Tree::stored( $settings );
+
+		if ( $tree ) {
+			$record = Rule_Tree::recording();
+			$result = Rule_Tree::evaluate( $tree, $item, $default_render, $record );
+
+			if ( $record ) {
+				Rule_Tree::add_trace( is_object( $item ) && method_exists( $item, 'get_id' ) ? $item->get_id() : '', is_object( $item ) && method_exists( $item, 'get_name' ) ? $item->get_name() : '', $tree, $result );
+			}
+
+			return $result['visible'];
+		}
+
+		if ( Rule_Tree::recording() ) {
+			// Same answer as below (the equivalence suite checks it), with the details for "why hidden".
+			$legacy = Rule_Tree::legacy_to_tree( $settings );
+			$result = Rule_Tree::evaluate( $legacy, $item, $default_render, true );
+			Rule_Tree::add_trace( is_object( $item ) && method_exists( $item, 'get_id' ) ? $item->get_id() : '', is_object( $item ) && method_exists( $item, 'get_name' ) ? $item->get_name() : '', $legacy, $result );
 		}
 
 		$options = apply_filters( 'stax/visibility/apply_conditions', [], $settings, $item ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- public 2.x hook name.

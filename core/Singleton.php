@@ -48,6 +48,23 @@ class Singleton {
 	 * Singleton constructor.
 	 */
 	protected function __construct() {
+		if ( self::columns_supported() ) {
+			$this->elements[] = [
+				'name'       => 'column',
+				'section_id' => 'section_advanced',
+				'prefix'     => self::SECTION_PREFIX,
+			];
+		}
+	}
+
+	/**
+	 * Classic columns get the Visibility tab (3.0). Not with Visibility Logic Pro before 2.5: its conditions are
+	 * registered on widgets, sections and containers only.
+	 *
+	 * @return bool
+	 */
+	public static function columns_supported() {
+		return ! defined( 'STAX_VISIBILITY_PRO_VERSION' ) || version_compare( STAX_VISIBILITY_PRO_VERSION, '2.5.0-dev', '>=' );
 	}
 
 	/**

@@ -84,7 +84,7 @@ class DateTimeVisibility extends Singleton {
 			[
 				'type'           => Controls_Manager::SELECT,
 				'label'          => __( 'Select Type:', 'visibility-logic-elementor' ),
-				'options'        => self::type_options(),
+				'options'        => self::type_options( true ),
 				'default'        => 'date',
 				'condition'      => [
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
@@ -204,13 +204,22 @@ class DateTimeVisibility extends Singleton {
 	 *
 	 * @return array
 	 */
-	public static function type_options() {
-		return [
+	public static function type_options( $legacy = false ) {
+		$options = [
 			'date'           => __( 'Date FROM/TO', 'visibility-logic-elementor' ),
 			'time'           => __( 'Time FROM/TO', 'visibility-logic-elementor' ),
 			'week_days'      => __( 'Week Days', 'visibility-logic-elementor' ),
 			'week_days_time' => __( 'Week Days + Time FROM/TO', 'visibility-logic-elementor' ),
+			'yearly'         => __( 'Every year, FROM/TO day', 'visibility-logic-elementor' ),
 		];
+
+		// The classic Elementor sections keep the 2.x choices (new ones are made in the rule builder, which stores
+		// them so that Visibility Logic 2.x fails closed, see Rule_Tree).
+		if ( $legacy ) {
+			unset( $options['yearly'] );
+		}
+
+		return $options;
 	}
 
 	/**
@@ -226,11 +235,45 @@ class DateTimeVisibility extends Singleton {
 			'switch' => 'date_time_enabled',
 			'fields' => [
 				[
-					'key'     => 'date_time_type',
-					'type'    => 'select',
-					'label'   => __( 'Select Type:', 'visibility-logic-elementor' ),
-					'options' => self::type_options(),
-					'default' => 'date',
+					'key'           => 'date_time_type',
+					'type'          => 'select',
+					'label'         => __( 'Select Type:', 'visibility-logic-elementor' ),
+					'options'       => self::type_options(),
+					'default'       => 'date',
+					'options_since' => [ 'yearly' => '3.0.0' ],
+				],
+				[
+					'key'         => 'date_year_from',
+					'type'        => 'text',
+					'label'       => __( 'Every year FROM (month-day)', 'visibility-logic-elementor' ),
+					'placeholder' => '12-20',
+					'show_if'     => [ 'date_time_type' => [ 'yearly' ] ],
+					'since'       => '3.0.0',
+				],
+				[
+					'key'         => 'date_year_from_time',
+					'type'        => 'time',
+					'label'       => __( 'FROM time (optional)', 'visibility-logic-elementor' ),
+					'placeholder' => 'HH:mm',
+					'show_if'     => [ 'date_time_type' => [ 'yearly' ] ],
+					'since'       => '3.0.0',
+				],
+				[
+					'key'         => 'date_year_to',
+					'type'        => 'text',
+					'label'       => __( 'Every year TO (month-day)', 'visibility-logic-elementor' ),
+					'placeholder' => '01-11',
+					'help'        => __( 'Ranges over the year end work (20 Dec to 11 Jan). 29 Feb counts as 28 Feb in other years.', 'visibility-logic-elementor' ),
+					'show_if'     => [ 'date_time_type' => [ 'yearly' ] ],
+					'since'       => '3.0.0',
+				],
+				[
+					'key'         => 'date_year_to_time',
+					'type'        => 'time',
+					'label'       => __( 'TO time (optional)', 'visibility-logic-elementor' ),
+					'placeholder' => 'HH:mm',
+					'show_if'     => [ 'date_time_type' => [ 'yearly' ] ],
+					'since'       => '3.0.0',
 				],
 				[
 					'key'     => 'date_from',
@@ -306,7 +349,7 @@ class DateTimeVisibility extends Singleton {
 
 		$time_week = self::value( $settings, 'time_week', [] );
 		$time_week = is_array( $time_week ) ? $time_week : [];
-		$is_today  = in_array( current_time( 'w' ), $time_week ); // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict -- 2.x loose match.
+		$is_today  = in_array( Context::local( 'w' ), $time_week ); // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict -- 2.x loose match.
 
 		switch ( (string) self::value( $settings, 'date_time_type' ) ) {
 			case 'date':
@@ -321,6 +364,14 @@ class DateTimeVisibility extends Singleton {
 			case 'week_days_time':
 				$options['date_time'] = $is_today
 					&& self::in_time_range( (string) self::value( $settings, 'time_from' ), (string) self::value( $settings, 'time_to' ) );
+				break;
+			case 'yearly':
+				$options['date_time'] = self::in_yearly_range(
+					(string) self::value( $settings, 'date_year_from' ),
+					(string) self::value( $settings, 'date_year_from_time' ),
+					(string) self::value( $settings, 'date_year_to' ),
+					(string) self::value( $settings, 'date_year_to_time' )
+				);
 				break;
 			default:
 				$options['date_time'] = false;
@@ -341,7 +392,7 @@ class DateTimeVisibility extends Singleton {
 	 * @return bool
 	 */
 	public static function in_date_range( $date_from, $date_to ) {
-		$current = current_datetime()->getTimestamp();
+		$current = Context::timestamp();
 
 		// Same tests as 2.x (truthiness, PHP comparison of a failed parse), only the parse can change.
 		if ( $date_from && $date_to ) {
@@ -397,7 +448,7 @@ class DateTimeVisibility extends Singleton {
 	 * @return bool
 	 */
 	public static function in_time_range( $time_from, $time_to ) {
-		$current_time = strtotime( current_time( 'H:i' ) );
+		$current_time = strtotime( Context::local( 'H:i' ) );
 
 		if ( $time_from && $time_to ) {
 			$from = strtotime( $time_from );
@@ -420,6 +471,60 @@ class DateTimeVisibility extends Singleton {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Every year between two month-days (site time zone, `stax/visibility/date_timezone` filter), optional times.
+	 *
+	 * Empty FROM = 1 Jan, empty TO = 31 Dec; FROM after TO wraps over the year end; 29 Feb is 28 Feb in other years.
+	 *
+	 * @param string $from      Month-day (MM-DD or M-D).
+	 * @param string $from_time HH:mm, empty for 00:00.
+	 * @param string $to        Month-day.
+	 * @param string $to_time   HH:mm, empty for 23:59.
+	 *
+	 * @return bool
+	 */
+	public static function in_yearly_range( $from, $from_time, $to, $to_time ) {
+		$timezone = wp_timezone();
+		$filtered = apply_filters( 'stax/visibility/date_timezone', $timezone ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- 2.x hook.
+
+		if ( $filtered instanceof \DateTimeZone ) {
+			$timezone = $filtered;
+		}
+
+		$now  = ( new \DateTimeImmutable( '@' . Context::timestamp() ) )->setTimezone( $timezone );
+		$leap = '1' === $now->format( 'L' );
+
+		$bound = static function ( $month_day, $time, $fallback_day, $fallback_time ) use ( $leap ) {
+			$month_day = trim( (string) $month_day );
+
+			if ( ! preg_match( '/^(\d{1,2})[-\/.](\d{1,2})$/', $month_day, $m ) ) {
+				$month_day = $fallback_day;
+				preg_match( '/^(\d{1,2})-(\d{1,2})$/', $month_day, $m );
+			}
+
+			$month = max( 1, min( 12, (int) $m[1] ) );
+			$day   = max( 1, min( 31, (int) $m[2] ) );
+
+			if ( 2 === $month && 29 === $day && ! $leap ) {
+				$day = 28;
+			}
+
+			$time = preg_match( '/^\d{1,2}:\d{2}$/', trim( (string) $time ) ) ? str_pad( trim( (string) $time ), 5, '0', STR_PAD_LEFT ) : $fallback_time;
+
+			return sprintf( '%02d-%02d %s', $month, $day, $time );
+		};
+
+		$start   = $bound( $from, $from_time, '01-01', '00:00' );
+		$end     = $bound( $to, $to_time, '12-31', '23:59' );
+		$current = $now->format( 'm-d H:i' );
+
+		if ( $start <= $end ) {
+			return $current >= $start && $current <= $end;
+		}
+
+		return $current >= $start || $current <= $end;
 	}
 }
 

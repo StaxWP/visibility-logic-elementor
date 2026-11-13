@@ -157,7 +157,7 @@ class BrowserTypeVisiblity extends Singleton {
 			return $options;
 		}
 
-		$options['browser_type'] = in_array( Resources::get_browser_type(), (array) $browsers, true );
+		$options['browser_type'] = in_array( Context::browser(), (array) $browsers, true );
 
 		return $options;
 	}

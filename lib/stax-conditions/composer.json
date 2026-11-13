@@ -1,0 +1,12 @@
+{
+  "name": "staxwp/stax-conditions",
+  "description": "Shared condition engine for StaxWP plugins: rule tree, evaluator with trace, operator library, plain-language summaries, warnings and the rule builder UI.",
+  "type": "library",
+  "license": "GPL-2.0-or-later",
+  "require": {
+    "php": ">=7.4"
+  },
+  "autoload": {
+    "files": [ "load.php" ]
+  }
+}

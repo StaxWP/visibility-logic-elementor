@@ -139,7 +139,7 @@ class AcfVisibility extends Singleton {
 			]
 		);
 
-		list( $conditions, $locked_conditions ) = self::all_condition_options();
+		list( $conditions, $locked_conditions ) = self::all_condition_options( true );
 
 		$element->add_control(
 			self::SECTION_PREFIX . 'acf_condition',
@@ -219,7 +219,7 @@ class AcfVisibility extends Singleton {
 			'contains'   => __( 'Contains', 'visibility-logic-elementor' ),
 			'is_true'    => __( 'Is true', 'visibility-logic-elementor' ),
 			'is_false'   => __( 'Is false', 'visibility-logic-elementor' ),
-		];
+		] + array_intersect_key( self::new_operators(), array_flip( [ 'equals_ci', 'not_equals_ci', 'starts_with', 'ends_with', 'not_in' ] ) );
 	}
 
 	/**
@@ -239,7 +239,7 @@ class AcfVisibility extends Singleton {
 			'no_rows'        => __( 'Has no rows (repeater)', 'visibility-logic-elementor' ),
 			'array_contains' => __( 'Array contains', 'visibility-logic-elementor' ),
 			'regex'          => __( 'Matches regex', 'visibility-logic-elementor' ),
-		];
+		] + array_intersect_key( self::new_operators(), array_flip( [ 'lte', 'gte' ] ) );
 	}
 
 	/**
@@ -247,8 +247,33 @@ class AcfVisibility extends Singleton {
 	 *
 	 * @return array [ options, locked values ]
 	 */
-	public static function all_condition_options() {
-		return Pro_Teaser::options( self::condition_options(), self::pro_condition_options(), 'acf_operators' );
+	public static function all_condition_options( $legacy = false ) {
+		$free = self::condition_options();
+		$pro  = self::pro_condition_options();
+
+		if ( $legacy ) {
+			$free = array_diff_key( $free, self::new_operators() );
+			$pro  = array_diff_key( $pro, self::new_operators() );
+		}
+
+		return Pro_Teaser::options( $free, $pro, 'acf_operators' );
+	}
+
+	/**
+	 * Operators added in 3.0 (shared operator library). Free ones are evaluated here, Pro ones by Pro.
+	 *
+	 * @return array
+	 */
+	public static function new_operators() {
+		return [
+			'equals_ci'     => __( 'Equals (ignore case)', 'visibility-logic-elementor' ),
+			'not_equals_ci' => __( 'Not equals (ignore case)', 'visibility-logic-elementor' ),
+			'starts_with'   => __( 'Starts with', 'visibility-logic-elementor' ),
+			'ends_with'     => __( 'Ends with', 'visibility-logic-elementor' ),
+			'not_in'        => __( 'Is not one of', 'visibility-logic-elementor' ),
+			'lte'           => __( 'Less than or equal to', 'visibility-logic-elementor' ),
+			'gte'           => __( 'Greater than or equal to', 'visibility-logic-elementor' ),
+		];
 	}
 
 	/**
@@ -275,7 +300,7 @@ class AcfVisibility extends Singleton {
 	 * @return string[]
 	 */
 	public static function value_operators() {
-		return [ 'equals', 'not_equals', 'contains', 'not_contains', 'greater_than', 'less_than', 'between', 'date_before', 'date_after', 'array_contains', 'regex' ];
+		return array_merge( [ 'equals', 'not_equals', 'contains', 'not_contains', 'greater_than', 'less_than', 'between', 'date_before', 'date_after', 'array_contains', 'regex' ], array_keys( self::new_operators() ) );
 	}
 
 	/**
@@ -312,6 +337,7 @@ class AcfVisibility extends Singleton {
 
 		$fields[] = [
 			'key'         => 'acf_field',
+			'required'    => true,
 			'type'        => 'text',
 			'label'       => __( 'Field Name', 'visibility-logic-elementor' ),
 			'placeholder' => 'my_custom_field',
@@ -324,6 +350,7 @@ class AcfVisibility extends Singleton {
 			'options'        => $operators,
 			'locked_options' => $locked_operators,
 			'default'        => 'not_empty',
+			'options_since'  => array_fill_keys( array_keys( self::new_operators() ), '3.0.0' ),
 		];
 		$fields[] = [
 			'key'     => 'acf_value',
@@ -449,6 +476,11 @@ class AcfVisibility extends Singleton {
 			case 'is_false':
 				$result = empty( $value ) || '0' === $value || 'false' === $value;
 				break;
+			default:
+				// 3.0 operators from the shared library.
+				if ( array_key_exists( $condition, self::new_operators() ) ) {
+					list( $result ) = \StaxWP\Conditions\V1\Operators::compare( $condition, $value, $compare_value );
+				}
 		}
 
 		$options['acf'] = $result;

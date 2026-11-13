@@ -151,7 +151,7 @@ class DeviceTypeVisibility extends Singleton {
 			return $options;
 		}
 
-		$options['device_type'] = in_array( Resources::get_device_type(), (array) $devices, true );
+		$options['device_type'] = in_array( Context::device(), (array) $devices, true );
 
 		return $options;
 	}

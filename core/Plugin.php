@@ -62,6 +62,11 @@ class Plugin extends Singleton {
 		require_once STAX_VISIBILITY_CORE_PATH . 'Conditions.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'Condition_Item.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'Rules.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'Context.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'Rule_Tree.php';
+		require_once STAX_VISIBILITY_CORE_HELPERS_PATH . 'Cache_Check.php';
+
+		Rule_Tree::load_package();
 
 		// Builder-agnostic parts: conditions, admin panel, block editor, abilities, WP-CLI.
 		if ( is_admin() ) {
@@ -104,9 +109,13 @@ class Plugin extends Singleton {
 		add_filter( 'elementor/widget/render_content', [ $this, 'content_change' ], 999, 2 );
 		add_filter( 'elementor/frontend/section/before_render', [ $this, 'section_content_change' ], 999 );
 		add_filter( 'elementor/frontend/container/before_render', [ $this, 'section_content_change' ], 999 );
+		if ( self::columns_supported() ) {
+			add_filter( 'elementor/frontend/column/before_render', [ $this, 'section_content_change' ], 999 );
+			}
 
 		add_filter( 'elementor/frontend/section/should_render', [ $this, 'item_should_render' ], 99999, 2 );
 		add_filter( 'elementor/frontend/container/should_render', [ $this, 'item_should_render' ], 99999, 2 );
+		add_filter( 'elementor/frontend/column/should_render', [ $this, 'item_should_render' ], 99999, 2 );
 		add_filter( 'elementor/frontend/widget/should_render', [ $this, 'item_should_render' ], 99999, 2 );
 		add_filter( 'elementor/frontend/repeater/should_render', [ $this, 'item_should_render' ], 99999, 2 );
 
@@ -410,13 +419,18 @@ class Plugin extends Singleton {
 	 *
 	 * @return \Elementor\Element_Base[]
 	 */
-	private function get_leaf_children( $item ) {
+	private function get_leaf_children( $item, $skip_hidden_columns = false ) {
 		$children = [];
 		$direct   = (bool) Resources::get_setting( 'container_widgets' );
 
 		foreach ( $item->get_children() as $child ) {
 			if ( $direct && 'widget' === $child->get_type() ) {
 				$children[] = $child;
+				continue;
+			}
+
+			// A column hidden by its own rule (3.0) hides everything in it.
+			if ( $skip_hidden_columns && 'column' === $child->get_name() && ! $this->should_render( $child ) && ! self::flag( $this->item_settings( $child ), 'keep_html' ) ) {
 				continue;
 			}
 
@@ -459,7 +473,7 @@ class Plugin extends Singleton {
 	private function check_for_empty_sections_recursively( $item ) {
 		$elements = [];
 
-		foreach ( $this->get_leaf_children( $item ) as $widget ) {
+		foreach ( $this->get_leaf_children( $item, true ) as $widget ) {
 			$widget_settings = $this->item_settings( $widget );
 
 			if ( ! $this->should_render( $widget ) && ! self::flag( $widget_settings, 'keep_html' ) ) {
