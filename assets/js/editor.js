@@ -151,6 +151,69 @@ var STAXVisibilityEditor = STAXVisibilityEditor || {};
 
     },
 
+    /**
+     * Opening a section re-renders every control of the tab (Elementor's _renderChildren), so the panel loses its
+     * scroll position and, with the long Visibility list, the opened section ends up below the fold. Remember
+     * where the clicked heading was (capture phase, before Elementor re-renders) and put it back there.
+     */
+    initSectionScroll: function () {
+      document.addEventListener(
+        "click",
+        function (event) {
+          var heading =
+            event.target && event.target.closest
+              ? event.target.closest(
+                  '#elementor-controls .elementor-control-type-section[class*="elementor-control-stax_visibility_"] .elementor-panel-heading'
+                )
+              : null;
+
+          if (!heading) {
+            return;
+          }
+
+          var wrapper = document.getElementById("elementor-panel-content-wrapper");
+          var section = heading.closest(".elementor-control-type-section");
+          var match = section.className.match(/elementor-control-(stax_visibility_[a-z0-9_]+)/);
+
+          if (!wrapper || !match) {
+            return;
+          }
+
+          var offset =
+            heading.getBoundingClientRect().top - wrapper.getBoundingClientRect().top;
+
+          STAXVisibilityEditor.fn.restoreSectionOffset(wrapper, match[1], offset);
+        },
+        true
+      );
+    },
+
+    restoreSectionOffset: function (wrapper, name, offset) {
+      var restore = function () {
+        var heading = document.querySelector(
+          "#elementor-controls .elementor-control-" + name + " .elementor-panel-heading"
+        );
+
+        if (!heading) {
+          return;
+        }
+
+        var top = heading.getBoundingClientRect().top - wrapper.getBoundingClientRect().top;
+        // Same place as before the click, but never so low that the opened controls start below the fold.
+        var keep = Math.max(0, Math.min(offset, wrapper.clientHeight * 0.4));
+        var target = wrapper.scrollTop + top - keep;
+        var max = wrapper.scrollHeight - wrapper.clientHeight;
+
+        wrapper.scrollTop = Math.max(0, Math.min(target, max));
+      };
+
+      // After Elementor's click handler (same tick) and once more after the controls laid out.
+      setTimeout(restore, 0);
+      window.requestAnimationFrame(function () {
+        window.requestAnimationFrame(restore);
+      });
+    },
+
     checkState: function () {
       let options = window.visibility_widgets;
 
@@ -201,6 +264,7 @@ var STAXVisibilityEditor = STAXVisibilityEditor || {};
   $(window).on("elementor:init", function () {
     STAXVisibilityEditor.fn.initSelect2();
     STAXVisibilityEditor.fn.initStateDisplay();
+    STAXVisibilityEditor.fn.initSectionScroll();
 
     // Check state when any element panel opens
     elementor.hooks.addAction('panel/open_editor/widget', function () {
