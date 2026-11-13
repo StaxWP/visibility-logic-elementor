@@ -274,6 +274,33 @@ class Plugin extends Singleton {
 	}
 
 	/**
+	 * Elements one level below the columns of a section, or below the child containers of a container.
+	 *
+	 * A widget placed directly in a container counts itself. Before 2.5.2 it was skipped (only children of children
+	 * were read), so "Hide when empty" always hid a container that holds its widgets directly.
+	 *
+	 * @param \Elementor\Element_Base $item Element.
+	 *
+	 * @return \Elementor\Element_Base[]
+	 */
+	private function get_leaf_children( $item ) {
+		$children = [];
+
+		foreach ( $item->get_children() as $child ) {
+			if ( 'widget' === $child->get_type() ) {
+				$children[] = $child;
+				continue;
+			}
+
+			foreach ( $child->get_children() as $grand_child ) {
+				$children[] = $grand_child;
+			}
+		}
+
+		return $children;
+	}
+
+	/**
 	 * Get section's widgets recursively
 	 *
 	 * @param object $item
@@ -283,13 +310,11 @@ class Plugin extends Singleton {
 	private function get_section_widgets_recursively( $item ) {
 		$elements = [];
 
-		foreach ( $item->get_children() as $column ) {
-			foreach ( $column->get_children() as $widget ) {
-				if ( 'section' === $widget->get_name() || 'container' === $widget->get_name() ) {
-					$elements = array_merge( $elements, $this->get_section_widgets_recursively( $widget ) );
-				} else {
-					$elements[ $widget->get_id() ] = method_exists( $widget, 'get_group_name' ) ? $widget->get_group_name() : $widget->get_name();
-				}
+		foreach ( $this->get_leaf_children( $item ) as $widget ) {
+			if ( 'section' === $widget->get_name() || 'container' === $widget->get_name() ) {
+				$elements = array_merge( $elements, $this->get_section_widgets_recursively( $widget ) );
+			} else {
+				$elements[ $widget->get_id() ] = method_exists( $widget, 'get_group_name' ) ? $widget->get_group_name() : $widget->get_name();
 			}
 		}
 
@@ -306,28 +331,26 @@ class Plugin extends Singleton {
 	private function check_for_empty_sections_recursively( $item ) {
 		$elements = [];
 
-		foreach ( $item->get_children() as $column ) {
-			foreach ( $column->get_children() as $widget ) {
-				$widget_settings = $widget->get_settings();
+		foreach ( $this->get_leaf_children( $item ) as $widget ) {
+			$widget_settings = $widget->get_settings();
 
-				if ( $this->should_render( $widget ) ) {
-					if ( ( 'section' === $widget->get_name() || 'container' === $widget->get_name() ) &&
-						 ! (bool) $widget_settings[ self::SECTION_PREFIX . 'enabled' ] &&
-						 isset( $widget_settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) &&
-						 (bool) $widget_settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) {
-						$elements = array_merge( $elements, $this->check_for_empty_sections_recursively( $widget ) );
-					} else {
-						$elements[] = $widget->get_name();
-					}
-				} elseif ( ! $this->should_render( $widget ) && (bool) $widget_settings[ self::SECTION_PREFIX . 'keep_html' ] ) {
-					if ( ( 'section' === $widget->get_name() || 'container' === $widget->get_name() ) &&
-						 ! (bool) $widget_settings[ self::SECTION_PREFIX . 'enabled' ] &&
-						 isset( $widget_settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) &&
-						 (bool) $widget_settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) {
-						$elements = array_merge( $elements, $this->check_for_empty_sections_recursively( $widget ) );
-					} else {
-						$elements[] = $widget->get_name();
-					}
+			if ( $this->should_render( $widget ) ) {
+				if ( ( 'section' === $widget->get_name() || 'container' === $widget->get_name() ) &&
+					 ! (bool) $widget_settings[ self::SECTION_PREFIX . 'enabled' ] &&
+					 isset( $widget_settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) &&
+					 (bool) $widget_settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) {
+					$elements = array_merge( $elements, $this->check_for_empty_sections_recursively( $widget ) );
+				} else {
+					$elements[] = $widget->get_name();
+				}
+			} elseif ( ! $this->should_render( $widget ) && (bool) $widget_settings[ self::SECTION_PREFIX . 'keep_html' ] ) {
+				if ( ( 'section' === $widget->get_name() || 'container' === $widget->get_name() ) &&
+					 ! (bool) $widget_settings[ self::SECTION_PREFIX . 'enabled' ] &&
+					 isset( $widget_settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) &&
+					 (bool) $widget_settings[ self::SECTION_PREFIX . 'hide_when_empty' ] ) {
+					$elements = array_merge( $elements, $this->check_for_empty_sections_recursively( $widget ) );
+				} else {
+					$elements[] = $widget->get_name();
 				}
 			}
 		}
