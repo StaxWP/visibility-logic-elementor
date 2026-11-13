@@ -136,6 +136,19 @@
 		}
 	}
 
+	// PRO mark: muted pill, text "PRO", accessible name "Pro feature" (same as Pro_Teaser::badge_html()).
+	function ProBadge( props ) {
+		return el( 'span', { className: 'stax-vl-pro', role: 'img', 'aria-label': props.pro.aria }, props.pro.badge );
+	}
+
+	// The one "More conditions in Pro" line with its link (only when Pro is not active).
+	function ProMore( props ) {
+		return el( 'p', { className: 'stax-vl-pro-more' },
+			el( ProBadge, { pro: props.pro } ), ' ', el( 'strong', null, props.pro.title ), ': ', props.pro.text, ' ',
+			el( components.ExternalLink, { href: props.pro.url }, props.pro.link )
+		);
+	}
+
 	function Panel( props ) {
 		var values = props.attributes[ ATTR ] || {};
 
@@ -188,10 +201,8 @@
 				children.push( el( 'div', { key: condition.slug, className: 'stax-vl-condition' + ( on ? ' is-on' : '' ) + ( lock ? ' is-locked' : '' ) }, inner ) );
 			} );
 
-			if ( config.proUrl ) {
-				children.push( el( 'p', { key: 'pro', className: 'stax-vl-note' },
-					el( components.ExternalLink, { href: config.proUrl }, __( 'More conditions in Visibility Logic Pro', 'visibility-logic-elementor' ) )
-				) );
+			if ( config.pro ) {
+				children.push( el( ProMore, { key: 'pro', pro: config.pro } ) );
 			}
 		}
 

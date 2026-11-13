@@ -51,7 +51,8 @@ class Controls {
 	 * @return array
 	 */
 	public function get_controls() {
-		$controls['stax_query'] = 'Query';
+		$controls['stax_query']  = 'Query';
+		$controls['stax_select'] = 'Select';
 
 		return $controls;
 	}

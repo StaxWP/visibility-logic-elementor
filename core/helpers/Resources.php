@@ -179,14 +179,14 @@ final class Resources extends Singleton {
 	}
 
 	/**
-	 * Visibility Logic Pro page on staxwp.com.
+	 * Visibility Logic Pro page on staxwp.com (product page, pricing), with UTM parameters.
 	 *
 	 * @param string $context Where the link is shown (analytics only).
 	 *
 	 * @return string
 	 */
 	public static function pro_url( $context = 'panel' ) {
-		$url = apply_filters( STAX_VISIBILITY_HOOK_PREFIX . 'admin_site_url', 'https://staxwp.com/go/visibility-logic' );
+		$url = apply_filters( STAX_VISIBILITY_HOOK_PREFIX . 'admin_site_url', 'https://staxwp.com/visibility-logic-for-elementor/#pricing' );
 
 		return add_query_arg(
 			[
@@ -327,7 +327,7 @@ final class Resources extends Singleton {
 			'acf'                => __( 'One ACF field of the current post or page.', 'visibility-logic-elementor' ),
 			'ip-referrer'        => __( 'Visitor IP address and the referring site.', 'visibility-logic-elementor' ),
 			'geo-location'       => __( 'Country or city of the visitor (MaxMind).', 'visibility-logic-elementor' ),
-			'advanced-user-meta' => __( 'Several user meta rules combined.', 'visibility-logic-elementor' ),
+			'advanced-user-meta' => __( 'Adds AND/OR rule groups to User Meta.', 'visibility-logic-elementor' ),
 			'post-page'          => __( 'Specific posts, pages, post types and terms.', 'visibility-logic-elementor' ),
 			'archive'            => __( 'Category, tag, author and other archive pages.', 'visibility-logic-elementor' ),
 			'conditional-tags'   => __( 'WordPress conditional tags such as is_front_page.', 'visibility-logic-elementor' ),
@@ -337,7 +337,7 @@ final class Resources extends Singleton {
 			'fallback'           => __( 'Show text or a template in place of a hidden element.', 'visibility-logic-elementor' ),
 			'query-string'       => __( 'URL parameters such as UTM tags or campaign codes.', 'visibility-logic-elementor' ),
 			'language'           => __( 'Current language with WPML, Polylang or TranslatePress.', 'visibility-logic-elementor' ),
-			'advanced-acf'       => __( 'Repeaters, options pages, user and term fields, AND/OR groups.', 'visibility-logic-elementor' ),
+			'advanced-acf'       => __( 'Adds user, term, options page and specific post fields, more operators and AND/OR rule groups to ACF Field.', 'visibility-logic-elementor' ),
 		];
 	}
 

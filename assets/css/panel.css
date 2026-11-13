@@ -12,33 +12,10 @@
   content: "\e8ac";
 }
  
-.elementor-panel [class*="elementor-control-stax_visibility_pro_"] {
-  pointer-events: none;
-}
-
-.elementor-panel [class*="elementor-control-stax_visibility_pro_"] .elementor-panel-heading-toggle {
-  display: none;
-}
-
-.elementor-panel [class*="elementor-control-stax_visibility_pro_"] .elementor-panel-heading-title,
 .stax-status-active .elementor-panel-heading-title,
 .stax-status-inactive .elementor-panel-heading-title,
 .stax-status-error .elementor-panel-heading-title {
   position: relative;
-}
-
-.elementor-panel [class*="elementor-control-stax_visibility_pro_"] .elementor-panel-heading-title:after {
-  font-family: eicons;
-  content: "\e893";
-  position: absolute;
-  top: 12px;
-  right: 0;
-  z-index: 2;
-  color: #7b5bcf;
-  font-size: 16px;
-  font-weight: 500;
-  background: #fff;
-  border-radius: 30px;
 }
 
 .stax-status-active .elementor-panel-heading-title:after {
@@ -73,9 +50,9 @@
 
 .elementor-control .stax-generic-notice {
   font-size: 12px;
-  line-height: 14px;
-  font-weight: 300;
-  color: #fff;
+  line-height: 1.4;
+  font-weight: 400;
+  color: var(--e-a-color-txt-muted, #818a96);
 }
 
 .elementor-control-type-stax_query .select2-search--inline input {
@@ -175,4 +152,42 @@
 .elementor-control-stax_visibility_dynamic_conditions_tag
   .elementor-control-dynamic-switcher {
   width: 100%;
+}
+
+/* PRO mark (Pro_Teaser): muted pill in the panel's own text color, light and dark editor themes. */
+.stax-vl-pro {
+  display: inline-block;
+  padding: 0 5px;
+  border: 1px solid var(--e-a-border-color-bold, #d5d8dc);
+  border-radius: 10px;
+  color: var(--e-a-color-txt-muted, #818a96);
+  font-size: 9px;
+  font-weight: 500;
+  line-height: 14px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  vertical-align: 1px;
+}
+
+.elementor-control .stax-vl-pro-more {
+  margin: 0;
+  color: var(--e-a-color-txt-muted, #818a96);
+  font-size: 11px;
+  line-height: 1.5;
+  font-style: normal;
+}
+
+.elementor-control .stax-vl-pro-more a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.elementor-control-stax_visibility_more_pro .elementor-panel-heading-title {
+  color: var(--e-a-color-txt-muted, #818a96);
+  font-weight: 400;
+}
+
+/* Pro options of a select (disabled, "(Pro)" in the label). */
+.elementor-control-type-stax_select option:disabled {
+  color: var(--e-a-color-txt-muted, #818a96);
 }

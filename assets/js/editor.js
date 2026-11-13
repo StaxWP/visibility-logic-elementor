@@ -128,6 +128,9 @@ var STAXVisibilityEditor = STAXVisibilityEditor || {};
 
       // Add Control Handlers
       elementor.addControlView("stax_query", ControlQuery);
+
+      // Select with disabled Pro options (template in core/helpers/controls/Select.php).
+      elementor.addControlView("stax_select", elementor.modules.controls.Select);
     },
 
     initStateDisplay: function () {

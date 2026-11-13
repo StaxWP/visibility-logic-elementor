@@ -66,28 +66,63 @@ class AcfVisibility extends Singleton {
 			]
 		);
 
-		$element->add_control(
-			self::SECTION_PREFIX . 'acf_source',
-			[
-				'label'          => __( 'Field Source', 'visibility-logic-elementor' ),
-				'type'           => Controls_Manager::HIDDEN,
-				'default'        => 'post',
-				'style_transfer' => false,
-			]
-		);
+		list( $sources, $locked_sources ) = self::source_options();
 
-		$element->add_control(
-			self::SECTION_PREFIX . 'acf_source_info',
-			[
-				'type'            => Controls_Manager::RAW_HTML,
-				'raw'             => __( 'Checks ACF fields on the current post/page.', 'visibility-logic-elementor' ),
-				'content_classes' => 'elementor-descriptor',
-				'condition'       => [
-					self::SECTION_PREFIX . 'acf_enabled' => 'yes',
-				],
-				'style_transfer'  => false,
-			]
-		);
+		if ( 1 === count( $sources ) ) {
+			// Only "Current post" (no Pro sources to offer): 2.x hidden setting.
+			$element->add_control(
+				self::SECTION_PREFIX . 'acf_source',
+				[
+					'label'          => __( 'Field Source', 'visibility-logic-elementor' ),
+					'type'           => Controls_Manager::HIDDEN,
+					'default'        => 'post',
+					'style_transfer' => false,
+				]
+			);
+
+			$element->add_control(
+				self::SECTION_PREFIX . 'acf_source_info',
+				[
+					'type'            => Controls_Manager::RAW_HTML,
+					'raw'             => __( 'Checks ACF fields on the current post/page.', 'visibility-logic-elementor' ),
+					'content_classes' => 'elementor-descriptor',
+					'condition'       => [
+						self::SECTION_PREFIX . 'acf_enabled' => 'yes',
+					],
+					'style_transfer'  => false,
+				]
+			);
+		} else {
+			$element->add_control(
+				self::SECTION_PREFIX . 'acf_source',
+				[
+					'label'          => __( 'Field Source', 'visibility-logic-elementor' ),
+					'type'           => 'stax_select',
+					'options'        => $sources,
+					'locked_options' => $locked_sources,
+					'default'        => 'post',
+					'condition'      => [
+						self::SECTION_PREFIX . 'acf_enabled' => 'yes',
+					],
+					'style_transfer' => false,
+				]
+			);
+		}
+
+		if ( Pro_Teaser::ON === Pro_Teaser::state( 'acf_sources' ) ) {
+			$element->add_control(
+				self::SECTION_PREFIX . 'acf_post_id',
+				[
+					'label'          => __( 'Post ID', 'visibility-logic-elementor' ),
+					'type'           => Controls_Manager::NUMBER,
+					'condition'      => [
+						self::SECTION_PREFIX . 'acf_enabled' => 'yes',
+						self::SECTION_PREFIX . 'acf_source'  => 'specific',
+					],
+					'style_transfer' => false,
+				]
+			);
+		}
 
 		$element->add_control(
 			self::SECTION_PREFIX . 'acf_field',
@@ -104,12 +139,15 @@ class AcfVisibility extends Singleton {
 			]
 		);
 
+		list( $conditions, $locked_conditions ) = self::all_condition_options();
+
 		$element->add_control(
 			self::SECTION_PREFIX . 'acf_condition',
 			[
 				'label'          => __( 'Condition', 'visibility-logic-elementor' ),
-				'type'           => Controls_Manager::SELECT,
-				'options'        => self::condition_options(),
+				'type'           => 'stax_select',
+				'options'        => $conditions,
+				'locked_options' => $locked_conditions,
 				'default'        => 'not_empty',
 				'condition'      => [
 					self::SECTION_PREFIX . 'acf_enabled' => 'yes',
@@ -128,32 +166,25 @@ class AcfVisibility extends Singleton {
 				'condition'      => [
 					self::SECTION_PREFIX . 'acf_enabled'   => 'yes',
 					self::SECTION_PREFIX . 'acf_field!'    => '',
-					self::SECTION_PREFIX . 'acf_condition' => [
-						'equals',
-						'not_equals',
-						'contains',
-					],
+					self::SECTION_PREFIX . 'acf_condition' => self::value_operators(),
 				],
 				'style_transfer' => false,
 			]
 		);
 
-		if ( ! defined( 'STAX_VISIBILITY_PRO_VERSION' ) ) {
+		if ( Pro_Teaser::ON === Pro_Teaser::state( 'acf_operators' ) ) {
 			$element->add_control(
-				self::SECTION_PREFIX . 'acf_pro_notice',
+				self::SECTION_PREFIX . 'acf_value_2',
 				[
-					'type'            => Controls_Manager::RAW_HTML,
-					'raw'             => sprintf(
-						/* translators: 1: link opening tag, 2: link closing tag. */
-						__( 'User, term and options page fields, repeaters and AND/OR groups are in %1$sVisibility Logic Pro%2$s.', 'visibility-logic-elementor' ),
-						'<a href="' . esc_url( Resources::pro_url( 'editor-acf' ) ) . '" target="_blank" rel="noopener">',
-						'</a>'
-					),
-					'content_classes' => 'elementor-descriptor',
-					'condition'       => [
-						self::SECTION_PREFIX . 'acf_enabled' => 'yes',
+					'label'          => __( 'Value 2 (upper bound)', 'visibility-logic-elementor' ),
+					'type'           => Controls_Manager::TEXT,
+					'label_block'    => true,
+					'condition'      => [
+						self::SECTION_PREFIX . 'acf_enabled'   => 'yes',
+						self::SECTION_PREFIX . 'acf_field!'    => '',
+						self::SECTION_PREFIX . 'acf_condition' => 'between',
 					],
-					'style_transfer'  => false,
+					'style_transfer' => false,
 				]
 			);
 		}
@@ -192,6 +223,62 @@ class AcfVisibility extends Singleton {
 	}
 
 	/**
+	 * Operators of Visibility Logic Pro (value => label), listed after the free ones (see Pro_Teaser).
+	 *
+	 * @return array
+	 */
+	public static function pro_condition_options() {
+		return [
+			'not_contains'   => __( 'Does not contain', 'visibility-logic-elementor' ),
+			'greater_than'   => __( 'Greater than', 'visibility-logic-elementor' ),
+			'less_than'      => __( 'Less than', 'visibility-logic-elementor' ),
+			'between'        => __( 'Between', 'visibility-logic-elementor' ),
+			'date_before'    => __( 'Date is before', 'visibility-logic-elementor' ),
+			'date_after'     => __( 'Date is after', 'visibility-logic-elementor' ),
+			'has_rows'       => __( 'Has rows (repeater)', 'visibility-logic-elementor' ),
+			'no_rows'        => __( 'Has no rows (repeater)', 'visibility-logic-elementor' ),
+			'array_contains' => __( 'Array contains', 'visibility-logic-elementor' ),
+			'regex'          => __( 'Matches regex', 'visibility-logic-elementor' ),
+		];
+	}
+
+	/**
+	 * Free and Pro operators, with the Pro ones locked when Pro is not active.
+	 *
+	 * @return array [ options, locked values ]
+	 */
+	public static function all_condition_options() {
+		return Pro_Teaser::options( self::condition_options(), self::pro_condition_options(), 'acf_operators' );
+	}
+
+	/**
+	 * Field sources: the current post (free), then the Pro ones.
+	 *
+	 * @return array [ options, locked values ]
+	 */
+	public static function source_options() {
+		return Pro_Teaser::options(
+			[ 'post' => __( 'Current Post', 'visibility-logic-elementor' ) ],
+			[
+				'user'     => __( 'Current User', 'visibility-logic-elementor' ),
+				'term'     => __( 'Archive Term', 'visibility-logic-elementor' ),
+				'options'  => __( 'Options Page', 'visibility-logic-elementor' ),
+				'specific' => __( 'Specific Post ID', 'visibility-logic-elementor' ),
+			],
+			'acf_sources'
+		);
+	}
+
+	/**
+	 * Operators that compare with a value.
+	 *
+	 * @return string[]
+	 */
+	public static function value_operators() {
+		return [ 'equals', 'not_equals', 'contains', 'not_contains', 'greater_than', 'less_than', 'between', 'date_before', 'date_after', 'array_contains', 'regex' ];
+	}
+
+	/**
 	 * Fields of this condition for the block editor and Elementor 4 atomic elements (see Conditions).
 	 *
 	 * @param array $conditions Registered conditions.
@@ -199,31 +286,65 @@ class AcfVisibility extends Singleton {
 	 * @return array
 	 */
 	public function condition_fields( $conditions ) {
+		list( $sources, $locked_sources )       = self::source_options();
+		list( $operators, $locked_operators )   = self::all_condition_options();
+		$fields                                 = [];
+
+		if ( count( $sources ) > 1 ) {
+			$fields[] = [
+				'key'            => 'acf_source',
+				'type'           => 'select',
+				'label'          => __( 'Field Source', 'visibility-logic-elementor' ),
+				'options'        => $sources,
+				'locked_options' => $locked_sources,
+				'default'        => 'post',
+			];
+		}
+
+		if ( Pro_Teaser::ON === Pro_Teaser::state( 'acf_sources' ) ) {
+			$fields[] = [
+				'key'     => 'acf_post_id',
+				'type'    => 'text',
+				'label'   => __( 'Post ID', 'visibility-logic-elementor' ),
+				'show_if' => [ 'acf_source' => [ 'specific' ] ],
+			];
+		}
+
+		$fields[] = [
+			'key'         => 'acf_field',
+			'type'        => 'text',
+			'label'       => __( 'Field Name', 'visibility-logic-elementor' ),
+			'placeholder' => 'my_custom_field',
+			'help'        => count( $sources ) > 1 ? __( 'ACF field name or key.', 'visibility-logic-elementor' ) : __( 'ACF field of the current post or page.', 'visibility-logic-elementor' ),
+		];
+		$fields[] = [
+			'key'            => 'acf_condition',
+			'type'           => 'select',
+			'label'          => __( 'Condition', 'visibility-logic-elementor' ),
+			'options'        => $operators,
+			'locked_options' => $locked_operators,
+			'default'        => 'not_empty',
+		];
+		$fields[] = [
+			'key'     => 'acf_value',
+			'type'    => 'text',
+			'label'   => __( 'Value', 'visibility-logic-elementor' ),
+			'show_if' => [ 'acf_condition' => self::value_operators() ],
+		];
+
+		if ( Pro_Teaser::ON === Pro_Teaser::state( 'acf_operators' ) ) {
+			$fields[] = [
+				'key'     => 'acf_value_2',
+				'type'    => 'text',
+				'label'   => __( 'Value 2 (upper bound)', 'visibility-logic-elementor' ),
+				'show_if' => [ 'acf_condition' => [ 'between' ] ],
+			];
+		}
+
 		$conditions['acf'] = [
 			'label'  => __( 'ACF Field', 'visibility-logic-elementor' ),
 			'switch' => 'acf_enabled',
-			'fields' => [
-				[
-					'key'         => 'acf_field',
-					'type'        => 'text',
-					'label'       => __( 'Field Name', 'visibility-logic-elementor' ),
-					'placeholder' => 'my_custom_field',
-					'help'        => __( 'ACF field of the current post or page.', 'visibility-logic-elementor' ),
-				],
-				[
-					'key'     => 'acf_condition',
-					'type'    => 'select',
-					'label'   => __( 'Condition', 'visibility-logic-elementor' ),
-					'options' => self::condition_options(),
-					'default' => 'not_empty',
-				],
-				[
-					'key'     => 'acf_value',
-					'type'    => 'text',
-					'label'   => __( 'Value', 'visibility-logic-elementor' ),
-					'show_if' => [ 'acf_condition' => [ 'equals', 'not_equals', 'contains' ] ],
-				],
-			],
+			'fields' => $fields,
 		];
 
 		return $conditions;
@@ -258,6 +379,35 @@ class AcfVisibility extends Singleton {
 
 		$condition     = (string) self::value( $settings, 'acf_condition', 'not_empty' );
 		$compare_value = (string) self::value( $settings, 'acf_value' );
+		$source        = (string) self::value( $settings, 'acf_source', 'post' );
+
+		// Pro sources and operators: evaluated by Visibility Logic Pro (filter below). Without Pro they never run.
+		if ( ( '' !== $source && 'post' !== $source ) || array_key_exists( $condition, self::pro_condition_options() ) ) {
+			/**
+			 * Result of an ACF Field rule that uses a Pro source or operator, null when nothing evaluates it.
+			 *
+			 * @param bool|null $result Result.
+			 * @param array     $rule   acf_source, acf_post_id, acf_field, acf_condition, acf_value, acf_value_2.
+			 */
+			$result = apply_filters( // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- shares the 2.x hook namespace.
+				'stax/visibility/acf/rule',
+				null,
+				[
+					'acf_source'    => $source,
+					'acf_post_id'   => self::value( $settings, 'acf_post_id' ),
+					'acf_field'     => $field_name,
+					'acf_condition' => $condition,
+					'acf_value'     => $compare_value,
+					'acf_value_2'   => (string) self::value( $settings, 'acf_value_2' ),
+				]
+			);
+
+			if ( null !== $result ) {
+				$options['acf'] = (bool) $result;
+			}
+
+			return $options;
+		}
 
 		// Get field value from current post/page
 		$value = get_field( $field_name );

@@ -182,7 +182,7 @@ class Blocks {
 						Conditions::fields( 'blocks' )
 					)
 				),
-				'proUrl'     => Plugin::instance()->has_pro() ? '' : Resources::pro_url( 'block-editor' ),
+				'pro'        => Pro_Teaser::for_js(),
 				'labels'     => [
 					'panel'  => __( 'Visibility', 'visibility-logic-elementor' ),
 					'badge'  => __( 'Visibility rules', 'visibility-logic-elementor' ),
@@ -213,8 +213,10 @@ class Blocks {
 			$field['label'] = wp_strip_all_tags( (string) $field['label'] );
 
 			if ( isset( $field['options'] ) ) {
-				$field['options'] = Conditions::option_list( (array) $field['options'] );
+				$field['options'] = Conditions::option_list( (array) $field['options'], isset( $field['locked_options'] ) ? (array) $field['locked_options'] : [] );
 			}
+
+			unset( $field['locked_options'] );
 
 			$out[] = $field;
 		}

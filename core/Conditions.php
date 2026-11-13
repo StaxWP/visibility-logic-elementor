@@ -20,7 +20,8 @@
  *   ]
  * Field keys are setting names without the `stax_visibility_` prefix. Types: switch, select, multiselect, text,
  * textarea, date (Y-m-d H:i), time (HH:mm), list (comma separated, stored as an array). Optional: default,
- * placeholder, help, show_if ( [ 'other_key' => [ values ] ] ), builders ( [ 'blocks', 'atomic' ] ).
+ * placeholder, help, show_if ( [ 'other_key' => [ values ] ] ), builders ( [ 'blocks', 'atomic' ] ), locked_options
+ * (select values listed but disabled: Pro options without Pro, see Pro_Teaser).
  * Condition-level, optional: `locked` (bool, an add-on without a license: the editors show the condition read-only,
  * saved values are kept and still apply) and `locked_notice` ( [ 'title', 'text', 'actions' => [ [ 'label', 'url' ] ] ] ).
  *
@@ -395,20 +396,29 @@ class Conditions {
 	}
 
 	/**
-	 * Options as [ [ value, label ] ] (editor UIs).
+	 * Options as [ [ value, label ] ] (editor UIs). Locked values (Pro options without Pro, see Pro_Teaser) get
+	 * `disabled`.
 	 *
 	 * @param array $options Value => label.
+	 * @param array $locked  Locked values.
 	 *
 	 * @return array[]
 	 */
-	public static function option_list( array $options ) {
-		$list = [];
+	public static function option_list( array $options, array $locked = [] ) {
+		$list   = [];
+		$locked = array_map( 'strval', $locked );
 
 		foreach ( $options as $value => $label ) {
-			$list[] = [
+			$item = [
 				'value' => (string) $value,
 				'label' => wp_strip_all_tags( (string) $label ),
 			];
+
+			if ( in_array( (string) $value, $locked, true ) ) {
+				$item['disabled'] = true;
+			}
+
+			$list[] = $item;
 		}
 
 		return $list;

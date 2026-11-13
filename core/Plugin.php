@@ -58,6 +58,7 @@ class Plugin extends Singleton {
 
 		require_once STAX_VISIBILITY_CORE_HELPERS_PATH . 'Resources.php';
 		require_once STAX_VISIBILITY_CORE_HELPERS_PATH . 'Notices.php';
+		require_once STAX_VISIBILITY_CORE_HELPERS_PATH . 'Pro_Teaser.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'Conditions.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'Condition_Item.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'Rules.php';
@@ -145,6 +146,7 @@ class Plugin extends Singleton {
 		require_once STAX_VISIBILITY_CORE_PATH . 'helpers/Ajax.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'helpers/FunctionCaller.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'helpers/controls/Query.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'helpers/controls/Select.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'helpers/Controls.php';
 
 		new Ajax();
@@ -185,7 +187,7 @@ class Plugin extends Singleton {
 			}
 		}
 
-		if ( ! $this->has_pro() ) {
+		if ( Pro_Teaser::visible() ) {
 			require_once STAX_VISIBILITY_CORE_SETTINGS_PATH . 'ProVisibility.php';
 		}
 

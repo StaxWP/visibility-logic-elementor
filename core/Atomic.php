@@ -300,7 +300,10 @@ class Atomic {
 				return Switch_Control::bind_to( $bind )->set_label( $label );
 
 			case 'select':
-				return Select_Control::bind_to( $bind )->set_label( $label )->set_options( Conditions::option_list( (array) $field['options'] ) );
+				// The V4 select cannot disable an option: Pro options without Pro are left out.
+				$options = array_diff_key( (array) $field['options'], array_flip( isset( $field['locked_options'] ) ? (array) $field['locked_options'] : [] ) );
+
+				return Select_Control::bind_to( $bind )->set_label( $label )->set_options( Conditions::option_list( $options ) );
 
 			case 'multiselect':
 				return Chips_Control::bind_to( $bind )->set_label( $label )->set_options( Conditions::option_list( (array) $field['options'] ) );

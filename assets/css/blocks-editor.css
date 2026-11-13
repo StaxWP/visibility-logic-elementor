@@ -32,3 +32,26 @@
 	outline: 1px dashed rgba(110, 73, 203, 0.6);
 	outline-offset: 2px;
 }
+
+/* PRO mark and the "More conditions in Pro" line (Pro not active). */
+.stax-vl-panel .stax-vl-pro {
+	display: inline-block;
+	padding: 0 5px;
+	border: 1px solid #ddd;
+	border-radius: 10px;
+	color: #757575;
+	font-size: 9px;
+	font-weight: 500;
+	line-height: 14px;
+	letter-spacing: .04em;
+	text-transform: uppercase;
+	vertical-align: 1px;
+}
+
+.stax-vl-panel .stax-vl-pro-more {
+	border-top: 1px solid #e0e0e0;
+	color: #757575;
+	font-size: 12px;
+	margin: 16px 0 0;
+	padding-top: 12px;
+}

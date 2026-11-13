@@ -387,6 +387,9 @@ class Rules {
 			}
 			$labels['post_page'] = isset( $labels['post_page'] ) ? $labels['post_page'] : __( 'Post & Page', 'visibility-logic-elementor' );
 			$labels['post']      = $labels['post_page'];
+			// Rule groups that Visibility Logic Pro adds to the free ACF Field and User Meta sections.
+			$labels['acf_rules']       = __( 'ACF Field (rule group)', 'visibility-logic-elementor' );
+			$labels['user_meta_rules'] = __( 'User Meta (rule group)', 'visibility-logic-elementor' );
 		}
 
 		return isset( $labels[ $slug ] ) ? $labels[ $slug ] : ucwords( str_replace( '_', ' ', $slug ) );
