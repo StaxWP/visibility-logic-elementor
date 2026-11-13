@@ -4,7 +4,7 @@ Tags: elementor, visibility, display conditions, conditional visibility, dynamic
 Requires at least: 5.0
 Requires PHP: 7.4
 Tested up to: 7.1.4
-Stable tag: 2.5.1
+Stable tag: 2.5.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -132,6 +132,12 @@ Visibility Logic Pro:
 6. **Admin Panel**: Global plugin settings and configuration
 
 == Changelog ==
+
+= 2.5.2 =
+* Fix: Date FROM and Date TO now use the site time zone (Settings > General), like the time of day and weekday options. Before, they were read as UTC, so a schedule started or ended early or late by the site's offset from UTC. If you shifted your dates to work around this, set them back to the site time.
+* Fix: Hide when empty no longer hides a Flexbox container whose widgets are visible. Widgets placed directly in a container now count.
+* Fix: the User Meta key list keeps keys that start with an underscore (such as `_my_field`), so rules on these keys match. If a rule was saved with the key without its underscore, pick the key again.
+* Fix: a PHP 8.5 deprecation notice in the Date Time condition.
 
 = 2.5.1 =
 * Fix: Corrected the Pro/admin URL used on the settings page.
@@ -278,6 +284,9 @@ Visibility Logic Pro:
 * Initial release
 
 == Upgrade Notice ==
+
+= 2.5.2 =
+Bug fixes: Date FROM/TO use the site time zone, Hide when empty works on Flexbox containers, User Meta keys starting with an underscore match.
 
 = 2.5.1 =
 Maintenance release with a corrected Pro/admin URL, refreshed Display Conditions for Elementor readme copy, and clearer free/Pro installation instructions.
