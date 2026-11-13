@@ -95,7 +95,8 @@ trait Meta_Trait {
 		$query = 'SELECT DISTINCT meta_key FROM ' . esc_sql( $table );
 
 		if ( $like ) {
-			$query .= " WHERE meta_key LIKE '%" . esc_sql( $like ) . "%'";
+			// The typed text is matched literally: `_` and `%` are not wildcards, so `_key` finds `_key`.
+			$query .= $wpdb->prepare( ' WHERE meta_key LIKE %s', '%' . $wpdb->esc_like( (string) $like ) . '%' );
 		}
 
 		$results = $wpdb->get_results( $query );
@@ -106,15 +107,14 @@ trait Meta_Trait {
 				$metas[ $auser->meta_key ] = $auser->meta_key;
 			}
 			ksort( $metas );
-			$manual_metas = $metas;
-			foreach ( $manual_metas as $ameta ) {
-				if ( substr( $ameta, 0, 1 ) == '_' ) {
-					$ameta = $tmp = substr( $ameta, 1 );
-					if ( in_array( $tmp, $manual_metas ) ) {
-						continue;
-					}
+			foreach ( $metas as $ameta ) {
+				// Keys are offered exactly as stored, also protected ones (`_key`), so the saved rule reads the same key.
+				// A protected key is hidden only when its unprefixed twin is in the same results (ACF keeps `_field`
+				// next to `field`); typing the leading underscore lists it.
+				if ( '_' === substr( $ameta, 0, 1 ) && isset( $metas[ substr( $ameta, 1 ) ] ) ) {
+					continue;
 				}
-				if ( ! isset( $postMetas[ $ameta ] ) ) {
+				if ( '' !== $ameta ) {
 					$user_metas[ $ameta ]                 = $ameta;
 					$user_metas_grouped['META'][ $ameta ] = $ameta;
 				}
