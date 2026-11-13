@@ -8,7 +8,7 @@ Stable tag: 2.5.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Display Conditions for Elementor: conditional visibility rules to show or hide widgets by user role, ACF fields, device type, date & time, browser and more.
+Display Conditions for Elementor: show or hide widgets and sections by user role, ACF fields, device type, date & time, browser and more.
 
 == Description ==
 
