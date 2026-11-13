@@ -9,14 +9,14 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-13T20:28:01+00:00\n"
+"POT-Creation-Date: 2026-11-13T19:07:25+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: visibility-logic-elementor\n"
 
 #. Plugin Name of the plugin
 #: conditional.php
-#: core/admin/Settings.php:84
+#: core/admin/Settings.php:83
 msgid "Visibility Logic for Elementor and the Block Editor"
 msgstr ""
 
@@ -41,9 +41,9 @@ msgid "https://staxwp.com"
 msgstr ""
 
 #: core/Abilities.php:61
-#: core/admin/layout.php:25
-#: core/admin/Settings.php:85
-#: core/admin/Settings.php:148
+#: core/admin/layout.php:24
+#: core/admin/Settings.php:84
+#: core/admin/Settings.php:147
 #: core/helpers/Notices.php:68
 msgid "Visibility Logic"
 msgstr ""
@@ -80,81 +80,107 @@ msgstr ""
 msgid "Only elements using this condition, for example user_role or date_time."
 msgstr ""
 
-#: core/admin/layout.php:27
-#: core/admin/pages/templates/options.php:119
+#: core/admin/layout.php:26
+#: core/admin/pages/templates/options.php:48
+#: core/admin/pages/templates/options.php:118
 #: core/Rule_Tree.php:1023
 msgid "Pro"
 msgstr ""
 
-#: core/admin/layout.php:31
+#: core/admin/layout.php:30
 msgid "for Elementor and the Block Editor"
 msgstr ""
 
 #. translators: %s: version number.
-#: core/admin/layout.php:35
+#: core/admin/layout.php:34
 #, php-format
 msgid "Version %s"
 msgstr ""
 
 #. translators: %s: version number.
-#: core/admin/layout.php:39
+#: core/admin/layout.php:38
 #, php-format
 msgid "Pro %s"
 msgstr ""
 
-#: core/admin/layout.php:49
+#: core/admin/layout.php:48
 msgid "Visibility Logic sections"
 msgstr ""
 
-#: core/admin/layout.php:71
+#: core/admin/layout.php:67
 msgid "About Visibility Logic"
 msgstr ""
 
-#: core/admin/layout.php:74
+#: core/admin/layout.php:70
+#: core/admin/layout.php:87
 msgid "Visibility Logic Pro"
 msgstr ""
 
-#: core/admin/layout.php:78
-msgid "Active and licensed. Thank you for supporting the plugin."
+#: core/admin/layout.php:71
+msgid "More conditions for the same Visibility tab:"
+msgstr ""
+
+#: core/admin/layout.php:73
+msgid "Posts, pages, archives and conditional tags"
+msgstr ""
+
+#: core/admin/layout.php:74
+msgid "URL parameters, IP, referrer and visitor country"
+msgstr ""
+
+#: core/admin/layout.php:75
+msgid "WooCommerce and EDD customers, language"
+msgstr ""
+
+#: core/admin/layout.php:76
+msgid "Advanced ACF, dynamic tags, fallback content"
 msgstr ""
 
 #: core/admin/layout.php:80
-msgid "Active, no license yet. Saved Pro conditions keep working; editing them needs a license."
+msgid "Learn about Pro"
 msgstr ""
 
-#: core/admin/layout.php:82
-msgid "Active."
-msgstr ""
-
-#: core/admin/layout.php:86
-msgid "Manage license"
-msgstr ""
-
-#: core/admin/layout.php:88
-msgid "Your staxwp.com account"
-msgstr ""
-
-#: core/admin/layout.php:88
-#: core/admin/layout.php:97
-#: core/admin/layout.php:98
-#: core/admin/pages/templates/options.php:129
-#: core/helpers/Pro_Teaser.php:206
+#: core/admin/layout.php:81
+#: core/admin/layout.php:101
+#: core/admin/layout.php:110
+#: core/admin/layout.php:111
+#: core/admin/pages/templates/options.php:128
 msgid "(opens in a new tab)"
 msgstr ""
 
-#: core/admin/layout.php:94
-msgid "Help"
+#: core/admin/layout.php:91
+msgid "Active and licensed. Thank you for supporting the plugin."
+msgstr ""
+
+#: core/admin/layout.php:93
+msgid "Active, no license yet. Saved Pro conditions keep working; editing them needs a license."
 msgstr ""
 
 #: core/admin/layout.php:95
+msgid "Active."
+msgstr ""
+
+#: core/admin/layout.php:99
+msgid "Manage license"
+msgstr ""
+
+#: core/admin/layout.php:101
+msgid "Your staxwp.com account"
+msgstr ""
+
+#: core/admin/layout.php:107
+msgid "Help"
+msgstr ""
+
+#: core/admin/layout.php:108
 msgid "Open any widget, section or container in Elementor, then the Visibility tab."
 msgstr ""
 
-#: core/admin/layout.php:97
+#: core/admin/layout.php:110
 msgid "Support forum"
 msgstr ""
 
-#: core/admin/layout.php:98
+#: core/admin/layout.php:111
 msgid "Rate the plugin"
 msgstr ""
 
@@ -165,79 +191,79 @@ msgid "Sorry, you are not allowed to do that."
 msgstr ""
 
 #: core/admin/pages/Options.php:115
-#: core/admin/pages/templates/options.php:28
+#: core/admin/pages/templates/options.php:27
 msgid "Conditions"
 msgstr ""
 
-#: core/admin/pages/templates/options.php:21
+#: core/admin/pages/templates/options.php:20
 msgid "Settings saved."
 msgstr ""
 
-#: core/admin/pages/templates/options.php:30
+#: core/admin/pages/templates/options.php:29
 msgid "Conditions turned off are removed from the Visibility tab in Elementor and are not checked on your pages, so their saved rules have no effect."
 msgstr ""
 
-#: core/admin/pages/templates/options.php:34
+#: core/admin/pages/templates/options.php:33
 msgid "Active conditions"
 msgstr ""
 
-#: core/admin/pages/templates/options.php:61
+#: core/admin/pages/templates/options.php:60
 msgid "General"
 msgstr ""
 
-#: core/admin/pages/templates/options.php:64
+#: core/admin/pages/templates/options.php:63
 msgid "Date ranges"
 msgstr ""
 
-#: core/admin/pages/templates/options.php:68
+#: core/admin/pages/templates/options.php:67
 msgid "Read Date FROM and Date TO in the site time zone"
 msgstr ""
 
 #. translators: %s: time zone name.
-#: core/admin/pages/templates/options.php:74
+#: core/admin/pages/templates/options.php:73
 #, php-format
 msgid "Site time zone: %s. Recommended, on by default since 2.5.2: Date FROM and Date TO mean the site time, like the times of day. Unchecked, they are read as UTC, as in versions before 2.5.2; changing it moves existing schedules by the difference between UTC and the site time zone, so check scheduled elements after changing it."
 msgstr ""
 
-#: core/admin/pages/templates/options.php:82
+#: core/admin/pages/templates/options.php:81
 #: core/settings/GeneralVisibility.php:81
 msgid "Hide when empty"
 msgstr ""
 
-#: core/admin/pages/templates/options.php:86
+#: core/admin/pages/templates/options.php:85
 msgid "Count widgets placed directly in a container"
 msgstr ""
 
-#: core/admin/pages/templates/options.php:89
+#: core/admin/pages/templates/options.php:88
 msgid "Recommended, on by default since 2.5.2. Before 2.5.2, \"Hide when empty\" only looked at widgets inside inner containers or columns, so a container holding its widgets directly was always hidden. Unchecked, containers are hidden that way again."
 msgstr ""
 
-#: core/admin/pages/templates/options.php:94
+#: core/admin/pages/templates/options.php:93
 msgid "Elementor cache"
 msgstr ""
 
-#: core/admin/pages/templates/options.php:98
+#: core/admin/pages/templates/options.php:97
 msgid "Keep Elementor's element cache on for pages with rules"
 msgstr ""
 
-#: core/admin/pages/templates/options.php:101
+#: core/admin/pages/templates/options.php:100
 msgid "Recommended, much faster. Only the elements with visibility rules are rendered on every visit; the rest of the page comes from Elementor's cache. Before 3.0 the whole page skipped the cache, so other dynamic widgets on those pages were also rendered on every visit; with this on, they follow their own Elementor cache settings. Changing it clears Elementor's element cache."
 msgstr ""
 
-#: core/admin/pages/templates/options.php:107
+#: core/admin/pages/templates/options.php:106
 msgid "Save Changes"
 msgstr ""
 
-#: core/admin/pages/templates/options.php:111
-#: core/helpers/Pro_Teaser.php:143
+#: core/admin/pages/templates/options.php:110
+#: core/helpers/Pro_Teaser.php:137
 msgid "More conditions in Pro"
 msgstr ""
 
-#: core/admin/pages/templates/options.php:113
+#: core/admin/pages/templates/options.php:112
 msgid "Visibility Logic Pro adds these to the same Visibility tab. Everything above stays free."
 msgstr ""
 
-#: core/admin/pages/templates/options.php:128
+#: core/admin/pages/templates/options.php:127
 msgid "Compare free and Pro on staxwp.com"
 msgstr ""
 
@@ -415,21 +441,21 @@ msgstr ""
 msgid "Scan again"
 msgstr ""
 
-#: core/admin/Settings.php:99
+#: core/admin/Settings.php:98
 msgid "Dashboard"
 msgstr ""
 
 #. translators: %s: tab name.
-#: core/admin/Settings.php:142
+#: core/admin/Settings.php:141
 #, php-format
 msgid "Visibility Logic: %s"
 msgstr ""
 
-#: core/admin/Settings.php:174
+#: core/admin/Settings.php:173
 msgid "Settings"
 msgstr ""
 
-#: core/admin/Settings.php:317
+#: core/admin/Settings.php:316
 msgid "Sorry, you are not allowed to access this page."
 msgstr ""
 
@@ -458,7 +484,6 @@ msgid "Review the options"
 msgstr ""
 
 #: core/admin/UpdateNotice.php:93
-#: core/helpers/Pro_Teaser.php:242
 msgid "Dismiss"
 msgstr ""
 
@@ -621,32 +646,28 @@ msgid "Update Elementor Now"
 msgstr ""
 
 #. translators: %s: name of an option that needs Visibility Logic Pro.
-#: core/helpers/Pro_Teaser.php:85
+#: core/helpers/Pro_Teaser.php:79
 #, php-format
 msgid "%s (Pro)"
 msgstr ""
 
-#: core/helpers/Pro_Teaser.php:134
+#: core/helpers/Pro_Teaser.php:128
 msgid "ACF fields of users, terms and options pages, AND/OR rule groups, posts and pages, archives, WooCommerce and EDD customers, location, language, URL parameters and fallback content."
 msgstr ""
 
-#: core/helpers/Pro_Teaser.php:152
+#: core/helpers/Pro_Teaser.php:146
 #: core/Rule_Tree.php:1027
 msgid "Learn more"
 msgstr ""
 
-#: core/helpers/Pro_Teaser.php:161
+#: core/helpers/Pro_Teaser.php:155
 #: core/Rule_Tree.php:1024
 msgid "Pro feature"
 msgstr ""
 
-#: core/helpers/Pro_Teaser.php:170
-#: core/helpers/Pro_Teaser.php:273
+#: core/helpers/Pro_Teaser.php:164
+#: core/helpers/Pro_Teaser.php:190
 msgid "PRO"
-msgstr ""
-
-#: core/helpers/Pro_Teaser.php:239
-msgid "More conditions in Pro: posts and archives, WooCommerce and EDD customers, location, language and URL parameters."
 msgstr ""
 
 #: core/helpers/Resources.php:241

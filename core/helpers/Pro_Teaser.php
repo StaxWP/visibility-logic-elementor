@@ -5,8 +5,7 @@
  *
  * Rules (wordpress.org guidelines): free features are never locked; Pro options are listed after the free ones,
  * disabled, with "(Pro)" in their label, so they cannot be picked or saved and never run; one discreet "More
- * conditions in Pro" line at the end of the Visibility tab carries the only link. In wp-admin, one small line under
- * the Visibility Logic tabs (never on other screens), dismissible for good per user. Nothing is shown when Pro is
+ * conditions in Pro" line at the end of the Visibility tab carries the only link. Nothing is shown when Pro is
  * active.
  *
  * Feature states:
@@ -32,11 +31,6 @@ class Pro_Teaser {
 	const ON     = 'on';
 	const TEASER = 'teaser';
 	const OFF    = 'off';
-
-	/** User option: the admin "More conditions in Pro" line was dismissed (for good). */
-	const DISMISSED = 'stax_vl_pro_line_dismissed';
-	/** admin-post action that dismisses the admin line. */
-	const DISMISS_ACTION = 'stax_vl_pro_line_dismiss';
 
 	/**
 	 * State of a Pro feature (see the class description).
@@ -180,83 +174,6 @@ class Pro_Teaser {
 	public static function more_html( $context ) {
 		return '<p class="stax-vl-pro-more">' . self::badge_html() . ' ' . esc_html( self::more_text() ) . ' '
 			. '<a href="' . esc_url( self::url( $context ) ) . '" target="_blank" rel="noopener">' . esc_html( self::link_label() ) . '</a></p>';
-	}
-
-	/**
-	 * One small line in wp-admin: PRO mark, text, links separated by middots. Shared by the free plugin's
-	 * "More conditions in Pro" line and Visibility Logic Pro's license line (same look on every Visibility Logic tab).
-	 *
-	 * @param string $text  Text (plain).
-	 * @param array  $links Links: [ label, url, external (bool) ].
-	 * @param string $id    Optional id attribute (tests and dismiss targets).
-	 *
-	 * @return string
-	 */
-	public static function line_html( $text, array $links, $id = '' ) {
-		$parts = [];
-
-		foreach ( $links as $link ) {
-			if ( ! is_array( $link ) || count( $link ) < 2 ) {
-				continue;
-			}
-
-			$external = ! empty( $link[2] );
-			$parts[]  = '<a href="' . esc_url( $link[1] ) . '"' . ( $external ? ' target="_blank" rel="noopener"' : '' ) . '>'
-				. esc_html( $link[0] )
-				. ( $external ? '<span class="screen-reader-text"> ' . esc_html__( '(opens in a new tab)', 'visibility-logic-elementor' ) . '</span>' : '' )
-				. '</a>';
-		}
-
-		return '<p class="stax-vl-pro-line"' . ( '' !== $id ? ' id="' . esc_attr( $id ) . '"' : '' ) . '>'
-			. self::badge_html() . ' ' . esc_html( $text )
-			. ( $parts ? ' ' . implode( ' &middot; ', $parts ) : '' )
-			. '</p>';
-	}
-
-	/**
-	 * URL that dismisses a line for the current user (admin-post, nonce).
-	 *
-	 * @param string $action admin-post action (also the nonce action).
-	 *
-	 * @return string
-	 */
-	public static function dismiss_url( $action ) {
-		return wp_nonce_url( admin_url( 'admin-post.php?action=' . $action ), $action );
-	}
-
-	/**
-	 * The admin "More conditions in Pro" line (Visibility Logic screens): empty when Pro is active, for users who
-	 * cannot manage options and once dismissed.
-	 *
-	 * @return string
-	 */
-	public static function admin_line_html() {
-		if ( ! self::visible() || ! current_user_can( 'manage_options' ) || get_user_option( self::DISMISSED ) ) {
-			return '';
-		}
-
-		return self::line_html(
-			__( 'More conditions in Pro: posts and archives, WooCommerce and EDD customers, location, language and URL parameters.', 'visibility-logic-elementor' ),
-			[
-				[ self::link_label(), self::url( 'panel-line' ), true ],
-				[ __( 'Dismiss', 'visibility-logic-elementor' ), self::dismiss_url( self::DISMISS_ACTION ), false ],
-			],
-			'stax-vl-pro-line'
-		);
-	}
-
-	/**
-	 * Dismisses the admin line for good (admin-post handler).
-	 */
-	public static function dismiss() {
-		check_admin_referer( self::DISMISS_ACTION );
-
-		if ( current_user_can( 'manage_options' ) ) {
-			update_user_option( get_current_user_id(), self::DISMISSED, time() );
-		}
-
-		wp_safe_redirect( wp_get_referer() ? wp_get_referer() : admin_url() );
-		exit;
 	}
 
 	/**

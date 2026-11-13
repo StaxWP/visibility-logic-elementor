@@ -11,7 +11,6 @@
  * @var array  $pro           Pro status (active, licensed, label, manage_url).
  */
 
-use Stax\VisibilityLogic\Pro_Teaser;
 use Stax\VisibilityLogic\Resources;
 
 defined( 'ABSPATH' ) || exit;
@@ -58,9 +57,6 @@ $stax_vl_classes = array_map( 'sanitize_html_class', array_filter( array_map( 's
 		</nav>
 	<?php endif; ?>
 
-	<?php // One small, dismissible line about Pro (Pro not active); Visibility Logic Pro adds its license line here. ?>
-	<?php echo Pro_Teaser::admin_line_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in Pro_Teaser::line_html(). ?>
-
 	<?php do_action( STAX_VISIBILITY_HOOK_PREFIX . 'before_panel_action' ); ?>
 
 	<div class="stax-vl-columns">
@@ -69,7 +65,24 @@ $stax_vl_classes = array_map( 'sanitize_html_class', array_filter( array_map( 's
 		</div>
 
 		<aside class="stax-vl-sidebar" aria-label="<?php esc_attr_e( 'About Visibility Logic', 'visibility-logic-elementor' ); ?>">
-			<?php if ( $pro['active'] ) : ?>
+			<?php if ( ! $pro['active'] ) : ?>
+				<div class="stax-vl-card">
+					<h2><?php esc_html_e( 'Visibility Logic Pro', 'visibility-logic-elementor' ); ?></h2>
+					<p><?php esc_html_e( 'More conditions for the same Visibility tab:', 'visibility-logic-elementor' ); ?></p>
+					<ul class="stax-vl-list">
+						<li><?php esc_html_e( 'Posts, pages, archives and conditional tags', 'visibility-logic-elementor' ); ?></li>
+						<li><?php esc_html_e( 'URL parameters, IP, referrer and visitor country', 'visibility-logic-elementor' ); ?></li>
+						<li><?php esc_html_e( 'WooCommerce and EDD customers, language', 'visibility-logic-elementor' ); ?></li>
+						<li><?php esc_html_e( 'Advanced ACF, dynamic tags, fallback content', 'visibility-logic-elementor' ); ?></li>
+					</ul>
+					<p>
+						<a class="button" href="<?php echo esc_url( Resources::pro_url( 'sidebar' ) ); ?>" target="_blank" rel="noopener">
+							<?php esc_html_e( 'Learn about Pro', 'visibility-logic-elementor' ); ?>
+							<span class="screen-reader-text"><?php esc_html_e( '(opens in a new tab)', 'visibility-logic-elementor' ); ?></span>
+						</a>
+					</p>
+				</div>
+			<?php else : ?>
 				<div class="stax-vl-card">
 					<h2><?php esc_html_e( 'Visibility Logic Pro', 'visibility-logic-elementor' ); ?></h2>
 					<?php if ( '' !== (string) $pro['label'] ) : ?>

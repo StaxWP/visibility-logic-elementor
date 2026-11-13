@@ -71,7 +71,6 @@ class Settings {
 		add_action( 'admin_enqueue_scripts', [ $this, 'admin_scripts' ] );
 		add_action( 'admin_init', [ $this, 'ensure_settings_option' ] );
 		add_action( STAX_VISIBILITY_HOOK_PREFIX . 'panel_action', [ $this, 'main_panel' ] );
-		add_action( 'admin_post_' . Pro_Teaser::DISMISS_ACTION, [ Pro_Teaser::class, 'dismiss' ] );
 		add_filter( 'plugin_action_links_' . STAX_VISIBILITY_PLUGIN_BASE, [ $this, 'plugin_action_links' ] );
 	}
 
