@@ -196,7 +196,7 @@ class DateTimeVisibility extends Singleton {
 			self::SECTION_PREFIX . 'date_info',
 			[
 				'type'           => Controls_Manager::RAW_HTML,
-				'raw'            => __( 'Use timestamps based on server time:', 'visibility-logic-elementor' ) .
+				'raw'            => __( 'Dates and times use the site time zone (Settings > General). Current site time:', 'visibility-logic-elementor' ) .
 									 '<br><strong>' . wp_date( 'Y-m-d H:i' ) . '</strong>',
 				'condition'      => [
 					self::SECTION_PREFIX . 'date_time_enabled' => 'yes',
@@ -204,6 +204,31 @@ class DateTimeVisibility extends Singleton {
 				'style_transfer' => false,
 			]
 		);
+	}
+
+	/**
+	 * Timestamp of a saved Date FROM/TO value (Y-m-d H:i), read in the site time zone.
+	 *
+	 * Before 2.5.2 the dates were read as UTC (strtotime() under WordPress), so a schedule ran early or late by the
+	 * site's offset from UTC although the panel shows the site time. The filter
+	 * `stax/visibility/date_timezone` can return `new DateTimeZone( 'UTC' )` to keep the old reading.
+	 *
+	 * @param string $date Saved date.
+	 *
+	 * @return int|false False when the date cannot be read (same as strtotime()).
+	 */
+	public static function to_timestamp( $date ) {
+		$timezone = apply_filters( 'stax/visibility/date_timezone', wp_timezone() );
+
+		if ( ! $timezone instanceof \DateTimeZone ) {
+			$timezone = wp_timezone();
+		}
+
+		try {
+			return ( new \DateTimeImmutable( (string) $date, $timezone ) )->getTimestamp();
+		} catch ( \Exception $e ) {
+			return false;
+		}
 	}
 
 	/**
@@ -232,20 +257,20 @@ class DateTimeVisibility extends Singleton {
 				$current_date = current_datetime()->getTimestamp();
 
 				if ( $date_from && $date_to ) {
-					if ( $current_date >= strtotime( $date_from ) && $current_date <= strtotime( $date_to ) ) {
+					if ( $current_date >= self::to_timestamp( $date_from ) && $current_date <= self::to_timestamp( $date_to ) ) {
 						$options['date_time'] = true;
 					}
 				} elseif ( $date_from && ! $date_to ) {
-					if ( $current_date >= strtotime( $date_from ) ) {
+					if ( $current_date >= self::to_timestamp( $date_from ) ) {
 						$options['date_time'] = true;
 					}
 				} elseif ( ! $date_from && $date_to ) {
-					if ( $current_date <= strtotime( $date_to ) ) {
+					if ( $current_date <= self::to_timestamp( $date_to ) ) {
 						$options['date_time'] = true;
 					}
 				}
 				break;
-			case 'time';
+			case 'time':
 				$time_from = $settings[ self::SECTION_PREFIX . 'time_from' ];
 				$time_to   = $settings[ self::SECTION_PREFIX . 'time_to' ];
 
