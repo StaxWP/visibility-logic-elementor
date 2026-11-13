@@ -12,6 +12,7 @@
  * @var bool  $saved    Just saved.
  */
 
+use Stax\VisibilityLogic\Pro_Teaser;
 use Stax\VisibilityLogic\Resources;
 
 defined( 'ABSPATH' ) || exit;
@@ -45,7 +46,7 @@ defined( 'ABSPATH' ) || exit;
 					<label for="<?php echo esc_attr( $stax_vl_id ); ?>" class="stax-vl-condition__name"><?php echo esc_html( wp_strip_all_tags( $stax_vl_option['name'] ) ); ?></label>
 				<?php endif; ?>
 				<?php if ( ! Resources::is_free_condition( $stax_vl_slug ) ) : ?>
-					<span class="stax-vl-badge stax-vl-badge--pro"><?php esc_html_e( 'Pro', 'visibility-logic-elementor' ); ?></span>
+					<?php echo Pro_Teaser::badge_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in Pro_Teaser. ?>
 				<?php endif; ?>
 				<?php if ( ! empty( $stax_vl_option['description'] ) ) : ?>
 					<p class="stax-vl-condition__desc"><?php echo wp_kses_post( $stax_vl_option['description'] ); ?></p>

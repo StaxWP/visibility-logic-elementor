@@ -69,11 +69,6 @@
 	margin: 12px 0 8px;
 }
 
-.stax-vl-list {
-	list-style: disc;
-	margin: 0 0 12px 18px;
-}
-
 .stax-vl-links {
 	margin: 0 0 8px;
 }
@@ -92,6 +87,33 @@
 .stax-vl-badge--pro {
 	background: #6e49cb;
 	color: #fff;
+}
+
+/* PRO mark and the one-line Pro / license note under the tabs (Pro_Teaser::line_html): same muted pill as the
+   editors, no box, no color. */
+.stax-vl .stax-vl-pro {
+	display: inline-block;
+	padding: 0 5px;
+	border: 1px solid #c3c4c7;
+	border-radius: 10px;
+	color: #646970;
+	font-size: 9px;
+	font-weight: 500;
+	line-height: 14px;
+	letter-spacing: .04em;
+	text-transform: uppercase;
+	vertical-align: 1px;
+}
+
+.stax-vl .stax-vl-pro-line {
+	margin: 12px 0 0;
+	color: #646970;
+	font-size: 12px;
+	line-height: 1.5;
+}
+
+.stax-vl .stax-vl-pro-line a {
+	color: inherit;
 }
 
 .stax-vl-status--ok::before,
@@ -147,7 +169,8 @@
 	color: #1d2327;
 }
 
-.stax-vl-condition__name + .stax-vl-badge {
+.stax-vl-condition__name + .stax-vl-badge,
+.stax-vl-condition__name + .stax-vl-pro {
 	margin-left: 6px;
 }
 

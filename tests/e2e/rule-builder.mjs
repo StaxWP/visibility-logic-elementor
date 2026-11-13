@@ -204,6 +204,22 @@ try {
 	await builder().locator( '.stax-vl-classic-toggle' ).click();
 	const classicVisible = await page.locator( '.elementor-control-stax_visibility_show_hide' ).isVisible();
 	check( 'classic settings can be shown', classicVisible );
+	// Visibility Logic Pro without a license: one subtle line at the top of each Pro section (no box, no buttons).
+	const proSection = page.locator( '.elementor-control-stax_visibility_post_section .elementor-panel-heading' );
+	if ( await proSection.count() ) {
+		await proSection.first().scrollIntoViewIfNeeded();
+		await proSection.first().click();
+		await page.waitForTimeout( 400 );
+		const gate = await page.locator( '#elementor-panel .vlp-gate-line, #elementor-panel .vlp-gate-box' ).evaluateAll( ( els ) => els.map( ( el ) => ( { line: el.classList.contains( 'vlp-gate-line' ), size: parseFloat( getComputedStyle( el ).fontSize ), bg: getComputedStyle( el ).backgroundColor } ) ) );
+		if ( gate.length ) {
+			check( 'Pro section without a license: subtle lock line (small, no box)', gate.every( ( g ) => g.line && g.size <= 12 && ( g.bg === 'rgba(0, 0, 0, 0)' || g.bg === 'transparent' ) ), gate );
+			await page.locator( '#elementor-panel .vlp-gate-line' ).first().scrollIntoViewIfNeeded();
+			await shot( 'elementor-10-license-line' );
+		} else {
+			console.log( 'SKIP lock line (Visibility Logic Pro licensed or not active)' );
+		}
+		await proSection.first().click();
+	}
 	await page.locator( '.elementor-control-type-section .elementor-panel-heading' ).first().scrollIntoViewIfNeeded();
 	await page.locator( '.stax-vl-classic-toggle' ).first().click().catch( () => {} );
 	await page.evaluate( () => {
