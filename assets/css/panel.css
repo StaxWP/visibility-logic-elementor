@@ -191,3 +191,82 @@
 .elementor-control-type-stax_select option:disabled {
   color: var(--e-a-color-txt-muted, #818a96);
 }
+
+/* 3.0 rule builder: the classic sections and General controls are hidden while the builder is in the panel
+   ("Show the classic settings" brings them back). The Fallback section (Pro) stays visible. */
+.stax-vl-has-builder:not(.stax-vl-show-classic) .elementor-control-type-section[class*="elementor-control-stax_visibility_"]:not(.elementor-control-stax_visibility_general_section):not(.elementor-control-stax_visibility_fallback_section),
+.stax-vl-has-builder:not(.stax-vl-show-classic) .elementor-control-stax_visibility_enabled,
+.stax-vl-has-builder:not(.stax-vl-show-classic) .elementor-control-stax_visibility_show_hide,
+.stax-vl-has-builder:not(.stax-vl-show-classic) .elementor-control-stax_visibility_condition_type,
+.stax-vl-has-builder:not(.stax-vl-show-classic) .elementor-control-stax_visibility_keep_html,
+.stax-vl-has-builder:not(.stax-vl-show-classic) .elementor-control-stax_visibility_hide_when_empty {
+  display: none !important;
+}
+
+.stax-vl-show-classic .elementor-control-stax_visibility_rules {
+  display: none !important;
+}
+
+.elementor-control-type-stax_rule_builder .elementor-control-content { display: block; }
+
+.stax-vl-rb-status:empty { display: none; }
+
+.stax-vl-rb-status {
+  margin: 8px 0 0;
+  font-size: 11px;
+  color: var(--e-a-color-txt, #515962);
+}
+
+.stax-vl-classic-toggle {
+  margin-top: 10px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--e-a-color-txt, #515962);
+  text-decoration: underline;
+  font-size: 11px;
+  cursor: pointer;
+  min-height: 24px;
+}
+
+.stax-vl-nav-badge {
+  margin-inline-start: 6px;
+  padding: 0 5px;
+  max-width: 45%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  border-radius: 8px;
+  background: #6e49cb;
+  color: #fff;
+  font-size: 9px;
+  line-height: 15px;
+  font-weight: 600;
+}
+
+/* Elementor panel colours for the shared builder (dark UI too). */
+.elementor-panel .stxc {
+  --stxc-border: var(--e-a-border-color, #d5d8dc);
+  --stxc-bg: var(--e-a-bg-default, #fff);
+  --stxc-soft: var(--e-a-bg-hover, #f1f2f3);
+  --stxc-muted: var(--e-a-color-txt, #515962);
+  --stxc-accent: #6e49cb;
+  color: var(--e-a-color-txt, #3f444b);
+}
+.elementor-panel .stxc select,
+.elementor-panel .stxc input[type="text"],
+.elementor-panel .stxc input[type="search"],
+.elementor-panel .stxc input[type="number"],
+.elementor-panel .stxc input[type="time"],
+.elementor-panel .stxc input[type="datetime-local"],
+.elementor-panel .stxc textarea {
+  background: var(--e-a-bg-default, #fff);
+  color: inherit;
+  border: 1px solid var(--e-a-border-color-bold, #d5d8dc);
+  border-radius: 3px;
+  padding: 4px 6px;
+  font-size: 12px;
+}
+
+.elementor-control-type-stax_rule_builder .elementor-control-field.stax-vl-rb-field { display: block; }
+.elementor-control-type-stax_rule_builder .stax-vl-rb { width: 100%; }

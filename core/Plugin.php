@@ -65,6 +65,7 @@ class Plugin extends Singleton {
 		require_once STAX_VISIBILITY_CORE_PATH . 'Context.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'Rule_Tree.php';
 		require_once STAX_VISIBILITY_CORE_HELPERS_PATH . 'Cache_Check.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'Rest.php';
 
 		Rule_Tree::load_package();
 
@@ -156,6 +157,7 @@ class Plugin extends Singleton {
 		require_once STAX_VISIBILITY_CORE_PATH . 'helpers/FunctionCaller.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'helpers/controls/Query.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'helpers/controls/Select.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'helpers/controls/Rule_Builder.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'helpers/Controls.php';
 
 		new Ajax();
@@ -624,8 +626,34 @@ class Plugin extends Singleton {
 			$js_widgets
 		);
 
+		self::enqueue_rule_builder( 'elementor' );
+
 		// Select2: Elementor's own copy (handles `jquery-elementor-select2` / `elementor-select2` in Elementor 3.x and 4.x).
 		// 2.x bundled a second Select2 build here.
+	}
+
+	/**
+	 * Rule builder assets (shared package script and style, the 2.x mapping, the editor adapter).
+	 *
+	 * @param string $editor elementor|blocks.
+	 *
+	 * @return string Handle of the editor adapter script.
+	 */
+	public static function enqueue_rule_builder( $editor ) {
+		\StaxWP\Conditions\V1\Assets::register();
+
+		wp_enqueue_style( 'stax-conditions' );
+		wp_register_script( 'stax-visibility-rule-map', STAX_VISIBILITY_ASSETS_URL . 'js/rule-map.js', [], STAX_VISIBILITY_VERSION, true );
+
+		if ( 'elementor' === $editor ) {
+			$handle = 'stax-visibility-rule-builder';
+			wp_enqueue_script( $handle, STAX_VISIBILITY_ASSETS_URL . 'js/rule-builder-elementor.js', [ 'jquery', 'stax-conditions', 'stax-visibility-rule-map' ], STAX_VISIBILITY_VERSION, true );
+			wp_localize_script( $handle, 'staxVisibilityRules', Rest::editor_data() );
+
+			return $handle;
+		}
+
+		return 'stax-visibility-blocks';
 	}
 
 	/**
@@ -661,7 +689,11 @@ class Plugin extends Singleton {
 	 * @return string
 	 */
 	private static function preview_css() {
-		return "body.elementor-editor-active .elementor-element.stax-condition-yes::before{content:'\\e8ed';color:#6E49CB;display:inline-block;font-family:eicons;font-size:15px;position:absolute;top:0;right:5px;z-index:1;}";
+		return "body.elementor-editor-active .elementor-element.stax-condition-yes::before{content:'\\e8ed';color:#6E49CB;display:inline-block;font-family:eicons;font-size:15px;position:absolute;top:0;right:5px;z-index:1;}"
+			// 3.0: short rule summary on the canvas (set by assets/js/rule-builder-elementor.js).
+			. 'body.elementor-editor-active .elementor-element[data-stax-vl]::after{content:attr(data-stax-vl);position:absolute;top:0;right:22px;z-index:2;max-width:60%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;padding:1px 6px;border-radius:0 0 4px 4px;background:#6E49CB;color:#fff;font:600 10px/16px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;pointer-events:none;}'
+			. 'body.elementor-editor-active .elementor-element.stax-vl-ghost{opacity:.35;outline:1px dashed #6E49CB;}'
+			. 'body.elementor-editor-active .elementor-element.stax-vl-ghost[data-stax-vl]::after{background:#3c434a;}';
 	}
 
 	/**

@@ -54,6 +54,8 @@ class Controls {
 		$controls['stax_query']  = 'Query';
 		$controls['stax_select'] = 'Select';
 
+		$controls['stax_rule_builder'] = 'Rule_Builder';
+
 		return $controls;
 	}
 

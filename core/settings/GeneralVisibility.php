@@ -34,7 +34,7 @@ class GeneralVisibility extends Singleton {
 			self::SECTION_PREFIX . 'general_section',
 			[
 				'tab'   => self::VISIBILITY_TAB,
-				'label' => __( 'General', 'visibility-logic-elementor' ),
+				'label' => __( 'Visibility rules', 'visibility-logic-elementor' ),
 			]
 		);
 
@@ -47,6 +47,19 @@ class GeneralVisibility extends Singleton {
 	 * @param $args
 	 */
 	public function register_controls( $element, $args ) {
+		// 3.0 rule builder (the classic controls below stay registered: they hold the 2.x settings).
+		$element->add_control(
+			self::SECTION_PREFIX . Rule_Tree::KEY,
+			[
+				'type'           => 'stax_rule_builder',
+				'label'          => __( 'Visibility rules', 'visibility-logic-elementor' ),
+				'show_label'     => false,
+				'label_block'    => true,
+				'default'        => '',
+				'style_transfer' => false,
+			]
+		);
+
 		$element->add_control(
 			self::SECTION_PREFIX . 'enabled',
 			[
