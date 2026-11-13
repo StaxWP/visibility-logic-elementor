@@ -239,6 +239,7 @@
 				this.previewBar = SC.createPreviewBar( barBox, {
 					roles: data.roles || [],
 					users: !! data.usersUrl,
+					country: !! data.previewCountry,
 					search: usersSearch,
 					value: preview.ctx,
 					labels: PL,

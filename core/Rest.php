@@ -108,6 +108,7 @@ class Rest {
 		$data['usersUrl']  = current_user_can( 'list_users' ) ? rest_url( self::NS . '/users' ) : '';
 		$data['restNonce'] = wp_create_nonce( 'wp_rest' );
 		$data['explainUrl'] = rest_url( self::NS . '/explain' );
+		$data['previewCountry'] = Preview::country_enabled();
 		$data['roles']      = [];
 
 		foreach ( wp_roles()->get_names() as $slug => $name ) {
@@ -132,6 +133,8 @@ class Rest {
 			'mobile'     => __( 'Mobile', 'visibility-logic-elementor' ),
 			'time'       => __( 'Date and time', 'visibility-logic-elementor' ),
 			'timeHelp'   => __( 'Empty: now (site time zone).', 'visibility-logic-elementor' ),
+			'country'    => __( 'Country', 'visibility-logic-elementor' ),
+			'countryHelp' => __( 'Two-letter code, for example DE.', 'visibility-logic-elementor' ),
 			'why'        => __( 'Preview as and why', 'visibility-logic-elementor' ),
 			/* translators: %s: who the page is previewed for. */
 			'visible'    => __( 'Shown for %s', 'visibility-logic-elementor' ),

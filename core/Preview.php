@@ -152,11 +152,25 @@ class Preview {
 			}
 		}
 
+		// Country (Visibility Logic Pro's geolocation reads it; a typed code, never a lookup).
+		if ( ! empty( $context['country'] ) && self::country_enabled() && preg_match( '/^[A-Za-z]{2}$/', (string) $context['country'] ) ) {
+			$simulation['country'] = strtoupper( (string) $context['country'] );
+		}
+
 		if ( $simulation ) {
 			Context::simulate( $simulation );
 		} else {
 			Context::reset();
 		}
+	}
+
+	/**
+	 * Whether "Preview as" offers a country (an add-on with location conditions turns it on).
+	 *
+	 * @return bool
+	 */
+	public static function country_enabled() {
+		return (bool) apply_filters( 'stax/visibility/preview_country', false ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- shares the 2.x hook namespace.
 	}
 
 	/**

@@ -23,7 +23,7 @@
  * (rows of `fields`, rule builder only). Optional: default,
  * placeholder, help, show_if ( [ 'other_key' => [ values ] ] ), builders ( [ 'blocks', 'atomic' ] ), locked_options
  * (select values listed but disabled: Pro options without Pro, see Pro_Teaser).
- * Condition-level, optional: `locked` (bool, an add-on without a license: the editors show the condition read-only,
+ * Condition-level, optional: `builders` (only these builders, e.g. [ 'rules' ]), `locked` (bool, an add-on without a license: the editors show the condition read-only,
  * saved values are kept and still apply) and `locked_notice` ( [ 'title', 'text', 'actions' => [ [ 'label', 'url' ] ] ] ).
  *
  * @package Stax\VisibilityLogic
@@ -109,6 +109,11 @@ class Conditions {
 
 		foreach ( $registered as $slug => $condition ) {
 			if ( ! is_array( $condition ) || empty( $condition['switch'] ) || empty( $condition['fields'] ) ) {
+				continue;
+			}
+
+			// Condition-level `builders`: offered only there (e.g. [ 'rules' ]: the rule builder, repeater fields).
+			if ( '' !== $builder && ! empty( $condition['builders'] ) && ! in_array( $builder, (array) $condition['builders'], true ) ) {
 				continue;
 			}
 

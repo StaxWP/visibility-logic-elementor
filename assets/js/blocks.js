@@ -154,6 +154,7 @@
 			var bar = SC.createPreviewBar( barRef.current, {
 				roles: data.roles || [],
 				users: !! data.usersUrl,
+				country: !! data.previewCountry,
 				search: usersSearch,
 				value: wp.data.select( STORE ).get().ctx,
 				labels: PL,
