@@ -115,7 +115,7 @@
 			groups = [ { conditions: conditions } ];
 		}
 
-		return { v: 1, action: on( values, 'show_hide' ) ? 'show' : 'hide', draft: false, groups: groups };
+		return { v: 1, action: ! conditions.length || on( values, 'show_hide' ) ? 'show' : 'hide', draft: false, groups: groups };
 	}
 
 	function usesNewOptions( condition, type, since ) {
@@ -213,7 +213,9 @@
 			inTree[ c.type ] = c;
 		} );
 
-		set( 'show_hide', tree.action === 'hide' ? '' : 'yes' );
+		if ( conditions.length ) {
+			set( 'show_hide', tree.action === 'hide' ? '' : 'yes' );
+		}
 
 		if ( conditions.length > 1 ) {
 			set( 'condition_type', groups.length > 1 ? 'one' : 'all' );

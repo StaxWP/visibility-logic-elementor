@@ -1,246 +1,256 @@
 /**
- * Visibility Logic: Visibility panel for every block (block editor only, no build step).
+ * Visibility Logic: "Visibility rules" panel for every block (block editor only, no build step).
  *
- * The panel is generated from the condition registry sent by PHP (window.staxVisibilityBlocks), so free and Pro
- * conditions registered with the `stax/visibility/condition_fields` filter appear here without extra code.
- * Values are stored in the block attribute `staxVisibility` and evaluated on the server in `render_block`.
+ * The panel hosts the shared rule builder (window.StaxConditions). Values are stored in the block attribute
+ * `staxVisibility` (2.x setting names without the `stax_visibility_` prefix) and evaluated on the server in
+ * `render_block`. Rules that the 2.x format can express are written as 2.x keys; others as a tree in `rules`
+ * (window.StaxVisibilityRuleMap, same as Elementor). The summary also reads WordPress's own block visibility
+ * (`metadata.blockVisibility`). List View rows get a badge with the short summary.
  */
-( function ( wp, config ) {
+( function ( wp, config, SC, RuleMap ) {
 	'use strict';
 
-	if ( ! wp || ! config || ! wp.hooks || ! wp.blockEditor ) {
+	if ( ! wp || ! config || ! wp.hooks || ! wp.blockEditor || ! SC || ! RuleMap ) {
 		return;
 	}
 
 	var el = wp.element.createElement;
 	var Fragment = wp.element.Fragment;
-	var __ = wp.i18n.__;
+	var useRef = wp.element.useRef;
+	var useEffect = wp.element.useEffect;
 	var InspectorControls = wp.blockEditor.InspectorControls;
 	var components = wp.components;
 	var ATTR = config.attribute;
+	var data = config.rules;
+	var L = data.labels;
 
-	// Attribute on every block, also blocks registered only in JavaScript.
 	wp.hooks.addFilter( 'blocks.registerBlockType', 'stax-visibility/attribute', function ( settings ) {
 		if ( ! settings || ( settings.attributes && settings.attributes[ ATTR ] ) ) {
 			return settings;
 		}
-
-		settings.attributes = Object.assign( {}, settings.attributes, {} );
+		settings.attributes = Object.assign( {}, settings.attributes );
 		settings.attributes[ ATTR ] = { type: 'object' };
-
 		return settings;
 	} );
 
-	function isOn( value ) {
+	function on( value ) {
 		return value === true || value === 'yes' || value === 1 || value === '1';
 	}
 
-	function defaultOf( field ) {
-		if ( field.type === 'switch' ) {
-			return false;
+	function treeOf( values ) {
+		var stored = values.rules ? SC.tree.normalize( values.rules ) : null;
+		if ( stored && ! SC.tree.isEmpty( stored ) ) {
+			return stored;
 		}
-		if ( field.type === 'multiselect' ) {
-			return [];
-		}
-		return field.default !== undefined ? field.default : '';
+		return RuleMap.legacyToTree( values, data.registry );
 	}
 
-	function shown( field, values ) {
-		if ( ! field.show_if ) {
-			return true;
-		}
-
-		return Object.keys( field.show_if ).every( function ( key ) {
-			var current = values[ key ];
-			if ( current === undefined ) {
-				var all = config.general.concat.apply( config.general, config.conditions.map( function ( c ) { return c.fields; } ) );
-				var def = all.filter( function ( f ) { return f.key === key; } )[ 0 ];
-				current = def ? defaultOf( def ) : '';
-			}
-			return field.show_if[ key ].indexOf( String( current ) ) !== -1;
+	// Block attribute conventions: switches as booleans.
+	function toBlock( changes ) {
+		var out = {};
+		Object.keys( changes ).forEach( function ( key ) {
+			var value = changes[ key ];
+			out[ key ] = /_enabled$/.test( key ) && ( value === 'yes' || value === '' ) ? value === 'yes' : value;
 		} );
+		return out;
 	}
 
-	function renderField( field, values, set, disabled ) {
-		var value = values[ field.key ] !== undefined ? values[ field.key ] : defaultOf( field );
-		var common = { key: field.key, label: field.label, help: field.help || undefined, disabled: !! disabled, __nextHasNoMarginBottom: true };
-
-		switch ( field.type ) {
-			case 'switch':
-				return el( components.ToggleControl, Object.assign( {}, common, {
-					checked: isOn( value ),
-					onChange: function ( checked ) { set( field.key, !! checked ); },
-				} ) );
-
-			case 'select':
-				return el( components.SelectControl, Object.assign( {}, common, {
-					value: String( value ),
-					options: field.options,
-					onChange: function ( next ) { set( field.key, next ); },
-					__next40pxDefaultSize: true,
-				} ) );
-
-			case 'multiselect':
-				var list = Array.isArray( value ) ? value.map( String ) : [];
-				return el( components.BaseControl, Object.assign( {}, common, { id: 'stax-vl-' + field.key } ),
-					el( 'div', { className: 'stax-vl-checkboxes', role: 'group', 'aria-label': field.label },
-						field.options.map( function ( option ) {
-							return el( components.CheckboxControl, {
-								key: option.value,
-								label: option.label,
-								disabled: !! disabled,
-								checked: list.indexOf( option.value ) !== -1,
-								__nextHasNoMarginBottom: true,
-								onChange: function ( checked ) {
-									var next = list.filter( function ( v ) { return v !== option.value; } );
-									if ( checked ) {
-										next.push( option.value );
-									}
-									set( field.key, next );
-								},
-							} );
-						} )
-					)
-				);
-
-			case 'textarea':
-				return el( components.TextareaControl, Object.assign( {}, common, {
-					value: String( value ),
-					onChange: function ( next ) { set( field.key, next ); },
-				} ) );
-
-			case 'date':
-				return el( components.TextControl, Object.assign( {}, common, {
-					type: 'datetime-local',
-					value: String( value ).replace( ' ', 'T' ),
-					onChange: function ( next ) { set( field.key, String( next ).replace( 'T', ' ' ) ); },
-					__next40pxDefaultSize: true,
-				} ) );
-
-			case 'time':
-				return el( components.TextControl, Object.assign( {}, common, {
-					type: 'time',
-					value: String( value ),
-					placeholder: field.placeholder || '',
-					onChange: function ( next ) { set( field.key, next ); },
-					__next40pxDefaultSize: true,
-				} ) );
-
-			default: // text, list.
-				return el( components.TextControl, Object.assign( {}, common, {
-					value: Array.isArray( value ) ? value.join( ', ' ) : String( value ),
-					placeholder: field.placeholder || '',
-					onChange: function ( next ) { set( field.key, next ); },
-					__next40pxDefaultSize: true,
-				} ) );
+	// WordPress 6.9+ block visibility (metadata.blockVisibility): false = hidden everywhere, or per viewport.
+	function coreVisibility( attributes ) {
+		var meta = attributes && attributes.metadata;
+		var v = meta ? meta.blockVisibility : undefined;
+		if ( v === false ) {
+			return config.labels.coreHidden;
 		}
+		if ( v && typeof v === 'object' ) {
+			var source = v.viewport && typeof v.viewport === 'object' ? v.viewport : v;
+			var hidden = Object.keys( source ).filter( function ( k ) {
+				return source[ k ] === false;
+			} );
+			if ( hidden.length ) {
+				return config.labels.coreHiddenOn.replace( '%s', hidden.join( ', ' ) );
+			}
+		}
+		return '';
 	}
 
-	// PRO mark: muted pill, text "PRO", accessible name "Pro feature" (same as Pro_Teaser::badge_html()).
-	function ProBadge( props ) {
-		return el( 'span', { className: 'stax-vl-pro', role: 'img', 'aria-label': props.pro.aria }, props.pro.badge );
+	function shortOf( values ) {
+		return SC.summary.short( treeOf( values ), data.registry, L );
 	}
 
-	// The one "More conditions in Pro" line with its link (only when Pro is not active).
-	function ProMore( props ) {
-		return el( 'p', { className: 'stax-vl-pro-more' },
-			el( ProBadge, { pro: props.pro } ), ' ', el( 'strong', null, props.pro.title ), ': ', props.pro.text, ' ',
-			el( components.ExternalLink, { href: props.pro.url }, props.pro.link )
+	var usersSearch = data.usersUrl ? function ( q ) {
+		return wp.apiFetch( { url: data.usersUrl + '?search=' + encodeURIComponent( q ) } ).catch( function () {
+			return [];
+		} );
+	} : null;
+
+	function Builder( props ) {
+		var mount = useRef( null );
+		var api = useRef( null );
+		var latest = useRef( props );
+		latest.current = props;
+
+		useEffect( function () {
+			var values = props.attributes[ ATTR ] || {};
+			var timer = null;
+			var pending = null;
+
+			function current() {
+				return Object.assign( {}, latest.current.attributes[ ATTR ] || {} );
+			}
+
+			function write( changes ) {
+				if ( ! Object.keys( changes ).length ) {
+					return;
+				}
+				var next = Object.assign( current(), toBlock( changes ) );
+				var update = {};
+				update[ ATTR ] = next;
+				latest.current.setAttributes( update );
+			}
+
+			function flush() {
+				if ( ! pending ) {
+					return;
+				}
+				var tree = pending;
+				pending = null;
+				var values2 = current();
+				var wasEmpty = SC.tree.isEmpty( treeOf( values2 ) );
+				var changes = RuleMap.toStorage( tree, values2, data.registry, data.since );
+				if ( changes === null ) {
+					return;
+				}
+				if ( wasEmpty && ! SC.tree.isEmpty( tree ) && ! on( values2.enabled ) ) {
+					changes.enabled = true;
+					api.current.setSettings( { active: true, when_hidden: on( values2.keep_html ) ? 'css' : 'remove' } );
+				}
+				write( changes );
+			}
+
+			api.current = SC.createBuilder( mount.current, {
+				registry: data.registry,
+				value: treeOf( values ),
+				labels: L,
+				context: data.context,
+				proUrl: data.proUrl,
+				search: usersSearch ? { users: usersSearch } : null,
+				settings: {
+					fields: [
+						{ key: 'active', type: 'switch', label: L.active, help: L.activeHelp },
+						{ key: 'when_hidden', type: 'select', label: L.whenHidden, options: [ { value: 'remove', label: L.remove_page }, { value: 'css', label: L.keepHtml } ], show_if: { active: [ 'yes' ] } },
+					],
+					values: { active: on( values.enabled ), when_hidden: on( values.keep_html ) ? 'css' : 'remove' },
+					onChange: function ( key, value ) {
+						write( key === 'active' ? { enabled: !! value } : { keep_html: value === 'css' } );
+					},
+				},
+				onChange: function ( tree ) {
+					pending = tree;
+					clearTimeout( timer );
+					timer = setTimeout( flush, 250 );
+				},
+			} );
+
+			return function () {
+				clearTimeout( timer );
+				flush();
+				api.current.destroy();
+			};
+		}, [ props.clientId ] );
+
+		var values = props.attributes[ ATTR ] || {};
+		var core = coreVisibility( props.attributes );
+		var tree = treeOf( values );
+		var note = ! SC.tree.isEmpty( tree ) && ! RuleMap.analyze( tree, data.registry, data.since ).flat ? L.treeNote : '';
+
+		return el( Fragment, null,
+			core ? el( 'p', { className: 'stax-vl-core' }, core ) : null,
+			el( 'div', { ref: mount, className: 'stax-vl-builder' } ),
+			note ? el( 'p', { className: 'stax-vl-note' }, note ) : null,
+			el( 'p', { className: 'stax-vl-note' }, config.labels.notice )
 		);
 	}
 
 	function Panel( props ) {
 		var values = props.attributes[ ATTR ] || {};
-
-		function set( key, value ) {
-			var next = Object.assign( {}, values );
-			next[ key ] = value;
-			var update = {};
-			update[ ATTR ] = next;
-			props.setAttributes( update );
-		}
-
-		var enabled = isOn( values.enabled );
-		var children = [];
-
-		config.general.forEach( function ( field ) {
-			if ( field.key === 'enabled' || enabled ) {
-				children.push( renderField( field, values, set ) );
-			}
-		} );
-
-		if ( enabled ) {
-			children.push( el( 'p', { key: 'notice', className: 'stax-vl-note' }, config.labels.notice ) );
-
-			config.conditions.forEach( function ( condition ) {
-				var on = isOn( values[ condition.switch ] );
-				var lock = condition.locked;
-				// Locked (add-on without a license): read-only, saved values kept.
-				var change = lock ? function () {} : set;
-				var inner = [];
-
-				if ( lock ) {
-					inner.push( el( components.Notice, { key: 'lock', status: 'warning', isDismissible: false, className: 'stax-vl-lock',
-						actions: lock.actions.map( function ( action ) {
-							return { label: action.label, url: action.url, noDefaultClasses: false };
-						} ) },
-						el( 'strong', null, lock.title ), lock.text ? el( 'p', null, lock.text ) : null
-					) );
-				}
-
-				inner.push( renderField( { key: condition.switch, type: 'switch', label: condition.label }, values, change, lock ) );
-
-				if ( on ) {
-					condition.fields.forEach( function ( field ) {
-						if ( shown( field, values ) ) {
-							inner.push( renderField( field, values, change, lock ) );
-						}
-					} );
-				}
-
-				children.push( el( 'div', { key: condition.slug, className: 'stax-vl-condition' + ( on ? ' is-on' : '' ) + ( lock ? ' is-locked' : '' ) }, inner ) );
-			} );
-
-			if ( config.pro ) {
-				children.push( el( ProMore, { key: 'pro', pro: config.pro } ) );
-			}
-		}
-
 		return el( InspectorControls, null,
 			el( components.PanelBody, {
 				title: config.labels.panel,
-				initialOpen: enabled,
+				initialOpen: on( values.enabled ),
 				className: 'stax-vl-panel',
-			}, children )
+			}, el( Builder, props ) )
 		);
 	}
 
-	var withPanel = wp.compose.createHigherOrderComponent( function ( BlockEdit ) {
+	wp.hooks.addFilter( 'editor.BlockEdit', 'stax-visibility/panel', wp.compose.createHigherOrderComponent( function ( BlockEdit ) {
 		return function ( props ) {
 			if ( ! props.isSelected ) {
 				return el( BlockEdit, props );
 			}
-
 			return el( Fragment, null, el( BlockEdit, props ), el( Panel, props ) );
 		};
-	}, 'withStaxVisibilityPanel' );
+	}, 'withStaxVisibilityPanel' ) );
 
-	wp.hooks.addFilter( 'editor.BlockEdit', 'stax-visibility/panel', withPanel );
-
-	// Outline blocks that have rules (editor only).
-	var withBadge = wp.compose.createHigherOrderComponent( function ( BlockListBlock ) {
+	// Canvas: outline and short label on blocks with rules (editor only).
+	wp.hooks.addFilter( 'editor.BlockListBlock', 'stax-visibility/badge', wp.compose.createHigherOrderComponent( function ( BlockListBlock ) {
 		return function ( props ) {
 			var values = props.attributes && props.attributes[ ATTR ];
-
-			if ( ! values || ! isOn( values.enabled ) ) {
+			if ( ! values || ! on( values.enabled ) ) {
 				return el( BlockListBlock, props );
 			}
-
+			var wrapperProps = Object.assign( {}, props.wrapperProps, {
+				'data-stax-vl': shortOf( values ),
+				'data-stax-vl-title': SC.summary.sentence( treeOf( values ), data.registry, L ),
+			} );
 			return el( BlockListBlock, Object.assign( {}, props, {
 				className: ( props.className ? props.className + ' ' : '' ) + 'stax-vl-has-rules',
+				wrapperProps: wrapperProps,
 			} ) );
 		};
-	}, 'withStaxVisibilityBadge' );
+	}, 'withStaxVisibilityBadge' ) );
 
-	wp.hooks.addFilter( 'editor.BlockListBlock', 'stax-visibility/badge', withBadge );
-}( window.wp, window.staxVisibilityBlocks ) );
+	// List View badges (rows are rendered by WordPress: add a small badge after the title).
+	var badgeTimer = null;
+	function refreshListView() {
+		var rows = document.querySelectorAll( '.block-editor-list-view-leaf[data-block]' );
+		if ( ! rows.length ) {
+			return;
+		}
+		var select = wp.data.select( 'core/block-editor' );
+		rows.forEach( function ( row ) {
+			var block = select.getBlock( row.getAttribute( 'data-block' ) );
+			var values = block && block.attributes && block.attributes[ ATTR ];
+			var title = row.querySelector( '.block-editor-list-view-block-select-button__title' );
+			var badge = row.querySelector( '.stax-vl-list-badge' );
+			if ( ! values || ! on( values.enabled ) || ! title ) {
+				if ( badge ) {
+					badge.remove();
+				}
+				return;
+			}
+			var text = shortOf( values );
+			if ( ! badge ) {
+				badge = document.createElement( 'span' );
+				badge.className = 'stax-vl-list-badge';
+				title.parentNode.insertBefore( badge, title.nextSibling );
+			}
+			if ( badge.textContent !== text ) {
+				badge.textContent = text;
+			}
+			badge.title = SC.summary.sentence( treeOf( values ), data.registry, L );
+		} );
+	}
+	function scheduleListView() {
+		clearTimeout( badgeTimer );
+		badgeTimer = setTimeout( refreshListView, 120 );
+	}
+	wp.data.subscribe( scheduleListView );
+	new MutationObserver( function ( mutations ) {
+		if ( mutations.some( function ( m ) {
+			return m.target.closest && m.target.closest( '.block-editor-list-view-tree' ) && ! m.target.classList.contains( 'stax-vl-list-badge' );
+		} ) ) {
+			scheduleListView();
+		}
+	} ).observe( document.body, { childList: true, subtree: true } );
+}( window.wp, window.staxVisibilityBlocks, window.StaxConditions, window.StaxVisibilityRuleMap ) );

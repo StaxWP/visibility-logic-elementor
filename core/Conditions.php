@@ -205,6 +205,10 @@ class Conditions {
 	 */
 	public static function reset() {
 		self::$fields = null;
+
+		if ( class_exists( __NAMESPACE__ . '\\Rule_Tree' ) ) {
+			Rule_Tree::reset();
+		}
 	}
 
 	/**

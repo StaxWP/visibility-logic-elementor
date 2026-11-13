@@ -55,3 +55,15 @@
 	margin: 16px 0 0;
 	padding-top: 12px;
 }
+
+/* 3.0 rule builder in the sidebar and List View badges. */
+.stax-vl-panel .stxc { --stxc-accent: #6e49cb; --stxc-muted: #50575e; font-size: 13px; }
+.stax-vl-panel .stxc select,
+.stax-vl-panel .stxc input[type="text"],
+.stax-vl-panel .stxc input[type="search"],
+.stax-vl-panel .stxc input[type="number"],
+.stax-vl-panel .stxc input[type="time"],
+.stax-vl-panel .stxc input[type="datetime-local"],
+.stax-vl-panel .stxc textarea { min-height: 32px; border: 1px solid #949494; border-radius: 2px; padding: 4px 8px; font-size: 13px; }
+.stax-vl-panel .stax-vl-core { margin: 0 0 8px; padding: 6px 8px; background: #f0f0f0; font-size: 12px; }
+.stax-vl-list-badge { margin-inline-start: 6px; padding: 0 6px; max-width: 50%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; border-radius: 8px; background: #6e49cb; color: #fff; font-size: 10px; line-height: 16px; font-weight: 600; }

@@ -293,7 +293,8 @@ class Rule_Tree {
 
 			$type['label']    = wp_strip_all_tags( (string) $condition['label'] );
 			$type['fields']   = array_values( $condition['fields'] );
-			$type['locked']   = null !== Conditions::lock_notice( $condition );
+			$type['lock']     = Conditions::lock_notice( $condition );
+			$type['locked']   = null !== $type['lock'];
 			$type['disabled'] = isset( $by_slug[ $base ] ) && empty( $by_slug[ $base ]['status'] );
 			$type['pro']      = ! empty( $condition['pro'] ) || ( isset( $by_slug[ $base ] ) && ! empty( $by_slug[ $base ]['pro'] ) );
 
@@ -487,7 +488,8 @@ class Rule_Tree {
 
 		return [
 			'v'      => Tree::VERSION,
-			'action' => self::on( $settings, $prefix . 'show_hide' ) ? 'show' : 'hide',
+			// A rule without conditions starts as "Show" (the 2.x default "Hide" only matters once a condition exists).
+			'action' => ( ! $conditions || self::on( $settings, $prefix . 'show_hide' ) ) ? 'show' : 'hide',
 			'draft'  => false,
 			'groups' => $groups,
 		];
@@ -638,7 +640,9 @@ class Rule_Tree {
 			$in_tree[ $condition['type'] ] = $condition;
 		}
 
-		$set( 'show_hide', 'hide' === $tree['action'] ? '' : 'yes' );
+		if ( $conditions ) {
+			$set( 'show_hide', 'hide' === $tree['action'] ? '' : 'yes' );
+		}
 
 		if ( count( $conditions ) > 1 ) {
 			$set( 'condition_type', count( $groups ) > 1 ? 'one' : 'all' );

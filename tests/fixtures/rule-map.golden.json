@@ -152,6 +152,7 @@
                         "required": true
                     }
                 ],
+                "lock": null,
                 "locked": false,
                 "disabled": false,
                 "pro": false,
@@ -313,6 +314,7 @@
                         }
                     }
                 ],
+                "lock": null,
                 "locked": false,
                 "disabled": false,
                 "pro": false,
@@ -536,6 +538,7 @@
                         }
                     }
                 ],
+                "lock": null,
                 "locked": false,
                 "disabled": false,
                 "pro": false,
@@ -605,6 +608,7 @@
                         ]
                     }
                 ],
+                "lock": null,
                 "locked": false,
                 "disabled": false,
                 "pro": false,
@@ -647,6 +651,7 @@
                         "help": "Detected on the server from the User-Agent."
                     }
                 ],
+                "lock": null,
                 "locked": false,
                 "disabled": false,
                 "pro": false,
@@ -766,6 +771,7 @@
                         }
                     }
                 ],
+                "lock": null,
                 "locked": false,
                 "disabled": false,
                 "pro": false,
@@ -813,6 +819,20 @@
                     }
                 ],
                 "locked": true,
+                "lock": {
+                    "title": "Activate Visibility Logic Pro to edit these conditions",
+                    "text": "Saved Pro conditions keep working on your site. Add your license key to change them.",
+                    "actions": [
+                        {
+                            "label": "Activate",
+                            "url": "http://vl3.test/wp-admin/options-general.php?page=stax-visibility-license"
+                        },
+                        {
+                            "label": "Get a license",
+                            "url": "https://staxwp.com/visibility-logic-for-elementor/#pricing"
+                        }
+                    ]
+                },
                 "disabled": false,
                 "category": "other",
                 "keywords": [],
@@ -867,6 +887,20 @@
                     }
                 ],
                 "locked": true,
+                "lock": {
+                    "title": "Activate Visibility Logic Pro to edit these conditions",
+                    "text": "Saved Pro conditions keep working on your site. Add your license key to change them.",
+                    "actions": [
+                        {
+                            "label": "Activate",
+                            "url": "http://vl3.test/wp-admin/options-general.php?page=stax-visibility-license"
+                        },
+                        {
+                            "label": "Get a license",
+                            "url": "https://staxwp.com/visibility-logic-for-elementor/#pricing"
+                        }
+                    ]
+                },
                 "disabled": false,
                 "category": "other",
                 "keywords": [],
@@ -1345,6 +1379,20 @@
                     }
                 ],
                 "locked": true,
+                "lock": {
+                    "title": "Activate Visibility Logic Pro to edit these conditions",
+                    "text": "Saved Pro conditions keep working on your site. Add your license key to change them.",
+                    "actions": [
+                        {
+                            "label": "Activate",
+                            "url": "http://vl3.test/wp-admin/options-general.php?page=stax-visibility-license"
+                        },
+                        {
+                            "label": "Get a license",
+                            "url": "https://staxwp.com/visibility-logic-for-elementor/#pricing"
+                        }
+                    ]
+                },
                 "disabled": false,
                 "category": "other",
                 "keywords": [],
@@ -1646,6 +1694,20 @@
                     }
                 ],
                 "locked": true,
+                "lock": {
+                    "title": "Activate Visibility Logic Pro to edit these conditions",
+                    "text": "Saved Pro conditions keep working on your site. Add your license key to change them.",
+                    "actions": [
+                        {
+                            "label": "Activate",
+                            "url": "http://vl3.test/wp-admin/options-general.php?page=stax-visibility-license"
+                        },
+                        {
+                            "label": "Get a license",
+                            "url": "https://staxwp.com/visibility-logic-for-elementor/#pricing"
+                        }
+                    ]
+                },
                 "disabled": false,
                 "category": "other",
                 "keywords": [],
@@ -1934,6 +1996,20 @@
                     }
                 ],
                 "locked": true,
+                "lock": {
+                    "title": "Activate Visibility Logic Pro to edit these conditions",
+                    "text": "Saved Pro conditions keep working on your site. Add your license key to change them.",
+                    "actions": [
+                        {
+                            "label": "Activate",
+                            "url": "http://vl3.test/wp-admin/options-general.php?page=stax-visibility-license"
+                        },
+                        {
+                            "label": "Get a license",
+                            "url": "https://staxwp.com/visibility-logic-for-elementor/#pricing"
+                        }
+                    ]
+                },
                 "disabled": false,
                 "category": "other",
                 "keywords": [],
@@ -2014,6 +2090,20 @@
                     }
                 ],
                 "locked": true,
+                "lock": {
+                    "title": "Activate Visibility Logic Pro to edit these conditions",
+                    "text": "Saved Pro conditions keep working on your site. Add your license key to change them.",
+                    "actions": [
+                        {
+                            "label": "Activate",
+                            "url": "http://vl3.test/wp-admin/options-general.php?page=stax-visibility-license"
+                        },
+                        {
+                            "label": "Get a license",
+                            "url": "https://staxwp.com/visibility-logic-for-elementor/#pricing"
+                        }
+                    ]
+                },
                 "disabled": false,
                 "category": "other",
                 "keywords": [],
@@ -3527,8 +3617,8 @@
                 "condition_type": "all",
                 "date_time_enabled": "yes",
                 "date_time_type": "date",
-                "date_from": "2026-11-12 17:11",
-                "date_to": "2026-11-14 17:11"
+                "date_from": "2026-11-12 17:14",
+                "date_to": "2026-11-14 17:14"
             },
             "tree": {
                 "v": 1,
@@ -3542,8 +3632,8 @@
                                 "type": "date_time",
                                 "values": {
                                     "date_time_type": "date",
-                                    "date_from": "2026-11-12 17:11",
-                                    "date_to": "2026-11-14 17:11"
+                                    "date_from": "2026-11-12 17:14",
+                                    "date_to": "2026-11-14 17:14"
                                 }
                             }
                         ]
@@ -3565,8 +3655,8 @@
                 "condition_type": "one",
                 "date_time_enabled": "yes",
                 "date_time_type": "date",
-                "date_from": "2026-11-12 17:11",
-                "date_to": "2026-11-14 17:11"
+                "date_from": "2026-11-12 17:14",
+                "date_to": "2026-11-14 17:14"
             },
             "tree": {
                 "v": 1,
@@ -3580,8 +3670,8 @@
                                 "type": "date_time",
                                 "values": {
                                     "date_time_type": "date",
-                                    "date_from": "2026-11-12 17:11",
-                                    "date_to": "2026-11-14 17:11"
+                                    "date_from": "2026-11-12 17:14",
+                                    "date_to": "2026-11-14 17:14"
                                 }
                             }
                         ]
@@ -3603,8 +3693,8 @@
                 "condition_type": "all",
                 "date_time_enabled": "yes",
                 "date_time_type": "date",
-                "date_from": "2026-11-12 17:11",
-                "date_to": "2026-11-14 17:11"
+                "date_from": "2026-11-12 17:14",
+                "date_to": "2026-11-14 17:14"
             },
             "tree": {
                 "v": 1,
@@ -3618,8 +3708,8 @@
                                 "type": "date_time",
                                 "values": {
                                     "date_time_type": "date",
-                                    "date_from": "2026-11-12 17:11",
-                                    "date_to": "2026-11-14 17:11"
+                                    "date_from": "2026-11-12 17:14",
+                                    "date_to": "2026-11-14 17:14"
                                 }
                             }
                         ]
@@ -3641,8 +3731,8 @@
                 "condition_type": "one",
                 "date_time_enabled": "yes",
                 "date_time_type": "date",
-                "date_from": "2026-11-12 17:11",
-                "date_to": "2026-11-14 17:11"
+                "date_from": "2026-11-12 17:14",
+                "date_to": "2026-11-14 17:14"
             },
             "tree": {
                 "v": 1,
@@ -3656,8 +3746,8 @@
                                 "type": "date_time",
                                 "values": {
                                     "date_time_type": "date",
-                                    "date_from": "2026-11-12 17:11",
-                                    "date_to": "2026-11-14 17:11"
+                                    "date_from": "2026-11-12 17:14",
+                                    "date_to": "2026-11-14 17:14"
                                 }
                             }
                         ]

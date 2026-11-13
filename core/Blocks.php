@@ -39,6 +39,7 @@ class Blocks {
 		add_filter( 'register_block_type_args', [ __CLASS__, 'add_attribute' ], 10, 2 );
 		add_filter( 'render_block', [ __CLASS__, 'render_block' ], 10, 2 );
 		add_action( 'enqueue_block_editor_assets', [ __CLASS__, 'editor_assets' ] );
+		add_action( 'enqueue_block_assets', [ __CLASS__, 'canvas_styles' ] );
 	}
 
 	/**
@@ -150,10 +151,12 @@ class Blocks {
 	 * @return void
 	 */
 	public static function editor_assets() {
+		Plugin::enqueue_rule_builder( 'blocks' );
+
 		wp_enqueue_script(
 			'stax-visibility-blocks',
 			STAX_VISIBILITY_ASSETS_URL . 'js/blocks.js',
-			[ 'wp-hooks', 'wp-compose', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-i18n', 'wp-blocks' ],
+			[ 'wp-hooks', 'wp-compose', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-i18n', 'wp-blocks', 'wp-data', 'wp-api-fetch', 'stax-conditions', 'stax-visibility-rule-map' ],
 			STAX_VISIBILITY_VERSION,
 			true
 		);
@@ -164,29 +167,15 @@ class Blocks {
 			'stax-visibility-blocks',
 			'staxVisibilityBlocks',
 			[
-				'attribute'  => self::ATTRIBUTE,
-				'general'    => self::fields_for_js( Conditions::for_builder( Conditions::general_fields(), 'blocks' ) ),
-				'conditions' => array_values(
-					array_map(
-						static function ( $slug, $condition ) {
-							return [
-								'slug'   => $slug,
-								'label'  => wp_strip_all_tags( (string) $condition['label'] ),
-								'switch' => $condition['switch'],
-								'pro'    => ! empty( $condition['pro'] ),
-								'locked' => Conditions::lock_notice( $condition ),
-								'fields' => self::fields_for_js( $condition['fields'] ),
-							];
-						},
-						array_keys( Conditions::fields( 'blocks' ) ),
-						Conditions::fields( 'blocks' )
-					)
-				),
-				'pro'        => Pro_Teaser::for_js(),
-				'labels'     => [
-					'panel'  => __( 'Visibility', 'visibility-logic-elementor' ),
-					'badge'  => __( 'Visibility rules', 'visibility-logic-elementor' ),
-					'notice' => __( 'Rules apply on the live site; the editor always shows the block.', 'visibility-logic-elementor' ),
+				'attribute' => self::ATTRIBUTE,
+				'rules'     => Rest::editor_data(),
+				'labels'    => [
+					// Not "Visibility": WordPress 7.0 has its own "Hide" / block visibility controls.
+					'panel'        => __( 'Visibility rules', 'visibility-logic-elementor' ),
+					'notice'       => __( 'Rules apply on the live site; the editor always shows the block.', 'visibility-logic-elementor' ),
+					'coreHidden'   => __( 'WordPress block visibility: hidden everywhere.', 'visibility-logic-elementor' ),
+					/* translators: %s: device names. */
+					'coreHiddenOn' => __( 'WordPress block visibility: hidden on %s.', 'visibility-logic-elementor' ),
 				],
 			]
 		);
@@ -194,8 +183,28 @@ class Blocks {
 		wp_enqueue_style(
 			'stax-visibility-blocks',
 			STAX_VISIBILITY_ASSETS_URL . 'css/blocks-editor.css',
-			[],
+			[ 'stax-conditions' ],
 			STAX_VISIBILITY_VERSION
+		);
+	}
+
+	/**
+	 * Canvas styles (the editor canvas is an iframe): label with the short summary on blocks with rules.
+	 *
+	 * @return void
+	 */
+	public static function canvas_styles() {
+		if ( ! is_admin() ) {
+			return;
+		}
+
+		wp_register_style( 'stax-visibility-blocks-canvas', false, [], STAX_VISIBILITY_VERSION );
+		wp_enqueue_style( 'stax-visibility-blocks-canvas' );
+		wp_add_inline_style(
+			'stax-visibility-blocks-canvas',
+			'.block-editor-block-list__block.stax-vl-has-rules{outline:1px dashed rgba(110,73,203,.6);outline-offset:2px;}'
+			. '.block-editor-block-list__block[data-stax-vl]::after{content:attr(data-stax-vl);position:absolute;top:-9px;right:4px;z-index:5;max-width:60%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;padding:0 6px;border-radius:8px;background:#6e49cb;color:#fff;font:600 10px/16px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;pointer-events:none;}'
+			. '.block-editor-block-list__block.stax-vl-ghost{opacity:.35;}'
 		);
 	}
 
