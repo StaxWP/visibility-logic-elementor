@@ -1,14 +1,41 @@
 # Visibility Logic 3.0: rule builder progress
 
-Plan: second-brain `Projects/staxwp/docs/2026-11-13-majors-ux-rethink.md` (V-M1 to V-M11) and backlog B1, B2, B4, B5, B6 from `2026-11-13-vl-vs-dynamic-visibility.md`. Approved 2026-11-13 (rule builder in 3.0, Settings > Visibility Logic with Rules first, shared conditions package).
+Plan: second-brain `Projects/staxwp/docs/2026-11-13-majors-ux-rethink.md` (V-M1 to V-M11) and backlog items B1, B2, B4, B5, B6 from `2026-11-13-vl-vs-dynamic-visibility.md`. Approved 2026-11-13: rule builder in 3.0, Settings > Visibility Logic with Rules first, shared conditions package.
 
-## Done
+## Storage and backward compatibility
 
-- Shared package `StaxWP/stax-conditions` bundled in `lib/stax-conditions` (loader picks the highest bundled copy).
-- Engine: `Rule_Tree` (registry for the builder, tree storage, 2.x mapping both ways, fail-closed downgrade keys, evaluation through the existing condition modules, summaries, warnings), `Context` (visitor and time, simulation for Preview as), `Cache_Check`.
-- B1 yearly recurring period, B2 specific users / capability / all selected roles, B4 draft (tree), B5 columns (also with Pro 2.5), B6 operators (User Meta, ACF) through the shared library; 2.x operators unchanged.
-- Tests: `tests/rule-tree-test.php` (equivalence suite: 370 rules x 24 visitor contexts, 26,568 checks; round trip; downgrade; 3.0 additions), `tests/js/rule-map.test.cjs` (JS twin vs PHP golden file).
+- Old rules are never migrated. The builder reads the 2.x settings as a tree: "All" = one group, "At least one" = one condition per group (`Rule_Tree::legacy_to_tree()`, JS twin `assets/js/rule-map.js`).
+- Saving: when the edited rule can be written in the 2.x format (one group, or one condition per group, each condition type once, no draft, no 3.0 option) only the 2.x keys that changed are written; nothing is written when nothing changed.
+- Otherwise the tree is stored in `stax_visibility_rules` (blocks: `staxVisibility.rules`) and the 2.x keys become a fail-closed rule: Show, All, User Role = administrator, every other condition switched off. Visibility Logic 2.x (which ignores the tree) then shows the element to administrators only.
+- 3.0 options are marked in the registry (`since`, `options_since`), so a rule that uses them is always stored as a tree.
+- Evaluation: `Conditions::evaluate()` uses the tree when one is stored, the 2.x evaluator otherwise (unchanged). Each tree condition is evaluated by the existing condition modules with only that condition switched on (`Rule_Tree::check()`), so Pro and add-on conditions work in trees.
 
-## Next
+## Done (by plan item)
 
-See the sections below as they are completed.
+- Shared package `StaxWP/stax-conditions` (private), bundled in `lib/stax-conditions` (loader picks the highest bundled 1.x copy; `bin/bundle.sh` in the package copies it).
+- V-M1 summaries: one template language in PHP and JS (shared fixtures), used by the panel, canvas labels, Navigator badges, List View badges, Rules overview, explain trace, abilities data (`summary` in `list-rules` elements).
+- V-M2 rule builder + tree + evaluator + mapping both ways (above).
+- V-M3 Elementor: custom control in the Visibility tab, classic sections behind "Show the classic settings"; Elementor 4 atomic elements keep the generated controls (new fields included).
+- V-M4 block editor: "Visibility rules" panel on the same builder, WordPress `metadata.blockVisibility` shown in the panel, canvas labels, List View badges.
+- V-M5 picker: search (labels and keywords), task categories, 6 presets, Pro conditions with a small Pro mark and one sentence + "Learn more" when Pro is missing (locked add-on conditions show their own notice).
+- V-M6 Preview as guest / role / specific user (needs `list_users`) / device / date and time in both editors; country with Pro. REST `visibility-logic/v1/explain`, simulation in `Context` only.
+- V-M7 why hidden: trace per condition in the editors; front-end admin bar "Visibility: N hidden here" with the reason per element and "View this page as" (nonce-signed).
+- V-M8 Rules overview (first tab): one row per element, rule in words, warnings (ended, starts later, never true, condition off, draft, visitor rule on a cached site), filters, cache check (`Cache_Check`). Server-rendered table (DataViews deferred, see below).
+- V-M9 field UX: chips for list values (meta keys, capabilities, typed values), "is empty / is not empty" operators, help with the site time zone on yearly ranges; midnight ranges keep the 2.x note.
+- V-M11 readme (3.0.0 changelog, upgrade notice), update notice links to Rules; POT regenerated. Docs on staxwp.com and wp.org screenshots: not done (see below).
+- B1 yearly period, B2 specific users / capability / all roles, B4 draft, B5 columns (also with Pro 2.5; not with Pro 2.4), B6 operators.
+
+## Tests
+
+- `tests/rule-tree-test.php`: equivalence suite (370 rules x 24 visitor contexts = 26,568 old-vs-new checks: tree, stored tree, default true/false, round trip, downgrade), storage decisions, B1/B2/B4/B6, groups, explain, overview, rendering (blocks, Elementor, columns); writes the golden file for the JS twin.
+- `tests/js/rule-map.test.cjs` (node): JS mapping = PHP mapping on the golden file.
+- `tests/visibility-test.php`, `tests/blocks-test.php`: unchanged 2.x suites still green.
+- E2E (`tests/e2e/`, Playwright + axe-core on a scratch site): `rule-builder.mjs` (Elementor), `blocks-builder.mjs`, `admin-screens.mjs`, `setup.php` (fixtures). `section-scroll.mjs` is from 3.0 RC.
+
+## Remaining
+
+- Midnight ranges in the summary ("22:00 to 02:00 next day") and a time zone note on every date field.
+- Elementor 4 atomic panel on the builder (V-L4, when Elementor's V4 API allows custom controls).
+- DataViews rules screen (approved build step; 3.0 ships the server-rendered table).
+- Docs on staxwp.com and wp.org screenshots (V-M11).
+- Not in scope until Gabriel decides: B3, B7, B10, B11, Pro backlog items.

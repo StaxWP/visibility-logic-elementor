@@ -34,7 +34,9 @@ By default, hidden elements are removed from the HTML instead of only hidden wit
 - **Browser Type**: Target Chrome, Firefox, Safari, Edge, Opera, iPhone, Android, and more.
 - **Flexbox Containers**: Full support for Elementor's Flexbox containers, classic sections, and nested containers.
 - **Hide When Empty**: Automatically hide a parent section/container when all child widgets are hidden by visibility conditions.
-- **Rules in use** (NEW): one list of every page, post and Elementor template with visibility rules, with the conditions each one uses.
+- **Rule builder** (NEW): "Show / Hide this element when ..." with groups (all of these, or any group), a plain-language summary, a searchable condition picker with presets, in Elementor and the block editor.
+- **Preview as** (NEW): see the page as a guest, a role, a specific user, a device or another date inside the editor, with "why is this hidden?" for every element.
+- **Rules** (NEW): one list of every element with visibility rules, its rule in plain words, warnings (date range ended, can never be true, condition turned off, page cache) and filters.
 - **Built for AI agents and the command line** (NEW): read-only WordPress Abilities (`visibility-logic/list-rules`, `visibility-logic/list-conditions`) for MCP clients, and `wp visibility-logic rules` / `wp visibility-logic conditions` for WP-CLI.
 
 = Elementor, Elementor 4 and the block editor =
@@ -166,7 +168,17 @@ Updating keeps your site working exactly as before: every saved rule renders the
 * NEW: Conditions are builder-agnostic: one registry and one evaluator for Elementor, Elementor 4 and blocks; add-ons register fields with the `stax/visibility/condition_fields` filter and evaluate through `stax/visibility/apply_conditions` as before.
 * NEW: Settings > Visibility Logic is the single panel for the free plugin and Visibility Logic Pro (conditions, Pro settings, Pro license), redesigned with the native WordPress admin look, keyboard and screen reader friendly.
 * NEW: Clear free and Pro overview: every condition with a short description, Pro conditions marked.
-* NEW: Rules in use: list of every page, post and template with visibility rules and the conditions they use.
+* NEW: Rule builder in Elementor (Visibility tab) and the block editor ("Visibility rules" panel): "Show / Hide this element when ...", conditions in groups (all conditions of a group, any group), a plain-language summary, a condition picker with search, task categories (Who, When, Device and browser, Page and content, Shop, Where from) and presets (Logged-in members only, Guests only, Hide on mobile, Only during a date range, Business hours, Administrators only), "When hidden" (remove, keep the HTML hidden by CSS, other content with Pro), inline warnings. Keyboard and screen reader friendly. The classic sections stay one click away ("Show the classic settings").
+* NEW: Short rule labels on the Elementor canvas, in the Navigator, on blocks and in the block List View.
+* NEW: Preview as: guest, a role, a specific user (with the right to list users), a device, a date and time, inside both editors; hidden elements are faded with "Hidden for ..." and each element explains why. Only the Visibility Logic check is simulated: you stay logged in as yourself.
+* NEW: Front end, for editors: the admin bar shows "Visibility: N hidden here" with the reason for each element, and "View this page as" a guest or a role.
+* NEW: Rules (first tab of Settings > Visibility Logic): every element with a rule, the rule in plain words, warnings (date range ended, starts later, can never be true, condition turned off in Settings, draft, visitor rules on cached pages), filters by editor, condition and status, and a cache check for WP Rocket, LiteSpeed, W3 Total Cache, WP Super Cache, Cloudflare and others.
+* NEW: Date & Time: "Every year, FROM/TO day" (seasonal content, ranges over the year end, 29 February handled).
+* NEW: User Role: specific users, "has capability", and "must have all selected roles".
+* NEW: "Hidden on the live site (draft)" for any element.
+* NEW: Classic Elementor columns have the Visibility tab.
+* NEW: More operators for User Meta and ACF Field: equal (ignore case), not equal (ignore case), starts with, ends with, less or equal, greater or equal, is not one of. The existing operators answer exactly as before.
+* Backward compatibility: saved rules are not migrated and render the same (checked by an equivalence suite of 26,568 old-vs-new cases). A rule edited in the builder is still saved in the 2.x format when 2.x can express it; rules that 2.x cannot express (groups, the same condition twice, draft, the new options) are saved in a new format, and their 2.x settings show the element to administrators only, so going back to 2.x never shows restricted content to everyone.
 * NEW: Read-only WordPress Abilities `visibility-logic/list-rules` and `visibility-logic/list-conditions` (WordPress 6.9+, MCP Adapter).
 * NEW: WP-CLI commands `wp visibility-logic rules` and `wp visibility-logic conditions`.
 * NEW: Option "Keep Elementor's element cache on for pages with rules": only elements with rules are rendered per request (a 300-widget test page went from about 177 ms to 60 ms per render, and Elementor no longer rewrites its cache on every view). On for new installs, opt-in for updated sites.
@@ -336,6 +348,9 @@ Updating keeps your site working exactly as before: every saved rule renders the
 * Initial release
 
 == Upgrade Notice ==
+
+= 3.0.0 =
+New rule builder, Preview as and a Rules overview in Elementor and the block editor. Your saved rules keep working exactly as before; nothing is migrated.
 
 = 2.5.1 =
 Maintenance release with a corrected Pro/admin URL, refreshed Display Conditions for Elementor readme copy, and clearer free/Pro installation instructions.

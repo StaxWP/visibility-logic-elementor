@@ -234,7 +234,7 @@ class Blocks {
 	}
 
 	/**
-	 * Blocks with rules in a block tree (parse_blocks() output), for Rules in use.
+	 * Blocks with rules in a block tree (parse_blocks() output), for the Rules overview.
 	 *
 	 * @param array  $blocks Blocks.
 	 * @param string $path   Position path.

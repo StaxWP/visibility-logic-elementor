@@ -4,7 +4,7 @@
  * the 2.x settings (both ways), evaluation, summaries and warnings. The engine is the shared StaxWP Conditions
  * package (lib/stax-conditions); this class is the Visibility Logic adapter.
  *
- * Storage (backward compatibility, see docs/rule-builder.md):
+ * Storage (backward compatibility, see docs/progress.md):
  * - Old rules keep working as they are: no bulk migration. The builder shows the 2.x settings as a tree
  *   ("All" = one group, "At least one" = one condition per group) and, when the edited rule can still be written
  *   in the 2.x format, writes only the 2.x keys (nothing changes when nothing was edited).

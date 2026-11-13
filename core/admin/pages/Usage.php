@@ -1,6 +1,6 @@
 <?php
 /**
- * Settings > Visibility Logic > Rules in use: every Elementor page, template or post with visibility rules.
+ * Settings > Visibility Logic > Rules (first tab): every element with visibility rules, in plain words, with warnings.
  *
  * @package Stax\VisibilityLogic
  * @since 3.0.0

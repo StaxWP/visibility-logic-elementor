@@ -2,7 +2,7 @@
 /**
  * Read-only index of the visibility rules saved in Elementor documents.
  *
- * Used by Settings > Visibility Logic > Rules in use, the `wp visibility-logic` command and the WordPress Abilities.
+ * Used by Settings > Visibility Logic > Rules, the `wp visibility-logic` command and the WordPress Abilities.
  * Nothing here runs on front-end requests.
  *
  * @package Stax\VisibilityLogic

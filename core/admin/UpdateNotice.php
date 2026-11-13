@@ -80,6 +80,7 @@ class UpdateNotice {
 		?>
 		<div class="notice notice-info">
 			<p><strong><?php esc_html_e( 'Visibility Logic 3.0: your site works exactly as before.', 'visibility-logic-elementor' ); ?></strong></p>
+			<p><?php esc_html_e( 'New: a rule builder that reads your rules as sentences ("Show this element when ..."), Preview as a guest, a role or another date inside the editor, and a Rules overview with warnings. Your saved rules are not changed; they open in the builder as they are.', 'visibility-logic-elementor' ); ?></p>
 			<p><?php esc_html_e( 'Faster pages are available as an option, off on updated sites so nothing changes without you:', 'visibility-logic-elementor' ); ?></p>
 			<ul class="ul-disc">
 				<?php if ( ! Resources::get_setting( 'element_cache' ) ) : ?>
@@ -87,7 +88,8 @@ class UpdateNotice {
 				<?php endif; ?>
 			</ul>
 			<p>
-				<a class="button button-primary" href="<?php echo esc_url( Settings::url( 'options' ) . '#stax-vl-general' ); ?>"><?php esc_html_e( 'Review the options', 'visibility-logic-elementor' ); ?></a>
+				<a class="button button-primary" href="<?php echo esc_url( Settings::url( 'usage' ) ); ?>"><?php esc_html_e( 'See your rules', 'visibility-logic-elementor' ); ?></a>
+				<a class="button" href="<?php echo esc_url( Settings::url( 'options' ) . '#stax-vl-general' ); ?>"><?php esc_html_e( 'Review the options', 'visibility-logic-elementor' ); ?></a>
 				<a class="button" href="<?php echo esc_url( $dismiss ); ?>"><?php esc_html_e( 'Dismiss', 'visibility-logic-elementor' ); ?></a>
 			</p>
 		</div>

@@ -12,3 +12,4 @@
 /tailwind.config.js
 /phpcs.xml.dist
 /vendor
+/docs

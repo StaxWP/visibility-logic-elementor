@@ -222,7 +222,7 @@ foreach ( $matrix as $label => $settings ) {
 Context::reset();
 WP_CLI::log( sprintf( '   %d rules x %d visitor contexts, %d equivalence checks', count( $matrix ), count( $contexts ), $checks ) );
 
-// Digest of the 2.x answers (compare with a 2.5.2 run of the same matrix, see docs/rule-builder.md).
+// Digest of the 2.x answers (to compare between runs and versions).
 $digest = [];
 foreach ( $matrix as $label => $settings ) {
 	foreach ( $users as $uid => $role ) {
