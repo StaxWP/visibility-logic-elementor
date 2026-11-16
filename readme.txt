@@ -201,6 +201,10 @@ Updating keeps your site working exactly as before: every saved rule renders the
 * Fix: User Meta: meta keys that start with an underscore (for example `_my_key`) are offered and saved exactly as stored. Before, the field list removed the underscore and the rule never matched. Rules saved before keep working as they did; pick the key again to use the underscore version.
 * Security: Stricter checks on the editor search requests, prepared SQL, escaped admin output; the password hash and activation key are no longer offered in the User Meta field list (rules saved with them keep working).
 
+= 2.5.3 =
+* Security fix: with Fallback turned on (Visibility Logic Pro), a hidden section or container was shown in full to the visitors the rule should hide it from, and the fallback was not shown. Now the fallback replaces the whole element. Widgets were not affected. Please update.
+* Fix: opening a section in the Visibility tab of the Elementor panel (for example WooCommerce Users) no longer scrolls the panel back to the top; the opened section stays where you clicked it.
+
 = 2.5.2 =
 * Fix: Date FROM and Date TO now use the site time zone (Settings > General), like the time of day and weekday options. Before, they were read as UTC, so a schedule started or ended early or late by the site's offset from UTC. If you shifted your dates to work around this, set them back to the site time.
 * Fix: Hide when empty no longer hides a Flexbox container whose widgets are visible. Widgets placed directly in a container now count.
@@ -355,6 +359,12 @@ Updating keeps your site working exactly as before: every saved rule renders the
 
 = 3.0.0 =
 New rule builder, Preview as and a Rules overview in Elementor and the block editor. Your saved rules keep working exactly as before; nothing is migrated.
+
+= 2.5.3 =
+Security fix: a hidden section or container with Fallback on was shown in full. Please update. Also keeps the Visibility tab scroll position.
+
+= 2.5.2 =
+Bug fixes: Date FROM/TO use the site time zone, Hide when empty works on Flexbox containers, User Meta keys starting with an underscore match.
 
 = 2.5.1 =
 Maintenance release with a corrected Pro/admin URL, refreshed Display Conditions for Elementor readme copy, and clearer free/Pro installation instructions.
