@@ -171,6 +171,14 @@ $stax_vl_statuses = [
 								<?php endforeach; ?>
 							</ul>
 						<?php endif; ?>
+						<?php
+						/**
+						 * Extra actions of a Rules overview row (Visibility Logic Pro: reset view counts).
+						 *
+						 * @param array $row Rules::overview_rows() row.
+						 */
+						do_action( 'stax/visibility/overview_row_actions', $stax_vl_row ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- shares the 2.x hook namespace.
+						?>
 					</td>
 				</tr>
 			<?php endforeach; ?>
