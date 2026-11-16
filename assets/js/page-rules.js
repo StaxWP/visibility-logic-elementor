@@ -65,11 +65,18 @@
 	 * @param {Function} write Stores a new value.
 	 * @return {Object|null} Builder API.
 	 */
-	function mountBuilder( mount, read, write ) {
+	function mountBuilder( mount, read, write, kind ) {
 		var data = hostData();
 		if ( ! data || ! mount ) {
 			return null;
 		}
+		var popup = kind === 'popup';
+		// Popups: the rule only (a hidden popup is not printed).
+		var fields = popup ? page.fields.filter( function ( f ) {
+			return f.key === 'active';
+		} ).map( function ( f ) {
+			return Object.assign( {}, f, { label: page.labels.use, help: '' } );
+		} ) : page.fields;
 		var value = normalize( read() );
 		var timer = null;
 		var textTimer = null;
@@ -79,7 +86,7 @@
 
 		var intro = document.createElement( 'p' );
 		intro.className = 'stax-vl-note';
-		intro.textContent = page.labels.intro;
+		intro.textContent = popup ? page.labels.popup : page.labels.intro;
 		mount.parentNode.insertBefore( intro, mount );
 
 		var builder = SC.createBuilder( mount, {
@@ -90,7 +97,7 @@
 			proUrl: data.proUrl,
 			search: search( data ),
 			settings: {
-				fields: page.fields,
+				fields: fields,
 				values: panelValues( value ),
 				onChange: function ( key, v ) {
 					if ( key === 'active' ) {
@@ -150,7 +157,7 @@
 						return view.getControlValue();
 					}, function ( next ) {
 						view.setValue( next );
-					} );
+					}, mount ? mount.getAttribute( 'data-kind' ) : 'page' );
 				},
 				onBeforeDestroy: function () {
 					if ( this.pageBuilder ) {

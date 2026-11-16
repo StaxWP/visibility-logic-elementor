@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-16T21:02:40+00:00\n"
+"POT-Creation-Date: 2026-11-16T21:13:26+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: visibility-logic-elementor\n"
@@ -426,18 +426,18 @@ msgid "OK"
 msgstr ""
 
 #. translators: %d: number.
-#: core/admin/pages/templates/usage.php:180
+#: core/admin/pages/templates/usage.php:188
 #, php-format
 msgid "Showing the newest %d documents."
 msgstr ""
 
 #. translators: %s: human time difference.
-#: core/admin/pages/templates/usage.php:190
+#: core/admin/pages/templates/usage.php:198
 #, php-format
 msgid "Scanned %s ago."
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:192
+#: core/admin/pages/templates/usage.php:200
 msgid "Scan again"
 msgstr ""
 
@@ -528,51 +528,51 @@ msgstr ""
 msgid "Not: %s"
 msgstr ""
 
-#: core/Conditions.php:317
+#: core/Conditions.php:323
 #: core/settings/GeneralVisibility.php:66
 msgid "Enable Visibility Logic"
 msgstr ""
 
-#: core/Conditions.php:322
+#: core/Conditions.php:328
 msgid "When the conditions are met"
 msgstr ""
 
-#: core/Conditions.php:324
+#: core/Conditions.php:330
 #: core/Rule_Tree.php:999
 #: core/settings/GeneralVisibility.php:105
 msgid "Hide"
 msgstr ""
 
-#: core/Conditions.php:325
+#: core/Conditions.php:331
 #: core/Rule_Tree.php:998
 #: core/settings/GeneralVisibility.php:106
 msgid "Show"
 msgstr ""
 
-#: core/Conditions.php:332
+#: core/Conditions.php:338
 msgid "Conditions to meet"
 msgstr ""
 
-#: core/Conditions.php:334
+#: core/Conditions.php:340
 #: core/Rule_Tree.php:1020
 #: core/settings/GeneralVisibility.php:122
 msgid "All"
 msgstr ""
 
-#: core/Conditions.php:335
+#: core/Conditions.php:341
 #: core/settings/GeneralVisibility.php:123
 msgid "At least one"
 msgstr ""
 
-#: core/Conditions.php:342
+#: core/Conditions.php:348
 msgid "Keep HTML, hide with CSS"
 msgstr ""
 
-#: core/Conditions.php:343
+#: core/Conditions.php:349
 msgid "The hidden element stays in the page source with display: none."
 msgstr ""
 
-#: core/Conditions.php:431
+#: core/Conditions.php:437
 msgid "This condition is locked."
 msgstr ""
 
@@ -925,7 +925,7 @@ msgid "Visibility Logic: this page has a rule (%s)."
 msgstr ""
 
 #: core/Page_Rules.php:498
-#: core/Page_Rules.php:570
+#: core/Page_Rules.php:575
 msgid "Page visibility"
 msgstr ""
 
@@ -934,7 +934,19 @@ msgid "Show or hide this whole page. When hidden, visitors get the option below;
 msgstr ""
 
 #: core/Page_Rules.php:500
+msgid "Show this popup only when the rule allows it. A hidden popup is not added to the page, so its triggers do nothing. Elementor Pro's own display conditions and triggers still apply first."
+msgstr ""
+
+#: core/Page_Rules.php:501
+msgid "Use a rule for this popup"
+msgstr ""
+
+#: core/Page_Rules.php:502
 msgid "Rules that depend on the visitor need the page to be excluded from page caching."
+msgstr ""
+
+#: core/Page_Rules.php:575
+msgid "Popup visibility"
 msgstr ""
 
 #. translators: %d: number of elements hidden on this page.
@@ -954,24 +966,24 @@ msgid "Hidden"
 msgstr ""
 
 #: core/Preview.php:339
-#: core/Rest.php:157
+#: core/Rest.php:165
 #: core/Rule_Tree.php:252
 msgid "yes"
 msgstr ""
 
 #: core/Preview.php:339
-#: core/Rest.php:158
+#: core/Rest.php:166
 #: core/Rule_Tree.php:253
 msgid "no"
 msgstr ""
 
 #: core/Preview.php:339
-#: core/Rest.php:159
+#: core/Rest.php:167
 msgid "does not apply here"
 msgstr ""
 
 #: core/Preview.php:356
-#: core/Rest.php:156
+#: core/Rest.php:164
 msgid "Hidden on the live site (draft)."
 msgstr ""
 
@@ -980,13 +992,13 @@ msgid "View this page as"
 msgstr ""
 
 #: core/Preview.php:377
-#: core/Rest.php:136
+#: core/Rest.php:144
 msgid "Guest"
 msgstr ""
 
 #. translators: %s: role name.
 #: core/Preview.php:381
-#: core/Rest.php:138
+#: core/Rest.php:146
 #, php-format
 msgid "Role: %s"
 msgstr ""
@@ -1015,108 +1027,108 @@ msgstr ""
 msgid "%1$s (#%2$d)"
 msgstr ""
 
-#: core/Rest.php:134
+#: core/Rest.php:142
 msgid "Preview as"
 msgstr ""
 
-#: core/Rest.php:135
+#: core/Rest.php:143
 msgid "Me (no preview)"
 msgstr ""
 
-#: core/Rest.php:139
+#: core/Rest.php:147
 msgid "A specific user"
 msgstr ""
 
-#: core/Rest.php:140
+#: core/Rest.php:148
 msgid "User"
 msgstr ""
 
-#: core/Rest.php:141
+#: core/Rest.php:149
 #: core/settings/DeviceTypeVisibility.php:72
 #: core/settings/DeviceTypeVisibility.php:126
 msgid "Device"
 msgstr ""
 
-#: core/Rest.php:142
+#: core/Rest.php:150
 msgid "This device"
 msgstr ""
 
-#: core/Rest.php:143
+#: core/Rest.php:151
 #: core/settings/DeviceTypeVisibility.php:105
 msgid "Desktop"
 msgstr ""
 
-#: core/Rest.php:144
+#: core/Rest.php:152
 #: core/settings/DeviceTypeVisibility.php:106
 msgid "Tablet"
 msgstr ""
 
-#: core/Rest.php:145
+#: core/Rest.php:153
 #: core/settings/DeviceTypeVisibility.php:107
 msgid "Mobile"
 msgstr ""
 
-#: core/Rest.php:146
+#: core/Rest.php:154
 #: core/Rule_Tree.php:137
 msgid "Date and time"
 msgstr ""
 
-#: core/Rest.php:147
+#: core/Rest.php:155
 msgid "Empty: now (site time zone)."
 msgstr ""
 
-#: core/Rest.php:148
+#: core/Rest.php:156
 msgid "Country"
 msgstr ""
 
-#: core/Rest.php:149
+#: core/Rest.php:157
 msgid "Two-letter code, for example DE."
 msgstr ""
 
-#: core/Rest.php:150
+#: core/Rest.php:158
 msgid "Preview as and why"
 msgstr ""
 
 #. translators: %s: who the page is previewed for.
-#: core/Rest.php:152
+#: core/Rest.php:160
 #, php-format
 msgid "Shown for %s"
 msgstr ""
 
 #. translators: %s: who the page is previewed for.
-#: core/Rest.php:154
+#: core/Rest.php:162
 #, php-format
 msgid "Hidden for %s"
 msgstr ""
 
-#: core/Rest.php:155
+#: core/Rest.php:163
 msgid "No rule applies: shown."
 msgstr ""
 
 #. translators: %d: group number.
-#: core/Rest.php:161
+#: core/Rest.php:169
 #: core/Rule_Tree.php:1016
 #, php-format
 msgid "Group %d"
 msgstr ""
 
-#: core/Rest.php:162
+#: core/Rest.php:170
 msgid "The rule matches."
 msgstr ""
 
-#: core/Rest.php:163
+#: core/Rest.php:171
 msgid "The rule does not match."
 msgstr ""
 
-#: core/Rest.php:164
+#: core/Rest.php:172
 msgid "Action: show when it matches."
 msgstr ""
 
-#: core/Rest.php:165
+#: core/Rest.php:173
 msgid "Action: hide when it matches."
 msgstr ""
 
-#: core/Rest.php:166
+#: core/Rest.php:174
 msgid "Rules are off for this element."
 msgstr ""
 

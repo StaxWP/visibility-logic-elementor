@@ -39,6 +39,15 @@ class Page_Rules_Control extends Base_Data_Control {
 	}
 
 	/**
+	 * Default settings: kind page or popup.
+	 *
+	 * @return array
+	 */
+	protected function get_default_settings() {
+		return [ 'kind' => 'page' ];
+	}
+
+	/**
 	 * Template: the builder mounts into the empty box.
 	 *
 	 * @return void
@@ -46,7 +55,7 @@ class Page_Rules_Control extends Base_Data_Control {
 	public function content_template() {
 		?>
 		<div class="elementor-control-field stax-vl-rb-field">
-			<div class="stax-vl-page-rb" data-setting="{{ data.name }}"></div>
+			<div class="stax-vl-page-rb" data-setting="{{ data.name }}" data-kind="{{ data.kind }}"></div>
 		</div>
 		<?php
 	}

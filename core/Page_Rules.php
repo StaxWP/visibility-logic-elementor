@@ -497,6 +497,8 @@ class Page_Rules {
 			'labels'   => [
 				'panel' => __( 'Page visibility', 'visibility-logic-elementor' ),
 				'intro' => __( 'Show or hide this whole page. When hidden, visitors get the option below; people who can edit the page always see it.', 'visibility-logic-elementor' ),
+				'popup' => __( 'Show this popup only when the rule allows it. A hidden popup is not added to the page, so its triggers do nothing. Elementor Pro\'s own display conditions and triggers still apply first.', 'visibility-logic-elementor' ),
+				'use'   => __( 'Use a rule for this popup', 'visibility-logic-elementor' ),
 				'cache' => __( 'Rules that depend on the visitor need the page to be excluded from page caching.', 'visibility-logic-elementor' ),
 			],
 		];
@@ -564,10 +566,13 @@ class Page_Rules {
 			return;
 		}
 
+		// Popups (Visibility Logic Pro): the rule only; a hidden popup is not printed.
+		$kind = method_exists( $document, 'get_name' ) && 'popup' === $document->get_name() ? 'popup' : 'page';
+
 		$document->start_controls_section(
 			'stax_visibility_page_section',
 			[
-				'label' => __( 'Page visibility', 'visibility-logic-elementor' ),
+				'label' => 'popup' === $kind ? __( 'Popup visibility', 'visibility-logic-elementor' ) : __( 'Page visibility', 'visibility-logic-elementor' ),
 				'tab'   => \Elementor\Controls_Manager::TAB_SETTINGS,
 			]
 		);
@@ -576,6 +581,7 @@ class Page_Rules {
 			self::SETTING,
 			[
 				'type'    => 'stax_page_rules',
+				'kind'    => $kind,
 				'default' => [],
 			]
 		);
