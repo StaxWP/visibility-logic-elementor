@@ -117,7 +117,7 @@
 	} ) );
 
 	function previewActive( ctx ) {
-		return ctx && ( ctx.as !== 'me' || ctx.device || ctx.time );
+		return window.StaxVisibilityPreview ? window.StaxVisibilityPreview.active( ctx ) : !! ( ctx && ( ctx.as !== 'me' || ctx.device || ctx.time ) );
 	}
 
 	function collect( blocks, out ) {
@@ -160,6 +160,7 @@
 
 	function PreviewBox( props ) {
 		var barRef = useRef( null );
+		var langRef = useRef( null );
 		var traceRef = useRef( null );
 		var state = wp.data.useSelect( function ( select ) {
 			return select( STORE ).get();
@@ -174,12 +175,25 @@
 				value: wp.data.select( STORE ).get().ctx,
 				labels: PL,
 				onChange: function ( ctx ) {
-					wp.data.dispatch( STORE ).set( { ctx: ctx } );
+					wp.data.dispatch( STORE ).set( { ctx: Object.assign( {}, ctx, { language: wp.data.select( STORE ).get().ctx.language || '' } ) } );
 					runExplain();
 				},
 			} );
+			// Language (Pro): next to the shared preview bar.
+			var lang = window.StaxVisibilityPreview ? window.StaxVisibilityPreview.language( langRef.current, {
+				languages: data.previewLanguages || [],
+				labels: PL,
+				value: wp.data.select( STORE ).get().ctx.language,
+				onChange: function ( code ) {
+					wp.data.dispatch( STORE ).set( { ctx: Object.assign( {}, wp.data.select( STORE ).get().ctx, { language: code } ) } );
+					runExplain();
+				},
+			} ) : null;
 			return function () {
 				bar.destroy();
+				if ( lang ) {
+					lang.destroy();
+				}
 			};
 		}, [] );
 
@@ -204,6 +218,7 @@
 		},
 			el( 'summary', null, PL.why ),
 			el( 'div', { ref: barRef } ),
+			el( 'div', { ref: langRef } ),
 			el( 'div', { ref: traceRef } )
 		);
 	}

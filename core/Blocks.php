@@ -161,7 +161,7 @@ class Blocks {
 		wp_enqueue_script(
 			'stax-visibility-blocks',
 			STAX_VISIBILITY_ASSETS_URL . 'js/blocks.js',
-			[ 'wp-hooks', 'wp-compose', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-i18n', 'wp-blocks', 'wp-data', 'wp-api-fetch', 'stax-conditions', 'stax-visibility-rule-map' ],
+			[ 'wp-hooks', 'wp-compose', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-i18n', 'wp-blocks', 'wp-data', 'wp-api-fetch', 'stax-conditions', 'stax-visibility-rule-map', 'stax-visibility-preview-extras' ],
 			STAX_VISIBILITY_VERSION,
 			true
 		);

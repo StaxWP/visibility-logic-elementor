@@ -109,6 +109,7 @@ class Rest {
 		$data['restNonce'] = wp_create_nonce( 'wp_rest' );
 		$data['explainUrl'] = rest_url( self::NS . '/explain' );
 		$data['previewCountry'] = Preview::country_enabled();
+		$data['previewLanguages'] = Conditions::option_list( Preview::languages() );
 		$data['postsUrl']       = rest_url( 'wp/v2/search' );
 		$data['proColumnsLocked'] = defined( 'STAX_VISIBILITY_PRO_VERSION' ) && ! Singleton::pro_supports_columns();
 		$data['templates']      = [];
@@ -155,6 +156,8 @@ class Rest {
 			'timeHelp'   => __( 'Empty: now (site time zone).', 'visibility-logic-elementor' ),
 			'country'    => __( 'Country', 'visibility-logic-elementor' ),
 			'countryHelp' => __( 'Two-letter code, for example DE.', 'visibility-logic-elementor' ),
+			'language'    => __( 'Language', 'visibility-logic-elementor' ),
+			'anyLanguage' => __( 'Current language', 'visibility-logic-elementor' ),
 			'why'        => __( 'Preview as and why', 'visibility-logic-elementor' ),
 			/* translators: %s: who the page is previewed for. */
 			'visible'    => __( 'Shown for %s', 'visibility-logic-elementor' ),

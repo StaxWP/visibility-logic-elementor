@@ -749,6 +749,26 @@ $GLOBALS['wp_query'] = new WP_Query();
 Page_Rules::reset();
 
 // ---------------------------------------------------------------------------------------------------------------
+$section( '5e. B20 Preview as a language and a country' );
+
+$langs = static function ( $l ) {
+	return array_merge( (array) $l, [ 'de' => 'Deutsch', 'fr' => 'Français' ] );
+};
+add_filter( 'stax/visibility/preview_languages', $langs );
+\Stax\VisibilityLogic\Preview::simulate( [ 'as' => 'me', 'language' => 'de' ] );
+$ok( 'de' === Context::get( 'language' ), 'B20 language simulated (listed code)' );
+\Stax\VisibilityLogic\Preview::simulate( [ 'as' => 'me', 'language' => 'xx' ] );
+$ok( ! Context::has( 'language' ), 'B20 unlisted language ignored' );
+Context::reset();
+$codes = wp_list_pluck( \Stax\VisibilityLogic\Rest::editor_data()['previewLanguages'], 'value' );
+$ok( [ 'de', 'fr' ] === array_values( array_intersect( $codes, [ 'de', 'fr' ] ) ), 'B20 editors get the languages', $codes );
+remove_filter( 'stax/visibility/preview_languages', $langs );
+\Stax\VisibilityLogic\Preview::simulate( [ 'as' => 'me', 'language' => 'de' ] );
+$ok( ! Context::has( 'language' ), 'B20 no language without an add-on that lists them' );
+Context::reset();
+$ok( false !== strpos( (string) file_get_contents( STAX_VISIBILITY_PATH . 'assets/js/preview-extras.js' ), '!! ctx.country || !! ctx.language' ), 'B20 a country or a language alone starts the preview' );
+
+// ---------------------------------------------------------------------------------------------------------------
 $section( '6. Golden file for the JS twin (assets/js/rule-map.js)' );
 
 $golden = [ 'registry' => Rule_Tree::registry()->to_array(), 'since' => Rule_Tree::SINCE, 'cases' => [] ];

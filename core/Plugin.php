@@ -735,10 +735,11 @@ class Plugin extends Singleton {
 
 		wp_enqueue_style( 'stax-conditions' );
 		wp_register_script( 'stax-visibility-rule-map', STAX_VISIBILITY_ASSETS_URL . 'js/rule-map.js', [], STAX_VISIBILITY_VERSION, true );
+		wp_register_script( 'stax-visibility-preview-extras', STAX_VISIBILITY_ASSETS_URL . 'js/preview-extras.js', [], STAX_VISIBILITY_VERSION, true );
 
 		if ( 'elementor' === $editor ) {
 			$handle = 'stax-visibility-rule-builder';
-			wp_enqueue_script( $handle, STAX_VISIBILITY_ASSETS_URL . 'js/rule-builder-elementor.js', [ 'jquery', 'stax-conditions', 'stax-visibility-rule-map' ], STAX_VISIBILITY_VERSION, true );
+			wp_enqueue_script( $handle, STAX_VISIBILITY_ASSETS_URL . 'js/rule-builder-elementor.js', [ 'jquery', 'stax-conditions', 'stax-visibility-rule-map', 'stax-visibility-preview-extras' ], STAX_VISIBILITY_VERSION, true );
 			wp_localize_script( $handle, 'staxVisibilityRules', Rest::editor_data() );
 
 			return $handle;

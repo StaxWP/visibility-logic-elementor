@@ -119,7 +119,8 @@ class Preview {
 	}
 
 	/**
-	 * Simulation from an editor context ( as: me|guest|role:<slug>|user, user, device, time 'Y-m-d\TH:i' ).
+	 * Simulation from an editor context ( as: me|guest|role:<slug>|user, user, device, time 'Y-m-d\TH:i', country,
+	 * language ).
 	 *
 	 * @param array $context Context.
 	 *
@@ -157,11 +158,25 @@ class Preview {
 			$simulation['country'] = strtoupper( (string) $context['country'] );
 		}
 
+		// Language (Visibility Logic Pro's Language condition reads it): one of the listed codes.
+		if ( ! empty( $context['language'] ) && array_key_exists( (string) $context['language'], self::languages() ) ) {
+			$simulation['language'] = (string) $context['language'];
+		}
+
 		if ( $simulation ) {
 			Context::simulate( $simulation );
 		} else {
 			Context::reset();
 		}
+	}
+
+	/**
+	 * Languages "Preview as" offers ( code => name ), from an add-on with a language condition.
+	 *
+	 * @return array
+	 */
+	public static function languages() {
+		return array_map( 'strval', (array) apply_filters( 'stax/visibility/preview_languages', [] ) ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- shares the 2.x hook namespace.
 	}
 
 	/**

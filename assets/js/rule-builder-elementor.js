@@ -5,7 +5,7 @@
  * window.StaxVisibilityRuleMap: rules that the 2.x settings can express are written to the 2.x keys (nothing is
  * written when nothing changed), other rules to `stax_visibility_rules` with fail-closed 2.x keys.
  */
-( function ( $, data, SC, RuleMap ) {
+( function ( $, data, SC, RuleMap, win ) {
 	'use strict';
 
 	if ( ! data || ! SC || ! RuleMap ) {
@@ -168,7 +168,7 @@
 	var PL = data.preview || {};
 
 	function previewActive() {
-		return preview.ctx && ( preview.ctx.as !== 'me' || preview.ctx.device || preview.ctx.time );
+		return win.StaxVisibilityPreview ? win.StaxVisibilityPreview.active( preview.ctx ) : !! ( preview.ctx && ( preview.ctx.as !== 'me' || preview.ctx.device || preview.ctx.time ) );
 	}
 
 	function allWithRules() {
@@ -281,10 +281,23 @@
 					value: preview.ctx,
 					labels: PL,
 					onChange: function ( ctx ) {
-						preview.ctx = ctx;
+						preview.ctx = Object.assign( {}, ctx, { language: preview.ctx.language || '' } );
 						runExplain();
 					},
 				} );
+
+				// Language (Pro): next to the shared preview bar.
+				var langBox = document.createElement( 'div' );
+				details.insertBefore( langBox, traceBox );
+				this.languageField = win.StaxVisibilityPreview ? win.StaxVisibilityPreview.language( langBox, {
+					languages: data.previewLanguages || [],
+					labels: PL,
+					value: preview.ctx.language,
+					onChange: function ( code ) {
+						preview.ctx = Object.assign( {}, preview.ctx, { language: code } );
+						runExplain();
+					},
+				} ) : null;
 
 				this.renderTrace = function () {
 					var result = preview.results[ container.id ];
@@ -553,4 +566,4 @@
 	api.refreshLabels = refreshLabels;
 	api.treeOf = treeOf;
 	api.valuesOf = valuesOf;
-}( jQuery, window.staxVisibilityRules, window.StaxConditions, window.StaxVisibilityRuleMap ) );
+}( jQuery, window.staxVisibilityRules, window.StaxConditions, window.StaxVisibilityRuleMap, window ) );
