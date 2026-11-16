@@ -27,6 +27,13 @@ class Plugin extends Singleton {
 	public $excluded_widgets = [];
 
 	/**
+	 * Hidden sections and containers (by object id) whose fallback is printed after Elementor skips them.
+	 *
+	 * @var array
+	 */
+	private $pending_fallbacks = [];
+
+	/**
 	 * Plugin constructor
 	 */
 	public function __construct() {
@@ -65,6 +72,7 @@ class Plugin extends Singleton {
 		add_filter( 'elementor/frontend/container/should_render', [ $this, 'item_should_render' ], 99999, 2 );
 		add_filter( 'elementor/frontend/widget/should_render', [ $this, 'item_should_render' ], 99999, 2 );
 		add_filter( 'elementor/frontend/repeater/should_render', [ $this, 'item_should_render' ], 99999, 2 );
+		add_action( 'elementor/frontend/after_render', [ $this, 'print_pending_fallback' ] );
 
 		add_action( 'elementor/frontend/before_get_builder_content', [ $this, 'maybe_disable_document_caching' ], 99999, 2 );
 		add_action( 'elementor/frontend/get_builder_content', [ $this, 're_enable_document_caching' ], 99999, 2 );
@@ -183,19 +191,9 @@ class Plugin extends Singleton {
 			$settings = $widget->get_settings();
 
 			if ( (bool) $settings[ self::SECTION_PREFIX . 'enabled' ] ) {
-				if ( isset( $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) && (bool) $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) {
-					$fallback_content = '';
-					if ( 'text' === $settings[ self::SECTION_PREFIX . 'fallback_type' ] ) {
-						$fallback_content = wp_kses_post( $settings[ self::SECTION_PREFIX . 'fallback_text' ] );
-					} elseif ( 'template' === $settings[ self::SECTION_PREFIX . 'fallback_type' ] ) {
-						if ( $settings[ self::SECTION_PREFIX . 'fallback_template' ] ) {
-							$fallback_content = do_shortcode( '[elementor-template id="' . $settings[ self::SECTION_PREFIX . 'fallback_template' ] . '"]' );
-						}
-					}
-
-					if ( $fallback_content ) {
-						return $fallback_content;
-					}
+				if ( $this->has_fallback( $settings ) ) {
+					// Sections and containers: print_pending_fallback() prints it in place of the element.
+					return $this->is_wrapper_element( $widget ) ? '' : $this->fallback_content( $settings );
 				} elseif ( isset( $settings[ self::SECTION_PREFIX . 'keep_html' ] ) && (bool) $settings[ self::SECTION_PREFIX . 'keep_html' ] ) {
 
 					$widget->add_render_attribute( '_wrapper', 'class', 'stax-visibility-hidden' );
@@ -233,6 +231,76 @@ class Plugin extends Singleton {
 	}
 
 	/**
+	 * Print the fallback of a hidden section or container that item_should_render() skipped.
+	 *
+	 * Runs on `elementor/frontend/after_render`, which Elementor fires whether or not the element was printed.
+	 *
+	 * @param \Elementor\Element_Base $element Element.
+	 *
+	 * @return void
+	 */
+	public function print_pending_fallback( $element ) {
+		$key = spl_object_id( $element );
+
+		if ( ! isset( $this->pending_fallbacks[ $key ] ) ) {
+			return;
+		}
+
+		$content = $this->fallback_content( $this->pending_fallbacks[ $key ] );
+		unset( $this->pending_fallbacks[ $key ] );
+
+		if ( '' !== $content ) {
+			// Escaped in fallback_content() (wp_kses_post) or rendered by Elementor (template).
+			echo '<div class="stax-visibility-fallback">' . $content . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		}
+	}
+
+	/**
+	 * Whether the element has Fallback turned on (a Pro setting).
+	 *
+	 * @param array $settings Element settings.
+	 *
+	 * @return bool
+	 */
+	private function has_fallback( $settings ) {
+		return ! empty( $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] );
+	}
+
+	/**
+	 * Fallback content of a hidden element: the text (sanitized) or the rendered Elementor template.
+	 *
+	 * @param array $settings Element settings.
+	 *
+	 * @return string
+	 */
+	private function fallback_content( $settings ) {
+		$type     = isset( $settings[ self::SECTION_PREFIX . 'fallback_type' ] ) ? $settings[ self::SECTION_PREFIX . 'fallback_type' ] : '';
+		$template = isset( $settings[ self::SECTION_PREFIX . 'fallback_template' ] ) ? $settings[ self::SECTION_PREFIX . 'fallback_template' ] : '';
+
+		if ( 'text' === $type ) {
+			return wp_kses_post( isset( $settings[ self::SECTION_PREFIX . 'fallback_text' ] ) ? (string) $settings[ self::SECTION_PREFIX . 'fallback_text' ] : '' );
+		}
+
+		if ( 'template' === $type && $template ) {
+			return (string) do_shortcode( '[elementor-template id="' . esc_attr( $template ) . '"]' );
+		}
+
+		return '';
+	}
+
+	/**
+	 * Whether the element wraps other elements (section, container): its own output cannot be replaced, only
+	 * skipped. Widgets swap their content in `elementor/widget/render_content`.
+	 *
+	 * @param \Elementor\Element_Base $item Element.
+	 *
+	 * @return bool
+	 */
+	private function is_wrapper_element( $item ) {
+		return 'widget' !== $item->get_type();
+	}
+
+	/**
 	 * Check if item should render
 	 *
 	 * @param bool   $should_render
@@ -244,19 +312,18 @@ class Plugin extends Singleton {
 		$settings = $widget->get_settings();
 
 		if ( ! $this->should_render( $widget, $should_render ) ) {
+			$fallback = $this->has_fallback( $settings );
 
-			// if keep html is enabled, return true
-			if ( (bool) $settings[ self::SECTION_PREFIX . 'keep_html' ] ) {
-				return true;
+			// Sections and containers cannot swap their output for the fallback: skip the element (and everything
+			// in it) and print the fallback after it. The fallback wins over Keep HTML, as on widgets.
+			if ( $fallback && $this->is_wrapper_element( $widget ) && ! \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
+				$this->pending_fallbacks[ spl_object_id( $widget ) ] = $settings;
+
+				return false;
 			}
 
-			// if fallback is enabled, return true
-			if ( isset( $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) &&
-				 (bool) $settings[ self::SECTION_PREFIX . 'fallback_enabled' ] ) {
-				return true;
-			}
-
-			return false;
+			// Widgets: the fallback replaces their content (content_change). Keep HTML: hidden by CSS.
+			return $fallback || ! empty( $settings[ self::SECTION_PREFIX . 'keep_html' ] );
 		}
 
 		$should_render = true;
