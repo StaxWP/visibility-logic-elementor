@@ -110,7 +110,7 @@ class Conditions {
 			$error = 'The slug must use lowercase letters, digits and underscores.';
 		} elseif ( empty( $args['label'] ) || ! isset( $args['evaluate'] ) || ! is_callable( $args['evaluate'] ) ) {
 			$error = 'A label and a callable `evaluate` are required.';
-		} elseif ( isset( self::$custom[ $slug ] ) || self::is_builtin( $slug ) ) {
+		} elseif ( isset( self::$custom[ $slug ] ) || self::is_builtin( $slug, ! empty( $args['pro'] ) ) ) {
 			$error = sprintf( 'The condition "%s" already exists.', $slug );
 		}
 
@@ -182,20 +182,26 @@ class Conditions {
 	}
 
 	/**
-	 * Whether a slug belongs to a condition of the plugin or Visibility Logic Pro (2.x list).
+	 * Whether a slug is taken: a condition of this plugin, a reserved setting name, or a condition of Visibility
+	 * Logic Pro (2.x list) when the caller is not Pro (`pro` => true).
 	 *
 	 * @param string $slug Slug.
+	 * @param bool   $pro  Registered by Visibility Logic Pro.
 	 *
 	 * @return bool
 	 */
-	private static function is_builtin( $slug ) {
-		foreach ( array_keys( Resources::get_all_widget_options() ) as $option ) {
+	private static function is_builtin( $slug, $pro = false ) {
+		if ( in_array( $slug, [ 'enabled', 'rules', 'show_hide', 'condition_type', 'keep_html', 'fallback', 'page' ], true ) ) {
+			return true;
+		}
+
+		foreach ( Resources::get_all_widget_options() as $option => $entry ) {
 			if ( ( 'post-page' === $option ? 'post' : str_replace( '-', '_', $option ) ) === $slug ) {
-				return true;
+				return ! $pro || ( isset( $entry['pro'] ) && false === $entry['pro'] );
 			}
 		}
 
-		return in_array( $slug, [ 'enabled', 'rules', 'show_hide', 'condition_type', 'keep_html', 'fallback' ], true );
+		return false;
 	}
 
 	/**
