@@ -178,6 +178,7 @@ Updating keeps your site working exactly as before: every saved rule renders the
 * NEW: User Role: specific users, "has capability", and "must have all selected roles".
 * NEW: "Hidden on the live site (draft)" for any element.
 * NEW: Page condition (free): page type (front page, blog, single post, page, archive, search results, 404), post type and specific pages or posts; inside a loop the loop item is checked. Taxonomies, meta and archive details stay in Pro.
+* NEW: Page visibility (free): one rule for a whole page or post, in Elementor's page settings (Page visibility) and in the block editor's document sidebar, built with the same rule builder. When the rule hides the page, visitors get a message instead of the content (theme header and footer kept); REST responses, feeds and excerpts get the message too, and search engines get noindex. People who can edit the page always see it, with a notice bar. Redirect, login page, 404 and an Elementor template need Visibility Logic Pro.
 * NEW: Text fallback (free): "When hidden: show a message instead" for Elementor elements and blocks (basic HTML, sanitized). The Elementor template fallback stays in Pro and is chosen in the same place.
 * NEW: Summaries say "(next day)" for time ranges over midnight, and every date and time field shows the site time zone and the current site time.
 * NEW: Classic Elementor columns have the Visibility tab (with Visibility Logic Pro 2.4, columns get the free conditions; Pro conditions on columns need Pro 2.5).

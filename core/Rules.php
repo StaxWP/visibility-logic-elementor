@@ -367,6 +367,9 @@ class Rules {
 			];
 		}
 
+		// Page-level rules (Page_Rules: Elementor page settings and the block editor document panel).
+		$documents = array_merge( $documents, Page_Rules::overview_documents( self::MAX_DOCUMENTS ) );
+
 		$index = [
 			'generated' => time(),
 			'truncated' => $truncated,

@@ -29,6 +29,7 @@ use Stax\VisibilityLogic\Condition_Item;
 use Stax\VisibilityLogic\Context;
 use Stax\VisibilityLogic\Rule_Tree;
 use Stax\VisibilityLogic\Blocks;
+use Stax\VisibilityLogic\Page_Rules;
 
 if ( ! defined( 'STAX_VISIBILITY_VERSION' ) ) {
 	WP_CLI::error( 'Visibility Logic must be active.' );
@@ -647,6 +648,105 @@ foreach ( [ 'vlt_level', 'vlt_flag', 'vlt_boom', 'vlt_skip' ] as $slug ) {
 	stax_visibility_unregister_condition( $slug );
 }
 $ok( null === Rule_Tree::registry( true )->type( 'vlt_level' ), 'B19 unregister' );
+
+// ---------------------------------------------------------------------------------------------------------------
+$section( '5d. B11 page-level visibility (free: hide + message)' );
+
+$pg      = wp_insert_post( [ 'post_type' => 'page', 'post_status' => 'publish', 'post_title' => 'VLT members page', 'post_content' => 'SECRET-PAGE', 'post_excerpt' => 'SECRET-EXCERPT' ] );
+$members = [ 'enabled' => true, 'hidden' => 'message', 'message' => 'Members only. <a href="/login">Log in</a><script>bad()</script>', 'rules' => $tree_of( 'show', [ [ $cond( 'user_role', [ 'user_role_conditions' => [ 'ecl-user' ] ] ) ] ] ) ];
+update_post_meta( $pg, Page_Rules::META, $members );
+$stored = Page_Rules::get( $pg );
+$ok( true === $stored['enabled'] && false === strpos( $stored['message'], '<script' ) && 'message' === $stored['hidden'], 'B11 sanitized on save', $stored );
+$ok( 'message' === Page_Rules::sanitize( [ 'hidden' => 'evil' ] )['hidden'] && '' === Page_Rules::sanitize( [ 'redirect' => 'javascript:alert(1)' ] )['redirect'], 'B11 unknown option and unsafe URL dropped' );
+$content_as = static function ( $user ) use ( $pg ) {
+	wp_set_current_user( $user );
+	Page_Rules::reset();
+	$GLOBALS['post'] = get_post( $pg );
+	setup_postdata( $GLOBALS['post'] );
+	$out = apply_filters( 'the_content', get_post( $pg )->post_content );
+	wp_reset_postdata();
+	return $out;
+};
+$guest_html = $content_as( 0 );
+$ok( false === strpos( $guest_html, 'SECRET-PAGE' ) && false !== strpos( $guest_html, 'Members only.' ) && false === strpos( $guest_html, '<script' ), 'B11 guest gets the message', $guest_html );
+$ok( false !== strpos( $content_as( $sub_id ), 'SECRET-PAGE' ), 'B11 member sees the page' );
+$ok( false !== strpos( $content_as( $adm_id ), 'SECRET-PAGE' ), 'B11 editor sees the page (exempt)' );
+wp_set_current_user( $adm_id );
+Context::simulate( [ 'user' => 0 ] );
+Page_Rules::reset();
+$ok( Page_Rules::is_hidden( $pg ), 'B11 Preview as guest applies the rule to an editor' );
+Context::reset();
+Page_Rules::reset();
+wp_set_current_user( 0 );
+$GLOBALS['post'] = get_post( $pg );
+$ok( 0 === strpos( get_the_excerpt( $pg ), 'Members only. Log in' ) && false === strpos( get_the_excerpt( $pg ), 'SECRET' ), 'B11 excerpt replaced', get_the_excerpt( $pg ) );
+// REST as a guest.
+$rest = rest_do_request( new WP_REST_Request( 'GET', '/wp/v2/pages/' . $pg ) );
+$data = $rest->get_data();
+$ok( 200 === $rest->get_status() && false === strpos( wp_json_encode( $data ), 'SECRET' ) && false !== strpos( $data['content']['rendered'], 'Members only.' ), 'B11 REST output for a guest', $rest->get_status() );
+$ok( ! isset( $data['meta'][ Page_Rules::META ] ) || is_array( $data['meta'][ Page_Rules::META ] ), 'B11 meta in REST is an object' );
+// Feed (the feed content goes through the_content).
+$GLOBALS['post'] = get_post( $pg );
+setup_postdata( $GLOBALS['post'] );
+$feed = get_the_content_feed( 'rss2' );
+wp_reset_postdata();
+$ok( false === strpos( $feed, 'SECRET-PAGE' ) && false !== strpos( $feed, 'Members only.' ), 'B11 feed output', $feed );
+// Single view: template_redirect action, robots, notice.
+$GLOBALS['wp_query'] = new WP_Query( [ 'page_id' => $pg ] );
+$GLOBALS['wp_the_query'] = $GLOBALS['wp_query'];
+$fired = null;
+$listen = static function ( $id, $settings ) use ( &$fired ) {
+	$fired = [ $id, $settings['hidden'] ];
+};
+add_action( 'stax/visibility/page_hidden', $listen, 10, 2 );
+Page_Rules::reset();
+Page_Rules::template_redirect();
+$ok( [ $pg, 'message' ] === $fired, 'B11 page_hidden action on the single view (Pro redirects there)', $fired );
+$ok( ! empty( Page_Rules::robots( [] )['noindex'] ), 'B11 noindex while hidden' );
+$fired = null;
+wp_set_current_user( $adm_id );
+Page_Rules::reset();
+Page_Rules::template_redirect();
+ob_start();
+Page_Rules::editor_notice();
+$notice = ob_get_clean();
+$ok( null === $fired && empty( Page_Rules::robots( [] )['noindex'] ) && false !== strpos( $notice, 'this page has a rule (Shown only when User role is Logged in users)' ), 'B11 editor: no action, indexable, notice bar', $notice );
+update_post_meta( $pg, Page_Rules::META, array_merge( $members, [ 'rules' => $tree_of( 'show', [ [ $cond( 'user_role', [ 'user_role_conditions' => [ 'ecl-guest' ] ] ) ] ] ) ] ) );
+Page_Rules::reset();
+Page_Rules::template_redirect();
+ob_start();
+Page_Rules::editor_notice();
+$notice = ob_get_clean();
+$ok( null === $fired && false !== strpos( $notice, 'hidden for you as a visitor' ) && false !== strpos( $content_as( $adm_id ), 'SECRET-PAGE' ), 'B11 editor the rule hides: sees the page and the notice', $notice );
+wp_set_current_user( $adm_id );
+remove_action( 'stax/visibility/page_hidden', $listen, 10 );
+wp_set_current_user( 0 );
+// Rule off / empty / draft.
+update_post_meta( $pg, Page_Rules::META, array_merge( $members, [ 'enabled' => false ] ) );
+$ok( false !== strpos( $content_as( 0 ), 'SECRET-PAGE' ), 'B11 rule switched off' );
+update_post_meta( $pg, Page_Rules::META, array_merge( $members, [ 'rules' => $tree_of( 'show', [] ) ] ) );
+$ok( false !== strpos( $content_as( 0 ), 'SECRET-PAGE' ), 'B11 empty rule does not hide' );
+update_post_meta( $pg, Page_Rules::META, array_merge( $members, [ 'message' => '', 'rules' => $tree_of( 'show', [], true ) ] ) );
+$ok( false !== strpos( $content_as( $sub_id ), 'This content is not available.' ), 'B11 draft hides for everyone (default message)' );
+// Rules overview row and Elementor mirror.
+update_post_meta( $pg, Page_Rules::META, $members );
+$rows = array_values( array_filter( \Stax\VisibilityLogic\Rules::overview_rows( \Stax\VisibilityLogic\Rules::index( true ) ), static function ( $r ) use ( $pg ) {
+	return (int) $r['doc']['id'] === (int) $pg && 'page' === $r['element']['type'];
+} ) );
+$ok( 1 === count( $rows ) && 'Shown only when User role is Logged in users' === $rows[0]['summary'], 'B11 Rules overview row', $rows ? $rows[0]['summary'] : null );
+update_post_meta( $pg, '_elementor_page_settings', [ 'hide_title' => 'yes', Page_Rules::SETTING => [] ] );
+update_post_meta( $pg, Page_Rules::META, array_merge( $members, [ 'message' => 'Mirrored' ] ) );
+$ps = get_post_meta( $pg, '_elementor_page_settings', true );
+$ok( 'Mirrored' === $ps[ Page_Rules::SETTING ]['message'] && 'yes' === $ps['hide_title'], 'B11 meta mirrored to Elementor page settings' );
+if ( did_action( 'elementor/loaded' ) ) {
+	$doc = \Elementor\Plugin::$instance->documents->get( $pg, false );
+	Page_Rules::elementor_saved( $doc, [ 'settings' => [ Page_Rules::SETTING => array_merge( $members, [ 'message' => 'From Elementor' ] ) ] ] );
+	$ok( 'From Elementor' === Page_Rules::get( $pg )['message'], 'B11 Elementor save copied to the meta' );
+	$ok( Page_Rules::supports_document( $doc ), 'B11 Elementor page settings panel on pages' );
+}
+wp_delete_post( $pg, true );
+$GLOBALS['wp_query'] = new WP_Query();
+Page_Rules::reset();
 
 // ---------------------------------------------------------------------------------------------------------------
 $section( '6. Golden file for the JS twin (assets/js/rule-map.js)' );

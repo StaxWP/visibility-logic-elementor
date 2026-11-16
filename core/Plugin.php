@@ -92,6 +92,7 @@ class Plugin extends Singleton {
 		require_once STAX_VISIBILITY_CORE_PATH . 'Abilities.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'Blocks.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'Atomic.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'Page_Rules.php';
 
 		add_action( 'init', [ $this, 'load_settings' ], 0 );
 		add_action( 'init', [ $this, 'maybe_upgrade' ], 1 );
@@ -169,6 +170,7 @@ class Plugin extends Singleton {
 		require_once STAX_VISIBILITY_CORE_PATH . 'helpers/controls/Query.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'helpers/controls/Select.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'helpers/controls/Rule_Builder.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'helpers/controls/Page_Rules_Control.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'helpers/Controls.php';
 
 		new Ajax();
