@@ -27,6 +27,13 @@ Plan: second-brain `Projects/staxwp/docs/2026-11-13-majors-ux-rethink.md` (V-M1 
 - B7 Page condition (free; builder-only, stored as a tree so 2.x fails closed), B3 text fallback (free: Elementor controls only without Pro, blocks too; "When hidden" in the builder offers remove / CSS / message / template (Pro)).
 - V-M9 finished: "(next day)" in summaries for time ranges over midnight (`{time_to|after:time_from}`), site time zone and current site time on every date and time field.
 
+### Dynamic Visibility parity (2026-11-16, plan `2026-11-16-vl-dv-parity-and-importer.md` P1 to P5, P9)
+
+- P5 / B19 developer API: `Conditions::register()` / `stax_visibility_register_condition()` on `stax/visibility/register_conditions` (label, fields, summary, `evaluate( $values, $context )`); stored as trees; conditions without fields get "Is true / Is not true"; exceptions count as not met. Pro registers its own slugs with `pro => true`. Docs: `docs/developer-conditions.md`, sample plugin `docs/examples/vl-sample-condition/`.
+- P1 / B11 page-level visibility: `Page_Rules` (post meta `_stax_visibility_page`, mirrored in Elementor page settings `stax_visibility_page`), Elementor page settings section and block editor document panel (`assets/js/page-rules.js`, one builder for both); free = message (REST, feeds, excerpts, noindex, editors exempt with a notice bar, Preview as applies); hooks for Pro: `page_hidden` action, `page_replacement` filter, `page_hidden_actions`, `page_fields`, `page_documents`. Rules overview rows (type `page`).
+- P2 / P3 / P4 / P9 Pro parts in Pro `license-client` (Reveal on click, view caps, popups, Preview as language). Free hooks they use: `stax/visibility/element_settings` (extra block panel fields), `stax/visibility/overview_row_actions`, `stax/visibility/preview_languages`; `assets/js/preview-extras.js` (a country or a language alone starts the preview).
+- Not checked in a browser yet: the page panel (both editors), the language select, Pro's Reveal section and block fields (logic covered by the WP-CLI suites and Pro's headless `tests/js/reveal.test.cjs`).
+
 ## Tests
 
 - `tests/rule-tree-test.php`: equivalence suite (370 rules x 24 visitor contexts = 26,568 old-vs-new checks: tree, stored tree, default true/false, round trip, downgrade), storage decisions, B1/B2/B4/B6, groups, explain, overview, rendering (blocks, Elementor, columns); writes the golden file for the JS twin.
@@ -40,4 +47,4 @@ Plan: second-brain `Projects/staxwp/docs/2026-11-13-majors-ux-rethink.md` (V-M1 
 - Elementor 4 atomic panel on the builder (V-L4, when Elementor's V4 API allows custom controls).
 - DataViews rules screen (approved build step; 3.0 ships the server-rendered table).
 - Docs on staxwp.com and wp.org screenshots (V-M11).
-- Decided for later: Dynamic Visibility importer (3.1), DataViews rules screen (3.1), click-to-reveal, view limits, popups (Pro 2.6).
+- Decided for later: Dynamic Visibility importer (3.1), DataViews rules screen (3.1). Click-to-reveal, view caps and popups were built in Pro 2.5 (2026-11-16).
