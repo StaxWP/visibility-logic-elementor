@@ -10,7 +10,7 @@
 
 defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 
-foreach ( [ 'stax_visibility_general', 'stax_visibility_version', 'stax_visibility_updated_from_2x', 'stax_visibility_db_version' ] as $stax_visibility_option ) {
+foreach ( [ 'stax_visibility_general', 'stax_visibility_version', 'stax_visibility_updated_from_2x', 'stax_visibility_db_version', 'stax_visibility_pro_notice' ] as $stax_visibility_option ) {
 	delete_option( $stax_visibility_option );
 }
 

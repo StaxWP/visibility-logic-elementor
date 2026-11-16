@@ -89,6 +89,7 @@ class Plugin extends Singleton {
 		require_once STAX_VISIBILITY_CORE_PATH . 'admin/pages/Usage.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'admin/Settings.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'admin/UpdateNotice.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'admin/ProNotice.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'Abilities.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'Blocks.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'Atomic.php';

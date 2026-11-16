@@ -61,18 +61,23 @@ class UpdateNotice {
 	}
 
 	/**
+	 * Whether the current admin screen may show the plugin's notices: Dashboard, Plugins, Visibility Logic screens.
+	 *
+	 * @return bool
+	 */
+	public static function on_screen() {
+		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+
+		return $screen && ( in_array( $screen->id, [ 'dashboard', 'plugins' ], true ) || false !== strpos( (string) $screen->id, 'stax-visibility' ) );
+	}
+
+	/**
 	 * Notice.
 	 *
 	 * @return void
 	 */
 	public static function render() {
-		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
-
-		if ( ! $screen || ( ! in_array( $screen->id, [ 'dashboard', 'plugins' ], true ) && false === strpos( (string) $screen->id, 'stax-visibility' ) ) ) {
-			return;
-		}
-
-		if ( ! self::applies() ) {
+		if ( ! self::on_screen() || ! self::applies() ) {
 			return;
 		}
 

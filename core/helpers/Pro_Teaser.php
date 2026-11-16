@@ -115,8 +115,31 @@ class Pro_Teaser {
 	 *
 	 * @return string
 	 */
-	public static function url( $context ) {
-		return Resources::pro_url( $context );
+	public static function url( $context, $content = '' ) {
+		return Resources::pro_url( $context, $content );
+	}
+
+	/**
+	 * Note shown when a locked Pro condition is clicked in the rule builder: what it does and one link.
+	 *
+	 * @param string $slug  Condition slug (utm_content).
+	 * @param string $label Condition name.
+	 * @param string $text  What it does.
+	 *
+	 * @return array title, text, actions (StaxWP Conditions lock notice).
+	 */
+	public static function condition_note( $slug, $label, $text ) {
+		return [
+			/* translators: %s: condition name. */
+			'title'   => sprintf( __( '%s is a Pro condition.', 'visibility-logic-elementor' ), wp_strip_all_tags( (string) $label ) ),
+			'text'    => wp_strip_all_tags( (string) $text ),
+			'actions' => [
+				[
+					'label' => self::link_label(),
+					'url'   => self::url( 'panel', $slug ),
+				],
+			],
+		];
 	}
 
 	/**

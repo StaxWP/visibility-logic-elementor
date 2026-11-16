@@ -30,6 +30,7 @@ use Stax\VisibilityLogic\Context;
 use Stax\VisibilityLogic\Rule_Tree;
 use Stax\VisibilityLogic\Blocks;
 use Stax\VisibilityLogic\Page_Rules;
+use Stax\VisibilityLogic\ProNotice;
 
 if ( ! defined( 'STAX_VISIBILITY_VERSION' ) ) {
 	WP_CLI::error( 'Visibility Logic must be active.' );
@@ -463,6 +464,17 @@ if ( ! defined( 'STAX_VISIBILITY_PRO_VERSION' ) ) {
 		return ! empty( $t['locked'] );
 	} );
 	$ok( count( $locked ) === count( $pro_types ), 'without Pro: every Pro condition is locked' );
+	$geo = $registry->type( 'geo_location' );
+	$url = $geo && ! empty( $geo['lock']['actions'][0]['url'] ) ? $geo['lock']['actions'][0]['url'] : '';
+	$ok( $geo && 'Geo Location is a Pro condition.' === $geo['lock']['title'] && '' !== $geo['lock']['text'] && 1 === count( $geo['lock']['actions'] ), 'upsell: a locked Pro condition says what it does, one link', $geo ? $geo['lock'] : null );
+	$ok( 0 === strpos( $url, 'https://staxwp.com/visibility-logic-for-elementor/?' ) && false !== strpos( $url, 'utm_source=plugin' ) && false !== strpos( $url, 'utm_medium=panel' ) && false !== strpos( $url, 'utm_campaign=vl-free' ) && false !== strpos( $url, 'utm_content=geo_location' ) && '#pricing' === substr( $url, -8 ), 'upsell: link to pricing with UTM (content = condition id)', $url );
+	foreach ( [ 'shop', 'split', 'view_cap', 'content_details' ] as $slug ) {
+		$t = $registry->type( $slug );
+		$ok( $t && ! empty( $t['locked'] ) && ! empty( $t['pro'] ) && ! empty( $t['lock']['text'] ), "upsell: newer Pro condition $slug listed locked" );
+	}
+} else {
+	$geo = $registry->type( 'geo_location' );
+	$ok( empty( $geo['lock'] ) || false === strpos( (string) $geo['lock']['title'], 'is a Pro condition' ), 'upsell: no Pro note while Pro is active (only Pro\'s own license note)' );
 }
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -767,6 +779,57 @@ remove_filter( 'stax/visibility/preview_languages', $langs );
 $ok( ! Context::has( 'language' ), 'B20 no language without an add-on that lists them' );
 Context::reset();
 $ok( false !== strpos( (string) file_get_contents( STAX_VISIBILITY_PATH . 'assets/js/preview-extras.js' ), '!! ctx.country || !! ctx.language' ), 'B20 a country or a language alone starts the preview' );
+
+// ---------------------------------------------------------------------------------------------------------------
+$section( '5f. Pro notice after the 5th saved rule (free only)' );
+
+$pn_backup = get_option( ProNotice::OPTION, false );
+delete_option( ProNotice::OPTION );
+$blocks_with = static function ( $n ) {
+	$out = '';
+	for ( $i = 0; $i < $n; $i++ ) {
+		$out .= '<!-- wp:paragraph {"staxVisibility":{"enabled":true,"show_hide":"yes","user_role_enabled":true,"user_role_conditions":["ecl-user"]}} --><p>r' . $i . '</p><!-- /wp:paragraph -->';
+	}
+	return $out;
+};
+wp_set_current_user( $adm_id );
+$pn_a = wp_insert_post( [ 'post_type' => 'page', 'post_status' => 'publish', 'post_title' => 'VLT notice A', 'post_content' => wp_slash( $blocks_with( 3 ) ) ] );
+$ok( 3 === ProNotice::rules_in( $pn_a ), 'notice: rules counted in a post (blocks)' );
+$st = ProNotice::state();
+if ( ! defined( 'STAX_VISIBILITY_PRO_VERSION' ) ) {
+	$ok( 3 === $st['counts'][ $pn_a ] && ! $st['reached'] && ! ProNotice::applies(), 'notice: 3 rules, nothing shown yet (fresh installs see nothing)' );
+	wp_update_post( [ 'ID' => $pn_a, 'post_content' => wp_slash( $blocks_with( 3 ) ) ] );
+	$ok( ! ProNotice::state()['reached'], 'notice: saving the same post again does not add up' );
+	$pn_b = wp_insert_post( [ 'post_type' => 'page', 'post_status' => 'publish', 'post_title' => 'VLT notice B', 'post_content' => wp_slash( $blocks_with( 1 ) ) ] );
+	update_post_meta( $pn_b, Page_Rules::META, [ 'enabled' => true, 'rules' => $tree_of( 'show', [ [ $cond( 'user_role', [ 'user_role_conditions' => [ 'ecl-user' ] ] ) ] ] ) ] );
+	$st = ProNotice::state();
+	$ok( $st['reached'] && [] === $st['counts'] && ProNotice::applies(), 'notice: 5th rule (block + page rule) shows it; counts dropped' );
+	set_current_screen( 'dashboard' );
+	ob_start();
+	ProNotice::render();
+	$html = ob_get_clean();
+	$ok( false !== strpos( $html, 'utm_medium=notice' ) && false !== strpos( $html, 'utm_campaign=vl-free' ) && false !== strpos( $html, 'stax_visibility_dismiss_pro_notice' ) && 2 === substr_count( $html, '<a ' ), 'notice: one Pro link with UTM and a Dismiss link', $html );
+	set_current_screen( 'edit-post' );
+	ob_start();
+	ProNotice::render();
+	$ok( '' === ob_get_clean(), 'notice: not on other screens' );
+	wp_set_current_user( $sub_id );
+	$ok( ! ProNotice::applies(), 'notice: only for users who manage options' );
+	wp_set_current_user( $adm_id );
+	update_option( ProNotice::OPTION, array_merge( ProNotice::state(), [ 'dismissed' => time() ] ), false );
+	ProNotice::recount( $pn_a );
+	$ok( ! ProNotice::applies(), 'notice: dismissed for good' );
+	wp_delete_post( $pn_b, true );
+} else {
+	$ok( [] === $st['counts'] && ! ProNotice::applies(), 'notice: nothing counted or shown while Pro is active' );
+}
+wp_delete_post( $pn_a, true );
+wp_set_current_user( 0 );
+if ( false === $pn_backup ) {
+	delete_option( ProNotice::OPTION );
+} else {
+	update_option( ProNotice::OPTION, $pn_backup, false );
+}
 
 // ---------------------------------------------------------------------------------------------------------------
 $section( '6. Golden file for the JS twin (assets/js/rule-map.js)' );

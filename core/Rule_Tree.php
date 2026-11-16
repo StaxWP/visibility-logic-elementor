@@ -331,6 +331,8 @@ class Rule_Tree {
 				'switch'   => $base . '_enabled',
 				'pro'      => ! empty( $option['pro'] ),
 				'locked'   => $pro_missing,
+				// Without Pro: what it does and one link (utm_content = condition id) when it is clicked.
+				'lock'     => $pro_missing ? Pro_Teaser::condition_note( $base, $option['name'], isset( $option['description'] ) ? $option['description'] : '' ) : null,
 				'readonly' => ! $pro_missing,
 				'hidden'   => ! $pro_missing, // Not offered in the picker; shown when an element already uses it.
 				'tree'     => false,
@@ -410,6 +412,10 @@ class Rule_Tree {
 			'query_string'         => 'where',
 			'language'             => 'where',
 			'advanced_user_meta'   => 'who',
+			'shop'                 => 'shop',
+			'split'                => 'other',
+			'view_cap'             => 'who',
+			'content_details'      => 'page',
 		];
 
 		return isset( $map[ $slug ] ) ? $map[ $slug ] : 'other';
@@ -980,7 +986,7 @@ class Rule_Tree {
 			'labels'   => self::builder_labels(),
 			'context'  => self::warning_context(),
 			'timezone' => wp_timezone_string(),
-			'proUrl'   => Pro_Teaser::visible() ? Pro_Teaser::url( 'rule-builder' ) : '',
+			'proUrl'   => Pro_Teaser::visible() ? Pro_Teaser::url( 'panel' ) : '',
 			'key'      => self::KEY,
 			'since'    => self::SINCE,
 		];

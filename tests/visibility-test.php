@@ -1227,7 +1227,7 @@ if ( class_exists( '\Stax\VisibilityLogic\Pro_Teaser' ) ) {
 
 		$html = \Stax\VisibilityLogic\Pro_Teaser::more_html( 'editor' );
 		vle_is( 'PRO mark: text PRO, aria-label "Pro feature"', 1, preg_match( '#<span class="stax-vl-pro" role="img" aria-label="Pro feature">PRO</span>#', $html ) );
-		vle_is( 'PRO line: exactly one link, product page with UTM', [ 1, 1 ], [ substr_count( $html, '<a ' ), preg_match( '#https://staxwp\.com/visibility-logic-for-elementor/\?utm_source=visibility-logic-free&(amp;|\#038;)?utm_medium=editor&(amp;|\#038;)?utm_campaign=upgrade\#pricing#', $html ) ] );
+		vle_is( 'PRO line: exactly one link, product page with UTM', [ 1, 1 ], [ substr_count( $html, '<a ' ), preg_match( '#https://staxwp\.com/visibility-logic-for-elementor/\?utm_source=plugin&(amp;|\#038;)?utm_medium=editor&(amp;|\#038;)?utm_campaign=vl-free\#pricing#', $html ) ] );
 		vle_is( 'block editor gets the PRO line data', true, is_array( \Stax\VisibilityLogic\Pro_Teaser::for_js() ) );
 
 		$fields = \Stax\VisibilityLogic\Conditions::fields( 'blocks' );

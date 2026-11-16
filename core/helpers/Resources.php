@@ -185,17 +185,19 @@ final class Resources extends Singleton {
 	 *
 	 * @return string
 	 */
-	public static function pro_url( $context = 'panel' ) {
-		$url = apply_filters( STAX_VISIBILITY_HOOK_PREFIX . 'admin_site_url', 'https://staxwp.com/visibility-logic-for-elementor/#pricing' );
+	public static function pro_url( $context = 'panel', $content = '' ) {
+		$url  = apply_filters( STAX_VISIBILITY_HOOK_PREFIX . 'admin_site_url', 'https://staxwp.com/visibility-logic-for-elementor/#pricing' );
+		$args = [
+			'utm_source'   => 'plugin',
+			'utm_medium'   => sanitize_key( $context ),
+			'utm_campaign' => 'vl-free',
+		];
 
-		return add_query_arg(
-			[
-				'utm_source'   => 'visibility-logic-free',
-				'utm_medium'   => sanitize_key( $context ),
-				'utm_campaign' => 'upgrade',
-			],
-			$url
-		);
+		if ( '' !== (string) $content ) {
+			$args['utm_content'] = sanitize_key( (string) $content );
+		}
+
+		return add_query_arg( $args, $url );
 	}
 
 	/**
@@ -344,6 +346,10 @@ final class Resources extends Singleton {
 			'query-string'       => __( 'URL parameters such as UTM tags or campaign codes.', 'visibility-logic-elementor' ),
 			'language'           => __( 'Current language with WPML, Polylang or TranslatePress.', 'visibility-logic-elementor' ),
 			'advanced-acf'       => __( 'Adds user, term, options page and specific post fields, more operators and AND/OR rule groups to ACF Field.', 'visibility-logic-elementor' ),
+			'shop'               => __( 'WooCommerce cart contents, cart total, product type, on sale and in stock.', 'visibility-logic-elementor' ),
+			'split'              => __( 'Show variants to a stable share of visitors (A/B tests).', 'visibility-logic-elementor' ),
+			'view-cap'           => __( 'Show an element only a few times per visitor, per day or in total.', 'visibility-logic-elementor' ),
+			'content-details'    => __( 'Post format, parent and child pages, term hierarchy and archives with posts.', 'visibility-logic-elementor' ),
 		];
 	}
 
@@ -404,6 +410,22 @@ final class Resources extends Singleton {
 			],
 			'advanced-acf'       => [
 				'name' => __( 'Advanced ACF', 'visibility-logic-elementor' ),
+				'pro'  => true,
+			],
+			'shop'               => [
+				'name' => __( 'Shop (cart and product)', 'visibility-logic-elementor' ),
+				'pro'  => true,
+			],
+			'split'              => [
+				'name' => __( 'A/B split', 'visibility-logic-elementor' ),
+				'pro'  => true,
+			],
+			'view-cap'           => [
+				'name' => __( 'Times shown (view caps)', 'visibility-logic-elementor' ),
+				'pro'  => true,
+			],
+			'content-details'    => [
+				'name' => __( 'Term and post details', 'visibility-logic-elementor' ),
 				'pro'  => true,
 			],
 		];
