@@ -113,6 +113,14 @@ class Rest {
 		$data['proColumnsLocked'] = defined( 'STAX_VISIBILITY_PRO_VERSION' ) && ! Singleton::pro_supports_columns();
 		$data['templates']      = [];
 
+		/**
+		 * Extra settings of an element in the block editor panel (same field format as the condition registry; the
+		 * value is stored under the field key in the block attribute). Visibility Logic Pro: Reveal on click.
+		 *
+		 * @param array $fields Fields.
+		 */
+		$data['elementSettings'] = array_values( (array) apply_filters( 'stax/visibility/element_settings', [] ) ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- shares the 2.x hook namespace.
+
 		if ( $data['fallback'] ) {
 			foreach ( get_posts( [ 'post_type' => 'elementor_library', 'post_status' => 'publish', 'numberposts' => 100, 'orderby' => 'title', 'order' => 'ASC' ] ) as $template ) {
 				$data['templates'][] = [

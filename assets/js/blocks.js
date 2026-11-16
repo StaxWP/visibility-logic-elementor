@@ -74,6 +74,21 @@
 		return '';
 	}
 
+	// Extra element settings from add-ons (`stax/visibility/element_settings`, e.g. Pro's Reveal on click): stored
+	// under their own key in the block attribute.
+	var extraFields = data.elementSettings || [];
+	var extraKeys = extraFields.map( function ( f ) {
+		return f.key;
+	} );
+
+	function extraValues( values ) {
+		var out = {};
+		extraFields.forEach( function ( f ) {
+			out[ f.key ] = values[ f.key ] !== undefined ? values[ f.key ] : ( f.default !== undefined ? f.default : '' );
+		} );
+		return out;
+	}
+
 	function shortOf( values ) {
 		return SC.summary.short( treeOf( values ), data.registry, L );
 	}
@@ -264,8 +279,8 @@
 						{ key: 'active', type: 'switch', label: L.active, help: L.activeHelp },
 						{ key: 'when_hidden', type: 'select', label: L.whenHidden, options: [ { value: 'remove', label: L.remove_page }, { value: 'css', label: L.keepHtml }, { value: 'text', label: L.fallbackText } ], show_if: { active: [ 'yes' ] } },
 						{ key: 'fallback_text', type: 'textarea', label: L.fallbackMessage, help: L.fallbackHelp, show_if: { active: [ 'yes' ], when_hidden: [ 'text' ] } },
-					],
-					values: { active: on( values.enabled ), when_hidden: on( values.fallback_enabled ) ? 'text' : ( on( values.keep_html ) ? 'css' : 'remove' ), fallback_text: values.fallback_text || '' },
+					].concat( extraFields ),
+					values: Object.assign( extraValues( values ), { active: on( values.enabled ), when_hidden: on( values.fallback_enabled ) ? 'text' : ( on( values.keep_html ) ? 'css' : 'remove' ), fallback_text: values.fallback_text || '' } ),
 					onChange: function ( key, value ) {
 						if ( key === 'active' ) {
 							write( { enabled: !! value } );
@@ -273,6 +288,10 @@
 							write( { keep_html: value === 'css', fallback_enabled: value === 'text', fallback_type: 'text' } );
 						} else if ( key === 'fallback_text' ) {
 							write( { fallback_text: value } );
+						} else if ( extraKeys.indexOf( key ) !== -1 ) {
+							var c = {};
+							c[ key ] = value;
+							write( c );
 						}
 					},
 				},
