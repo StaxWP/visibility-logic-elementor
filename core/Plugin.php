@@ -67,6 +67,7 @@ class Plugin extends Singleton {
 		require_once STAX_VISIBILITY_CORE_HELPERS_PATH . 'Notices.php';
 		require_once STAX_VISIBILITY_CORE_HELPERS_PATH . 'Pro_Teaser.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'Conditions.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'api.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'Condition_Item.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'Rules.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'Context.php';
@@ -76,6 +77,7 @@ class Plugin extends Singleton {
 		require_once STAX_VISIBILITY_CORE_PATH . 'Preview.php';
 
 		Rule_Tree::load_package();
+		Conditions::boot();
 
 		// Builder-agnostic parts: conditions, admin panel, block editor, abilities, WP-CLI.
 		if ( is_admin() ) {
@@ -215,6 +217,9 @@ class Plugin extends Singleton {
 		if ( ! defined( 'STAX_VISIBILITY_PRO_VERSION' ) ) {
 			require_once STAX_VISIBILITY_CORE_SETTINGS_PATH . 'FallbackText.php';
 		}
+
+		// Developer API: the place to call stax_visibility_register_condition() (see docs/developer-conditions.md).
+		do_action( 'stax/visibility/register_conditions' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- shares the 2.x hook namespace.
 
 		do_action( 'stax/visibility/after/load_settings' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- public 2.x hook name.
 	}

@@ -49,6 +49,262 @@ class Conditions {
 	private static $fields = null;
 
 	/**
+	 * Conditions added in code with Conditions::register() (developer API, backlog B19).
+	 *
+	 * @var array slug => entry (registry keys + `evaluate` callback).
+	 */
+	private static $custom = [];
+
+	/**
+	 * Registry keys a registered condition may set (everything else is ignored).
+	 *
+	 * @var string[]
+	 */
+	const REGISTER_KEYS = [ 'label', 'category', 'keywords', 'fields', 'summary', 'short', 'pro', 'visitor', 'exclusive', 'expires', 'starts', 'since', 'builders', 'locked', 'locked_notice' ];
+
+	/**
+	 * Hook the conditions added with register() into the registry and the evaluator. Called once by the plugin.
+	 *
+	 * @return void
+	 */
+	public static function boot() {
+		// Late priority: built-in slugs are known when a registration is checked for a clash.
+		add_filter( 'stax/visibility/condition_fields', [ __CLASS__, 'registered_fields' ], 50 ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- shares the 2.x hook namespace.
+		add_filter( 'stax/visibility/apply_conditions', [ __CLASS__, 'apply_registered' ], 10, 3 ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- public 2.x hook name.
+	}
+
+	/**
+	 * Add a condition in code (supported developer API since 3.0). It shows in the rule builder (picker, summaries,
+	 * Navigator and canvas labels, Rules overview, Preview as, "why hidden"), the block editor and Elementor 4
+	 * elements, with no editor code. Rules that use it are stored as rule trees, so Visibility Logic 2.x (which
+	 * does not know the condition) fails closed: administrators only.
+	 *
+	 * Call it on the `stax/visibility/register_conditions` action (or any time before `wp_loaded`).
+	 *
+	 *   Conditions::register( 'acme_member', [
+	 *       'label'    => 'ACME membership',
+	 *       'category' => 'who',
+	 *       'fields'   => [ [ 'key' => 'acme_member_level', 'type' => 'select', 'label' => 'Level', 'options' => [ 'gold' => 'Gold' ] ] ],
+	 *       'summary'  => 'ACME level is {acme_member_level}',
+	 *       'evaluate' => function ( array $values, array $context ) { return acme_level() === $values['acme_member_level']; },
+	 *   ] );
+	 *
+	 * `evaluate` receives the condition's field values (switches as bool, lists as arrays) and the context
+	 * ( id, name, kind = element|block|atomic ). It returns true (met), false (not met) or null (cannot apply here:
+	 * skipped, like a condition of an inactive plugin). An exception counts as "not met". Read the visitor through
+	 * Context (user_id(), roles(), timestamp(), device()...), so "Preview as" works for the condition too.
+	 *
+	 * @param string $slug Lowercase letters, digits and underscores; the switch is `<slug>_enabled`, field keys
+	 *                     should start with the slug.
+	 * @param array  $args label (required), evaluate (callable, required), fields, category (who|when|device|page|
+	 *                     shop|where|other), keywords, summary, short, visitor (depends on the visitor: cache
+	 *                     warning), since, builders, pro.
+	 *
+	 * @return bool False when the slug or arguments are invalid or the slug is taken.
+	 */
+	public static function register( $slug, array $args ) {
+		$slug  = (string) $slug;
+		$error = '';
+
+		if ( ! preg_match( '/^[a-z][a-z0-9_]*$/', $slug ) ) {
+			$error = 'The slug must use lowercase letters, digits and underscores.';
+		} elseif ( empty( $args['label'] ) || ! isset( $args['evaluate'] ) || ! is_callable( $args['evaluate'] ) ) {
+			$error = 'A label and a callable `evaluate` are required.';
+		} elseif ( isset( self::$custom[ $slug ] ) || self::is_builtin( $slug ) ) {
+			$error = sprintf( 'The condition "%s" already exists.', $slug );
+		}
+
+		if ( '' !== $error ) {
+			_doing_it_wrong( __METHOD__, esc_html( $error ), '3.0.0' );
+
+			return false;
+		}
+
+		$entry = array_intersect_key( $args, array_flip( self::REGISTER_KEYS ) );
+
+		$entry['switch']   = $slug . '_enabled';
+		$entry['fields']   = isset( $entry['fields'] ) ? array_values( (array) $entry['fields'] ) : [];
+		$entry['since']    = isset( $entry['since'] ) ? (string) $entry['since'] : '3.0.0';
+		$entry['custom']   = true;
+		$entry['evaluate'] = $args['evaluate'];
+
+		if ( ! $entry['fields'] ) {
+			// A condition without settings gets "is true / is not true" (the registry lists conditions with fields).
+			$label           = wp_strip_all_tags( (string) $entry['label'] );
+			$entry['fields'] = [
+				[
+					'key'     => $slug . '_is',
+					'type'    => 'select',
+					'label'   => $label,
+					'options' => [
+						'yes' => __( 'Is true', 'visibility-logic-elementor' ),
+						'no'  => __( 'Is not true', 'visibility-logic-elementor' ),
+					],
+					'default' => 'yes',
+				],
+			];
+			$entry['negate']  = $slug . '_is';
+			$entry['summary'] = isset( $entry['summary'] ) ? $entry['summary'] : [
+				'field' => $slug . '_is',
+				'cases' => [
+					/* translators: %s: condition name. */
+					'no' => sprintf( __( 'Not: %s', 'visibility-logic-elementor' ), $label ),
+					'*'  => $label,
+				],
+			];
+		}
+
+		self::$custom[ $slug ] = $entry;
+		self::reset();
+
+		return true;
+	}
+
+	/**
+	 * Remove a condition added with register() (tests, add-ons that turn a condition off).
+	 *
+	 * @param string $slug Slug.
+	 *
+	 * @return void
+	 */
+	public static function unregister( $slug ) {
+		unset( self::$custom[ (string) $slug ] );
+		self::reset();
+	}
+
+	/**
+	 * Conditions added with register().
+	 *
+	 * @return array slug => entry.
+	 */
+	public static function registered() {
+		return self::$custom;
+	}
+
+	/**
+	 * Whether a slug belongs to a condition of the plugin or Visibility Logic Pro (2.x list).
+	 *
+	 * @param string $slug Slug.
+	 *
+	 * @return bool
+	 */
+	private static function is_builtin( $slug ) {
+		foreach ( array_keys( Resources::get_all_widget_options() ) as $option ) {
+			if ( ( 'post-page' === $option ? 'post' : str_replace( '-', '_', $option ) ) === $slug ) {
+				return true;
+			}
+		}
+
+		return in_array( $slug, [ 'enabled', 'rules', 'show_hide', 'condition_type', 'keep_html', 'fallback' ], true );
+	}
+
+	/**
+	 * `stax/visibility/condition_fields`: add the registered conditions (an existing entry with the same slug wins).
+	 *
+	 * @param array $conditions Conditions.
+	 *
+	 * @return array
+	 */
+	public static function registered_fields( $conditions ) {
+		foreach ( self::$custom as $slug => $entry ) {
+			if ( ! isset( $conditions[ $slug ] ) ) {
+				unset( $entry['evaluate'], $entry['negate'] );
+				$conditions[ $slug ] = $entry;
+			}
+		}
+
+		return $conditions;
+	}
+
+	/**
+	 * `stax/visibility/apply_conditions`: answer for every registered condition switched on in the settings.
+	 *
+	 * @param array  $options  Results.
+	 * @param array  $settings Settings.
+	 * @param object $item     Element.
+	 *
+	 * @return array
+	 */
+	public static function apply_registered( $options, $settings, $item ) {
+		if ( ! self::$custom ) {
+			return $options;
+		}
+
+		$settings = is_object( $item ) && method_exists( $item, 'get_settings_for_display' ) ? (array) $item->get_settings_for_display() : (array) $settings;
+
+		foreach ( self::$custom as $slug => $entry ) {
+			if ( ! Singleton::flag( $settings, $entry['switch'] ) ) {
+				continue;
+			}
+
+			$answer = self::run_registered( $entry, self::registered_values( $entry, $settings ), $item );
+
+			if ( null !== $answer && isset( $entry['negate'] ) && 'no' === Singleton::value( $settings, $entry['negate'], 'yes' ) ) {
+				$answer = ! $answer;
+			}
+
+			if ( null !== $answer ) {
+				$options[ $slug ] = $answer;
+			}
+		}
+
+		return $options;
+	}
+
+	/**
+	 * Field values of a registered condition, unprefixed (switches as bool).
+	 *
+	 * @param array $entry    Entry.
+	 * @param array $settings Settings.
+	 *
+	 * @return array
+	 */
+	private static function registered_values( array $entry, array $settings ) {
+		$values = [];
+
+		foreach ( $entry['fields'] as $field ) {
+			if ( empty( $field['key'] ) || ( isset( $entry['negate'] ) && $entry['negate'] === $field['key'] ) ) {
+				continue;
+			}
+
+			$value = Singleton::value( $settings, $field['key'], isset( $field['default'] ) ? $field['default'] : '' );
+
+			$values[ $field['key'] ] = 'switch' === ( isset( $field['type'] ) ? $field['type'] : '' ) ? ! empty( $value ) : $value;
+		}
+
+		return $values;
+	}
+
+	/**
+	 * Call the `evaluate` callback of a registered condition.
+	 *
+	 * @param array  $entry  Entry.
+	 * @param array  $values Values.
+	 * @param object $item   Element.
+	 *
+	 * @return bool|null
+	 */
+	private static function run_registered( array $entry, array $values, $item ) {
+		$context = [
+			'id'   => is_object( $item ) && method_exists( $item, 'get_id' ) ? (string) $item->get_id() : '',
+			'name' => is_object( $item ) && method_exists( $item, 'get_name' ) ? (string) $item->get_name() : '',
+			'kind' => $item instanceof Condition_Item ? $item->get_type() : 'element',
+		];
+
+		try {
+			$answer = call_user_func( $entry['evaluate'], $values, $context );
+		} catch ( \Throwable $e ) {
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				error_log( 'Visibility Logic: condition "' . substr( $entry['switch'], 0, -8 ) . '" failed: ' . $e->getMessage() ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- debug only.
+			}
+
+			return false;
+		}
+
+		return null === $answer ? null : (bool) $answer;
+	}
+
+	/**
 	 * Fields of the General section (shared by every builder).
 	 *
 	 * @return array

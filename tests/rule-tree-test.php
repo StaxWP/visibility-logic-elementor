@@ -575,6 +575,80 @@ $df = Rule_Tree::registry( true )->field( 'date_time', 'date_from' );
 $ok( false !== strpos( $df['help'], 'Site time zone: ' . wp_timezone_string() ), 'V-M9 time zone note on date fields', $df['help'] );
 
 // ---------------------------------------------------------------------------------------------------------------
+$section( '5c. B19 developer condition API (Conditions::register)' );
+
+$GLOBALS['vlt_api_level'] = 'gold';
+$GLOBALS['vlt_api_calls'] = [];
+$ok( true === stax_visibility_register_condition( 'vlt_level', [
+	'label'    => 'VLT level',
+	'category' => 'who',
+	'visitor'  => true,
+	'fields'   => [
+		[ 'key' => 'vlt_level_is', 'type' => 'multiselect', 'label' => 'Level', 'options' => [ 'gold' => 'Gold', 'silver' => 'Silver' ] ],
+		[ 'key' => 'vlt_level_strict', 'type' => 'switch', 'label' => 'Strict' ],
+	],
+	'summary'  => 'VLT level is[ {vlt_level_is|or}]',
+	'evaluate' => static function ( array $values, array $context ) {
+		$GLOBALS['vlt_api_calls'][] = [ $values, $context ];
+		return in_array( $GLOBALS['vlt_api_level'], (array) $values['vlt_level_is'], true );
+	},
+] ), 'B19 register with fields' );
+$ok( true === Conditions::register( 'vlt_flag', [ 'label' => 'VLT flag on', 'evaluate' => static function () {
+	return ! empty( $GLOBALS['vlt_api_flag'] );
+} ] ), 'B19 register without fields' );
+$ok( true === Conditions::register( 'vlt_boom', [ 'label' => 'VLT boom', 'evaluate' => static function () {
+	throw new RuntimeException( 'boom' );
+} ] ), 'B19 register a failing condition' );
+$ok( true === Conditions::register( 'vlt_skip', [ 'label' => 'VLT skip', 'evaluate' => '__return_null' ] ), 'B19 register a condition that does not apply' );
+
+add_filter( 'doing_it_wrong_trigger_error', '__return_false' );
+$ok( false === Conditions::register( 'user_role', [ 'label' => 'x', 'evaluate' => '__return_true' ] ), 'B19 built-in slug refused' );
+$ok( false === Conditions::register( 'geo_location', [ 'label' => 'x', 'evaluate' => '__return_true' ] ), 'B19 Pro slug refused' );
+$ok( false === Conditions::register( 'vlt_level', [ 'label' => 'x', 'evaluate' => '__return_true' ] ), 'B19 duplicate refused' );
+$ok( false === Conditions::register( 'Bad-Slug', [ 'label' => 'x', 'evaluate' => '__return_true' ] ), 'B19 invalid slug refused' );
+$ok( false === Conditions::register( 'vlt_nocb', [ 'label' => 'x' ] ), 'B19 evaluate required' );
+remove_filter( 'doing_it_wrong_trigger_error', '__return_false' );
+
+$reg = Rule_Tree::registry( true );
+$lvl = $reg->type( 'vlt_level' );
+$ok( $lvl && 'who' === $lvl['category'] && 'vlt_level_enabled' === $lvl['switch'] && ! isset( $lvl['evaluate'] ), 'B19 in the builder registry (no callback exported)', $lvl );
+$ok( isset( Conditions::fields( 'blocks' )['vlt_level'], Conditions::fields( 'atomic' )['vlt_level'] ), 'B19 offered in blocks and Elementor 4 elements' );
+$flag = $reg->type( 'vlt_flag' );
+$ok( $flag && 'vlt_flag_is' === $flag['fields'][0]['key'] && 'select' === $flag['fields'][0]['type'], 'B19 condition without fields gets "is true / is not true"', $flag );
+
+$lv = static function ( $levels, $action = 'show' ) use ( $tree_of, $cond ) {
+	return $tree_of( $action, [ [ $cond( 'vlt_level', [ 'vlt_level_is' => $levels, 'vlt_level_strict' => 'yes' ] ) ] ] );
+};
+$a = Rule_Tree::analyze( $lv( [ 'gold' ] ) );
+$ok( ! $a['flat'] && 'new' === $a['reason'] && $a['storable'], 'B19 rules with a registered condition are stored as trees (2.x fails closed)', $a );
+$GLOBALS['vlt_api_calls'] = [];
+$ok( true === $stored_eval( $lv( [ 'gold' ] ) ) && false === $stored_eval( $lv( [ 'silver' ] ) ), 'B19 evaluated (show)' );
+$ok( false === $stored_eval( $lv( [ 'gold' ], 'hide' ) ), 'B19 evaluated (hide)' );
+$call = $GLOBALS['vlt_api_calls'][0];
+$ok( [ 'gold' ] === $call[0]['vlt_level_is'] && true === $call[0]['vlt_level_strict'] && 't1' === $call[1]['id'] && 'heading' === $call[1]['name'] && 'element' === $call[1]['kind'], 'B19 callback gets values (switch as bool) and context', $call );
+$ok( 'Shown only when VLT level is Gold or Silver' === Rule_Tree::sentence( $lv( [ 'gold', 'silver' ] ) ), 'B19 summary', Rule_Tree::sentence( $lv( [ 'gold', 'silver' ] ) ) );
+$fl = static function ( $is ) use ( $tree_of, $cond ) {
+	return $tree_of( 'show', [ [ $cond( 'vlt_flag', [ 'vlt_flag_is' => $is ] ) ] ] );
+};
+$GLOBALS['vlt_api_flag'] = true;
+$ok( true === $stored_eval( $fl( 'yes' ) ) && false === $stored_eval( $fl( 'no' ) ), 'B19 is true / is not true (flag on)' );
+$GLOBALS['vlt_api_flag'] = false;
+$ok( false === $stored_eval( $fl( 'yes' ) ) && true === $stored_eval( $fl( 'no' ) ), 'B19 is true / is not true (flag off)' );
+$ok( 'Shown only when Not: VLT flag on' === Rule_Tree::sentence( $fl( 'no' ) ), 'B19 summary of "is not true"', Rule_Tree::sentence( $fl( 'no' ) ) );
+$ok( false === $stored_eval( $tree_of( 'show', [ [ $cond( 'vlt_boom', [] ) ] ] ) ), 'B19 an exception counts as not met' );
+$ok( true === $stored_eval( $tree_of( 'show', [ [ $cond( 'vlt_skip', [] ) ] ] ) ) && false === $stored_eval( $tree_of( 'show', [ [ $cond( 'vlt_skip', [] ) ] ] ), false ), 'B19 null = does not apply (default answer)' );
+$ok( false === $stored_eval( $tree_of( 'show', [ [ $cond( 'vlt_skip', [] ), $cond( 'vlt_level', [ 'vlt_level_is' => [ 'silver' ] ] ) ] ] ) ), 'B19 skipped condition next to one that answers' );
+// Block with a stored tree.
+$blk = [ 'blockName' => 'core/paragraph', 'attrs' => [ Blocks::ATTRIBUTE => [ 'enabled' => true, 'rules' => $lv( [ 'silver' ] ) ] ] ];
+$ok( '' === Blocks::render_block( '<p>api</p>', $blk ), 'B19 block hidden by a registered condition' );
+$blk['attrs'][ Blocks::ATTRIBUTE ]['rules'] = $lv( [ 'gold' ] );
+$ok( '<p>api</p>' === Blocks::render_block( '<p>api</p>', $blk ), 'B19 block shown by a registered condition' );
+foreach ( [ 'vlt_level', 'vlt_flag', 'vlt_boom', 'vlt_skip' ] as $slug ) {
+	stax_visibility_unregister_condition( $slug );
+}
+$ok( null === Rule_Tree::registry( true )->type( 'vlt_level' ), 'B19 unregister' );
+
+// ---------------------------------------------------------------------------------------------------------------
 $section( '6. Golden file for the JS twin (assets/js/rule-map.js)' );
 
 $golden = [ 'registry' => Rule_Tree::registry()->to_array(), 'since' => Rule_Tree::SINCE, 'cases' => [] ];
