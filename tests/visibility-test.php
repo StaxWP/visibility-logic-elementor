@@ -11,7 +11,8 @@
  * two temporary users are created and deleted at the end. Exit code 1 when a check fails.
  *
  * Covered: General (show/hide, all/one, keep HTML, hide when empty for sections and containers), User Role (guests,
- * logged in, roles), legacy 1.x settings (ecl_*), User Meta operators and protected (`_key`) meta keys, Date & Time
+ * logged in, roles), Fallback on sections, inner sections, columns and (nested) containers with Keep HTML on and off,
+ * legacy 1.x settings (ecl_*), User Meta operators and protected (`_key`) meta keys, Date & Time
  * (date range, time range, over midnight, week days, week days + time), Device Type, Browser Type, ACF Field (with a stub
  * when ACF is not active).
  *
@@ -931,6 +932,65 @@ $html = vle_render( $container( 'con5', [ $shown_w ], $guest_show ) );
 vle_is( 'container with its own condition: hidden', 'absent', vle_state( $html, 'con5' ) );
 $html = vle_render( $container( 'con6', [ $shown_w ], array_merge( $guest_show, vle_s( [ 'keep_html' => 'yes' ] ) ) ) );
 vle_is( 'container keep HTML: present', true, 'absent' !== vle_state( $html, 'con6' ) );
+
+// Fallback on sections, columns and containers: a hidden element prints only its fallback, never its children
+// (before the fix the fallback was dropped and guests saw the hidden content).
+$fallback = vle_s(
+	[
+		'fallback_enabled' => 'yes',
+		'fallback_type'    => 'text',
+		'fallback_text'    => 'VLE-FALLBACK',
+	]
+);
+$column   = function ( $id, array $settings ) use ( $shown_w ) {
+	return [
+		'id'       => $id,
+		'elType'   => 'section',
+		'settings' => [],
+		'elements' => [
+			[
+				'id'       => $id . 'c',
+				'elType'   => 'column',
+				'settings' => array_merge( [ '_column_size' => 100 ], $settings ),
+				'elements' => [ $shown_w ],
+			],
+		],
+	];
+};
+$shapes   = [
+	'container'              => function ( $s ) use ( $container, $shown_w ) {
+		return $container( 'fb1', [ $shown_w ], $s );
+	},
+	'nested container'       => function ( $s ) use ( $container, $shown_w ) {
+		return $container( 'fb2', [ $container( 'fb2a', [ $shown_w ], $s ) ] );
+	},
+	'container with a child' => function ( $s ) use ( $container, $shown_w ) {
+		return $container( 'fb3', [ $container( 'fb3a', [ $shown_w ] ) ], $s );
+	},
+	'section'                => function ( $s ) use ( $section, $shown_w ) {
+		return $section( 'fb4', [ $shown_w ], $s );
+	},
+	'inner section'          => function ( $s ) use ( $section, $shown_w ) {
+		return $section( 'fb5', [ array_merge( $section( 'fb5a', [ $shown_w ], $s ), [ 'isInner' => true ] ) ] );
+	},
+	'column'                 => function ( $s ) use ( $column ) {
+		return $column( 'fb6', $s );
+	},
+];
+foreach ( $shapes as $shape => $build ) {
+	foreach ( [ 'keep HTML off' => [], 'keep HTML on' => vle_s( [ 'keep_html' => 'yes' ] ) ] as $keep => $keep_settings ) {
+		$html = vle_render( $build( array_merge( $guest_show, $fallback, $keep_settings ) ) );
+		vle_is( "fallback, {$shape}, {$keep}: hidden content not printed", 'absent', vle_state( $html, 'sw1' ) );
+		vle_is( "fallback, {$shape}, {$keep}: fallback printed", true, false !== strpos( $html, 'VLE-FALLBACK' ) );
+	}
+}
+wp_set_current_user( 0 );
+$html = vle_render( $container( 'fb7', [ $shown_w ], array_merge( $guest_show, $fallback ) ) );
+vle_is( 'fallback, container, rules allow: content printed', 'visible', vle_state( $html, 'sw1' ) );
+vle_is( 'fallback, container, rules allow: no fallback', false, strpos( $html, 'VLE-FALLBACK' ) );
+wp_set_current_user( $sub_id );
+$html = vle_render( $container( 'fb8', [ $shown_w ], array_merge( $guest_show, vle_s( [ 'fallback_enabled' => 'yes', 'fallback_text' => '' ] ) ) ) );
+vle_is( 'fallback, container, empty text: nothing printed', '', trim( $html ) );
 
 // ---------------------------------------------------------------------------------------------------------------
 // Elementor 4 atomic elements: same conditions through the Visibility section props.

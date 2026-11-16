@@ -52,6 +52,13 @@ class Plugin extends Singleton {
 	private $uncacheable_documents = [];
 
 	/**
+	 * Hidden sections, columns and containers (by object id) whose fallback is printed after Elementor skips them.
+	 *
+	 * @var array
+	 */
+	private $pending_fallbacks = [];
+
+	/**
 	 * Plugin constructor
 	 */
 	public function __construct() {
@@ -120,6 +127,7 @@ class Plugin extends Singleton {
 		add_filter( 'elementor/frontend/column/should_render', [ $this, 'item_should_render' ], 99999, 2 );
 		add_filter( 'elementor/frontend/widget/should_render', [ $this, 'item_should_render' ], 99999, 2 );
 		add_filter( 'elementor/frontend/repeater/should_render', [ $this, 'item_should_render' ], 99999, 2 );
+		add_action( 'elementor/frontend/after_render', [ $this, 'print_pending_fallback' ] );
 
 		// Elementor element cache (see the `element_cache` setting).
 		add_filter( 'elementor/element/is_dynamic_content', [ $this, 'is_dynamic_content' ], 10, 2 );
@@ -300,19 +308,8 @@ class Plugin extends Singleton {
 
 			if ( self::flag( $settings, 'enabled' ) ) {
 				if ( self::flag( $settings, 'fallback_enabled' ) ) {
-					$fallback_content = '';
-					$fallback_type    = (string) self::value( $settings, 'fallback_type' );
-					$fallback_type    = '' === $fallback_type ? 'text' : $fallback_type;
-
-					if ( 'text' === $fallback_type ) {
-						$fallback_content = wp_kses_post( (string) self::value( $settings, 'fallback_text' ) );
-					} elseif ( 'template' === $fallback_type && self::value( $settings, 'fallback_template' ) && shortcode_exists( 'elementor-template' ) ) {
-						$fallback_content = do_shortcode( '[elementor-template id="' . esc_attr( self::value( $settings, 'fallback_template' ) ) . '"]' );
-					}
-
-					if ( $fallback_content ) {
-						return $fallback_content;
-					}
+					// Sections, columns and containers: print_pending_fallback() prints it in place of the element.
+					return $this->is_wrapper_element( $widget ) ? '' : $this->fallback_content( $settings );
 				} elseif ( self::flag( $settings, 'keep_html' ) ) {
 					$widget->add_render_attribute( '_wrapper', 'class', 'stax-visibility-hidden' );
 					$widget->add_render_attribute( '_wrapper', 'style', 'display: none' );
@@ -357,13 +354,18 @@ class Plugin extends Singleton {
 		$settings = $this->item_settings( $widget );
 
 		if ( ! $this->should_render( $widget, $should_render ) ) {
+			$fallback = self::flag( $settings, 'fallback_enabled' );
 
-			// Keep HTML (hidden by CSS) or fallback content: the element is printed.
-			if ( self::flag( $settings, 'keep_html' ) || self::flag( $settings, 'fallback_enabled' ) ) {
-				return true;
+			// Sections, columns and containers cannot swap their output for the fallback: skip the element (and
+			// everything in it) and print the fallback after it. The fallback wins over Keep HTML, as on widgets.
+			if ( $fallback && $this->is_wrapper_element( $widget ) && ! $this->is_edit_mode() ) {
+				$this->pending_fallbacks[ spl_object_id( $widget ) ] = $settings;
+
+				return false;
 			}
 
-			return false;
+			// Widgets: the fallback replaces their content (content_change). Keep HTML: hidden by CSS.
+			return $fallback || self::flag( $settings, 'keep_html' );
 		}
 
 		$should_render = true;
@@ -402,6 +404,68 @@ class Plugin extends Singleton {
 		$this->results           = [];
 		$this->initiated_widgets = [];
 		$this->excluded_widgets  = [];
+		$this->pending_fallbacks = [];
+	}
+
+	/**
+	 * Print the fallback of a hidden section, column or container that item_should_render() skipped.
+	 *
+	 * Runs on `elementor/frontend/after_render`, which Elementor fires whether or not the element was printed.
+	 *
+	 * @param \Elementor\Element_Base $element Element.
+	 *
+	 * @return void
+	 */
+	public function print_pending_fallback( $element ) {
+		$key = spl_object_id( $element );
+
+		if ( ! isset( $this->pending_fallbacks[ $key ] ) ) {
+			return;
+		}
+
+		$content = $this->fallback_content( $this->pending_fallbacks[ $key ] );
+		unset( $this->pending_fallbacks[ $key ] );
+
+		if ( '' !== $content ) {
+			// Escaped in fallback_content() (wp_kses_post) or rendered by Elementor (template).
+			echo '<div class="stax-visibility-fallback">' . $content . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		}
+	}
+
+	/**
+	 * Fallback content of a hidden element: the text (sanitized) or the rendered Elementor template.
+	 *
+	 * @param array $settings Element visibility settings.
+	 *
+	 * @return string
+	 */
+	private function fallback_content( $settings ) {
+		$type = (string) self::value( $settings, 'fallback_type' );
+		$type = '' === $type ? 'text' : $type;
+
+		if ( 'text' === $type ) {
+			return wp_kses_post( (string) self::value( $settings, 'fallback_text' ) );
+		}
+
+		$template = self::value( $settings, 'fallback_template' );
+
+		if ( 'template' === $type && $template && shortcode_exists( 'elementor-template' ) ) {
+			return (string) do_shortcode( '[elementor-template id="' . esc_attr( $template ) . '"]' );
+		}
+
+		return '';
+	}
+
+	/**
+	 * Whether the element wraps other elements (section, column, container, atomic layout elements): its own output
+	 * cannot be replaced, only skipped. Widgets swap their content in `elementor/widget/render_content`.
+	 *
+	 * @param \Elementor\Element_Base $item Element.
+	 *
+	 * @return bool
+	 */
+	private function is_wrapper_element( $item ) {
+		return 'widget' !== $item->get_type();
 	}
 
 	/**
