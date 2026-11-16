@@ -134,6 +134,7 @@ Visibility Logic Pro:
 == Changelog ==
 
 = 2.5.3 =
+* Security fix: with Fallback turned on (Visibility Logic Pro), a hidden section or container was shown in full to the visitors the rule should hide it from, and the fallback was not shown. Now the fallback replaces the whole element. Widgets were not affected. Please update.
 * Fix: opening a section in the Visibility tab of the Elementor panel (for example WooCommerce Users) no longer scrolls the panel back to the top; the opened section stays where you clicked it.
 
 = 2.5.2 =
@@ -289,7 +290,7 @@ Visibility Logic Pro:
 == Upgrade Notice ==
 
 = 2.5.3 =
-Bug fix: opening a section in the Visibility tab keeps the panel scroll position.
+Security fix: a hidden section or container with Fallback on was shown in full. Please update. Also keeps the Visibility tab scroll position.
 
 = 2.5.2 =
 Bug fixes: Date FROM/TO use the site time zone, Hide when empty works on Flexbox containers, User Meta keys starting with an underscore match.
