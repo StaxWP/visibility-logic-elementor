@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-17T08:20:50+00:00\n"
+"POT-Creation-Date: 2026-11-17T08:55:32+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: visibility-logic-elementor\n"
@@ -949,82 +949,78 @@ msgid "Show an Elementor template (Pro)"
 msgstr ""
 
 #: core/Page_Rules.php:223
-msgid "Use a rule for this page"
+msgid "Limit who can see this page"
 msgstr ""
 
-#: core/Page_Rules.php:224
-msgid "Applies to the whole page. People who can edit it always see it, with a notice."
+#: core/Page_Rules.php:228
+msgid "When hidden, visitors get"
 msgstr ""
 
-#: core/Page_Rules.php:229
-msgid "When the page is hidden"
-msgstr ""
-
-#: core/Page_Rules.php:236
+#: core/Page_Rules.php:235
 #: core/Rule_Tree.php:1073
 #: core/settings/FallbackText.php:94
 msgid "Message"
 msgstr ""
 
-#: core/Page_Rules.php:238
+#: core/Page_Rules.php:237
 msgid "Basic HTML. The theme header and footer stay."
 msgstr ""
 
-#: core/Page_Rules.php:255
+#: core/Page_Rules.php:254
 msgid "This content is not available."
 msgstr ""
 
-#: core/Page_Rules.php:281
+#: core/Page_Rules.php:280
 msgid "This page"
 msgstr ""
 
 #. translators: %s: the rule in words.
-#: core/Page_Rules.php:459
+#: core/Page_Rules.php:458
 #, php-format
 msgid "Visibility Logic: this page is hidden for you as a visitor (%s). You see it because you can edit it."
 msgstr ""
 
 #. translators: %s: the rule in words.
-#: core/Page_Rules.php:461
+#: core/Page_Rules.php:460
 #, php-format
 msgid "Visibility Logic: this page has a rule (%s)."
 msgstr ""
 
-#: core/Page_Rules.php:498
+#: core/Page_Rules.php:497
 #: core/Page_Rules.php:587
 msgid "Page visibility"
 msgstr ""
 
-#: core/Page_Rules.php:499
-msgid "Show or hide this whole page. When hidden, visitors get the option below; people who can edit the page always see it."
+#: core/Page_Rules.php:498
+msgid "Set who can see this whole page. You and other editors always see it, with a notice."
 msgstr ""
 
-#: core/Page_Rules.php:500
+#: core/Page_Rules.php:499
 msgid "Show this popup only when the rule allows it. A hidden popup is not added to the page, so its triggers do nothing. Elementor Pro's own display conditions and triggers still apply first."
 msgstr ""
 
-#: core/Page_Rules.php:501
-msgid "Use a rule for this popup"
+#: core/Page_Rules.php:500
+msgid "Limit when this popup shows"
 msgstr ""
 
-#: core/Page_Rules.php:502
+#: core/Page_Rules.php:501
 msgid "Rules that depend on the visitor need the page to be excluded from page caching."
 msgstr ""
 
-#: core/Page_Rules.php:507
+#: core/Page_Rules.php:506
 msgid "this page when"
 msgstr ""
 
-#: core/Page_Rules.php:508
-msgid "Visitors never see this page; people who can edit it still do."
+#: core/Page_Rules.php:507
+msgid "Visitors never see this page."
 msgstr ""
 
-#: core/Page_Rules.php:511
+#: core/Page_Rules.php:510
 msgid "this popup when"
 msgstr ""
 
-#: core/Page_Rules.php:512
-msgid "Visitors never see this popup; you still see it in the editor."
+#: core/Page_Rules.php:511
+msgid "Visitors never see this popup."
 msgstr ""
 
 #: core/Page_Rules.php:587

@@ -1,0 +1,10 @@
+/**
+ * Visibility Logic: page and popup panel (Page_Rules), in Elementor's page settings and the block editor sidebar.
+ * The rule builder shows only while the switch is on, with the "When hidden" options below the conditions.
+ */
+.stax-vl-page-switch { display: flex; align-items: center; gap: 8px; margin: 10px 0 12px; }
+.stax-vl-page-switch input { margin: 0; }
+.stax-vl-page.is-off .stxc-builder { display: none; }
+.stax-vl-page .stxc-builder { display: flex; flex-direction: column; }
+.stax-vl-page .stxc-builder > .stxc-settings { order: 1; margin-top: 12px; }
+.stax-vl-page .stxc-builder > .stxc-draft { order: 2; }

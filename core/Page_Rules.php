@@ -220,13 +220,12 @@ class Page_Rules {
 			[
 				'key'   => 'active',
 				'type'  => 'switch',
-				'label' => __( 'Use a rule for this page', 'visibility-logic-elementor' ),
-				'help'  => __( 'Applies to the whole page. People who can edit it always see it, with a notice.', 'visibility-logic-elementor' ),
+				'label' => __( 'Limit who can see this page', 'visibility-logic-elementor' ),
 			],
 			[
 				'key'     => 'hidden',
 				'type'    => 'select',
-				'label'   => __( 'When the page is hidden', 'visibility-logic-elementor' ),
+				'label'   => __( 'When hidden, visitors get', 'visibility-logic-elementor' ),
 				'options' => Conditions::option_list( $actions, $locked ),
 				'show_if' => [ 'active' => [ 'yes' ] ],
 			],
@@ -496,20 +495,20 @@ class Page_Rules {
 			'defaults' => self::defaults(),
 			'labels'   => [
 				'panel' => __( 'Page visibility', 'visibility-logic-elementor' ),
-				'intro' => __( 'Show or hide this whole page. When hidden, visitors get the option below; people who can edit the page always see it.', 'visibility-logic-elementor' ),
+				'intro' => __( 'Set who can see this whole page. You and other editors always see it, with a notice.', 'visibility-logic-elementor' ),
 				'popup' => __( 'Show this popup only when the rule allows it. A hidden popup is not added to the page, so its triggers do nothing. Elementor Pro\'s own display conditions and triggers still apply first.', 'visibility-logic-elementor' ),
-				'use'   => __( 'Use a rule for this popup', 'visibility-logic-elementor' ),
+				'use'   => __( 'Limit when this popup shows', 'visibility-logic-elementor' ),
 				'cache' => __( 'Rules that depend on the visitor need the page to be excluded from page caching.', 'visibility-logic-elementor' ),
 			],
 			// Rule builder wording per kind (the builder's defaults name an element).
 			'builder'  => [
 				'page'  => [
 					'when'      => __( 'this page when', 'visibility-logic-elementor' ),
-					'draftHelp' => __( 'Visitors never see this page; people who can edit it still do.', 'visibility-logic-elementor' ),
+					'draftHelp' => __( 'Visitors never see this page.', 'visibility-logic-elementor' ),
 				],
 				'popup' => [
 					'when'      => __( 'this popup when', 'visibility-logic-elementor' ),
-					'draftHelp' => __( 'Visitors never see this popup; you still see it in the editor.', 'visibility-logic-elementor' ),
+					'draftHelp' => __( 'Visitors never see this popup.', 'visibility-logic-elementor' ),
 				],
 			],
 		];
@@ -549,6 +548,7 @@ class Page_Rules {
 	 */
 	private static function enqueue_panel( array $deps, $in_footer = true ) {
 		wp_enqueue_script( 'stax-visibility-page-rules', STAX_VISIBILITY_ASSETS_URL . 'js/page-rules.js', $deps, STAX_VISIBILITY_VERSION, $in_footer );
+		wp_enqueue_style( 'stax-visibility-page-rules', STAX_VISIBILITY_ASSETS_URL . 'css/page-rules.css', [], STAX_VISIBILITY_VERSION );
 		wp_localize_script( 'stax-visibility-page-rules', 'staxVisibilityPage', self::editor_data() );
 	}
 

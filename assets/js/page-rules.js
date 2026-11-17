@@ -71,12 +71,14 @@
 			return null;
 		}
 		var popup = kind === 'popup';
-		// Popups: the rule only (a hidden popup is not printed).
-		var fields = popup ? page.fields.filter( function ( f ) {
+		var activeField = page.fields.filter( function ( f ) {
 			return f.key === 'active';
-		} ).map( function ( f ) {
-			return Object.assign( {}, f, { label: page.labels.use, help: '' } );
-		} ) : page.fields;
+		} )[ 0 ] || {};
+		// The switch is ours (above the builder); the builder gets the "When hidden" fields (popups: none, a hidden
+		// popup is not printed).
+		var fields = popup ? [] : page.fields.filter( function ( f ) {
+			return f.key !== 'active';
+		} );
 		var value = normalize( read() );
 		var timer = null;
 		var textTimer = null;
@@ -89,6 +91,27 @@
 		intro.textContent = popup ? page.labels.popup : page.labels.intro;
 		mount.parentNode.insertBefore( intro, mount );
 
+		// "Limit who can see this page": the rule builder shows only while it is on.
+		var switchId = 'stax-vl-page-switch-' + Math.random().toString( 36 ).slice( 2, 8 );
+		var toggle = document.createElement( 'div' );
+		toggle.className = 'stax-vl-page-switch';
+		var box = document.createElement( 'input' );
+		box.type = 'checkbox';
+		box.id = switchId;
+		box.checked = value.enabled;
+		var label = document.createElement( 'label' );
+		label.setAttribute( 'for', switchId );
+		label.textContent = popup ? page.labels.use : activeField.label;
+		toggle.appendChild( box );
+		toggle.appendChild( label );
+		mount.parentNode.insertBefore( toggle, mount );
+
+		mount.classList.add( 'stax-vl-page' );
+		var setOff = function ( on ) {
+			mount.classList.toggle( 'is-off', ! on );
+		};
+		setOff( value.enabled );
+
 		var builder = SC.createBuilder( mount, {
 			registry: data.registry,
 			value: value.rules ? SC.tree.normalize( value.rules ) : SC.tree.make( 'show' ),
@@ -96,14 +119,10 @@
 			context: data.context,
 			proUrl: data.proUrl,
 			search: search( data ),
-			settings: {
+			settings: fields.length ? {
 				fields: fields,
 				values: panelValues( value ),
 				onChange: function ( key, v ) {
-					if ( key === 'active' ) {
-						update( { enabled: !! v } );
-						return;
-					}
 					if ( key === 'message' || key === 'redirect' ) {
 						clearTimeout( textTimer );
 						textTimer = setTimeout( function () {
@@ -117,20 +136,21 @@
 					c[ key ] = v;
 					update( c );
 				},
-			},
+			} : null,
 			onChange: function ( tree ) {
 				clearTimeout( timer );
 				timer = setTimeout( function () {
-					var current = normalize( read() );
-					var changes = { rules: tree };
-					// First condition added: turn the page rule on.
-					if ( ! current.enabled && ( ! current.rules || SC.tree.isEmpty( SC.tree.normalize( current.rules ) ) ) && ! SC.tree.isEmpty( tree ) ) {
-						changes.enabled = true;
-						builder.setSettings( Object.assign( panelValues( current ), { active: true } ) );
-					}
-					update( changes );
+					update( { rules: tree } );
 				}, 250 );
 			},
+		} );
+
+		box.addEventListener( 'change', function () {
+			setOff( box.checked );
+			update( { enabled: box.checked } );
+			if ( fields.length ) {
+				builder.setSettings( Object.assign( panelValues( normalize( read() ) ), { active: box.checked } ) );
+			}
 		} );
 
 		if ( data.users && Object.keys( data.users ).length ) {
@@ -142,6 +162,12 @@
 				clearTimeout( timer );
 				clearTimeout( textTimer );
 				builder.destroy();
+				[ intro, toggle ].forEach( function ( node ) {
+					if ( node.parentNode ) {
+						node.parentNode.removeChild( node );
+					}
+				} );
+				mount.classList.remove( 'stax-vl-page', 'is-off' );
 			},
 		};
 	}
