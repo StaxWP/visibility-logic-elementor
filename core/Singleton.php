@@ -67,13 +67,13 @@ class Singleton {
 	}
 
 	/**
-	 * Whether Visibility Logic Pro registers its conditions on columns too (2.5+). With Pro 2.4 columns get the free
+	 * Whether Visibility Logic Pro registers its conditions on columns too (3.0+). With Pro 2.4 columns get the free
 	 * conditions; rules on columns are evaluated without the Pro controls (Plugin::should_render()).
 	 *
 	 * @return bool
 	 */
 	public static function pro_supports_columns() {
-		return ! defined( 'STAX_VISIBILITY_PRO_VERSION' ) || version_compare( STAX_VISIBILITY_PRO_VERSION, '2.5.0-dev', '>=' );
+		return ! defined( 'STAX_VISIBILITY_PRO_VERSION' ) || version_compare( STAX_VISIBILITY_PRO_VERSION, '3.0.0-dev', '>=' );
 	}
 
 	/**

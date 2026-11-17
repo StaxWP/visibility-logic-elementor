@@ -1,6 +1,6 @@
 /**
  * E2E (Playwright): Settings > Visibility Logic opens the Rules overview; filters; cache check; accessibility; with
- * Visibility Logic Pro 2.5 also the Rule sets tab (create a set with the builder, list with "where used").
+ * Visibility Logic Pro 3.0 also the Rule sets tab (create a set with the builder, list with "where used").
  *
  *   VL_BASE=http://vl3.test VL_SHOTS=/dir node tests/e2e/admin-screens.mjs
  *
@@ -63,7 +63,7 @@ try {
 	const draftRows = await page.locator( '.stax-vl-usage tbody tr' ).allInnerTexts();
 	check( 'status filter: drafts only', draftRows.length >= 1 && draftRows.every( ( r ) => r.indexOf( 'Hidden on the live site' ) !== -1 ), draftRows );
 
-	// Pro 2.5: Rule sets.
+	// Pro 3.0: Rule sets.
 	await page.goto( `${ BASE }/wp-admin/options-general.php?page=stax-visibility-rule-sets` );
 	if ( await page.locator( 'h2', { hasText: 'Rule sets' } ).count() ) {
 		await page.click( 'text=Add a rule set' );
@@ -84,7 +84,7 @@ try {
 		await page.waitForLoadState( 'networkidle' );
 		check( 'rule set deleted after confirmation', ( await page.locator( 'tr', { hasText: 'Members only (e2e)' } ).count() ) === 0 );
 	} else {
-		console.log( 'SKIP Rule sets (Visibility Logic Pro 2.5 not active)' );
+		console.log( 'SKIP Rule sets (Visibility Logic Pro 3.0 not active)' );
 	}
 
 	check( 'no JavaScript errors', errors.length === 0, errors );

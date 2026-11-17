@@ -1073,7 +1073,7 @@ class Rule_Tree {
 			'fallbackMessage' => __( 'Message', 'visibility-logic-elementor' ),
 			'fallbackHelp'    => __( 'Shown to visitors who do not see the element. Basic HTML is allowed.', 'visibility-logic-elementor' ),
 			'fallbackChoose'  => __( 'Template', 'visibility-logic-elementor' ),
-			'proColumns'      => __( 'Pro conditions on columns need Visibility Logic Pro 2.5 or newer.', 'visibility-logic-elementor' ),
+			'proColumns'      => __( 'Pro conditions on columns need Visibility Logic Pro 3.0 or newer.', 'visibility-logic-elementor' ),
 			'searchPosts'     => __( 'Search pages and posts', 'visibility-logic-elementor' ),
 			'hideEmpty'       => __( 'Hide this container when everything inside is hidden', 'visibility-logic-elementor' ),
 			'classic'         => __( 'Classic settings', 'visibility-logic-elementor' ),

@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-17T08:00:38+00:00\n"
+"POT-Creation-Date: 2026-11-17T08:06:14+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: visibility-logic-elementor\n"
@@ -1775,7 +1775,7 @@ msgid "Template"
 msgstr ""
 
 #: core/Rule_Tree.php:1076
-msgid "Pro conditions on columns need Visibility Logic Pro 2.5 or newer."
+msgid "Pro conditions on columns need Visibility Logic Pro 3.0 or newer."
 msgstr ""
 
 #: core/Rule_Tree.php:1077

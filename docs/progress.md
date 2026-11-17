@@ -47,4 +47,4 @@ Plan: second-brain `Projects/staxwp/docs/2026-11-13-majors-ux-rethink.md` (V-M1 
 - Elementor 4 atomic panel on the builder (V-L4, when Elementor's V4 API allows custom controls).
 - DataViews rules screen (approved build step; 3.0 ships the server-rendered table).
 - Docs on staxwp.com and wp.org screenshots (V-M11).
-- Decided for later: Dynamic Visibility importer (3.1), DataViews rules screen (3.1). Click-to-reveal, view caps and popups were built in Pro 2.5 (2026-11-16).
+- Decided for later: Dynamic Visibility importer (3.1), DataViews rules screen (3.1). Click-to-reveal, view caps and popups were built in Pro 3.0 (2026-11-16).

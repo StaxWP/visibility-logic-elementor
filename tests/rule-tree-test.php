@@ -456,7 +456,7 @@ $ok( null === $registry->type( 'fallback' ) && 1 === count( \StaxWP\Conditions\V
 $pro_types = array_filter( $registry->types(), static function ( $t ) {
 	return ! empty( $t['pro'] );
 } );
-if ( \Stax\VisibilityLogic\Singleton::pro_supports_columns() ) { // No Pro, or Pro 2.5+ (Pro 2.4 conditions have no builder fields: read-only).
+if ( \Stax\VisibilityLogic\Singleton::pro_supports_columns() ) { // No Pro, or Pro 3.0+ (Pro 2.4 conditions have no builder fields: read-only).
 	$ok( count( $pro_types ) >= 5, 'registry: Pro conditions listed (locked without Pro, editable with Pro)', count( $pro_types ) );
 }
 if ( ! defined( 'STAX_VISIBILITY_PRO_VERSION' ) ) {
