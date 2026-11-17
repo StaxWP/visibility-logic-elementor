@@ -501,6 +501,17 @@ class Page_Rules {
 				'use'   => __( 'Use a rule for this popup', 'visibility-logic-elementor' ),
 				'cache' => __( 'Rules that depend on the visitor need the page to be excluded from page caching.', 'visibility-logic-elementor' ),
 			],
+			// Rule builder wording per kind (the builder's defaults name an element).
+			'builder'  => [
+				'page'  => [
+					'when'      => __( 'this page when', 'visibility-logic-elementor' ),
+					'draftHelp' => __( 'Visitors never see this page; people who can edit it still do.', 'visibility-logic-elementor' ),
+				],
+				'popup' => [
+					'when'      => __( 'this popup when', 'visibility-logic-elementor' ),
+					'draftHelp' => __( 'Visitors never see this popup; you still see it in the editor.', 'visibility-logic-elementor' ),
+				],
+			],
 		];
 	}
 
@@ -525,18 +536,19 @@ class Page_Rules {
 	 * @return void
 	 */
 	public static function elementor_assets() {
-		self::enqueue_panel( [ 'jquery', 'stax-visibility-rule-builder' ] );
+		self::enqueue_panel( [ 'jquery', 'stax-visibility-rule-builder' ], false ); // Head, like the rule builder (see Plugin::enqueue_rule_builder).
 	}
 
 	/**
 	 * Panel script for both editors.
 	 *
-	 * @param array $deps Dependencies.
+	 * @param array $deps      Dependencies.
+	 * @param bool  $in_footer Print in the footer.
 	 *
 	 * @return void
 	 */
-	private static function enqueue_panel( array $deps ) {
-		wp_enqueue_script( 'stax-visibility-page-rules', STAX_VISIBILITY_ASSETS_URL . 'js/page-rules.js', $deps, STAX_VISIBILITY_VERSION, true );
+	private static function enqueue_panel( array $deps, $in_footer = true ) {
+		wp_enqueue_script( 'stax-visibility-page-rules', STAX_VISIBILITY_ASSETS_URL . 'js/page-rules.js', $deps, STAX_VISIBILITY_VERSION, $in_footer );
 		wp_localize_script( 'stax-visibility-page-rules', 'staxVisibilityPage', self::editor_data() );
 	}
 

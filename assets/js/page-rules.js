@@ -92,7 +92,7 @@
 		var builder = SC.createBuilder( mount, {
 			registry: data.registry,
 			value: value.rules ? SC.tree.normalize( value.rules ) : SC.tree.make( 'show' ),
-			labels: data.labels,
+			labels: Object.assign( {}, data.labels, page.builder && page.builder[ popup ? 'popup' : 'page' ] ),
 			context: data.context,
 			proUrl: data.proUrl,
 			search: search( data ),

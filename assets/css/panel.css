@@ -207,7 +207,8 @@
   display: none !important;
 }
 
-.elementor-control-type-stax_rule_builder .elementor-control-content { display: block; }
+.elementor-control-type-stax_rule_builder .elementor-control-content,
+.elementor-control-type-stax_page_rules .elementor-control-content { display: block; }
 
 .stax-vl-rb-status:empty { display: none; }
 
@@ -268,8 +269,10 @@
   font-size: 12px;
 }
 
-.elementor-control-type-stax_rule_builder .elementor-control-field.stax-vl-rb-field { display: block; }
-.elementor-control-type-stax_rule_builder .stax-vl-rb { width: 100%; }
+.elementor-control-type-stax_rule_builder .elementor-control-field.stax-vl-rb-field,
+.elementor-control-type-stax_page_rules .elementor-control-field.stax-vl-rb-field { display: block; }
+.elementor-control-type-stax_rule_builder .stax-vl-rb,
+.elementor-control-type-stax_page_rules .stax-vl-page-rb { width: 100%; }
 
 .stax-vl-preview { margin: 0 0 10px; }
 .stax-vl-preview > summary { cursor: pointer; font-weight: 600; padding: 4px 0; min-height: 24px; }

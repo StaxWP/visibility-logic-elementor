@@ -740,7 +740,8 @@ class Plugin extends Singleton {
 
 		if ( 'elementor' === $editor ) {
 			$handle = 'stax-visibility-rule-builder';
-			wp_enqueue_script( $handle, STAX_VISIBILITY_ASSETS_URL . 'js/rule-builder-elementor.js', [ 'jquery', 'stax-conditions', 'stax-visibility-rule-map', 'stax-visibility-preview-extras' ], STAX_VISIBILITY_VERSION, true );
+			// In the head: Elementor 4 can fire `elementor:init` before footer scripts run, and the control view must exist by then.
+			wp_enqueue_script( $handle, STAX_VISIBILITY_ASSETS_URL . 'js/rule-builder-elementor.js', [ 'jquery', 'stax-conditions', 'stax-visibility-rule-map', 'stax-visibility-preview-extras' ], STAX_VISIBILITY_VERSION, false );
 			wp_localize_script( $handle, 'staxVisibilityRules', Rest::editor_data() );
 
 			return $handle;

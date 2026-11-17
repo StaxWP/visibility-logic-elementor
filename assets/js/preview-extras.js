@@ -42,6 +42,9 @@
 		} );
 		wrap.appendChild( label );
 		wrap.appendChild( select );
+		// Same box as the shared preview bar (.stxc-preview), right under it.
+		container.classList.add( 'stxc', 'stxc-preview', 'stax-vl-preview-lang' );
+		container.style.marginTop = '6px';
 		container.appendChild( wrap );
 		return {
 			set: function ( value ) {
