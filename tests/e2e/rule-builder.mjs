@@ -168,7 +168,7 @@ try {
 	check( 'preset "Hide on mobile": enabled, hide, device mobile', s.enabled === 'yes' && s.show_hide === '' && s.device_type_enabled === 'yes' && JSON.stringify( s.device_types ) === '["mobile"]', s );
 
 	await select( 'e2ew1' );
-	await builder().locator( '.stxc-draft input' ).check();
+	await builder().locator( '.stxc-action' ).selectOption( 'draft' );
 	await settle();
 	s = await settings( 'e2ew1' );
 	check( 'draft: tree with draft, rules on', s.enabled === 'yes' && s.rules && s.rules.draft === true, s );
@@ -258,7 +258,7 @@ try {
 	const bar = await page.locator( '#wp-admin-bar-stax-vl > .ab-item' ).innerText();
 	check( 'admin bar: "Visibility: 1 hidden here" (the draft)', bar.indexOf( 'Visibility: 1 hidden here' ) !== -1, bar );
 	const items = await page.locator( '#wp-admin-bar-stax-vl .ab-submenu .ab-item' ).allTextContents();
-	check( 'admin bar: the reason of each element', items.some( ( t ) => t.indexOf( 'Hidden: Heading #e2ew1' ) === 0 ) && items.some( ( t ) => t.indexOf( 'Hidden on the live site (draft).' ) !== -1 ), items.slice( 0, 12 ) );
+	check( 'admin bar: the reason of each element', items.some( ( t ) => t.indexOf( 'Hidden: Heading #e2ew1' ) === 0 ) && items.some( ( t ) => t.indexOf( 'Hidden from everyone.' ) !== -1 ), items.slice( 0, 12 ) );
 	const asGuest = await page.locator( '#wp-admin-bar-stax-vl-as-guest a' ).getAttribute( 'href' );
 	await page.goto( asGuest );
 	const html = await page.content();

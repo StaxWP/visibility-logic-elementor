@@ -504,11 +504,11 @@ class Page_Rules {
 			'builder'  => [
 				'page'  => [
 					'when'      => __( 'this page when', 'visibility-logic-elementor' ),
-					'draftHelp' => __( 'Visitors never see this page.', 'visibility-logic-elementor' ),
+					'draftHelp' => __( 'Ignores the conditions and keeps them for later. Visitors get the "When hidden" option; you and other editors still see the page.', 'visibility-logic-elementor' ),
 				],
 				'popup' => [
 					'when'      => __( 'this popup when', 'visibility-logic-elementor' ),
-					'draftHelp' => __( 'Visitors never see this popup.', 'visibility-logic-elementor' ),
+					'draftHelp' => __( 'Ignores the conditions and keeps them for later. The popup is not added for visitors; you still see it in the editor.', 'visibility-logic-elementor' ),
 				],
 			],
 		];

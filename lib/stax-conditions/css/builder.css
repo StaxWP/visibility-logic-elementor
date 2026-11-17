@@ -64,8 +64,8 @@
 .stxc-locked:empty { display: none; }
 .stxc-locked { margin: 6px 0 0; }
 .stxc-pro { display: inline-block; padding: 0 5px; border-radius: 8px; background: #eceef1; color: var(--stxc-muted); font-size: 9px; font-weight: 700; line-height: 16px; letter-spacing: .03em; }
-.stxc-draft { margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--stxc-border); }
-.stxc-builder.is-draft .stxc-groups { opacity: .6; }
+.stxc-draft-help { margin: 4px 0 8px; }
+.stxc-builder.is-draft .stxc-groups, .stxc-builder.is-draft .stxc-add-group { opacity: .55; }
 .stxc-settings { margin: 0 0 8px; padding: 0 0 6px; border-bottom: 1px solid var(--stxc-border); }
 .stxc button:focus-visible, .stxc input:focus-visible, .stxc select:focus-visible, .stxc textarea:focus-visible { outline: 2px solid var(--stxc-accent); outline-offset: 1px; }
 .stxc-preview { padding: 8px; border: 1px solid var(--stxc-border); border-radius: 4px; background: var(--stxc-soft); }

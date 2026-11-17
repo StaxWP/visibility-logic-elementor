@@ -437,7 +437,7 @@ $ok( 1 === count( $rows ) && 'a' === $rows[0]['element']['id'] && in_array( 'exp
 $section( '4. Summaries, warnings, registry' );
 
 $ok( 'Shown only when (User role is Subscriber and Device is Mobile) or User role is Editor' === Rule_Tree::sentence( $t ), 'sentence with groups', Rule_Tree::sentence( $t ) );
-$ok( 'Hidden on the live site (draft)' === Rule_Tree::sentence( $tree_of( 'show', [ [] ], true ) ), 'sentence of a draft' );
+$ok( 'Hidden from everyone' === Rule_Tree::sentence( $tree_of( 'show', [ [] ], true ) ), 'sentence of a draft' );
 $ok( 'Shown only when Every year from 12-20 to 01-11' === Rule_Tree::sentence( $tree_of( 'show', [ [ $yearly ] ] ) ), 'B1 summary', Rule_Tree::sentence( $tree_of( 'show', [ [ $yearly ] ] ) ) );
 $users_summary = Rule_Tree::sentence( $who( [ 'user_role_by' => 'users', 'user_role_users' => [ (string) $sub_id ] ] ) );
 $ok( false !== strpos( $users_summary, get_userdata( $sub_id )->display_name ), 'B2 summary shows user names', $users_summary );

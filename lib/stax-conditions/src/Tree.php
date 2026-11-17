@@ -5,7 +5,7 @@
  *   [
  *     'v'      => 1,
  *     'action' => 'show' | 'hide',   // what happens when the rule matches
- *     'draft'  => false,             // true: never shown to visitors (Hidden on the live site)
+ *     'draft'  => false,             // true: never shown to visitors (Hidden from everyone)
  *     'groups' => [                  // OR between groups
  *       [ 'conditions' => [          // AND inside a group
  *           [ 'id' => 'c1', 'type' => 'user_role', 'values' => [ 'user_role_conditions' => [ 'subscriber' ] ] ],

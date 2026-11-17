@@ -164,7 +164,7 @@ class Rest {
 			/* translators: %s: who the page is previewed for. */
 			'hidden'     => __( 'Hidden for %s', 'visibility-logic-elementor' ),
 			'noRule'     => __( 'No rule applies: shown.', 'visibility-logic-elementor' ),
-			'draft'      => __( 'Hidden on the live site (draft).', 'visibility-logic-elementor' ),
+			'draft'      => __( 'Hidden from everyone.', 'visibility-logic-elementor' ),
 			'met'        => __( 'yes', 'visibility-logic-elementor' ),
 			'notMet'     => __( 'no', 'visibility-logic-elementor' ),
 			'skipped'    => __( 'does not apply here', 'visibility-logic-elementor' ),

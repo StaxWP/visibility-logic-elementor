@@ -368,7 +368,7 @@ class Preview {
 					[
 						'parent' => $node,
 						'id'     => $node . '-d',
-						'title'  => esc_html__( 'Hidden on the live site (draft).', 'visibility-logic-elementor' ),
+						'title'  => esc_html__( 'Hidden from everyone.', 'visibility-logic-elementor' ),
 					]
 				);
 			}

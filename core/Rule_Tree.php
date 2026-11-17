@@ -245,7 +245,7 @@ class Rule_Tree {
 			'hide'       => __( 'Hidden when %s', 'visibility-logic-elementor' ),
 			'and'        => __( ' and ', 'visibility-logic-elementor' ),
 			'or'         => __( ' or ', 'visibility-logic-elementor' ),
-			'draft'      => __( 'Hidden on the live site (draft)', 'visibility-logic-elementor' ),
+			'draft'      => __( 'Hidden from everyone', 'visibility-logic-elementor' ),
 			'none'       => __( 'No conditions yet', 'visibility-logic-elementor' ),
 			/* translators: 1: first items, 2: number of other items. */
 			'more'       => __( '%1$s and %2$d more', 'visibility-logic-elementor' ),
@@ -945,7 +945,7 @@ class Rule_Tree {
 
 		switch ( $warning['code'] ) {
 			case 'draft':
-				return __( 'Hidden on the live site: visitors never see this element.', 'visibility-logic-elementor' );
+				return __( 'Hidden from everyone: visitors never see it.', 'visibility-logic-elementor' );
 			case 'locked':
 				/* translators: %s: condition name. */
 				return sprintf( __( '%s needs a Pro license; it is kept and still applies.', 'visibility-logic-elementor' ), $label );
@@ -1003,6 +1003,7 @@ class Rule_Tree {
 			'actionLabel'     => __( 'Action', 'visibility-logic-elementor' ),
 			'actionShow'      => __( 'Show', 'visibility-logic-elementor' ),
 			'actionHide'      => __( 'Hide', 'visibility-logic-elementor' ),
+			'actionDraft'     => __( 'Hide from everyone', 'visibility-logic-elementor' ),
 			'when'            => __( 'this element when', 'visibility-logic-elementor' ),
 			'allOf'           => __( 'All of these', 'visibility-logic-elementor' ),
 			/* translators: %d: group number. */
@@ -1021,7 +1022,7 @@ class Rule_Tree {
 			/* translators: %d: group number. */
 			'moveGroup'       => __( 'Group %d', 'visibility-logic-elementor' ),
 			'moveNew'         => __( 'New "or" group', 'visibility-logic-elementor' ),
-			'draftHelp'       => __( 'Visitors never see this element; you still see it in the editor.', 'visibility-logic-elementor' ),
+			'draftHelp'       => __( 'Ignores the conditions and keeps them for later. You still see it in the editor.', 'visibility-logic-elementor' ),
 			'search'          => __( 'Search conditions', 'visibility-logic-elementor' ),
 			'all'             => __( 'All', 'visibility-logic-elementor' ),
 			'presets'         => __( 'Start from a preset', 'visibility-logic-elementor' ),

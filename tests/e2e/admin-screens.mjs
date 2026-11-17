@@ -61,7 +61,7 @@ try {
 	await page.click( '.stax-vl-filters button' );
 	await page.waitForLoadState( 'networkidle' );
 	const draftRows = await page.locator( '.stax-vl-usage tbody tr' ).allInnerTexts();
-	check( 'status filter: drafts only', draftRows.length >= 1 && draftRows.every( ( r ) => r.indexOf( 'Hidden on the live site' ) !== -1 ), draftRows );
+	check( 'status filter: drafts only', draftRows.length >= 1 && draftRows.every( ( r ) => r.indexOf( 'Hidden from everyone' ) !== -1 ), draftRows );
 
 	// Pro 3.0: Rule sets.
 	await page.goto( `${ BASE }/wp-admin/options-general.php?page=stax-visibility-rule-sets` );

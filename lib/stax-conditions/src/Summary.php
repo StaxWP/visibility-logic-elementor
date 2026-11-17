@@ -32,7 +32,7 @@ class Summary {
 			'hide'       => 'Hidden when %s',
 			'and'        => ' and ',
 			'or'         => ' or ',
-			'draft'      => 'Hidden on the live site (draft)',
+			'draft'      => 'Hidden from everyone',
 			'none'       => 'No conditions yet',
 			'more'       => '%1$s and %2$d more',
 			'yes'        => 'yes',

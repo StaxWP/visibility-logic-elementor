@@ -46,7 +46,7 @@ $stax_vl_statuses = [
 	'future'   => __( 'Starts later', 'visibility-logic-elementor' ),
 	'never'    => __( 'Can never be true', 'visibility-logic-elementor' ),
 	'disabled' => __( 'Condition turned off', 'visibility-logic-elementor' ),
-	'draft'    => __( 'Hidden (draft)', 'visibility-logic-elementor' ),
+	'draft'    => __( 'Hidden from everyone', 'visibility-logic-elementor' ),
 	'cache'    => __( 'Depends on the visitor', 'visibility-logic-elementor' ),
 	'tree'     => __( 'Saved in the 3.0 format', 'visibility-logic-elementor' ),
 ];

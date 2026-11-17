@@ -1,1 +1,1 @@
-staxwp/stax-conditions 1.0.0 (a0fa48a). Do not edit: change the package, then run its bin/bundle.sh.
+staxwp/stax-conditions 1.0.0 (2ab4d4d). Do not edit: change the package, then run its bin/bundle.sh.

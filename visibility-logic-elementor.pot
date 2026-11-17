@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-17T08:55:32+00:00\n"
+"POT-Creation-Date: 2026-11-17T09:07:01+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: visibility-logic-elementor\n"
@@ -83,7 +83,7 @@ msgstr ""
 #: core/admin/layout.php:26
 #: core/admin/pages/templates/options.php:48
 #: core/admin/pages/templates/options.php:118
-#: core/Rule_Tree.php:1029
+#: core/Rule_Tree.php:1030
 msgid "Pro"
 msgstr ""
 
@@ -293,7 +293,8 @@ msgid "Condition turned off"
 msgstr ""
 
 #: core/admin/pages/templates/usage.php:49
-msgid "Hidden (draft)"
+#: core/Rule_Tree.php:248
+msgid "Hidden from everyone"
 msgstr ""
 
 #: core/admin/pages/templates/usage.php:50
@@ -582,7 +583,7 @@ msgid "Conditions to meet"
 msgstr ""
 
 #: core/Conditions.php:340
-#: core/Rule_Tree.php:1026
+#: core/Rule_Tree.php:1027
 #: core/settings/GeneralVisibility.php:122
 msgid "All"
 msgstr ""
@@ -705,12 +706,12 @@ msgid "ACF fields of users, terms and options pages, AND/OR rule groups, posts a
 msgstr ""
 
 #: core/helpers/Pro_Teaser.php:169
-#: core/Rule_Tree.php:1033
+#: core/Rule_Tree.php:1034
 msgid "Learn more"
 msgstr ""
 
 #: core/helpers/Pro_Teaser.php:178
-#: core/Rule_Tree.php:1030
+#: core/Rule_Tree.php:1031
 msgid "Pro feature"
 msgstr ""
 
@@ -957,7 +958,7 @@ msgid "When hidden, visitors get"
 msgstr ""
 
 #: core/Page_Rules.php:235
-#: core/Rule_Tree.php:1073
+#: core/Rule_Tree.php:1074
 #: core/settings/FallbackText.php:94
 msgid "Message"
 msgstr ""
@@ -1012,7 +1013,7 @@ msgid "this page when"
 msgstr ""
 
 #: core/Page_Rules.php:507
-msgid "Visitors never see this page."
+msgid "Ignores the conditions and keeps them for later. Visitors get the \"When hidden\" option; you and other editors still see the page."
 msgstr ""
 
 #: core/Page_Rules.php:510
@@ -1020,7 +1021,7 @@ msgid "this popup when"
 msgstr ""
 
 #: core/Page_Rules.php:511
-msgid "Visitors never see this popup."
+msgid "Ignores the conditions and keeps them for later. The popup is not added for visitors; you still see it in the editor."
 msgstr ""
 
 #: core/Page_Rules.php:587
@@ -1062,7 +1063,7 @@ msgstr ""
 
 #: core/Preview.php:371
 #: core/Rest.php:167
-msgid "Hidden on the live site (draft)."
+msgid "Hidden from everyone."
 msgstr ""
 
 #: core/Preview.php:386
@@ -1193,7 +1194,7 @@ msgstr ""
 
 #. translators: %d: group number.
 #: core/Rest.php:172
-#: core/Rule_Tree.php:1022
+#: core/Rule_Tree.php:1023
 #, php-format
 msgid "Group %d"
 msgstr ""
@@ -1508,10 +1509,6 @@ msgstr ""
 msgid " or "
 msgstr ""
 
-#: core/Rule_Tree.php:248
-msgid "Hidden on the live site (draft)"
-msgstr ""
-
 #: core/Rule_Tree.php:249
 msgid "No conditions yet"
 msgstr ""
@@ -1561,47 +1558,47 @@ msgid "Site time zone: %1$s (now %2$s)."
 msgstr ""
 
 #: core/Rule_Tree.php:948
-msgid "Hidden on the live site: visitors never see this element."
+msgid "Hidden from everyone: visitors never see it."
 msgstr ""
 
 #. translators: %s: condition name.
 #: core/Rule_Tree.php:951
-#: core/Rule_Tree.php:1050
+#: core/Rule_Tree.php:1051
 #, php-format
 msgid "%s needs a Pro license; it is kept and still applies."
 msgstr ""
 
 #. translators: %s: condition name.
 #: core/Rule_Tree.php:954
-#: core/Rule_Tree.php:1052
+#: core/Rule_Tree.php:1053
 #, php-format
 msgid "%s is turned off in the settings; it does not apply."
 msgstr ""
 
 #. translators: %s: condition name.
 #: core/Rule_Tree.php:957
-#: core/Rule_Tree.php:1054
+#: core/Rule_Tree.php:1055
 #, php-format
 msgid "%s is not complete yet."
 msgstr ""
 
 #. translators: 1: condition name, 2: date.
 #: core/Rule_Tree.php:960
-#: core/Rule_Tree.php:1056
+#: core/Rule_Tree.php:1057
 #, php-format
 msgid "The date range of %1$s ended on %2$s."
 msgstr ""
 
 #. translators: 1: condition name, 2: date.
 #: core/Rule_Tree.php:963
-#: core/Rule_Tree.php:1058
+#: core/Rule_Tree.php:1059
 #, php-format
 msgid "%1$s starts on %2$s."
 msgstr ""
 
 #. translators: %s: condition name.
 #: core/Rule_Tree.php:966
-#: core/Rule_Tree.php:1060
+#: core/Rule_Tree.php:1061
 #, php-format
 msgid "This group can never be true: %s conflicts with another condition."
 msgstr ""
@@ -1615,204 +1612,208 @@ msgid "Action"
 msgstr ""
 
 #: core/Rule_Tree.php:1006
-msgid "this element when"
+msgid "Hide from everyone"
 msgstr ""
 
 #: core/Rule_Tree.php:1007
+msgid "this element when"
+msgstr ""
+
+#: core/Rule_Tree.php:1008
 msgid "All of these"
 msgstr ""
 
 #. translators: %d: group number.
-#: core/Rule_Tree.php:1009
+#: core/Rule_Tree.php:1010
 #, php-format
 msgid "Group %d: all of these"
 msgstr ""
 
-#: core/Rule_Tree.php:1010
+#: core/Rule_Tree.php:1011
 msgid "or"
 msgstr ""
 
-#: core/Rule_Tree.php:1011
+#: core/Rule_Tree.php:1012
 msgid "Add condition"
 msgstr ""
 
-#: core/Rule_Tree.php:1012
+#: core/Rule_Tree.php:1013
 msgid "Add \"or\" group"
 msgstr ""
 
 #. translators: %d: group number.
-#: core/Rule_Tree.php:1014
+#: core/Rule_Tree.php:1015
 #, php-format
 msgid "Remove group %d"
 msgstr ""
 
-#: core/Rule_Tree.php:1015
+#: core/Rule_Tree.php:1016
 msgid "Edit"
 msgstr ""
 
-#: core/Rule_Tree.php:1016
+#: core/Rule_Tree.php:1017
 msgid "Remove"
 msgstr ""
 
 #. translators: %s: condition summary.
-#: core/Rule_Tree.php:1018
+#: core/Rule_Tree.php:1019
 #, php-format
 msgid "Remove condition: %s"
 msgstr ""
 
-#: core/Rule_Tree.php:1019
+#: core/Rule_Tree.php:1020
 msgid "Duplicate"
 msgstr ""
 
-#: core/Rule_Tree.php:1020
+#: core/Rule_Tree.php:1021
 msgid "Move to"
 msgstr ""
 
-#: core/Rule_Tree.php:1023
+#: core/Rule_Tree.php:1024
 msgid "New \"or\" group"
 msgstr ""
 
-#: core/Rule_Tree.php:1024
-msgid "Visitors never see this element; you still see it in the editor."
+#: core/Rule_Tree.php:1025
+msgid "Ignores the conditions and keeps them for later. You still see it in the editor."
 msgstr ""
 
-#: core/Rule_Tree.php:1025
+#: core/Rule_Tree.php:1026
 msgid "Search conditions"
 msgstr ""
 
-#: core/Rule_Tree.php:1027
+#: core/Rule_Tree.php:1028
 msgid "Start from a preset"
 msgstr ""
 
-#: core/Rule_Tree.php:1028
+#: core/Rule_Tree.php:1029
 msgid "Close"
 msgstr ""
 
 #. translators: %s: condition name.
-#: core/Rule_Tree.php:1032
+#: core/Rule_Tree.php:1033
 #, php-format
 msgid "%s needs Visibility Logic Pro."
 msgstr ""
 
-#: core/Rule_Tree.php:1034
+#: core/Rule_Tree.php:1035
 msgid "No condition matches your search."
 msgstr ""
 
-#: core/Rule_Tree.php:1035
+#: core/Rule_Tree.php:1036
 msgid "This condition is edited in the classic settings."
 msgstr ""
 
-#: core/Rule_Tree.php:1036
+#: core/Rule_Tree.php:1037
 msgid "Add"
 msgstr ""
 
 #. translators: %s: value.
-#: core/Rule_Tree.php:1038
+#: core/Rule_Tree.php:1039
 #, php-format
 msgid "Remove %s"
 msgstr ""
 
-#: core/Rule_Tree.php:1039
+#: core/Rule_Tree.php:1040
 msgid "Add rule"
 msgstr ""
 
 #. translators: %d: rule number.
-#: core/Rule_Tree.php:1041
+#: core/Rule_Tree.php:1042
 #, php-format
 msgid "Remove rule %d"
 msgstr ""
 
 #. translators: %d: rule number.
-#: core/Rule_Tree.php:1043
+#: core/Rule_Tree.php:1044
 #, php-format
 msgid "Rule %d"
 msgstr ""
 
-#: core/Rule_Tree.php:1044
+#: core/Rule_Tree.php:1045
 msgid "Search users"
 msgstr ""
 
-#: core/Rule_Tree.php:1045
+#: core/Rule_Tree.php:1046
 msgid "No users found."
 msgstr ""
 
-#: core/Rule_Tree.php:1046
+#: core/Rule_Tree.php:1047
 msgid "Filter options"
 msgstr ""
 
-#: core/Rule_Tree.php:1064
+#: core/Rule_Tree.php:1065
 msgid "Rules on"
 msgstr ""
 
-#: core/Rule_Tree.php:1065
+#: core/Rule_Tree.php:1066
 msgid "Turn off to keep the rule without applying it."
 msgstr ""
 
-#: core/Rule_Tree.php:1066
+#: core/Rule_Tree.php:1067
 msgid "When hidden"
 msgstr ""
 
-#: core/Rule_Tree.php:1067
+#: core/Rule_Tree.php:1068
 msgid "Remove it from the page"
 msgstr ""
 
-#: core/Rule_Tree.php:1068
+#: core/Rule_Tree.php:1069
 msgid "Keep the HTML, hide with CSS"
 msgstr ""
 
-#: core/Rule_Tree.php:1069
+#: core/Rule_Tree.php:1070
 msgid "Show other content (Pro)"
 msgstr ""
 
-#: core/Rule_Tree.php:1070
+#: core/Rule_Tree.php:1071
 msgid "Show a message instead"
 msgstr ""
 
-#: core/Rule_Tree.php:1071
+#: core/Rule_Tree.php:1072
 msgid "Show an Elementor template instead"
 msgstr ""
 
-#: core/Rule_Tree.php:1072
+#: core/Rule_Tree.php:1073
 msgid "Show an Elementor template instead (Pro)"
 msgstr ""
 
-#: core/Rule_Tree.php:1074
+#: core/Rule_Tree.php:1075
 msgid "Shown to visitors who do not see the element. Basic HTML is allowed."
 msgstr ""
 
-#: core/Rule_Tree.php:1075
+#: core/Rule_Tree.php:1076
 msgid "Template"
 msgstr ""
 
-#: core/Rule_Tree.php:1076
+#: core/Rule_Tree.php:1077
 msgid "Pro conditions on columns need Visibility Logic Pro 3.0 or newer."
 msgstr ""
 
-#: core/Rule_Tree.php:1077
+#: core/Rule_Tree.php:1078
 msgid "Search pages and posts"
 msgstr ""
 
-#: core/Rule_Tree.php:1078
+#: core/Rule_Tree.php:1079
 msgid "Hide this container when everything inside is hidden"
 msgstr ""
 
-#: core/Rule_Tree.php:1079
+#: core/Rule_Tree.php:1080
 msgid "Classic settings"
 msgstr ""
 
-#: core/Rule_Tree.php:1080
+#: core/Rule_Tree.php:1081
 msgid "Show the classic settings"
 msgstr ""
 
-#: core/Rule_Tree.php:1081
+#: core/Rule_Tree.php:1082
 msgid "Hide the classic settings"
 msgstr ""
 
-#: core/Rule_Tree.php:1082
+#: core/Rule_Tree.php:1083
 msgid "This rule uses a condition the builder cannot store in groups. Keep one group, or edit it in the classic settings."
 msgstr ""
 
-#: core/Rule_Tree.php:1083
+#: core/Rule_Tree.php:1084
 msgid "Saved in the 3.0 format. Visibility Logic 2.x would show this element to administrators only."
 msgstr ""
 
