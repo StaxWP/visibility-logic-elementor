@@ -40,6 +40,7 @@ class UpdateNotice {
 		}
 
 		add_action( 'admin_notices', [ __CLASS__, 'render' ] );
+		add_action( 'admin_notices', [ __CLASS__, 'render_pro_outdated' ] );
 		add_action( 'admin_post_stax_visibility_dismiss_notice', [ __CLASS__, 'dismiss' ] );
 	}
 
@@ -97,6 +98,28 @@ class UpdateNotice {
 				<a class="button" href="<?php echo esc_url( Settings::url( 'options' ) . '#stax-vl-general' ); ?>"><?php esc_html_e( 'Review the options', 'visibility-logic-elementor' ); ?></a>
 				<a class="button" href="<?php echo esc_url( $dismiss ); ?>"><?php esc_html_e( 'Dismiss', 'visibility-logic-elementor' ); ?></a>
 			</p>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Visibility Logic Pro older than 3.0: ask to update it. Nothing is broken meanwhile (saved Pro rules keep
+	 * working), so the notice only explains and links to the update; it goes away once Pro is updated.
+	 *
+	 * @return void
+	 */
+	public static function render_pro_outdated() {
+		if ( ! Singleton::pro_outdated() || ! current_user_can( 'update_plugins' ) || ! self::on_screen() ) {
+			return;
+		}
+		?>
+		<div class="notice notice-warning">
+			<p><strong><?php esc_html_e( 'Update Visibility Logic Pro to 3.0.', 'visibility-logic-elementor' ); ?></strong>
+			<?php
+			/* translators: %s: installed Visibility Logic Pro version. */
+			echo esc_html( sprintf( __( 'You have Pro %s. Your rules keep working as before; with Pro 3.0 you can edit Pro conditions in the new rule builder.', 'visibility-logic-elementor' ), STAX_VISIBILITY_PRO_VERSION ) );
+			?>
+			<a href="<?php echo esc_url( admin_url( 'plugins.php?plugin_status=upgrade' ) ); ?>"><?php esc_html_e( 'Go to updates', 'visibility-logic-elementor' ); ?></a></p>
 		</div>
 		<?php
 	}

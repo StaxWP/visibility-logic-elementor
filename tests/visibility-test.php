@@ -1191,11 +1191,13 @@ if ( class_exists( '\Stax\VisibilityLogic\Pro_Teaser' ) ) {
 		vle_case( 'acf 2.x rule without acf_source', $acf_rule( [ 'acf_field' => 'vle_color', 'acf_condition' => 'equals', 'acf_value' => 'red' ] ), 0, 'visible' );
 		vle_case( 'acf rule with acf_source post', $acf_rule( [ 'acf_source' => 'post', 'acf_field' => 'vle_color', 'acf_condition' => 'equals', 'acf_value' => 'blue' ] ), 0, 'absent' );
 
-		// Saved with a Pro operator (Pro active when it was saved): evaluated by Pro, never without it.
+		// Saved with a Pro operator (Pro active when it was saved): evaluated by Pro, never without it. Pro 2.4 does
+		// not read the merged section (only Pro 3.0 saves such rules): like no Pro.
+		$pro_reads = $has_pro && ! \Stax\VisibilityLogic\Singleton::pro_outdated();
 		$pro_op = $acf_rule( [ 'acf_field' => 'vle_count', 'acf_condition' => 'greater_than', 'acf_value' => '9' ] );
-		vle_case( 'acf rule with a Pro operator: ' . ( $has_pro ? 'evaluated by Pro' : 'never runs without Pro' ), $pro_op, 0, $has_pro ? 'absent' : 'visible' );
+		vle_case( 'acf rule with a Pro operator: ' . ( $pro_reads ? 'evaluated by Pro' : 'never runs without Pro' ), $pro_op, 0, $pro_reads ? 'absent' : 'visible' );
 		$pro_src = $acf_rule( [ 'acf_source' => 'options', 'acf_field' => 'vle_none', 'acf_condition' => 'not_empty' ] );
-		vle_case( 'acf rule with a Pro source: ' . ( $has_pro ? 'evaluated by Pro' : 'never runs without Pro' ), $pro_src, 0, $has_pro ? 'absent' : 'visible' );
+		vle_case( 'acf rule with a Pro source: ' . ( $pro_reads ? 'evaluated by Pro' : 'never runs without Pro' ), $pro_src, 0, $pro_reads ? 'absent' : 'visible' );
 	}
 
 	// Elementor controls of the merged section.

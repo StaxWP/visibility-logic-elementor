@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-17T08:06:14+00:00\n"
+"POT-Creation-Date: 2026-11-17T08:20:50+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: visibility-logic-elementor\n"
@@ -187,7 +187,7 @@ msgstr ""
 #: core/admin/pages/Options.php:42
 #: core/admin/pages/Usage.php:41
 #: core/admin/ProNotice.php:222
-#: core/admin/UpdateNotice.php:111
+#: core/admin/UpdateNotice.php:134
 msgid "Sorry, you are not allowed to do that."
 msgstr ""
 
@@ -455,7 +455,7 @@ msgid "See Visibility Logic Pro"
 msgstr ""
 
 #: core/admin/ProNotice.php:209
-#: core/admin/UpdateNotice.php:98
+#: core/admin/UpdateNotice.php:99
 msgid "Dismiss"
 msgstr ""
 
@@ -477,28 +477,42 @@ msgstr ""
 msgid "Sorry, you are not allowed to access this page."
 msgstr ""
 
-#: core/admin/UpdateNotice.php:87
+#: core/admin/UpdateNotice.php:88
 msgid "Visibility Logic 3.0: your site works exactly as before."
 msgstr ""
 
-#: core/admin/UpdateNotice.php:88
+#: core/admin/UpdateNotice.php:89
 msgid "New: a rule builder that reads your rules as sentences (\"Show this element when ...\"), Preview as a guest, a role or another date inside the editor, and a Rules overview with warnings. Your saved rules are not changed; they open in the builder as they are."
 msgstr ""
 
-#: core/admin/UpdateNotice.php:89
+#: core/admin/UpdateNotice.php:90
 msgid "Faster pages are available as an option, off on updated sites so nothing changes without you:"
 msgstr ""
 
-#: core/admin/UpdateNotice.php:92
+#: core/admin/UpdateNotice.php:93
 msgid "Faster pages: keep Elementor's element cache on for pages with visibility rules."
 msgstr ""
 
-#: core/admin/UpdateNotice.php:96
+#: core/admin/UpdateNotice.php:97
 msgid "See your rules"
 msgstr ""
 
-#: core/admin/UpdateNotice.php:97
+#: core/admin/UpdateNotice.php:98
 msgid "Review the options"
+msgstr ""
+
+#: core/admin/UpdateNotice.php:117
+msgid "Update Visibility Logic Pro to 3.0."
+msgstr ""
+
+#. translators: %s: installed Visibility Logic Pro version.
+#: core/admin/UpdateNotice.php:120
+#, php-format
+msgid "You have Pro %s. Your rules keep working as before; with Pro 3.0 you can edit Pro conditions in the new rule builder."
+msgstr ""
+
+#: core/admin/UpdateNotice.php:122
+msgid "Go to updates"
 msgstr ""
 
 #: core/Atomic.php:187
@@ -2365,8 +2379,8 @@ msgstr ""
 msgid "The visitor needs at least one of them. Guests never match."
 msgstr ""
 
-#: core/Singleton.php:90
-#: core/Singleton.php:101
+#: core/Singleton.php:100
+#: core/Singleton.php:111
 msgid "Cheatin&#8217; huh?"
 msgstr ""
 

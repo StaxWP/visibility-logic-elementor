@@ -111,7 +111,7 @@ class Rest {
 		$data['previewCountry'] = Preview::country_enabled();
 		$data['previewLanguages'] = Conditions::option_list( Preview::languages() );
 		$data['postsUrl']       = rest_url( 'wp/v2/search' );
-		$data['proColumnsLocked'] = defined( 'STAX_VISIBILITY_PRO_VERSION' ) && ! Singleton::pro_supports_columns();
+		$data['proColumnsLocked'] = Singleton::pro_outdated();
 		$data['templates']      = [];
 
 		/**

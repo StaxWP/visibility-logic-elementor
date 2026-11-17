@@ -73,7 +73,17 @@ class Singleton {
 	 * @return bool
 	 */
 	public static function pro_supports_columns() {
-		return ! defined( 'STAX_VISIBILITY_PRO_VERSION' ) || version_compare( STAX_VISIBILITY_PRO_VERSION, '3.0.0-dev', '>=' );
+		return ! self::pro_outdated();
+	}
+
+	/**
+	 * Visibility Logic Pro is active but older than 3.0 (the Pro release that goes with free 3.0). Everything keeps
+	 * working; Pro conditions are read-only in the rule builder until Pro is updated (UpdateNotice::render_pro_outdated()).
+	 *
+	 * @return bool
+	 */
+	public static function pro_outdated() {
+		return defined( 'STAX_VISIBILITY_PRO_VERSION' ) && version_compare( STAX_VISIBILITY_PRO_VERSION, '3.0.0-dev', '<' );
 	}
 
 	/**
