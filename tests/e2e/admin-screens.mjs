@@ -49,18 +49,18 @@ try {
 		return tabs;
 	} ) );
 	check( 'Rules is the first tab', firstTab.indexOf( 'Rules' ) !== -1 && firstTab.indexOf( 'Rules' ) < firstTab.indexOf( 'Conditions' ), firstTab );
-	const rows = await page.locator( '.stax-vl-usage tbody tr' ).count();
+	const rows = await page.locator( '#stax-vl-rules tbody tr' ).count();
 	check( 'one row per element with a rule', rows >= 3, rows );
-	const words = await page.locator( '.stax-vl-usage .stax-vl-rule' ).allInnerTexts();
+	const words = await page.locator( '#stax-vl-rules .stax-vl-rule' ).allInnerTexts();
 	check( 'rules in plain words', words.some( ( w ) => w.indexOf( 'Shown only when (User role is Logged in users and Browser is Google Chrome) or Device is Mobile' ) === 0 ), words.slice( 0, 5 ) );
-	check( 'cache check present', ( await page.locator( '.stax-vl-cache' ).count() ) === 1 );
+	check( 'cache check present', ( await page.locator( '#stax-vl-cache-title' ).count() ) === 1 );
 	check( 'axe: Rules screen', ( await axe( '#wpbody-content' ) ).length === 0, await axe( '#wpbody-content' ) );
 	await shot( 'admin-1-rules-overview' );
 
-	await page.selectOption( '#stax-vl-f-status', 'draft' );
-	await page.click( '.stax-vl-filters button' );
+	// The filters apply as soon as a select changes.
+	await Promise.all( [ page.waitForNavigation(), page.selectOption( '#stax-vl-f-status', 'draft' ) ] );
 	await page.waitForLoadState( 'networkidle' );
-	const draftRows = await page.locator( '.stax-vl-usage tbody tr' ).allInnerTexts();
+	const draftRows = await page.locator( '#stax-vl-rules tbody tr' ).allInnerTexts();
 	check( 'status filter: drafts only', draftRows.length >= 1 && draftRows.every( ( r ) => r.indexOf( 'Hidden from everyone' ) !== -1 ), draftRows );
 
 	// Pro 3.0: Rule sets.

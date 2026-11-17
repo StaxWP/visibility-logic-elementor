@@ -1,6 +1,6 @@
 <?php
 /**
- * Settings > Visibility Logic > Conditions: turn conditions on or off, general settings, free vs Pro overview.
+ * Settings > Visibility Logic > Conditions: turn conditions on or off, free vs Pro overview. Also saves the General tab.
  *
  * @package Stax\VisibilityLogic
  */
@@ -44,31 +44,38 @@ class Options extends Base {
 
 		check_admin_referer( 'stax_visibility_options_activation' );
 
-		$disabled_options = [];
+		// One form per tab: the Conditions tab saves the conditions, the General tab the general settings.
+		$section = isset( $_POST['section'] ) ? sanitize_key( wp_unslash( $_POST['section'] ) ) : 'all';
 
-		foreach ( Resources::get_all_widget_options( Plugin::instance()->has_pro() ) as $slug => $option ) {
-			if ( ! isset( $_POST[ $slug ] ) ) {
-				$disabled_options[ $slug ] = true;
+		if ( 'general' !== $section ) {
+			$disabled_options = [];
+
+			foreach ( Resources::get_all_widget_options( Plugin::instance()->has_pro() ) as $slug => $option ) {
+				if ( ! isset( $_POST[ $slug ] ) ) {
+					$disabled_options[ $slug ] = true;
+				}
+			}
+
+			update_option( '_stax_visibility_disabled_options', $disabled_options );
+		}
+
+		if ( 'conditions' !== $section ) {
+			$settings = wp_parse_args( (array) get_option( Resources::SETTINGS_OPTION, [] ), Resources::default_settings() );
+			$previous = $settings;
+
+			foreach ( array_keys( Resources::default_settings() ) as $key ) {
+				$settings[ $key ] = ! empty( $_POST[ 'stax_visibility_' . $key ] );
+			}
+
+			update_option( Resources::SETTINGS_OPTION, $settings );
+
+			// Cached pages were built for the other cache mode.
+			if ( $previous['element_cache'] !== $settings['element_cache'] ) {
+				Plugin::flush_element_cache();
 			}
 		}
 
-		update_option( '_stax_visibility_disabled_options', $disabled_options );
-
-		$settings = wp_parse_args( (array) get_option( Resources::SETTINGS_OPTION, [] ), Resources::default_settings() );
-		$previous = $settings;
-
-		foreach ( array_keys( Resources::default_settings() ) as $key ) {
-			$settings[ $key ] = ! empty( $_POST[ 'stax_visibility_' . $key ] );
-		}
-
-		update_option( Resources::SETTINGS_OPTION, $settings );
-
-		// Cached pages were built for the other cache mode.
-		if ( $previous['element_cache'] !== $settings['element_cache'] ) {
-			Plugin::flush_element_cache();
-		}
-
-		wp_safe_redirect( add_query_arg( 'updated', '1', Settings::url( $this->current_slug ) ) );
+		wp_safe_redirect( add_query_arg( 'updated', '1', Settings::url( 'general' === $section ? 'general' : $this->current_slug ) ) );
 		exit;
 	}
 
@@ -97,7 +104,6 @@ class Options extends Base {
 				'included' => $included,
 				'locked'   => $locked,
 				'has_pro'  => $pro,
-				'settings' => wp_parse_args( (array) get_option( Resources::SETTINGS_OPTION, [] ), Resources::default_settings() ),
 				'saved'    => isset( $_GET['updated'] ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- display only.
 			]
 		);

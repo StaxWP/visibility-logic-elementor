@@ -395,11 +395,17 @@ class Rules {
 		foreach ( $index['documents'] as $doc ) {
 			$builder = isset( $doc['builder'] ) ? $doc['builder'] : 'elementor';
 
-			if ( ! empty( $filters['editor'] ) && $filters['editor'] !== $builder ) {
+			$pages = ! empty( $filters['editor'] ) && 'page' === $filters['editor'];
+
+			if ( ! empty( $filters['editor'] ) && ! $pages && $filters['editor'] !== $builder ) {
 				continue;
 			}
 
 			foreach ( $doc['elements'] as $element ) {
+				if ( $pages !== ( isset( $element['type'] ) && 'page' === $element['type'] ) && ! empty( $filters['editor'] ) ) {
+					continue;
+				}
+
 				if ( ! empty( $filters['condition'] ) && ! in_array( $filters['condition'], (array) $element['conditions'], true ) ) {
 					continue;
 				}

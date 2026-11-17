@@ -1,6 +1,6 @@
 <?php
 /**
- * Conditions tab.
+ * Conditions tab: turn conditions on or off (grouped cards), Pro conditions locked when Pro is missing.
  *
  * @package Stax\VisibilityLogic
  *
@@ -8,124 +8,172 @@
  * @var array $included Conditions available on this site (free, and Pro when active).
  * @var array $locked   Pro conditions (Pro not active).
  * @var bool  $has_pro  Pro active.
- * @var array $settings General settings.
  * @var bool  $saved    Just saved.
  */
 
 use Stax\VisibilityLogic\Resources;
+use Stax\VisibilityLogic\Settings;
 
 defined( 'ABSPATH' ) || exit;
+
+// Group and icon of each condition; conditions from add-ons go to "More".
+$stax_vl_groups = [
+	'visitor' => [
+		'label' => __( 'Visitor', 'visibility-logic-elementor' ),
+		'items' => [
+			'user-role'          => 'user',
+			'user-meta'          => 'db',
+			'advanced-user-meta' => 'db',
+			'device-type'        => 'phone',
+			'browser-type'       => 'globe',
+			'geo-location'       => 'globe',
+			'ip-referrer'        => 'link',
+			'language'           => 'globe',
+			'woocommerce-users'  => 'cart',
+			'edd-users'          => 'cart',
+		],
+	],
+	'content' => [
+		'label' => __( 'Time and content', 'visibility-logic-elementor' ),
+		'items' => [
+			'date-time'          => 'clock',
+			'page'               => 'file',
+			'post-page'          => 'file',
+			'archive'            => 'file',
+			'content-details'    => 'file',
+			'acf'                => 'stack',
+			'advanced-acf'       => 'stack',
+			'conditional-tags'   => 'code',
+			'dynamic-conditions' => 'code',
+			'query-string'       => 'link',
+			'shop'               => 'cart',
+		],
+	],
+	'display' => [
+		'label' => __( 'Display', 'visibility-logic-elementor' ),
+		'items' => [
+			'fallback' => 'eye',
+			'split'    => 'shuffle',
+			'view-cap' => 'eye',
+		],
+	],
+	'more'    => [
+		'label' => __( 'More', 'visibility-logic-elementor' ),
+		'items' => [],
+	],
+];
+
+$stax_vl_icons = [];
+foreach ( $stax_vl_groups as $stax_vl_key => $stax_vl_group ) {
+	foreach ( $stax_vl_group['items'] as $stax_vl_slug => $stax_vl_icon ) {
+		$stax_vl_icons[ $stax_vl_slug ] = [ $stax_vl_key, $stax_vl_icon ];
+	}
+}
+
+$stax_vl_sorted = [];
+foreach ( $included as $stax_vl_slug => $stax_vl_option ) {
+	$stax_vl_group                                 = isset( $stax_vl_icons[ $stax_vl_slug ] ) ? $stax_vl_icons[ $stax_vl_slug ][0] : 'more';
+	$stax_vl_sorted[ $stax_vl_group ][ $stax_vl_slug ] = $stax_vl_option;
+}
 ?>
+<div class="stax-vl-title">
+	<div>
+		<h2><?php esc_html_e( 'Conditions', 'visibility-logic-elementor' ); ?></h2>
+		<p><?php esc_html_e( 'Turn off the ones you don\'t use: they leave the editors and are not checked on your pages, so their saved rules have no effect.', 'visibility-logic-elementor' ); ?></p>
+	</div>
+	<label class="stax-vl-search">
+		<?php Settings::icon( 'search' ); ?>
+		<span class="screen-reader-text"><?php esc_html_e( 'Find a condition', 'visibility-logic-elementor' ); ?></span>
+		<input type="search" data-stax-vl-search="#stax-vl-conditions-form" placeholder="<?php esc_attr_e( 'Find a condition', 'visibility-logic-elementor' ); ?>">
+	</label>
+</div>
+
 <?php if ( $saved ) : ?>
 	<div class="notice notice-success is-dismissible inline"><p><?php esc_html_e( 'Settings saved.', 'visibility-logic-elementor' ); ?></p></div>
 <?php endif; ?>
 
-<form action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post">
+<form class="stax-vl-card" id="stax-vl-conditions-form" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post" data-stax-vl-dirty>
 	<input type="hidden" name="action" value="stax_visibility_options_activation">
+	<input type="hidden" name="section" value="conditions">
 	<?php wp_nonce_field( 'stax_visibility_options_activation' ); ?>
 
-	<h2><?php esc_html_e( 'Conditions', 'visibility-logic-elementor' ); ?></h2>
-	<p class="description">
-		<?php esc_html_e( 'Conditions turned off are removed from the Visibility tab in Elementor and are not checked on your pages, so their saved rules have no effect.', 'visibility-logic-elementor' ); ?>
-	</p>
-
-	<fieldset class="stax-vl-conditions">
-		<legend class="screen-reader-text"><?php esc_html_e( 'Active conditions', 'visibility-logic-elementor' ); ?></legend>
-		<?php foreach ( $included as $stax_vl_slug => $stax_vl_option ) : ?>
+	<div class="stax-vl-card__body">
+		<?php foreach ( $stax_vl_groups as $stax_vl_key => $stax_vl_group ) : ?>
 			<?php
-			$stax_vl_id      = 'stax-vl-condition-' . sanitize_html_class( $stax_vl_slug );
-			$stax_vl_require = isset( $stax_vl_option['require']['text']['plugins'] ) ? [ $stax_vl_option['require']['text']['plugins'] ] : [];
-			$stax_vl_blocked = ! empty( $stax_vl_option['require'] );
+			$stax_vl_items  = isset( $stax_vl_sorted[ $stax_vl_key ] ) ? $stax_vl_sorted[ $stax_vl_key ] : [];
+			$stax_vl_legend = 'stax-vl-group-' . $stax_vl_key;
+			if ( ! $stax_vl_items ) {
+				continue;
+			}
 			?>
-			<div class="stax-vl-condition<?php echo $stax_vl_blocked ? ' is-blocked' : ''; ?>">
-				<?php if ( $stax_vl_blocked ) : ?>
-					<span class="stax-vl-condition__name"><?php echo esc_html( wp_strip_all_tags( $stax_vl_option['name'] ) ); ?></span>
-				<?php else : ?>
-					<input type="checkbox" class="stax-vl-switch" name="<?php echo esc_attr( $stax_vl_slug ); ?>" id="<?php echo esc_attr( $stax_vl_id ); ?>" value="1" <?php checked( ! empty( $stax_vl_option['status'] ) ); ?>>
-					<label for="<?php echo esc_attr( $stax_vl_id ); ?>" class="stax-vl-condition__name"><?php echo esc_html( wp_strip_all_tags( $stax_vl_option['name'] ) ); ?></label>
-				<?php endif; ?>
-				<?php if ( ! Resources::is_free_condition( $stax_vl_slug ) ) : ?>
-					<span class="stax-vl-badge stax-vl-badge--pro"><?php esc_html_e( 'Pro', 'visibility-logic-elementor' ); ?></span>
-				<?php endif; ?>
-				<?php if ( ! empty( $stax_vl_option['description'] ) ) : ?>
-					<p class="stax-vl-condition__desc"><?php echo wp_kses_post( $stax_vl_option['description'] ); ?></p>
-				<?php endif; ?>
-				<?php foreach ( (array) $stax_vl_require as $stax_vl_text ) : ?>
-					<p class="stax-vl-condition__req"><?php echo wp_kses_post( $stax_vl_text ); ?></p>
-				<?php endforeach; ?>
+			<fieldset class="stax-vl-group" aria-labelledby="<?php echo esc_attr( $stax_vl_legend ); ?>">
+				<h3 id="<?php echo esc_attr( $stax_vl_legend ); ?>"><?php echo esc_html( $stax_vl_group['label'] ); ?></h3>
+				<div class="stax-vl-conditions">
+					<?php foreach ( $stax_vl_items as $stax_vl_slug => $stax_vl_option ) : ?>
+						<?php
+						$stax_vl_id      = 'stax-vl-condition-' . sanitize_html_class( $stax_vl_slug );
+						$stax_vl_require = isset( $stax_vl_option['require']['text']['plugins'] ) ? [ $stax_vl_option['require']['text']['plugins'] ] : [];
+						$stax_vl_blocked = ! empty( $stax_vl_option['require'] );
+						$stax_vl_on      = ! empty( $stax_vl_option['status'] );
+						$stax_vl_icon    = isset( $stax_vl_icons[ $stax_vl_slug ] ) ? $stax_vl_icons[ $stax_vl_slug ][1] : 'box';
+						$stax_vl_classes = 'stax-vl-condition' . ( $stax_vl_blocked ? ' is-blocked' : ( $stax_vl_on ? '' : ' is-off' ) );
+						?>
+						<label class="<?php echo esc_attr( $stax_vl_classes ); ?>" for="<?php echo esc_attr( $stax_vl_id ); ?>" data-stax-vl-item>
+							<span class="stax-vl-condition__icon"><?php Settings::icon( $stax_vl_icon ); ?></span>
+							<span class="stax-vl-condition__text">
+								<span class="stax-vl-condition__name">
+									<?php echo esc_html( wp_strip_all_tags( $stax_vl_option['name'] ) ); ?>
+									<?php if ( ! Resources::is_free_condition( $stax_vl_slug ) ) : ?>
+										<span class="stax-vl-badge stax-vl-badge--pro"><?php esc_html_e( 'Pro', 'visibility-logic-elementor' ); ?></span>
+									<?php endif; ?>
+								</span>
+								<?php if ( ! empty( $stax_vl_option['description'] ) ) : ?>
+									<span class="stax-vl-condition__desc"><?php echo wp_kses_post( $stax_vl_option['description'] ); ?></span>
+								<?php endif; ?>
+								<?php foreach ( (array) $stax_vl_require as $stax_vl_text ) : ?>
+									<span class="stax-vl-condition__req"><?php echo wp_kses_post( $stax_vl_text ); ?></span>
+								<?php endforeach; ?>
+							</span>
+							<?php if ( $stax_vl_blocked ) : ?>
+								<input type="checkbox" class="stax-vl-switch" id="<?php echo esc_attr( $stax_vl_id ); ?>" disabled>
+							<?php else : ?>
+								<input type="checkbox" class="stax-vl-switch" name="<?php echo esc_attr( $stax_vl_slug ); ?>" id="<?php echo esc_attr( $stax_vl_id ); ?>" value="1" <?php checked( $stax_vl_on ); ?>>
+							<?php endif; ?>
+						</label>
+					<?php endforeach; ?>
+				</div>
+			</fieldset>
+		<?php endforeach; ?>
+
+		<?php if ( ! empty( $locked ) ) : ?>
+			<div class="stax-vl-group">
+				<h3>
+					<?php esc_html_e( 'More in Pro', 'visibility-logic-elementor' ); ?>
+					<a href="<?php echo esc_url( Resources::pro_url( 'conditions' ) ); ?>" target="_blank" rel="noopener">
+						<?php esc_html_e( 'Compare free and Pro', 'visibility-logic-elementor' ); ?>
+						<span class="screen-reader-text"><?php esc_html_e( '(opens in a new tab)', 'visibility-logic-elementor' ); ?></span>
+					</a>
+				</h3>
+				<ul class="stax-vl-conditions">
+					<?php foreach ( $locked as $stax_vl_slug => $stax_vl_option ) : ?>
+						<li class="stax-vl-condition is-locked" data-stax-vl-item>
+							<span class="stax-vl-condition__icon"><?php Settings::icon( isset( $stax_vl_icons[ $stax_vl_slug ] ) ? $stax_vl_icons[ $stax_vl_slug ][1] : 'box' ); ?></span>
+							<span class="stax-vl-condition__text">
+								<span class="stax-vl-condition__name">
+									<?php echo esc_html( wp_strip_all_tags( $stax_vl_option['name'] ) ); ?>
+									<span class="stax-vl-badge stax-vl-badge--pro"><?php esc_html_e( 'Pro', 'visibility-logic-elementor' ); ?></span>
+								</span>
+								<?php if ( ! empty( $stax_vl_option['description'] ) ) : ?>
+									<span class="stax-vl-condition__desc"><?php echo esc_html( wp_strip_all_tags( $stax_vl_option['description'] ) ); ?></span>
+								<?php endif; ?>
+							</span>
+							<?php Settings::icon( 'lock' ); ?>
+						</li>
+					<?php endforeach; ?>
+				</ul>
 			</div>
-		<?php endforeach; ?>
-	</fieldset>
+		<?php endif; ?>
+	</div>
 
-	<h2 id="stax-vl-general"><?php esc_html_e( 'General', 'visibility-logic-elementor' ); ?></h2>
-	<table class="form-table" role="presentation">
-		<tr>
-			<th scope="row"><?php esc_html_e( 'Date ranges', 'visibility-logic-elementor' ); ?></th>
-			<td>
-				<label for="stax-vl-site-timezone">
-					<input type="checkbox" name="stax_visibility_site_timezone" id="stax-vl-site-timezone" value="1" <?php checked( ! empty( $settings['site_timezone'] ) ); ?>>
-					<?php esc_html_e( 'Read Date FROM and Date TO in the site time zone', 'visibility-logic-elementor' ); ?>
-				</label>
-				<p class="description">
-					<?php
-					printf(
-						/* translators: %s: time zone name. */
-						esc_html__( 'Site time zone: %s. Recommended, on by default since 2.5.2: Date FROM and Date TO mean the site time, like the times of day. Unchecked, they are read as UTC, as in versions before 2.5.2; changing it moves existing schedules by the difference between UTC and the site time zone, so check scheduled elements after changing it.', 'visibility-logic-elementor' ),
-						'<code>' . esc_html( wp_timezone_string() ) . '</code>'
-					);
-					?>
-				</p>
-			</td>
-		</tr>
-		<tr>
-			<th scope="row"><?php esc_html_e( 'Hide when empty', 'visibility-logic-elementor' ); ?></th>
-			<td>
-				<label for="stax-vl-container-widgets">
-					<input type="checkbox" name="stax_visibility_container_widgets" id="stax-vl-container-widgets" value="1" <?php checked( ! empty( $settings['container_widgets'] ) ); ?>>
-					<?php esc_html_e( 'Count widgets placed directly in a container', 'visibility-logic-elementor' ); ?>
-				</label>
-				<p class="description">
-					<?php esc_html_e( 'Recommended, on by default since 2.5.2. Before 2.5.2, "Hide when empty" only looked at widgets inside inner containers or columns, so a container holding its widgets directly was always hidden. Unchecked, containers are hidden that way again.', 'visibility-logic-elementor' ); ?>
-				</p>
-			</td>
-		</tr>
-		<tr>
-			<th scope="row"><?php esc_html_e( 'Elementor cache', 'visibility-logic-elementor' ); ?></th>
-			<td>
-				<label for="stax-vl-element-cache">
-					<input type="checkbox" name="stax_visibility_element_cache" id="stax-vl-element-cache" value="1" <?php checked( ! empty( $settings['element_cache'] ) ); ?>>
-					<?php esc_html_e( 'Keep Elementor\'s element cache on for pages with rules', 'visibility-logic-elementor' ); ?>
-				</label>
-				<p class="description">
-					<?php esc_html_e( 'Recommended, much faster. Only the elements with visibility rules are rendered on every visit; the rest of the page comes from Elementor\'s cache. Before 3.0 the whole page skipped the cache, so other dynamic widgets on those pages were also rendered on every visit; with this on, they follow their own Elementor cache settings. Changing it clears Elementor\'s element cache.', 'visibility-logic-elementor' ); ?>
-				</p>
-			</td>
-		</tr>
-	</table>
-
-	<?php submit_button( __( 'Save Changes', 'visibility-logic-elementor' ) ); ?>
+	<?php Resources::load_template( 'core/admin/pages/templates/savebar' ); ?>
 </form>
-
-<?php if ( ! empty( $locked ) ) : ?>
-	<h2><?php esc_html_e( 'More conditions in Pro', 'visibility-logic-elementor' ); ?></h2>
-	<p class="description">
-		<?php esc_html_e( 'Visibility Logic Pro adds these to the same Visibility tab. Everything above stays free.', 'visibility-logic-elementor' ); ?>
-	</p>
-	<ul class="stax-vl-conditions stax-vl-conditions--pro">
-		<?php foreach ( $locked as $stax_vl_option ) : ?>
-			<li class="stax-vl-condition is-pro">
-				<span class="stax-vl-condition__name"><?php echo esc_html( wp_strip_all_tags( $stax_vl_option['name'] ) ); ?></span>
-				<span class="stax-vl-badge stax-vl-badge--pro"><?php esc_html_e( 'Pro', 'visibility-logic-elementor' ); ?></span>
-				<?php if ( ! empty( $stax_vl_option['description'] ) ) : ?>
-					<p class="stax-vl-condition__desc"><?php echo esc_html( wp_strip_all_tags( $stax_vl_option['description'] ) ); ?></p>
-				<?php endif; ?>
-			</li>
-		<?php endforeach; ?>
-	</ul>
-	<p>
-		<a href="<?php echo esc_url( Resources::pro_url( 'conditions' ) ); ?>" target="_blank" rel="noopener">
-			<?php esc_html_e( 'Compare free and Pro on staxwp.com', 'visibility-logic-elementor' ); ?>
-			<span class="screen-reader-text"><?php esc_html_e( '(opens in a new tab)', 'visibility-logic-elementor' ); ?></span>
-		</a>
-	</p>
-<?php endif; ?>

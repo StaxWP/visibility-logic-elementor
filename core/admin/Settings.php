@@ -196,6 +196,109 @@ class Settings {
 	}
 
 	/**
+	 * Inline SVG icons of the panel (24px grid, stroke drawn in currentColor).
+	 */
+	const ICONS = [
+		'eye'     => '<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+		'list'    => '<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',
+		'sliders' => '<path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/>',
+		'gear'    => '<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M2 12h3M19 12h3M4.9 19.1 7 17M17 7l2.1-2.1"/>',
+		'key'     => '<circle cx="7.5" cy="15.5" r="5.5"/><path d="M21 2l-9.6 9.6M15.5 7.5l3 3L22 7l-3-3"/>',
+		'stack'   => '<path d="m12 2 10 5-10 5L2 7z"/><path d="m2 17 10 5 10-5M2 12l10 5 10-5"/>',
+		'alert'   => '<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/>',
+		'user'    => '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+		'file'    => '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/>',
+		'clock'   => '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
+		'phone'   => '<rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/>',
+		'globe'   => '<circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/>',
+		'cart'    => '<circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/>',
+		'db'      => '<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.7-4 3-9 3s-9-1.3-9-3M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5"/>',
+		'link'    => '<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>',
+		'lock'    => '<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+		'check'   => '<path d="M20 6 9 17l-5-5"/>',
+		'search'  => '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+		'edit'    => '<path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
+		'ext'     => '<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/>',
+		'book'    => '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V2H6.5A2.5 2.5 0 0 0 4 4.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/>',
+		'chat'    => '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+		'star'    => '<path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/>',
+		'box'     => '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/>',
+		'blocks'  => '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
+		'zap'     => '<path d="M13 2 3 14h9l-1 8 10-12h-9z"/>',
+		'shuffle' => '<path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>',
+		'code'    => '<path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/>',
+		'refresh' => '<path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.5 9a9 9 0 0 1 14.9-3.4L23 10M1 14l4.6 4.4A9 9 0 0 0 20.5 15"/>',
+	];
+
+	/**
+	 * Print a panel icon.
+	 *
+	 * @param string $name  Key of self::ICONS.
+	 * @param string $class Extra class.
+	 *
+	 * @return void
+	 */
+	public static function icon( $name, $class = '' ) {
+		$paths = isset( self::ICONS[ $name ] ) ? self::ICONS[ $name ] : self::ICONS['box'];
+
+		echo '<svg class="stax-vl-icon ' . esc_attr( $class ) . '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' . $paths . '</svg>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static markup from self::ICONS.
+	}
+
+	/**
+	 * Icon of a tab, by its page slug (add-on tabs can set `icon` on their menu item).
+	 *
+	 * @param array $item Menu item.
+	 *
+	 * @return string
+	 */
+	public static function tab_icon( $item ) {
+		if ( ! empty( $item['icon'] ) && isset( self::ICONS[ $item['icon'] ] ) ) {
+			return $item['icon'];
+		}
+
+		$icons = [
+			'usage'     => 'list',
+			'options'   => 'sliders',
+			'general'   => 'gear',
+			'rule-sets' => 'stack',
+			'settings'  => 'gear',
+			'license'   => 'key',
+		];
+		$slug  = substr( (string) $item['query'], strlen( STAX_VISIBILITY_SLUG_PREFIX ) );
+
+		foreach ( $icons as $key => $icon ) {
+			if ( false !== strpos( $slug, $key ) ) {
+				return $icon;
+			}
+		}
+
+		return 'box';
+	}
+
+	/**
+	 * Rules that need attention, from the cached index only (no scan on other tabs).
+	 *
+	 * @return int
+	 */
+	public static function attention_count() {
+		$index = get_transient( Rules::CACHE_KEY );
+
+		if ( ! is_array( $index ) || empty( $index['documents'] ) ) {
+			return 0;
+		}
+
+		$count = 0;
+
+		foreach ( Rules::overview_rows( $index ) as $row ) {
+			if ( array_diff( $row['codes'], [ 'cache', 'draft' ] ) ) {
+				++$count;
+			}
+		}
+
+		return $count;
+	}
+
+	/**
 	 * Whether the current admin page is one of the panel's tabs.
 	 *
 	 * @return bool
@@ -344,6 +447,19 @@ class Settings {
 	}
 
 	/**
+	 * Asset version: plugin version plus file time, so a changed file is never served from the browser cache.
+	 *
+	 * @param string $file Path inside assets/.
+	 *
+	 * @return string
+	 */
+	private static function asset_version( $file ) {
+		$time = @filemtime( STAX_VISIBILITY_PATH . 'assets/' . $file ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- a missing file only drops the suffix.
+
+		return STAX_VISIBILITY_VERSION . ( $time ? '.' . $time : '' );
+	}
+
+	/**
 	 * Load scripts & styles, only on the panel's pages.
 	 */
 	public function admin_scripts() {
@@ -355,11 +471,19 @@ class Settings {
 			'stax-visibility-settings',
 			STAX_VISIBILITY_ASSETS_URL . 'css/settings.css',
 			[],
-			STAX_VISIBILITY_VERSION
+			self::asset_version( 'css/settings.css' )
+		);
+
+		wp_enqueue_script(
+			'stax-visibility-settings',
+			STAX_VISIBILITY_ASSETS_URL . 'js/settings.js',
+			[],
+			self::asset_version( 'js/settings.js' ),
+			true
 		);
 
 		// Utility classes (`ste-*`) used by tabs built for the 2.x panel, such as Visibility Logic Pro's settings.
-		if ( ! in_array( $this->current_slug(), [ 'options', 'usage' ], true ) ) {
+		if ( ! in_array( $this->current_slug(), [ 'options', 'usage', 'general' ], true ) ) {
 			wp_enqueue_style(
 				'stax-visibility-tw',
 				STAX_VISIBILITY_ASSETS_URL . 'css/admin.css',
