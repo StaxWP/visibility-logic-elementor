@@ -231,18 +231,21 @@
 }
 
 .stax-vl-nav-badge {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 18px;
+  height: 18px;
   margin-inline-start: 6px;
-  padding: 0 5px;
-  max-width: 45%;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  border-radius: 8px;
-  background: #6e49cb;
-  color: #fff;
-  font-size: 9px;
-  line-height: 15px;
-  font-weight: 600;
+  border-radius: 50%;
+  background: rgba(110, 73, 203, 0.12);
+  color: #6e49cb;
+  cursor: help;
+}
+
+.stax-vl-nav-badge.is-warning {
+  background: #fdf3e1;
+  color: #8a5300;
 }
 
 /* Elementor panel colours for the shared builder (dark UI too). */

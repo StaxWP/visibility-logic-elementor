@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-17T09:20:35+00:00\n"
+"POT-Creation-Date: 2026-11-17T09:38:49+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: visibility-logic-elementor\n"
@@ -221,11 +221,6 @@ msgstr ""
 msgid "Rate the plugin"
 msgstr ""
 
-#: core/admin/pages/General.php:55
-#: core/admin/pages/templates/general.php:41
-msgid "General"
-msgstr ""
-
 #: core/admin/pages/Options.php:42
 #: core/admin/pages/Usage.php:41
 #: core/admin/ProNotice.php:222
@@ -233,68 +228,15 @@ msgstr ""
 msgid "Sorry, you are not allowed to do that."
 msgstr ""
 
-#: core/admin/pages/Options.php:121
+#: core/admin/pages/Options.php:134
 #: core/admin/pages/templates/options.php:81
 msgid "Conditions"
 msgstr ""
 
-#: core/admin/pages/templates/general.php:15
-msgid "Recommended"
-msgstr ""
-
-#: core/admin/pages/templates/general.php:19
-msgid "Use the site time zone for date ranges"
-msgstr ""
-
-#. translators: %s: time zone name.
-#: core/admin/pages/templates/general.php:22
-#, php-format
-msgid "Date FROM and Date TO mean the time in %s, like the times of day."
-msgstr ""
-
-#: core/admin/pages/templates/general.php:23
-msgid "Before 2.5.2 these dates were read as UTC. Switching this off reads them as UTC again; changing it moves existing schedules by the difference between UTC and the site time zone, so check scheduled elements after changing it."
-msgstr ""
-
-#: core/admin/pages/templates/general.php:26
-msgid "\"Hide when empty\" counts widgets placed directly in a container"
-msgstr ""
-
-#: core/admin/pages/templates/general.php:28
-msgid "Switched off, a container that holds its widgets directly is always treated as empty and hidden."
-msgstr ""
-
-#: core/admin/pages/templates/general.php:29
-msgid "Before 2.5.2, \"Hide when empty\" only looked at widgets inside inner containers or columns."
-msgstr ""
-
-#: core/admin/pages/templates/general.php:32
-msgid "Keep Elementor's element cache on for pages with rules"
-msgstr ""
-
-#: core/admin/pages/templates/general.php:33
-msgid "Faster"
-msgstr ""
-
-#: core/admin/pages/templates/general.php:34
-msgid "Only the elements with visibility rules are rendered on every visit; the rest of the page comes from Elementor's cache. Changing it clears Elementor's element cache."
-msgstr ""
-
-#: core/admin/pages/templates/general.php:35
-msgid "Before 3.0 the whole page skipped the cache, so other dynamic widgets on those pages were also rendered on every visit; with this on, they follow their own Elementor cache settings."
-msgstr ""
-
-#: core/admin/pages/templates/general.php:42
-msgid "How rules are read and rendered on this site."
-msgstr ""
-
-#: core/admin/pages/templates/general.php:47
-#: core/admin/pages/templates/options.php:92
-msgid "Settings saved."
-msgstr ""
-
-#: core/admin/pages/templates/general.php:65
-msgid "Earlier versions"
+#: core/admin/pages/SettingsTab.php:79
+#: core/admin/pages/templates/settings.php:25
+#: core/admin/Settings.php:173
+msgid "Settings"
 msgstr ""
 
 #: core/admin/pages/templates/options.php:22
@@ -322,6 +264,11 @@ msgstr ""
 msgid "Find a condition"
 msgstr ""
 
+#: core/admin/pages/templates/options.php:92
+#: core/admin/pages/templates/settings.php:31
+msgid "Settings saved."
+msgstr ""
+
 #: core/admin/pages/templates/options.php:151
 msgid "More in Pro"
 msgstr ""
@@ -336,6 +283,48 @@ msgstr ""
 
 #: core/admin/pages/templates/savebar.php:12
 msgid "Save changes"
+msgstr ""
+
+#. translators: %s: time zone name.
+#: core/admin/pages/templates/settings.php:19
+#, php-format
+msgid "Date ranges are read in UTC, not in the site time zone (%s)."
+msgstr ""
+
+#: core/admin/pages/templates/settings.php:20
+msgid "\"Hide when empty\" hides containers that hold their widgets directly."
+msgstr ""
+
+#: core/admin/pages/templates/settings.php:26
+msgid "How visibility rules run on this site."
+msgstr ""
+
+#: core/admin/pages/templates/settings.php:38
+msgid "This site still uses older behavior"
+msgstr ""
+
+#: core/admin/pages/templates/settings.php:39
+msgid "Kept from a version before 2.5.2, so nothing changed on its own when you updated:"
+msgstr ""
+
+#: core/admin/pages/templates/settings.php:46
+msgid "After switching, check your scheduled elements: their times move by the difference between UTC and the site time zone."
+msgstr ""
+
+#: core/admin/pages/templates/settings.php:52
+msgid "Switch to the current behavior"
+msgstr ""
+
+#: core/admin/pages/templates/settings.php:66
+msgid "Faster pages with visibility rules"
+msgstr ""
+
+#: core/admin/pages/templates/settings.php:67
+msgid "Recommended"
+msgstr ""
+
+#: core/admin/pages/templates/settings.php:70
+msgid "Elementor's cache stays on; only the elements with rules are checked on each visit. Turn it off only if another dynamic widget on those pages stops updating. Changing it clears Elementor's cache."
 msgstr ""
 
 #: core/admin/pages/templates/usage.php:41
@@ -597,11 +586,7 @@ msgstr ""
 msgid "Visibility Logic: %s"
 msgstr ""
 
-#: core/admin/Settings.php:173
-msgid "Settings"
-msgstr ""
-
-#: core/admin/Settings.php:419
+#: core/admin/Settings.php:435
 msgid "Sorry, you are not allowed to access this page."
 msgstr ""
 

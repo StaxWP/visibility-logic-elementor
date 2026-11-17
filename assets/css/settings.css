@@ -143,7 +143,7 @@
 .stax-vl-panel > * + * { margin-top: 24px; }
 
 /* Tabs from add-ons built for the 2.x panel get a card around their content. */
-.stax-vl-panel:not(.stax-vl-panel--usage):not(.stax-vl-panel--options):not(.stax-vl-panel--general) {
+.stax-vl-panel:not(.stax-vl-panel--usage):not(.stax-vl-panel--options):not(.stax-vl-panel--settings) {
 	padding: 8px 24px 20px;
 	border: 1px solid var(--vl-border);
 	border-radius: var(--vl-radius);
@@ -204,6 +204,8 @@
 .stax-vl-alert > .stax-vl-icon { margin-top: 2px; color: var(--vl-info); }
 .stax-vl-alert--ok { border-color: rgba(0, 112, 60, .18); background: var(--vl-ok-bg); }
 .stax-vl-alert--ok > .stax-vl-icon { color: var(--vl-ok); }
+.stax-vl-alert--warn { border-color: rgba(138, 83, 0, .2); background: var(--vl-warn-bg); }
+.stax-vl-alert--warn > .stax-vl-icon { color: var(--vl-warn); }
 .stax-vl .stax-vl-alert h3 { margin: 0 0 2px; font-size: 14px; }
 .stax-vl .stax-vl-alert p { margin: 0; }
 .stax-vl-alert ul { margin: 8px 0 0; padding-left: 18px; list-style: disc; }
@@ -304,13 +306,22 @@ label.stax-vl-condition:hover { border-color: rgba(var(--vl-accent-rgb), .45); }
 .stax-vl-setting__name { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-weight: 600; cursor: pointer; }
 .stax-vl .stax-vl-setting__desc { max-width: 680px; margin: 4px 0 0; color: var(--vl-muted); font-size: 13px; }
 .stax-vl-setting__desc code { padding: 1px 5px; border-radius: 4px; background: var(--vl-surface-2); font-size: 12px; }
+.stax-vl-fields { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px 20px; margin-top: 16px; }
+.stax-vl .stax-vl-field { display: flex; flex-direction: column; gap: 4px; margin: 0; }
+.stax-vl .stax-vl-field label { font-size: 13px; font-weight: 600; }
+.stax-vl .stax-vl-field input[type="text"],
+.stax-vl .stax-vl-field input[type="password"],
+.stax-vl .stax-vl-field select { width: 100%; max-width: none; min-height: 36px; border-color: var(--vl-border-strong); border-radius: var(--vl-radius-sm); }
+.stax-vl .stax-vl-setting__name { margin: 0; }
 .stax-vl-details { margin-top: 6px; font-size: 13px; }
 .stax-vl-details summary { color: var(--vl-accent); cursor: pointer; }
 
-.stax-vl-savebar {
+.stax-vl-savebar.is-dirty {
 	position: sticky;
 	bottom: 0;
 	z-index: 2;
+}
+.stax-vl-savebar {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;

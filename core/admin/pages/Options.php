@@ -1,6 +1,6 @@
 <?php
 /**
- * Settings > Visibility Logic > Conditions: turn conditions on or off, free vs Pro overview. Also saves the General tab.
+ * Settings > Visibility Logic > Conditions: turn conditions on or off, free vs Pro overview. Also saves the Settings tab.
  *
  * @package Stax\VisibilityLogic
  */
@@ -44,10 +44,16 @@ class Options extends Base {
 
 		check_admin_referer( 'stax_visibility_options_activation' );
 
-		// One form per tab: the Conditions tab saves the conditions, the General tab the general settings.
-		$section = isset( $_POST['section'] ) ? sanitize_key( wp_unslash( $_POST['section'] ) ) : 'all';
+		/*
+		 * One form per tab. Sections: `conditions` (Conditions tab), `settings` (Settings tab: Elementor cache),
+		 * `current_behavior` (Settings tab: switch a pre-2.5.2 site to the current behavior), `all` (a 2.x form
+		 * without a section: conditions and every general setting).
+		 */
+		$section  = isset( $_POST['section'] ) ? sanitize_key( wp_unslash( $_POST['section'] ) ) : 'all';
+		$sections = [ 'conditions', 'settings', 'current_behavior', 'all' ];
+		$section  = in_array( $section, $sections, true ) ? $section : 'all';
 
-		if ( 'general' !== $section ) {
+		if ( in_array( $section, [ 'conditions', 'all' ], true ) ) {
 			$disabled_options = [];
 
 			foreach ( Resources::get_all_widget_options( Plugin::instance()->has_pro() ) as $slug => $option ) {
@@ -63,19 +69,26 @@ class Options extends Base {
 			$settings = wp_parse_args( (array) get_option( Resources::SETTINGS_OPTION, [] ), Resources::default_settings() );
 			$previous = $settings;
 
-			foreach ( array_keys( Resources::default_settings() ) as $key ) {
-				$settings[ $key ] = ! empty( $_POST[ 'stax_visibility_' . $key ] );
+			if ( 'current_behavior' === $section ) {
+				$settings['site_timezone']     = true;
+				$settings['container_widgets'] = true;
+			} else {
+				$keys = 'settings' === $section ? [ 'element_cache' ] : array_keys( Resources::default_settings() );
+
+				foreach ( $keys as $key ) {
+					$settings[ $key ] = ! empty( $_POST[ 'stax_visibility_' . $key ] );
+				}
 			}
 
 			update_option( Resources::SETTINGS_OPTION, $settings );
 
-			// Cached pages were built for the other cache mode.
-			if ( $previous['element_cache'] !== $settings['element_cache'] ) {
+			// Cached pages were built for the other cache mode or the old behavior.
+			if ( $previous !== $settings ) {
 				Plugin::flush_element_cache();
 			}
 		}
 
-		wp_safe_redirect( add_query_arg( 'updated', '1', Settings::url( 'general' === $section ? 'general' : $this->current_slug ) ) );
+		wp_safe_redirect( add_query_arg( 'updated', '1', Settings::url( in_array( $section, [ 'settings', 'current_behavior' ], true ) ? 'settings' : $this->current_slug ) ) );
 		exit;
 	}
 

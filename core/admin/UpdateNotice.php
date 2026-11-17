@@ -95,7 +95,7 @@ class UpdateNotice {
 			</ul>
 			<p>
 				<a class="button button-primary" href="<?php echo esc_url( Settings::url( 'usage' ) ); ?>"><?php esc_html_e( 'See your rules', 'visibility-logic-elementor' ); ?></a>
-				<a class="button" href="<?php echo esc_url( Settings::url( 'general' ) ); ?>"><?php esc_html_e( 'Review the options', 'visibility-logic-elementor' ); ?></a>
+				<a class="button" href="<?php echo esc_url( Settings::url( 'settings' ) ); ?>"><?php esc_html_e( 'Review the options', 'visibility-logic-elementor' ); ?></a>
 				<a class="button" href="<?php echo esc_url( $dismiss ); ?>"><?php esc_html_e( 'Dismiss', 'visibility-logic-elementor' ); ?></a>
 			</p>
 		</div>

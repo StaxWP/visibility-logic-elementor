@@ -214,7 +214,7 @@ try {
 	// 9. Navigator badge.
 	await page.evaluate( () => $e.run( 'navigator/open' ) );
 	await page.waitForTimeout( 1200 );
-	const badges = await page.locator( '#elementor-navigator .stax-vl-nav-badge' ).allInnerTexts();
+	const badges = await page.locator( '#elementor-navigator .stax-vl-nav-badge' ).evaluateAll( ( els ) => els.map( ( el ) => el.title ) );
 	check( 'Navigator badges for the 3 elements with rules', badges.length === 3, badges );
 	await select( 'e2ew2' );
 	await shot( 'elementor-5-navigator' );

@@ -259,8 +259,7 @@ class Settings {
 		$icons = [
 			'usage'     => 'list',
 			'options'   => 'sliders',
-			'general'   => 'gear',
-			'rule-sets' => 'stack',
+						'rule-sets' => 'stack',
 			'settings'  => 'gear',
 			'license'   => 'key',
 		];
@@ -334,6 +333,23 @@ class Settings {
 				$menu,
 				static function ( $item ) {
 					return is_array( $item ) && ! empty( $item['name'] ) && ! empty( $item['query'] );
+				}
+			)
+		);
+
+		// One tab per page: Visibility Logic Pro's own "Settings" item shows its settings in the free Settings tab.
+		$seen = [];
+		$menu = array_values(
+			array_filter(
+				$menu,
+				static function ( $item ) use ( &$seen ) {
+					if ( isset( $seen[ $item['query'] ] ) ) {
+						return false;
+					}
+
+					$seen[ $item['query'] ] = true;
+
+					return true;
 				}
 			)
 		);
@@ -483,7 +499,7 @@ class Settings {
 		);
 
 		// Utility classes (`ste-*`) used by tabs built for the 2.x panel, such as Visibility Logic Pro's settings.
-		if ( ! in_array( $this->current_slug(), [ 'options', 'usage', 'general' ], true ) ) {
+		if ( ! in_array( $this->current_slug(), [ 'options', 'usage', 'settings' ], true ) ) {
 			wp_enqueue_style(
 				'stax-visibility-tw',
 				STAX_VISIBILITY_ASSETS_URL . 'css/admin.css',

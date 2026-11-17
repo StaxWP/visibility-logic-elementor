@@ -435,6 +435,8 @@
 	}
 
 	// ---- canvas labels and Navigator badges ----
+	var NAV_ICON = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 4h18l-7 8.5V19l-4 2v-8.5z"/></svg>';
+
 	var labelTimer = null;
 
 	function scheduleLabels() {
@@ -515,8 +517,13 @@
 					var title = row.querySelector( '.elementor-navigator__element__title' ) || row.lastElementChild;
 					( title && title.parentNode === row ? row.insertBefore( badge, title.nextSibling ) : row.appendChild( badge ) );
 				}
-				badge.textContent = text;
-				badge.title = full;
+				// A small icon (Elementor's own eye is the hide button next to it); the rule shows on hover.
+				if ( ! badge.firstChild ) {
+					badge.innerHTML = NAV_ICON;
+				}
+				badge.classList.toggle( 'is-warning', warnings.length > 0 );
+				badge.title = ( warnings.length ? '⚠ ' : '' ) + full;
+				badge.setAttribute( 'role', 'img' );
 				badge.setAttribute( 'aria-label', L.builder + ': ' + full );
 			}
 		} );
