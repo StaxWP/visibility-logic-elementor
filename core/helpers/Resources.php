@@ -304,6 +304,18 @@ final class Resources extends Singleton {
 	}
 
 	/**
+	 * Title of a condition card in Settings > Visibility Logic > Conditions: `title` when set (a card that is part of
+	 * another condition's section, such as "ACF Field: Pro extras"), else `name` (also used for rules and summaries).
+	 *
+	 * @param array $option Condition option (get_all_widget_options() entry).
+	 *
+	 * @return string
+	 */
+	public static function option_title( array $option ) {
+		return ! empty( $option['title'] ) ? (string) $option['title'] : (string) $option['name'];
+	}
+
+	/**
 	 * Conditions included in the free plugin.
 	 */
 	const FREE_CONDITIONS = [ 'user-role', 'user-meta', 'date-time', 'browser-type', 'device-type', 'acf', 'page' ];
@@ -335,7 +347,7 @@ final class Resources extends Singleton {
 			'page'               => __( 'Page type, post type or specific pages (rule builder).', 'visibility-logic-elementor' ),
 			'ip-referrer'        => __( 'Visitor IP address and the referring site.', 'visibility-logic-elementor' ),
 			'geo-location'       => __( 'Country or city of the visitor (MaxMind).', 'visibility-logic-elementor' ),
-			'advanced-user-meta' => __( 'Adds AND/OR rule groups to User Meta.', 'visibility-logic-elementor' ),
+			'advanced-user-meta' => __( 'AND/OR rule groups inside User Meta. Turn off to keep User Meta to one field.', 'visibility-logic-elementor' ),
 			'post-page'          => __( 'Specific posts, pages, post types and terms.', 'visibility-logic-elementor' ),
 			'archive'            => __( 'Category, tag, author and other archive pages.', 'visibility-logic-elementor' ),
 			'conditional-tags'   => __( 'WordPress conditional tags such as is_front_page.', 'visibility-logic-elementor' ),
@@ -343,9 +355,9 @@ final class Resources extends Singleton {
 			'woocommerce-users'  => __( 'Customers who bought products or hold subscriptions.', 'visibility-logic-elementor' ),
 			'edd-users'          => __( 'Customers who bought Easy Digital Downloads products.', 'visibility-logic-elementor' ),
 			'fallback'           => __( 'Show text or a template in place of a hidden element.', 'visibility-logic-elementor' ),
-			'query-string'       => __( 'URL parameters such as UTM tags or campaign codes.', 'visibility-logic-elementor' ),
+			'query-string'       => __( 'URL parameters (UTM tags, campaign codes), form fields, cookies and headers.', 'visibility-logic-elementor' ),
 			'language'           => __( 'Current language with WPML, Polylang or TranslatePress.', 'visibility-logic-elementor' ),
-			'advanced-acf'       => __( 'Adds user, term, options page and specific post fields, more operators and AND/OR rule groups to ACF Field.', 'visibility-logic-elementor' ),
+			'advanced-acf'       => __( 'User, term, options page and specific post fields, more operators and AND/OR rule groups inside ACF Field.', 'visibility-logic-elementor' ),
 			'shop'               => __( 'WooCommerce cart contents, cart total, product type, on sale and in stock.', 'visibility-logic-elementor' ),
 			'split'              => __( 'Show variants to a stable share of visitors (A/B tests).', 'visibility-logic-elementor' ),
 			'view-cap'           => __( 'Show an element only a few times per visitor, per day or in total.', 'visibility-logic-elementor' ),
@@ -369,11 +381,12 @@ final class Resources extends Singleton {
 				'pro'  => true,
 			],
 			'advanced-user-meta' => [
-				'name' => __( 'Advanced User Meta', 'visibility-logic-elementor' ),
+				'name'  => __( 'Advanced User Meta', 'visibility-logic-elementor' ),
+				'title' => __( 'User Meta: Pro extras', 'visibility-logic-elementor' ),
 				'pro'  => true,
 			],
 			'post-page'          => [
-				'name' => __( 'Post & Page', 'visibility-logic-elementor' ),
+				'name' => __( 'Posts & Pages', 'visibility-logic-elementor' ),
 				'pro'  => true,
 			],
 			'archive'            => [
@@ -401,15 +414,16 @@ final class Resources extends Singleton {
 				'pro'  => true,
 			],
 			'query-string'       => [
-				'name' => __( 'URL Parameters', 'visibility-logic-elementor' ),
+				'name' => __( 'Request (URL, form, cookie, header)', 'visibility-logic-elementor' ),
 				'pro'  => true,
 			],
 			'language'           => [
-				'name' => __( 'Language (WPML/Polylang)', 'visibility-logic-elementor' ),
+				'name' => __( 'Language', 'visibility-logic-elementor' ),
 				'pro'  => true,
 			],
 			'advanced-acf'       => [
-				'name' => __( 'Advanced ACF', 'visibility-logic-elementor' ),
+				'name'  => __( 'Advanced ACF', 'visibility-logic-elementor' ),
+				'title' => __( 'ACF Field: Pro extras', 'visibility-logic-elementor' ),
 				'pro'  => true,
 			],
 			'shop'               => [
@@ -421,7 +435,7 @@ final class Resources extends Singleton {
 				'pro'  => true,
 			],
 			'view-cap'           => [
-				'name' => __( 'Times shown (view caps)', 'visibility-logic-elementor' ),
+				'name' => __( 'Times shown', 'visibility-logic-elementor' ),
 				'pro'  => true,
 			],
 			'content-details'    => [

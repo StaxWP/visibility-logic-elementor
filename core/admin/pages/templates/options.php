@@ -75,6 +75,39 @@ foreach ( $included as $stax_vl_slug => $stax_vl_option ) {
 	$stax_vl_group                                 = isset( $stax_vl_icons[ $stax_vl_slug ] ) ? $stax_vl_icons[ $stax_vl_slug ][0] : 'more';
 	$stax_vl_sorted[ $stax_vl_group ][ $stax_vl_slug ] = $stax_vl_option;
 }
+
+// Cards in the order of their group above ("User Meta: Pro extras" right after "User Meta"); add-ons after.
+$stax_vl_order = array_flip( array_keys( $stax_vl_icons ) );
+foreach ( $stax_vl_sorted as $stax_vl_key => $stax_vl_items ) {
+	uksort(
+		$stax_vl_sorted[ $stax_vl_key ],
+		static function ( $a, $b ) use ( $stax_vl_order ) {
+			$x = isset( $stax_vl_order[ $a ] ) ? $stax_vl_order[ $a ] : PHP_INT_MAX;
+			$y = isset( $stax_vl_order[ $b ] ) ? $stax_vl_order[ $b ] : PHP_INT_MAX;
+
+			return $x <=> $y;
+		}
+	);
+}
+
+/**
+ * Card title with the Pro badge kept on the line of its last word.
+ *
+ * @param array $option Condition option.
+ * @param bool  $pro    Show the Pro badge.
+ */
+$stax_vl_name = static function ( array $option, $pro ) {
+	$name  = wp_strip_all_tags( Resources::option_title( $option ) );
+	$space = strrpos( $name, ' ' );
+	$head  = false === $space ? '' : substr( $name, 0, $space + 1 );
+	$tail  = false === $space ? $name : substr( $name, $space + 1 );
+
+	echo esc_html( $head ) . '<span class="stax-vl-nowrap">' . esc_html( $tail );
+	if ( $pro ) {
+		echo '<span class="stax-vl-badge stax-vl-badge--pro">' . esc_html__( 'Pro', 'visibility-logic-elementor' ) . '</span>';
+	}
+	echo '</span>';
+};
 ?>
 <div class="stax-vl-title">
 	<div>
@@ -122,10 +155,7 @@ foreach ( $included as $stax_vl_slug => $stax_vl_option ) {
 							<span class="stax-vl-condition__icon"><?php Settings::icon( $stax_vl_icon ); ?></span>
 							<span class="stax-vl-condition__text">
 								<span class="stax-vl-condition__name">
-									<?php echo esc_html( wp_strip_all_tags( $stax_vl_option['name'] ) ); ?>
-									<?php if ( ! Resources::is_free_condition( $stax_vl_slug ) ) : ?>
-										<span class="stax-vl-badge stax-vl-badge--pro"><?php esc_html_e( 'Pro', 'visibility-logic-elementor' ); ?></span>
-									<?php endif; ?>
+									<?php $stax_vl_name( $stax_vl_option, ! Resources::is_free_condition( $stax_vl_slug ) ); ?>
 								</span>
 								<?php if ( ! empty( $stax_vl_option['description'] ) ) : ?>
 									<span class="stax-vl-condition__desc"><?php echo wp_kses_post( $stax_vl_option['description'] ); ?></span>
@@ -160,8 +190,7 @@ foreach ( $included as $stax_vl_slug => $stax_vl_option ) {
 							<span class="stax-vl-condition__icon"><?php Settings::icon( isset( $stax_vl_icons[ $stax_vl_slug ] ) ? $stax_vl_icons[ $stax_vl_slug ][1] : 'box' ); ?></span>
 							<span class="stax-vl-condition__text">
 								<span class="stax-vl-condition__name">
-									<?php echo esc_html( wp_strip_all_tags( $stax_vl_option['name'] ) ); ?>
-									<span class="stax-vl-badge stax-vl-badge--pro"><?php esc_html_e( 'Pro', 'visibility-logic-elementor' ); ?></span>
+									<?php $stax_vl_name( $stax_vl_option, true ); ?>
 								</span>
 								<?php if ( ! empty( $stax_vl_option['description'] ) ) : ?>
 									<span class="stax-vl-condition__desc"><?php echo esc_html( wp_strip_all_tags( $stax_vl_option['description'] ) ); ?></span>

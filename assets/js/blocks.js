@@ -168,6 +168,29 @@
 		}, 250 );
 	}
 
+	// "Previewing as ..." pill while a preview is on, with a stop button; open preview bars follow the context.
+	var bars = [];
+	var pill = window.StaxVisibilityPreview && window.StaxVisibilityPreview.pill ? window.StaxVisibilityPreview.pill( {
+		labels: PL,
+		onStop: function () {
+			wp.data.dispatch( STORE ).set( { ctx: { as: 'me' } } );
+			bars.forEach( function ( b ) {
+				b.setValue( { as: 'me' } );
+			} );
+			runExplain();
+		},
+	} ) : null;
+	if ( pill ) {
+		var lastCtx = null;
+		wp.data.subscribe( function () {
+			var ctx = wp.data.select( STORE ).get().ctx;
+			if ( ctx !== lastCtx ) {
+				lastCtx = ctx;
+				pill.update( ctx, SC.contextLabel( ctx, { roles: data.roles }, PL ) );
+			}
+		} );
+	}
+
 	function PreviewBox( props ) {
 		var barRef = useRef( null );
 		var langRef = useRef( null );
@@ -199,7 +222,17 @@
 					runExplain();
 				},
 			} ) : null;
+			var handle = { setValue: function ( v ) {
+				bar.setValue( v );
+				if ( lang ) {
+					lang.set( '' );
+				}
+			} };
+			bars.push( handle );
 			return function () {
+				bars = bars.filter( function ( b ) {
+					return b !== handle;
+				} );
 				bar.destroy();
 				if ( lang ) {
 					lang.destroy();

@@ -5,6 +5,9 @@
  * - language( container, opts ): a language select next to the shared preview bar, when an add-on lists languages
  *   (`stax/visibility/preview_languages`, Visibility Logic Pro). opts: languages [ { value, label } ], labels,
  *   value, onChange( code ).
+ * - pill( opts ): a small floating "Previewing as ..." pill with a stop button, shown while a preview is on, so editors
+ *   know the editor shows the page as someone else. opts: labels (previewing, stopPreview), onStop(). Returns
+ *   { update( ctx, who ), destroy }.
  */
 ( function ( root ) {
 	'use strict';
@@ -56,5 +59,43 @@
 		};
 	}
 
-	root.StaxVisibilityPreview = { active: active, language: language };
+	function pill( opts ) {
+		var L = ( opts && opts.labels ) || {};
+		var box = document.createElement( 'div' );
+		box.className = 'stax-vl-preview-pill';
+		box.setAttribute( 'role', 'status' );
+		box.hidden = true;
+		var text = document.createElement( 'span' );
+		var stop = document.createElement( 'button' );
+		stop.type = 'button';
+		stop.textContent = L.stopPreview || 'Stop preview';
+		stop.addEventListener( 'click', function () {
+			if ( opts.onStop ) {
+				opts.onStop();
+			}
+		} );
+		box.appendChild( text );
+		box.appendChild( stop );
+		document.body.appendChild( box );
+		return {
+			update: function ( ctx, who ) {
+				box.hidden = ! active( ctx );
+				text.textContent = ( L.previewing || 'Previewing as %s' ).replace( '%s', ( who || '' ) + ( ctx && ctx.language ? ' · ' + ctx.language : '' ) );
+			},
+			destroy: function () {
+				box.remove();
+			},
+		};
+	}
+
+	// Styles of the pill (both editors load this file, not a stylesheet of ours).
+	var css = document.createElement( 'style' );
+	css.textContent = '.stax-vl-preview-pill{position:fixed;z-index:99999;left:50%;bottom:44px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;max-width:calc(100vw - 32px);padding:6px 6px 6px 14px;border-radius:999px;background:#1e1e1e;color:#fff;font:600 12px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;box-shadow:0 4px 16px rgba(0,0,0,.25)}'
+		+ '.stax-vl-preview-pill[hidden]{display:none}'
+		+ '.stax-vl-preview-pill span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
+		+ '.stax-vl-preview-pill button{flex:none;padding:3px 10px;border:0;border-radius:999px;background:#fff;color:#1e1e1e;font:inherit;cursor:pointer}'
+		+ '.stax-vl-preview-pill button:focus-visible{outline:2px solid #3858e9;outline-offset:2px}';
+	( document.head || document.documentElement ).appendChild( css );
+
+	root.StaxVisibilityPreview = { active: active, language: language, pill: pill };
 }( window ) );

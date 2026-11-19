@@ -499,7 +499,7 @@ class Rules {
 			foreach ( Resources::get_all_widget_options() as $key => $option ) {
 				$labels[ str_replace( '-', '_', $key ) ] = $option['name'];
 			}
-			$labels['post_page'] = isset( $labels['post_page'] ) ? $labels['post_page'] : __( 'Post & Page', 'visibility-logic-elementor' );
+			$labels['post_page'] = isset( $labels['post_page'] ) ? $labels['post_page'] : __( 'Posts & Pages', 'visibility-logic-elementor' );
 			$labels['post']      = $labels['post_page'];
 			// Rule groups that Visibility Logic Pro adds to the free ACF Field and User Meta sections.
 			$labels['acf_rules']       = __( 'ACF Field (rule group)', 'visibility-logic-elementor' );

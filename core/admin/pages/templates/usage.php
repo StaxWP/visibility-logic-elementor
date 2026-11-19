@@ -12,6 +12,7 @@
  * @var array $caches  Cache_Check::detect() result.
  */
 
+use Stax\VisibilityLogic\Rule_Tree;
 use Stax\VisibilityLogic\Rules;
 use Stax\VisibilityLogic\Settings;
 
@@ -39,17 +40,14 @@ foreach ( $stax_vl_docs as $stax_vl_doc ) {
 }
 asort( $stax_vl_conditions );
 
-$stax_vl_statuses = [
-	''         => __( 'Any status', 'visibility-logic-elementor' ),
-	'problems' => __( 'Needs attention', 'visibility-logic-elementor' ),
-	'expired'  => __( 'Date range ended', 'visibility-logic-elementor' ),
-	'future'   => __( 'Starts later', 'visibility-logic-elementor' ),
-	'never'    => __( 'Can never be true', 'visibility-logic-elementor' ),
-	'disabled' => __( 'Condition turned off', 'visibility-logic-elementor' ),
-	'draft'    => __( 'Hidden from everyone', 'visibility-logic-elementor' ),
-	'cache'    => __( 'Depends on the visitor', 'visibility-logic-elementor' ),
-	'tree'     => __( 'Saved in the 3.0 format', 'visibility-logic-elementor' ),
-];
+$stax_vl_statuses = array_merge(
+	[
+		''         => __( 'Any status', 'visibility-logic-elementor' ),
+		'problems' => __( 'Needs attention', 'visibility-logic-elementor' ),
+	],
+	Rule_Tree::warning_tags(),
+	[ 'tree' => __( 'Saved in the 3.0 format', 'visibility-logic-elementor' ) ]
+);
 
 $stax_vl_editors = [
 	''          => __( 'All', 'visibility-logic-elementor' ),
@@ -70,6 +68,9 @@ $stax_vl_tags = [
 	'cache'      => [ 'info', 'user' ],
 ];
 
+// Short tag per warning code (the sentences go under the rule text).
+$stax_vl_tag_names = Rule_Tree::warning_tags();
+
 /**
  * URL of the Rules tab with the given filters (others kept).
  *
@@ -85,7 +86,7 @@ $stax_vl_stats = [
 	[ 'stack', '', $stax_vl_total, _n( 'Element with rules', 'Elements with rules', $stax_vl_total, 'visibility-logic-elementor' ), [ 'status' => '' ] ],
 	[ 'file', 'muted', count( $stax_vl_docs ), _n( 'Page', 'Pages', count( $stax_vl_docs ), 'visibility-logic-elementor' ), null ],
 	[ 'alert', 'warn', $stax_vl_problems, _n( 'Needs attention', 'Need attention', $stax_vl_problems, 'visibility-logic-elementor' ), [ 'status' => 'problems' ] ],
-	[ 'user', 'info', $stax_vl_visitor, _n( 'Depends on the visitor', 'Depend on the visitor', $stax_vl_visitor, 'visibility-logic-elementor' ), [ 'status' => 'cache' ] ],
+	[ 'user', 'info', $stax_vl_visitor, __( 'Cache risk', 'visibility-logic-elementor' ), [ 'status' => 'cache' ] ],
 ];
 ?>
 <div class="stax-vl-title">
@@ -259,6 +260,16 @@ $stax_vl_stats = [
 						</td>
 						<td class="stax-vl-rule">
 							<?php echo esc_html( $stax_vl_row['summary'] ); ?>
+							<?php
+							$stax_vl_notes = array_unique( array_diff_key( $stax_vl_row['warnings'], array_keys( $stax_vl_row['codes'], 'draft', true ) ) );
+							?>
+							<?php if ( $stax_vl_notes ) : ?>
+								<ul class="stax-vl-rule__notes">
+									<?php foreach ( $stax_vl_notes as $stax_vl_text ) : ?>
+										<li><?php echo esc_html( $stax_vl_text ); ?></li>
+									<?php endforeach; ?>
+								</ul>
+							<?php endif; ?>
 							<?php if ( $stax_vl_row['stored'] && ! $stax_vl_page ) : ?>
 								<br><span class="stax-vl-muted"><?php esc_html_e( 'Saved in the 3.0 format (groups or 3.0 options)', 'visibility-logic-elementor' ); ?></span>
 							<?php endif; ?>
@@ -268,11 +279,8 @@ $stax_vl_stats = [
 								<?php if ( ! $stax_vl_row['codes'] ) : ?>
 									<li><span class="stax-vl-tag stax-vl-tag--ok"><?php Settings::icon( 'check' ); ?><?php esc_html_e( 'OK', 'visibility-logic-elementor' ); ?></span></li>
 								<?php endif; ?>
-								<?php foreach ( $stax_vl_row['warnings'] as $stax_vl_i => $stax_vl_text ) : ?>
-									<?php
-									$stax_vl_code = $stax_vl_row['codes'][ $stax_vl_i ];
-									$stax_vl_t    = isset( $stax_vl_tags[ $stax_vl_code ] ) ? $stax_vl_tags[ $stax_vl_code ] : [ 'warn', 'alert' ];
-									?>
+								<?php foreach ( array_intersect_key( $stax_vl_tag_names, array_flip( $stax_vl_row['codes'] ) ) as $stax_vl_code => $stax_vl_text ) : ?>
+									<?php $stax_vl_t = isset( $stax_vl_tags[ $stax_vl_code ] ) ? $stax_vl_tags[ $stax_vl_code ] : [ 'warn', 'alert' ]; ?>
 									<li><span class="stax-vl-tag stax-vl-tag--<?php echo esc_attr( $stax_vl_t[0] ); ?>"><?php Settings::icon( $stax_vl_t[1] ); ?><?php echo esc_html( $stax_vl_text ); ?></span></li>
 								<?php endforeach; ?>
 							</ul>

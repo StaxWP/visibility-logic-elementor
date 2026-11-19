@@ -159,6 +159,9 @@ try {
 	// 7. Preset on an empty element, then draft.
 	await select( 'e2ew3' );
 	await builder().locator( '.stxc-add' ).first().click();
+	const allFirst = await builder().locator( '.stxc-option' ).count();
+	check( 'picker opens on the condition list (presets behind their chip)', allFirst > 5 && ( await builder().locator( '.stxc-preset' ).count() ) === 0, allFirst );
+	await builder().locator( '.stxc-cat--presets' ).click();
 	const presets = await builder().locator( '.stxc-preset' ).count();
 	check( 'presets offered on an empty rule', presets >= 6, presets );
 	await shot( 'elementor-4-presets' );
@@ -196,9 +199,13 @@ try {
 	s = await settings( 'e2ew1' );
 	check( 'Page condition stored in the tree (3.0 condition)', !! ( s.rules && JSON.stringify( s.rules ).indexOf( '"page_types":["front"]' ) !== -1 ), s.rules );
 	await builder().locator( '.stxc-add' ).first().click();
-	await builder().locator( '.stxc-cat', { hasText: 'Shop' } ).click();
-	await shot( 'elementor-9-picker-shop-pro' );
-	await page.keyboard.press( 'Escape' );
+	// The Shop category is listed only with WooCommerce active.
+	const shopChip = builder().locator( '.stxc-cat', { hasText: 'Shop' } );
+	if ( await shopChip.count() ) {
+		await shopChip.click();
+		await shot( 'elementor-9-picker-shop-pro' );
+	}
+	await builder().locator( '.stxc-picker .stxc-icon' ).first().click();
 
 	// 8. Classic settings toggle.
 	await builder().locator( '.stax-vl-classic-toggle' ).click();
@@ -258,7 +265,7 @@ try {
 	const bar = await page.locator( '#wp-admin-bar-stax-vl > .ab-item' ).innerText();
 	check( 'admin bar: "Visibility: 1 hidden here" (the draft)', bar.indexOf( 'Visibility: 1 hidden here' ) !== -1, bar );
 	const items = await page.locator( '#wp-admin-bar-stax-vl .ab-submenu .ab-item' ).allTextContents();
-	check( 'admin bar: the reason of each element', items.some( ( t ) => t.indexOf( 'Hidden: Heading #e2ew1' ) === 0 ) && items.some( ( t ) => t.indexOf( 'Hidden from everyone.' ) !== -1 ), items.slice( 0, 12 ) );
+	check( 'admin bar: the reason of each element', items.some( ( t ) => t.indexOf( 'Hidden: Heading · Hidden from everyone' ) === 0 ) && items.some( ( t ) => t.indexOf( 'Hidden from everyone.' ) !== -1 ), items.slice( 0, 12 ) );
 	const asGuest = await page.locator( '#wp-admin-bar-stax-vl-as-guest a' ).getAttribute( 'href' );
 	await page.goto( asGuest );
 	const html = await page.content();

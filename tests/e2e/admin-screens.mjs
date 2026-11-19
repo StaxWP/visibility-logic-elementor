@@ -48,7 +48,9 @@ try {
 		const tabs = [ ...document.querySelectorAll( 'a[href*="page=stax-visibility-"]' ) ].map( ( a ) => a.textContent.trim() ).filter( Boolean );
 		return tabs;
 	} ) );
-	check( 'Rules is the first tab', firstTab.indexOf( 'Rules' ) !== -1 && firstTab.indexOf( 'Rules' ) < firstTab.indexOf( 'Conditions' ), firstTab );
+	// The Rules tab may carry a "N need attention" badge after its name.
+	const rulesTab = firstTab.findIndex( ( t ) => t.indexOf( 'Rules' ) === 0 );
+	check( 'Rules is the first tab', rulesTab !== -1 && rulesTab < firstTab.indexOf( 'Conditions' ), firstTab );
 	const rows = await page.locator( '#stax-vl-rules tbody tr' ).count();
 	check( 'one row per element with a rule', rows >= 3, rows );
 	const words = await page.locator( '#stax-vl-rules .stax-vl-rule' ).allInnerTexts();

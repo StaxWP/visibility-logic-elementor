@@ -223,11 +223,12 @@ class Rule_Tree {
 				'action'      => 'show',
 				'groups'      => [ [ 'conditions' => [ $condition( 'date_time', [ 'date_time_type' => 'week_days_time', 'time_week' => [ '1', '2', '3', '4', '5' ], 'time_from' => '09:00', 'time_to' => '17:00' ] ) ] ] ],
 			],
-			'admins'    => [
-				'label'       => __( 'Administrators only', 'visibility-logic-elementor' ),
-				'description' => __( 'Work in progress content', 'visibility-logic-elementor' ),
+			// "Administrators only" (work in progress) is now the "Hide from everyone" choice of the rule.
+			'roles'     => [
+				'label'       => __( 'Members with a role', 'visibility-logic-elementor' ),
+				'description' => __( 'Pick the roles that see it', 'visibility-logic-elementor' ),
 				'action'      => 'show',
-				'groups'      => [ [ 'conditions' => [ $condition( 'user_role', [ 'user_role_conditions' => [ 'administrator' ] ] ) ] ] ],
+				'groups'      => [ [ 'conditions' => [ $condition( 'user_role', [ 'user_role_conditions' => [] ] ) ] ] ],
 			],
 		];
 	}
@@ -972,6 +973,24 @@ class Rule_Tree {
 	}
 
 	/**
+	 * Short tags of the warning codes (Rules overview status column and filter), in display order.
+	 *
+	 * @return string[] Code => tag.
+	 */
+	public static function warning_tags() {
+		return [
+			'expired'    => __( 'Ended', 'visibility-logic-elementor' ),
+			'never'      => __( 'Never true', 'visibility-logic-elementor' ),
+			'disabled'   => __( 'Condition off', 'visibility-logic-elementor' ),
+			'incomplete' => __( 'Incomplete', 'visibility-logic-elementor' ),
+			'locked'     => __( 'Pro license', 'visibility-logic-elementor' ),
+			'future'     => __( 'Starts later', 'visibility-logic-elementor' ),
+			'draft'      => __( 'Hidden from everyone', 'visibility-logic-elementor' ),
+			'cache'      => __( 'Cache risk', 'visibility-logic-elementor' ),
+		];
+	}
+
+	/**
 	 * Builder data for the editors (registry, labels, context).
 	 *
 	 * @return array
@@ -1028,6 +1047,7 @@ class Rule_Tree {
 			'search'          => __( 'Search conditions', 'visibility-logic-elementor' ),
 			'all'             => __( 'All', 'visibility-logic-elementor' ),
 			'presets'         => __( 'Start from a preset', 'visibility-logic-elementor' ),
+			'presetsTab'      => __( 'Presets', 'visibility-logic-elementor' ),
 			'close'           => __( 'Close', 'visibility-logic-elementor' ),
 			'pro'             => __( 'Pro', 'visibility-logic-elementor' ),
 			'proFeature'      => __( 'Pro feature', 'visibility-logic-elementor' ),

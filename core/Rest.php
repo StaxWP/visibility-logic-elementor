@@ -160,6 +160,9 @@ class Rest {
 			'anyLanguage' => __( 'Current language', 'visibility-logic-elementor' ),
 			'why'        => __( 'Preview as and why', 'visibility-logic-elementor' ),
 			/* translators: %s: who the page is previewed for. */
+			'previewing' => __( 'Previewing as %s', 'visibility-logic-elementor' ),
+			'stopPreview' => __( 'Stop preview', 'visibility-logic-elementor' ),
+			/* translators: %s: who the page is previewed for. */
 			'visible'    => __( 'Shown for %s', 'visibility-logic-elementor' ),
 			/* translators: %s: who the page is previewed for. */
 			'hidden'     => __( 'Hidden for %s', 'visibility-logic-elementor' ),

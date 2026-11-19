@@ -3439,8 +3439,8 @@
                 "slug": "hours"
             },
             {
-                "label": "Administrators only",
-                "description": "Work in progress content",
+                "label": "Members with a role",
+                "description": "Pick the roles that see it",
                 "action": "show",
                 "groups": [
                     {
@@ -3448,15 +3448,13 @@
                             {
                                 "type": "user_role",
                                 "values": {
-                                    "user_role_conditions": [
-                                        "administrator"
-                                    ]
+                                    "user_role_conditions": []
                                 }
                             }
                         ]
                     }
                 ],
-                "slug": "admins"
+                "slug": "roles"
             }
         ]
     },

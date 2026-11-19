@@ -170,7 +170,7 @@
 
 .stax-vl-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
 .stax-vl-tags li { margin: 0; }
-.stax-vl-tag { display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border-radius: 999px; background: var(--vl-warn-bg); color: var(--vl-warn); font-size: 12px; font-weight: 600; line-height: 1.6; }
+.stax-vl-tag { white-space: nowrap; display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border-radius: 999px; background: var(--vl-warn-bg); color: var(--vl-warn); font-size: 12px; font-weight: 600; line-height: 1.6; }
 .stax-vl-tag .stax-vl-icon { width: 13px; height: 13px; }
 .stax-vl-tag--ok { background: var(--vl-ok-bg); color: var(--vl-ok); }
 .stax-vl-tag--error { background: var(--vl-error-bg); color: var(--vl-error); }
@@ -236,6 +236,8 @@
 .stax-vl-el__name { font-weight: 600; }
 .stax-vl .stax-vl-el__page, .stax-vl .stax-vl-el__page a { color: var(--vl-muted); font-size: 12px; }
 .stax-vl-rule { max-width: 480px; color: var(--vl-text-2); }
+.stax-vl-rule__notes { margin: 6px 0 0; padding: 0; list-style: none; color: var(--vl-muted); font-size: 12px; }
+.stax-vl-rule__notes li { margin: 2px 0 0; }
 .stax-vl-actions { display: flex; flex-wrap: nowrap; justify-content: flex-end; gap: 4px; }
 .stax-vl-actions .button { margin: 0; }
 .stax-vl-empty { padding: 40px 24px; color: var(--vl-muted); text-align: center; }
@@ -257,7 +259,9 @@ label.stax-vl-condition { cursor: pointer; }
 label.stax-vl-condition:hover { border-color: rgba(var(--vl-accent-rgb), .45); }
 .stax-vl-condition__icon { display: grid; place-items: center; flex: none; width: 34px; height: 34px; border-radius: 8px; background: var(--vl-accent-soft); color: var(--vl-accent); }
 .stax-vl-condition__text { flex: 1; min-width: 0; }
-.stax-vl-condition__name { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; color: var(--vl-text); font-weight: 600; }
+.stax-vl-condition__name { display: block; color: var(--vl-text); font-weight: 600; }
+.stax-vl-condition__name .stax-vl-badge { margin-left: 4px; }
+.stax-vl-nowrap { white-space: nowrap; }
 .stax-vl-condition__desc, .stax-vl-condition__req { display: block; margin-top: 2px; color: var(--vl-muted); font-size: 12px; }
 .stax-vl-condition__req { margin-top: 4px; color: var(--vl-warn); }
 .stax-vl-condition.is-off .stax-vl-condition__icon,

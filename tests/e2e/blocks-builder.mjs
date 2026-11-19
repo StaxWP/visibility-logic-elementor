@@ -46,7 +46,7 @@ const selectBlock = async ( index ) => {
 	await page.waitForTimeout( 600 );
 	const panel = page.locator( '.stax-vl-panel' );
 	if ( ! ( await panel.locator( '.stxc-summary' ).count() ) ) {
-		await panel.locator( '.components-panel__body-toggle' ).click();
+		await panel.locator( '.components-panel__body-toggle' ).first().click();
 	}
 	await panel.locator( '.stxc-summary' ).waitFor();
 	return panel;
@@ -69,7 +69,7 @@ try {
 
 	// 1. The 2.x block rule opens as a sentence, panel name does not clash with core "Hide".
 	let panel = await selectBlock( 1 );
-	const title = await panel.locator( '.components-panel__body-toggle' ).innerText();
+	const title = await panel.locator( '.components-panel__body-toggle' ).first().innerText();
 	check( 'panel named "Visibility rules"', title.trim() === 'Visibility rules', title );
 	const summary = await panel.locator( '.stxc-summary' ).innerText();
 	check( '2.x block rule as a sentence', summary === 'Shown only when User role is Logged in users', summary );

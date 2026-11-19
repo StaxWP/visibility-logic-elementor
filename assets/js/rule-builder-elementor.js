@@ -183,7 +183,33 @@
 		return list;
 	}
 
+	// "Previewing as ..." pill while a preview is on, with a stop button (all elements share the context).
+	function syncPill() {
+		var P2 = win.StaxVisibilityPreview;
+		if ( ! P2 || ! P2.pill ) {
+			return;
+		}
+		if ( ! preview.pill ) {
+			preview.pill = P2.pill( { labels: PL, onStop: stopPreview } );
+		}
+		preview.pill.update( preview.ctx, SC.contextLabel( preview.ctx, { roles: data.roles }, PL ) );
+	}
+
+	function stopPreview() {
+		preview.ctx = { as: 'me' };
+		preview.views.forEach( function ( v ) {
+			if ( v.previewBar ) {
+				v.previewBar.setValue( preview.ctx );
+			}
+			if ( v.languageField ) {
+				v.languageField.set( '' );
+			}
+		} );
+		runExplain();
+	}
+
 	function runExplain() {
+		syncPill();
 		clearTimeout( preview.timer );
 		preview.timer = setTimeout( function () {
 			var containers = allWithRules();
