@@ -244,6 +244,7 @@
 .stax-vl-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 12px 20px; border-top: 1px solid var(--vl-border); color: var(--vl-muted); font-size: 13px; }
 .stax-vl .stax-vl-foot form { display: flex; align-items: center; gap: 8px; margin: 0; }
 .stax-vl-row-hidden { display: none; }
+.stax-vl-paging { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 12px 20px; border-top: 1px solid var(--vl-border); color: var(--vl-muted); font-size: 13px; }
 
 /* Conditions */
 .stax-vl-card__body { padding: 20px 24px; }

@@ -1004,6 +1004,8 @@ class Rule_Tree {
 			'actionShow'      => __( 'Show', 'visibility-logic-elementor' ),
 			'actionHide'      => __( 'Hide', 'visibility-logic-elementor' ),
 			'actionDraft'     => __( 'Hide from everyone', 'visibility-logic-elementor' ),
+			'actionOff'       => __( 'Off (keep the rule)', 'visibility-logic-elementor' ),
+			'offHelp'         => __( 'The rule is kept but not applied: everyone sees it.', 'visibility-logic-elementor' ),
 			'when'            => __( 'this element when', 'visibility-logic-elementor' ),
 			'allOf'           => __( 'All of these', 'visibility-logic-elementor' ),
 			/* translators: %d: group number. */
@@ -1062,8 +1064,6 @@ class Rule_Tree {
 				'cache'      => self::warning_text( [ 'code' => 'cache', 'type' => '', 'value' => '' ] ),
 			],
 			// Visibility Logic additions (element options, editor messages).
-			'active'          => __( 'Rules on', 'visibility-logic-elementor' ),
-			'activeHelp'      => __( 'Turn off to keep the rule without applying it.', 'visibility-logic-elementor' ),
 			'whenHidden'      => __( 'When hidden', 'visibility-logic-elementor' ),
 			'remove_page'     => __( 'Remove it from the page', 'visibility-logic-elementor' ),
 			'keepHtml'        => __( 'Keep the HTML, hide with CSS', 'visibility-logic-elementor' ),

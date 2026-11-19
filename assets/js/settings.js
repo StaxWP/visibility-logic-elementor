@@ -27,9 +27,9 @@
 			} );
 		} );
 
-		// Enter in the search box must not submit the filters form.
+		// Enter in the search box must not submit the filters form (unless the search runs on the server: data-stax-vl-submit).
 		input.addEventListener( 'keydown', function ( event ) {
-			if ( 'Enter' === event.key ) {
+			if ( 'Enter' === event.key && ! input.hasAttribute( 'data-stax-vl-submit' ) ) {
 				event.preventDefault();
 			}
 		} );

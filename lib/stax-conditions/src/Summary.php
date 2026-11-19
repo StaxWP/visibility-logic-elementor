@@ -259,6 +259,18 @@ class Summary {
 			case 'repeater':
 				$count = is_array( $value ) ? count( $value ) : 0;
 				$text  = $count ? sprintf( $labels['rows'], $count ) : '';
+
+				// `row_summary`: each row as words ("URL parameter utm_source equals facebook"), joined with "and" ("or" with |or).
+				if ( $count && ! empty( $field['row_summary'] ) ) {
+					$items = [];
+					foreach ( $value as $row ) {
+						$line = is_array( $row ) ? self::row_text( (string) $field['row_summary'], $row, isset( $field['fields'] ) ? (array) $field['fields'] : [], $labels, $formatters ) : '';
+						if ( '' !== $line ) {
+							$items[] = $line;
+						}
+					}
+					$text = $items ? self::join( $items, 'or' === $modifier ? $labels['or'] : $labels['and'], $labels ) : $text;
+				}
 				break;
 
 			case 'multiselect':
@@ -286,6 +298,58 @@ class Summary {
 		}
 
 		return 'lower' === $modifier ? self::lcfirst( $text ) : $text;
+	}
+
+	/**
+	 * One repeater row in words: {key} placeholders of the row's fields, [ ... ] parts dropped when one inside is empty.
+	 *
+	 * @param string $template   Row template.
+	 * @param array  $row        Row values.
+	 * @param array  $fields     Row fields.
+	 * @param array  $labels     Wording.
+	 * @param array  $formatters Formatters.
+	 *
+	 * @return string
+	 */
+	private static function row_text( $template, array $row, array $fields, array $labels, array $formatters ) {
+		$by_key = [];
+		foreach ( $fields as $sub ) {
+			if ( is_array( $sub ) && isset( $sub['key'] ) ) {
+				$by_key[ $sub['key'] ] = $sub;
+			}
+		}
+
+		$fill = static function ( $text, &$empty ) use ( $row, $by_key, $labels, $formatters ) {
+			return preg_replace_callback(
+				'/\{([a-z0-9_]+)(?:\|([a-z]+))?\}/',
+				static function ( $m ) use ( $row, $by_key, $labels, $formatters, &$empty ) {
+					$sub   = isset( $by_key[ $m[1] ] ) ? $by_key[ $m[1] ] : [ 'type' => 'text' ];
+					$value = array_key_exists( $m[1], $row ) ? $row[ $m[1] ] : ( isset( $sub['default'] ) ? $sub['default'] : null );
+					$out   = self::format( $value, $sub, $labels, $formatters, isset( $m[2] ) ? $m[2] : '' );
+					if ( '' === $out ) {
+						$empty = true;
+					}
+
+					return $out;
+				},
+				$text
+			);
+		};
+
+		$template = preg_replace_callback(
+			'/\[([^\[\]]*)\]/',
+			static function ( $m ) use ( $fill ) {
+				$empty = false;
+				$out   = $fill( $m[1], $empty );
+
+				return $empty ? '' : $out;
+			},
+			$template
+		);
+
+		$empty = false;
+
+		return trim( preg_replace( '/\s+/', ' ', $fill( $template, $empty ) ) );
 	}
 
 	/**

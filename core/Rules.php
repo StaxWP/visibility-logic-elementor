@@ -382,6 +382,26 @@ class Rules {
 	}
 
 	/**
+	 * Whether a row contains the search text (page title, element name or id, rule in words).
+	 *
+	 * @param string $query   Search text.
+	 * @param array  $doc     Document of the index.
+	 * @param array  $element Element of the index.
+	 *
+	 * @return bool
+	 */
+	private static function row_matches( $query, array $doc, array $element ) {
+		$parts = [];
+		foreach ( [ [ $doc, 'title' ], [ $element, 'label' ], [ $element, 'name' ], [ $element, 'id' ], [ $element, 'summary' ] ] as $pair ) {
+			if ( isset( $pair[0][ $pair[1] ] ) && is_scalar( $pair[0][ $pair[1] ] ) ) {
+				$parts[] = (string) $pair[0][ $pair[1] ];
+			}
+		}
+
+		return false !== stripos( implode( ' ', $parts ), (string) $query );
+	}
+
+	/**
 	 * One row per element for the Rules overview, with its sentence and warnings, filtered.
 	 *
 	 * @param array $index   Rules::index() result.
@@ -407,6 +427,10 @@ class Rules {
 				}
 
 				if ( ! empty( $filters['condition'] ) && ! in_array( $filters['condition'], (array) $element['conditions'], true ) ) {
+					continue;
+				}
+
+				if ( ! empty( $filters['q'] ) && ! self::row_matches( $filters['q'], $doc, $element ) ) {
 					continue;
 				}
 

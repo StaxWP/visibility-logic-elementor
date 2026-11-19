@@ -75,15 +75,25 @@
 	}
 
 	// Extra element settings from add-ons (`stax/visibility/element_settings`, e.g. Pro's Reveal on click): stored
-	// under their own key in the block attribute.
-	var extraFields = data.elementSettings || [];
+	// under their own key in the block attribute. Fields with a `panel` title get their own panel below "Visibility
+	// rules" (they are not part of the rule); the others sit in the rule builder's options.
+	var allExtra = data.elementSettings || [];
+	var extraFields = allExtra.filter( function ( f ) {
+		return ! f.panel;
+	} );
 	var extraKeys = extraFields.map( function ( f ) {
 		return f.key;
 	} );
+	var extraPanels = allExtra.reduce( function ( out, f ) {
+		if ( f.panel ) {
+			( out[ f.panel ] = out[ f.panel ] || [] ).push( f );
+		}
+		return out;
+	}, {} );
 
-	function extraValues( values ) {
+	function extraValues( values, fields ) {
 		var out = {};
-		extraFields.forEach( function ( f ) {
+		( fields || extraFields ).forEach( function ( f ) {
 			out[ f.key ] = values[ f.key ] !== undefined ? values[ f.key ] : ( f.default !== undefined ? f.default : '' );
 		} );
 		return out;
@@ -244,6 +254,11 @@
 				return Object.assign( {}, latest.current.attributes[ ATTR ] || {} );
 			}
 
+			// Builder settings values of the stored attributes.
+			function settingsOf( v ) {
+				return Object.assign( extraValues( v ), { active: on( v.enabled ), when_hidden: on( v.fallback_enabled ) ? 'text' : ( on( v.keep_html ) ? 'css' : 'remove' ), fallback_text: v.fallback_text || '' } );
+			}
+
 			function write( changes ) {
 				if ( ! Object.keys( changes ).length ) {
 					return;
@@ -268,7 +283,8 @@
 				}
 				if ( wasEmpty && ! SC.tree.isEmpty( tree ) && ! on( values2.enabled ) ) {
 					changes.enabled = true;
-					api.current.setSettings( { active: true, when_hidden: on( values2.keep_html ) ? 'css' : 'remove' } );
+					api.current.setSettings( Object.assign( settingsOf( values2 ), { active: true } ) );
+					api.current.setActive( true );
 				}
 				write( changes );
 				runExplain();
@@ -289,13 +305,21 @@
 						return [];
 					} );
 				} : null },
+				pause: {
+					active: on( values.enabled ),
+					onChange: function ( active ) {
+						write( { enabled: active } );
+						if ( api.current ) {
+							api.current.setSettings( Object.assign( settingsOf( current() ), { active: active } ) );
+						}
+					},
+				},
 				settings: {
 					fields: [
-						{ key: 'active', type: 'switch', label: L.active, help: L.activeHelp },
 						{ key: 'when_hidden', type: 'select', label: L.whenHidden, options: [ { value: 'remove', label: L.remove_page }, { value: 'css', label: L.keepHtml }, { value: 'text', label: L.fallbackText } ], show_if: { active: [ 'yes' ] } },
 						{ key: 'fallback_text', type: 'textarea', label: L.fallbackMessage, help: L.fallbackHelp, show_if: { active: [ 'yes' ], when_hidden: [ 'text' ] } },
 					].concat( extraFields ),
-					values: Object.assign( extraValues( values ), { active: on( values.enabled ), when_hidden: on( values.fallback_enabled ) ? 'text' : ( on( values.keep_html ) ? 'css' : 'remove' ), fallback_text: values.fallback_text || '' } ),
+					values: settingsOf( values ),
 					onChange: function ( key, value ) {
 						if ( key === 'active' ) {
 							write( { enabled: !! value } );
@@ -338,6 +362,50 @@
 		);
 	}
 
+	// One add-on panel (e.g. "Reveal on click"): WordPress controls for select, text, number, textarea and switch fields.
+	function ExtraPanel( props ) {
+		var fields = extraPanels[ props.title ];
+		var stored = props.attributes[ ATTR ] || {};
+		var values = extraValues( stored, fields );
+		var set = function ( key, value ) {
+			var next = Object.assign( {}, props.attributes[ ATTR ] || {} );
+			next[ key ] = value;
+			var update = {};
+			update[ ATTR ] = next;
+			props.setAttributes( update );
+		};
+		var changed = fields.some( function ( f ) {
+			return stored[ f.key ] !== undefined && stored[ f.key ] !== ( f.default !== undefined ? f.default : '' );
+		} );
+
+		return el( components.PanelBody, { title: props.title, initialOpen: changed, className: 'stax-vl-panel' },
+			fields.filter( function ( f ) {
+				return SC.summary.shown( f, values, fields );
+			} ).map( function ( f ) {
+				var common = { key: f.key, label: f.label, help: f.help || undefined, __nextHasNoMarginBottom: true, __next40pxDefaultSize: true };
+				var v = values[ f.key ];
+				if ( f.type === 'select' ) {
+					return el( components.SelectControl, Object.assign( common, { value: String( v ), options: f.options || [], onChange: function ( x ) {
+						set( f.key, x );
+					} } ) );
+				}
+				if ( f.type === 'switch' ) {
+					return el( components.ToggleControl, Object.assign( common, { checked: v === true || v === 'yes', onChange: function ( x ) {
+						set( f.key, !! x );
+					} } ) );
+				}
+				if ( f.type === 'textarea' ) {
+					return el( components.TextareaControl, Object.assign( common, { value: v || '', onChange: function ( x ) {
+						set( f.key, x );
+					} } ) );
+				}
+				return el( components.TextControl, Object.assign( common, { type: f.type === 'number' ? 'number' : 'text', placeholder: f.placeholder || undefined, value: v === undefined || v === null ? '' : String( v ), onChange: function ( x ) {
+					set( f.key, x );
+				} } ) );
+			} )
+		);
+	}
+
 	function Panel( props ) {
 		var values = props.attributes[ ATTR ] || {};
 		return el( InspectorControls, null,
@@ -345,7 +413,10 @@
 				title: config.labels.panel,
 				initialOpen: on( values.enabled ),
 				className: 'stax-vl-panel',
-			}, el( Builder, props ) )
+			}, el( Builder, props ) ),
+			Object.keys( extraPanels ).map( function ( title ) {
+				return el( ExtraPanel, Object.assign( {}, props, { key: title, title: title } ) );
+			} )
 		);
 	}
 

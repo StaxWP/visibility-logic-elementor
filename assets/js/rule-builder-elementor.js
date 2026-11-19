@@ -77,8 +77,8 @@
 	}
 
 	function settingsFields( container ) {
+		// On/off is the "Off (keep the rule)" choice of the action select (builder `pause`), not a field.
 		var fields = [
-			{ key: 'active', type: 'switch', label: L.active, help: L.activeHelp },
 			{ key: 'when_hidden', type: 'select', label: L.whenHidden, options: [
 				{ value: 'remove', label: L.remove_page },
 				{ value: 'css', label: L.keepHtml },
@@ -335,6 +335,7 @@
 					if ( wasEmpty && ! SC.tree.isEmpty( tree ) && ! on( current.enabled ) ) {
 						changes.enabled = 'yes';
 						view.builder.setSettings( settingsValues( Object.assign( {}, current, { enabled: 'yes' } ) ) );
+						view.builder.setActive( true );
 					}
 
 					status.textContent = RuleMap.analyze( tree, data.registry, data.since ).flat ? '' : L.treeNote;
@@ -353,6 +354,14 @@
 					context: data.context,
 					proUrl: data.proUrl,
 					search: { users: usersSearch, posts: postsSearch },
+					pause: {
+						active: on( values.enabled ),
+						onChange: function ( active ) {
+							var current = valuesOf( container );
+							apply( container, { enabled: active ? 'yes' : '' } );
+							view.builder.setSettings( settingsValues( Object.assign( {}, current, { enabled: active ? 'yes' : '' } ) ) );
+						},
+					},
 					settings: {
 						fields: settingsFields( container ),
 						values: settingsValues( values ),

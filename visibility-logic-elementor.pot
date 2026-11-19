@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-17T09:38:49+00:00\n"
+"POT-Creation-Date: 2026-11-19T18:20:02+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: visibility-logic-elementor\n"
@@ -100,7 +100,7 @@ msgstr ""
 #: core/admin/layout.php:32
 #: core/admin/pages/templates/options.php:127
 #: core/admin/pages/templates/options.php:164
-#: core/Rule_Tree.php:1030
+#: core/Rule_Tree.php:1032
 msgid "Pro"
 msgstr ""
 
@@ -222,7 +222,7 @@ msgid "Rate the plugin"
 msgstr ""
 
 #: core/admin/pages/Options.php:42
-#: core/admin/pages/Usage.php:41
+#: core/admin/pages/Usage.php:46
 #: core/admin/ProNotice.php:222
 #: core/admin/UpdateNotice.php:134
 msgid "Sorry, you are not allowed to do that."
@@ -327,77 +327,77 @@ msgstr ""
 msgid "Elementor's cache stays on; only the elements with rules are checked on each visit. Turn it off only if another dynamic widget on those pages stops updating. Changing it clears Elementor's cache."
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:41
+#: core/admin/pages/templates/usage.php:43
 msgid "Any status"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:42
-#: core/admin/pages/templates/usage.php:85
+#: core/admin/pages/templates/usage.php:44
+#: core/admin/pages/templates/usage.php:87
 msgid "Needs attention"
 msgid_plural "Need attention"
 msgstr[0] ""
 msgstr[1] ""
 
-#: core/admin/pages/templates/usage.php:43
+#: core/admin/pages/templates/usage.php:45
 msgid "Date range ended"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:44
+#: core/admin/pages/templates/usage.php:46
 msgid "Starts later"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:45
+#: core/admin/pages/templates/usage.php:47
 msgid "Can never be true"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:46
+#: core/admin/pages/templates/usage.php:48
 msgid "Condition turned off"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:47
+#: core/admin/pages/templates/usage.php:49
 #: core/Rule_Tree.php:248
 msgid "Hidden from everyone"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:48
-#: core/admin/pages/templates/usage.php:86
+#: core/admin/pages/templates/usage.php:50
+#: core/admin/pages/templates/usage.php:88
 msgid "Depends on the visitor"
 msgid_plural "Depend on the visitor"
 msgstr[0] ""
 msgstr[1] ""
 
-#: core/admin/pages/templates/usage.php:49
+#: core/admin/pages/templates/usage.php:51
 msgid "Saved in the 3.0 format"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:53
+#: core/admin/pages/templates/usage.php:55
 #: core/Conditions.php:340
-#: core/Rule_Tree.php:1027
+#: core/Rule_Tree.php:1029
 #: core/settings/GeneralVisibility.php:122
 msgid "All"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:54
-#: core/admin/pages/templates/usage.php:253
+#: core/admin/pages/templates/usage.php:56
+#: core/admin/pages/templates/usage.php:255
 #: core/helpers/Notices.php:69
 msgid "Elementor"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:55
+#: core/admin/pages/templates/usage.php:57
 msgid "Blocks"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:56
+#: core/admin/pages/templates/usage.php:58
 msgid "Pages"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:83
+#: core/admin/pages/templates/usage.php:85
 msgid "Element with rules"
 msgid_plural "Elements with rules"
 msgstr[0] ""
 msgstr[1] ""
 
-#: core/admin/pages/templates/usage.php:84
+#: core/admin/pages/templates/usage.php:86
 #: core/helpers/Resources.php:273
 #: core/settings/PageVisibility.php:44
 #: core/settings/PageVisibility.php:77
@@ -406,31 +406,31 @@ msgid_plural "Pages"
 msgstr[0] ""
 msgstr[1] ""
 
-#: core/admin/pages/templates/usage.php:91
-#: core/admin/pages/Usage.php:85
+#: core/admin/pages/templates/usage.php:93
+#: core/admin/pages/Usage.php:103
 msgid "Rules"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:92
+#: core/admin/pages/templates/usage.php:94
 msgid "Every element, block and page with a visibility rule, in plain words. Open one to change its rule."
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:120
+#: core/admin/pages/templates/usage.php:122
 msgid "No page cache detected"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:121
+#: core/admin/pages/templates/usage.php:123
 msgid "Rules are checked on every page view."
 msgstr ""
 
 #. translators: %s: cache plugin or host names.
-#: core/admin/pages/templates/usage.php:131
+#: core/admin/pages/templates/usage.php:133
 #, php-format
 msgid "Page cache detected: %s"
 msgstr ""
 
 #. translators: %s: number of elements.
-#: core/admin/pages/templates/usage.php:137
+#: core/admin/pages/templates/usage.php:139
 #, php-format
 msgid "A page cache serves one copy of a page to many visitors. %s element has a rule that depends on the visitor; exclude its page from the cache or keep caching only for guests."
 msgid_plural "A page cache serves one copy of a page to many visitors. %s elements have rules that depend on the visitor; exclude their pages from the cache or keep caching only for guests."
@@ -438,124 +438,142 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s: number of elements.
-#: core/admin/pages/templates/usage.php:150
+#: core/admin/pages/templates/usage.php:152
 msgid "Show this element"
 msgid_plural "Show these %s elements"
 msgstr[0] ""
 msgstr[1] ""
 
-#: core/admin/pages/templates/usage.php:163
+#: core/admin/pages/templates/usage.php:165
 msgid "No element uses visibility rules yet. Open an element in Elementor (Visibility tab) or a block (Visibility rules panel) to add one."
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:173
+#: core/admin/pages/templates/usage.php:175
 msgid "Search the rules on this screen"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:174
+#: core/admin/pages/templates/usage.php:176
 msgid "Search elements, pages or rules"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:176
+#: core/admin/pages/templates/usage.php:178
 msgid "Editor"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:182
+#: core/admin/pages/templates/usage.php:184
 #: core/settings/AcfVisibility.php:147
 #: core/settings/AcfVisibility.php:349
 msgid "Condition"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:184
+#: core/admin/pages/templates/usage.php:186
 msgid "Any condition"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:189
-#: core/admin/pages/templates/usage.php:207
+#: core/admin/pages/templates/usage.php:191
+#: core/admin/pages/templates/usage.php:209
 msgid "Status"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:195
+#: core/admin/pages/templates/usage.php:197
 msgid "Filter"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:197
+#: core/admin/pages/templates/usage.php:199
 msgid "Clear filters"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:202
+#: core/admin/pages/templates/usage.php:204
 msgid "Elements with visibility rules"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:205
+#: core/admin/pages/templates/usage.php:207
 msgid "Element"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:206
+#: core/admin/pages/templates/usage.php:208
 msgid "Rule"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:208
+#: core/admin/pages/templates/usage.php:210
 msgid "Actions"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:213
+#: core/admin/pages/templates/usage.php:215
 msgid "No element matches these filters."
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:219
+#: core/admin/pages/templates/usage.php:221
 msgid "(no title)"
 msgstr ""
 
 #. translators: %s: post type name, such as Page.
-#: core/admin/pages/templates/usage.php:229
+#: core/admin/pages/templates/usage.php:231
 #, php-format
 msgid "Whole %s"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:253
+#: core/admin/pages/templates/usage.php:255
 msgid "Block editor"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:261
+#: core/admin/pages/templates/usage.php:263
 msgid "Saved in the 3.0 format (groups or 3.0 options)"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:267
+#: core/admin/pages/templates/usage.php:269
 msgid "OK"
 msgstr ""
 
 #. translators: %s: page title.
-#: core/admin/pages/templates/usage.php:286
+#: core/admin/pages/templates/usage.php:288
 #, php-format
 msgid "Edit %s"
 msgstr ""
 
 #. translators: %s: page title.
-#: core/admin/pages/templates/usage.php:297
+#: core/admin/pages/templates/usage.php:299
 #, php-format
 msgid "View %s (opens in a new tab)"
 msgstr ""
 
-#. translators: 1: number of rows shown, 2: number of elements.
-#: core/admin/pages/templates/usage.php:322
+#: core/admin/pages/templates/usage.php:321
+msgid "Rules pages"
+msgstr ""
+
+#: core/admin/pages/templates/usage.php:323
+msgid "Previous"
+msgstr ""
+
+#. translators: 1: current page, 2: number of pages.
+#: core/admin/pages/templates/usage.php:328
 #, php-format
-msgid "Showing %1$s of %2$s"
+msgid "Page %1$s of %2$s"
+msgstr ""
+
+#: core/admin/pages/templates/usage.php:332
+msgid "Next"
+msgstr ""
+
+#. translators: 1: first row shown, 2: last row shown, 3: number of matching rows.
+#: core/admin/pages/templates/usage.php:342
+#, php-format
+msgid "Showing %1$s to %2$s of %3$s"
 msgstr ""
 
 #. translators: %d: number.
-#: core/admin/pages/templates/usage.php:326
+#: core/admin/pages/templates/usage.php:346
 #, php-format
 msgid "newest %d documents only"
 msgstr ""
 
 #. translators: %s: human time difference.
-#: core/admin/pages/templates/usage.php:336
+#: core/admin/pages/templates/usage.php:356
 #, php-format
 msgid "Scanned %s ago."
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:339
+#: core/admin/pages/templates/usage.php:359
 msgid "Scan again"
 msgstr ""
 
@@ -816,12 +834,12 @@ msgid "More conditions in Pro"
 msgstr ""
 
 #: core/helpers/Pro_Teaser.php:169
-#: core/Rule_Tree.php:1034
+#: core/Rule_Tree.php:1036
 msgid "Learn more"
 msgstr ""
 
 #: core/helpers/Pro_Teaser.php:178
-#: core/Rule_Tree.php:1031
+#: core/Rule_Tree.php:1033
 msgid "Pro feature"
 msgstr ""
 
@@ -974,7 +992,7 @@ msgid "Advanced User Meta"
 msgstr ""
 
 #: core/helpers/Resources.php:376
-#: core/Rules.php:478
+#: core/Rules.php:502
 msgid "Post & Page"
 msgstr ""
 
@@ -1139,74 +1157,74 @@ msgid "Popup visibility"
 msgstr ""
 
 #. translators: %d: number of elements hidden on this page.
-#: core/Preview.php:318
+#: core/Preview.php:349
 #, php-format
 msgid "Visibility: %d hidden here"
 msgid_plural "Visibility: %d hidden here"
 msgstr[0] ""
 msgstr[1] ""
 
-#: core/Preview.php:330
+#: core/Preview.php:362
 msgid "Shown"
 msgstr ""
 
-#: core/Preview.php:330
+#: core/Preview.php:362
 msgid "Hidden"
 msgstr ""
 
-#: core/Preview.php:354
+#: core/Preview.php:386
 #: core/Rest.php:168
 #: core/Rule_Tree.php:252
 msgid "yes"
 msgstr ""
 
-#: core/Preview.php:354
+#: core/Preview.php:386
 #: core/Rest.php:169
 #: core/Rule_Tree.php:253
 msgid "no"
 msgstr ""
 
-#: core/Preview.php:354
+#: core/Preview.php:386
 #: core/Rest.php:170
 msgid "does not apply here"
 msgstr ""
 
-#: core/Preview.php:371
+#: core/Preview.php:403
 #: core/Rest.php:167
 msgid "Hidden from everyone."
 msgstr ""
 
-#: core/Preview.php:386
+#: core/Preview.php:418
 msgid "View this page as"
 msgstr ""
 
-#: core/Preview.php:392
+#: core/Preview.php:424
 #: core/Rest.php:145
 msgid "Guest"
 msgstr ""
 
 #. translators: %s: role name.
-#: core/Preview.php:396
+#: core/Preview.php:428
 #: core/Rest.php:147
 #, php-format
 msgid "Role: %s"
 msgstr ""
 
-#: core/Preview.php:421
+#: core/Preview.php:453
 msgid "Stop: view as me"
 msgstr ""
 
-#: core/Preview.php:442
+#: core/Preview.php:474
 msgid "viewing as Guest"
 msgstr ""
 
 #. translators: %s: role name.
-#: core/Preview.php:449
+#: core/Preview.php:481
 #, php-format
 msgid "viewing as %s"
 msgstr ""
 
-#: core/Preview.php:452
+#: core/Preview.php:484
 msgid "preview"
 msgstr ""
 
@@ -1304,7 +1322,7 @@ msgstr ""
 
 #. translators: %d: group number.
 #: core/Rest.php:172
-#: core/Rule_Tree.php:1023
+#: core/Rule_Tree.php:1025
 #, php-format
 msgid "Group %d"
 msgstr ""
@@ -1333,11 +1351,11 @@ msgstr ""
 msgid "Visibility Logic 1.x settings (user roles)"
 msgstr ""
 
-#: core/Rules.php:481
+#: core/Rules.php:505
 msgid "ACF Field (rule group)"
 msgstr ""
 
-#: core/Rules.php:482
+#: core/Rules.php:506
 msgid "User Meta (rule group)"
 msgstr ""
 
@@ -1673,42 +1691,42 @@ msgstr ""
 
 #. translators: %s: condition name.
 #: core/Rule_Tree.php:951
-#: core/Rule_Tree.php:1051
+#: core/Rule_Tree.php:1053
 #, php-format
 msgid "%s needs a Pro license; it is kept and still applies."
 msgstr ""
 
 #. translators: %s: condition name.
 #: core/Rule_Tree.php:954
-#: core/Rule_Tree.php:1053
+#: core/Rule_Tree.php:1055
 #, php-format
 msgid "%s is turned off in the settings; it does not apply."
 msgstr ""
 
 #. translators: %s: condition name.
 #: core/Rule_Tree.php:957
-#: core/Rule_Tree.php:1055
+#: core/Rule_Tree.php:1057
 #, php-format
 msgid "%s is not complete yet."
 msgstr ""
 
 #. translators: 1: condition name, 2: date.
 #: core/Rule_Tree.php:960
-#: core/Rule_Tree.php:1057
+#: core/Rule_Tree.php:1059
 #, php-format
 msgid "The date range of %1$s ended on %2$s."
 msgstr ""
 
 #. translators: 1: condition name, 2: date.
 #: core/Rule_Tree.php:963
-#: core/Rule_Tree.php:1059
+#: core/Rule_Tree.php:1061
 #, php-format
 msgid "%1$s starts on %2$s."
 msgstr ""
 
 #. translators: %s: condition name.
 #: core/Rule_Tree.php:966
-#: core/Rule_Tree.php:1061
+#: core/Rule_Tree.php:1063
 #, php-format
 msgid "This group can never be true: %s conflicts with another condition."
 msgstr ""
@@ -1726,137 +1744,137 @@ msgid "Hide from everyone"
 msgstr ""
 
 #: core/Rule_Tree.php:1007
-msgid "this element when"
+msgid "Off (keep the rule)"
 msgstr ""
 
 #: core/Rule_Tree.php:1008
+msgid "The rule is kept but not applied: everyone sees it."
+msgstr ""
+
+#: core/Rule_Tree.php:1009
+msgid "this element when"
+msgstr ""
+
+#: core/Rule_Tree.php:1010
 msgid "All of these"
 msgstr ""
 
 #. translators: %d: group number.
-#: core/Rule_Tree.php:1010
+#: core/Rule_Tree.php:1012
 #, php-format
 msgid "Group %d: all of these"
 msgstr ""
 
-#: core/Rule_Tree.php:1011
+#: core/Rule_Tree.php:1013
 msgid "or"
 msgstr ""
 
-#: core/Rule_Tree.php:1012
+#: core/Rule_Tree.php:1014
 msgid "Add condition"
 msgstr ""
 
-#: core/Rule_Tree.php:1013
+#: core/Rule_Tree.php:1015
 msgid "Add \"or\" group"
 msgstr ""
 
 #. translators: %d: group number.
-#: core/Rule_Tree.php:1015
+#: core/Rule_Tree.php:1017
 #, php-format
 msgid "Remove group %d"
 msgstr ""
 
-#: core/Rule_Tree.php:1016
+#: core/Rule_Tree.php:1018
 msgid "Edit"
 msgstr ""
 
-#: core/Rule_Tree.php:1017
+#: core/Rule_Tree.php:1019
 msgid "Remove"
 msgstr ""
 
 #. translators: %s: condition summary.
-#: core/Rule_Tree.php:1019
+#: core/Rule_Tree.php:1021
 #, php-format
 msgid "Remove condition: %s"
 msgstr ""
 
-#: core/Rule_Tree.php:1020
+#: core/Rule_Tree.php:1022
 msgid "Duplicate"
 msgstr ""
 
-#: core/Rule_Tree.php:1021
+#: core/Rule_Tree.php:1023
 msgid "Move to"
 msgstr ""
 
-#: core/Rule_Tree.php:1024
+#: core/Rule_Tree.php:1026
 msgid "New \"or\" group"
 msgstr ""
 
-#: core/Rule_Tree.php:1025
+#: core/Rule_Tree.php:1027
 msgid "Ignores the conditions and keeps them for later. You still see it in the editor."
 msgstr ""
 
-#: core/Rule_Tree.php:1026
+#: core/Rule_Tree.php:1028
 msgid "Search conditions"
 msgstr ""
 
-#: core/Rule_Tree.php:1028
+#: core/Rule_Tree.php:1030
 msgid "Start from a preset"
 msgstr ""
 
-#: core/Rule_Tree.php:1029
+#: core/Rule_Tree.php:1031
 msgid "Close"
 msgstr ""
 
 #. translators: %s: condition name.
-#: core/Rule_Tree.php:1033
+#: core/Rule_Tree.php:1035
 #, php-format
 msgid "%s needs Visibility Logic Pro."
 msgstr ""
 
-#: core/Rule_Tree.php:1035
+#: core/Rule_Tree.php:1037
 msgid "No condition matches your search."
 msgstr ""
 
-#: core/Rule_Tree.php:1036
+#: core/Rule_Tree.php:1038
 msgid "This condition is edited in the classic settings."
 msgstr ""
 
-#: core/Rule_Tree.php:1037
+#: core/Rule_Tree.php:1039
 msgid "Add"
 msgstr ""
 
 #. translators: %s: value.
-#: core/Rule_Tree.php:1039
+#: core/Rule_Tree.php:1041
 #, php-format
 msgid "Remove %s"
 msgstr ""
 
-#: core/Rule_Tree.php:1040
-msgid "Add rule"
-msgstr ""
-
-#. translators: %d: rule number.
 #: core/Rule_Tree.php:1042
-#, php-format
-msgid "Remove rule %d"
+msgid "Add rule"
 msgstr ""
 
 #. translators: %d: rule number.
 #: core/Rule_Tree.php:1044
 #, php-format
+msgid "Remove rule %d"
+msgstr ""
+
+#. translators: %d: rule number.
+#: core/Rule_Tree.php:1046
+#, php-format
 msgid "Rule %d"
 msgstr ""
 
-#: core/Rule_Tree.php:1045
+#: core/Rule_Tree.php:1047
 msgid "Search users"
 msgstr ""
 
-#: core/Rule_Tree.php:1046
+#: core/Rule_Tree.php:1048
 msgid "No users found."
 msgstr ""
 
-#: core/Rule_Tree.php:1047
+#: core/Rule_Tree.php:1049
 msgid "Filter options"
-msgstr ""
-
-#: core/Rule_Tree.php:1065
-msgid "Rules on"
-msgstr ""
-
-#: core/Rule_Tree.php:1066
-msgid "Turn off to keep the rule without applying it."
 msgstr ""
 
 #: core/Rule_Tree.php:1067

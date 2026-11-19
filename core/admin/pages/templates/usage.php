@@ -5,7 +5,9 @@
  * @package Stax\VisibilityLogic
  *
  * @var array $index   Rules::index() result.
- * @var array $rows    Rules::overview_rows() result.
+ * @var array $rows    Rows of this page (Rules::overview_rows(), paged).
+ * @var int   $matched Rows matching the filters, all pages.
+ * @var array $paging  page, pages, per_page.
  * @var array $filters Current filters.
  * @var array $caches  Cache_Check::detect() result.
  */
@@ -171,7 +173,7 @@ $stax_vl_stats = [
 			<label class="stax-vl-search">
 				<?php Settings::icon( 'search' ); ?>
 				<span class="screen-reader-text"><?php esc_html_e( 'Search the rules on this screen', 'visibility-logic-elementor' ); ?></span>
-				<input type="search" data-stax-vl-search="#stax-vl-rules" placeholder="<?php esc_attr_e( 'Search elements, pages or rules', 'visibility-logic-elementor' ); ?>">
+				<input type="search" name="q" value="<?php echo esc_attr( $filters['q'] ); ?>" data-stax-vl-search="#stax-vl-rules" data-stax-vl-submit placeholder="<?php esc_attr_e( 'Search elements, pages or rules', 'visibility-logic-elementor' ); ?>">
 			</label>
 			<nav class="stax-vl-seg" aria-label="<?php esc_attr_e( 'Editor', 'visibility-logic-elementor' ); ?>">
 				<?php foreach ( $stax_vl_editors as $stax_vl_value => $stax_vl_label ) : ?>
@@ -315,11 +317,29 @@ $stax_vl_stats = [
 		</table>
 	<?php endif; ?>
 
+	<?php if ( $paging['pages'] > 1 ) : ?>
+		<nav class="stax-vl-paging" aria-label="<?php esc_attr_e( 'Rules pages', 'visibility-logic-elementor' ); ?>">
+			<?php if ( $paging['page'] > 1 ) : ?>
+				<a class="stax-vl-btn stax-vl-btn--sm" href="<?php echo esc_url( $stax_vl_filter_url( [ 'paged' => (string) ( $paging['page'] - 1 ) ] ) ); ?>"><?php esc_html_e( 'Previous', 'visibility-logic-elementor' ); ?></a>
+			<?php endif; ?>
+			<span>
+				<?php
+				/* translators: 1: current page, 2: number of pages. */
+				echo esc_html( sprintf( __( 'Page %1$s of %2$s', 'visibility-logic-elementor' ), number_format_i18n( $paging['page'] ), number_format_i18n( $paging['pages'] ) ) );
+				?>
+			</span>
+			<?php if ( $paging['page'] < $paging['pages'] ) : ?>
+				<a class="stax-vl-btn stax-vl-btn--sm" href="<?php echo esc_url( $stax_vl_filter_url( [ 'paged' => (string) ( $paging['page'] + 1 ) ] ) ); ?>"><?php esc_html_e( 'Next', 'visibility-logic-elementor' ); ?></a>
+			<?php endif; ?>
+		</nav>
+	<?php endif; ?>
+
 	<div class="stax-vl-foot">
 		<span>
 			<?php
-			/* translators: 1: number of rows shown, 2: number of elements. */
-			echo esc_html( sprintf( __( 'Showing %1$s of %2$s', 'visibility-logic-elementor' ), number_format_i18n( count( $rows ) ), number_format_i18n( $stax_vl_total ) ) );
+			$stax_vl_from = $matched ? ( $paging['page'] - 1 ) * $paging['per_page'] + 1 : 0;
+			/* translators: 1: first row shown, 2: last row shown, 3: number of matching rows. */
+			echo esc_html( sprintf( __( 'Showing %1$s to %2$s of %3$s', 'visibility-logic-elementor' ), number_format_i18n( $stax_vl_from ), number_format_i18n( $stax_vl_from ? $stax_vl_from + count( $rows ) - 1 : 0 ), number_format_i18n( $matched ) ) );
 			if ( $index['truncated'] ) {
 				echo ' &middot; ';
 				/* translators: %d: number. */

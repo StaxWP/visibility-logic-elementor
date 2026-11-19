@@ -290,6 +290,37 @@ class Preview {
 	}
 
 	/**
+	 * Readable name of an element type: Elementor widget or element title, block title, else the name in words.
+	 *
+	 * @param string $name Element name (Elementor) or block name.
+	 *
+	 * @return string
+	 */
+	private static function element_title( $name ) {
+		$name = (string) $name;
+
+		if ( class_exists( '\\Elementor\\Plugin' ) && \Elementor\Plugin::$instance ) {
+			$plugin = \Elementor\Plugin::$instance;
+			$type   = isset( $plugin->widgets_manager ) ? $plugin->widgets_manager->get_widget_types( $name ) : null;
+			if ( ! $type && isset( $plugin->elements_manager ) ) {
+				$type = $plugin->elements_manager->get_element_types( $name );
+			}
+			if ( $type && method_exists( $type, 'get_title' ) && '' !== (string) $type->get_title() ) {
+				return (string) $type->get_title();
+			}
+		}
+
+		if ( false !== strpos( $name, '/' ) && class_exists( 'WP_Block_Type_Registry' ) ) {
+			$block = \WP_Block_Type_Registry::get_instance()->get_registered( $name );
+			if ( $block && ! empty( $block->title ) ) {
+				return (string) $block->title;
+			}
+		}
+
+		return ucfirst( str_replace( [ '-', '_', '/' ], ' ', $name ) );
+	}
+
+	/**
 	 * Admin bar: hidden elements of this request with the reason, and "View this page as".
 	 *
 	 * @param \WP_Admin_Bar $bar Admin bar.
@@ -327,14 +358,15 @@ class Preview {
 			++$n;
 			$described = self::describe( $trace['tree'], $trace['trace'] );
 			$node      = 'stax-vl-e' . $n;
-			$label     = ( $described['visible'] ? __( 'Shown', 'visibility-logic-elementor' ) : __( 'Hidden', 'visibility-logic-elementor' ) ) . ': ' . ucfirst( str_replace( [ '-', '_' ], ' ', $trace['name'] ) ) . ( '' !== $trace['id'] ? ' #' . $trace['id'] : '' );
+			// "Hidden: Heading · Logged-in users": the element's type name and its rule; the id stays in the tooltip.
+			$label     = ( $described['visible'] ? __( 'Shown', 'visibility-logic-elementor' ) : __( 'Hidden', 'visibility-logic-elementor' ) ) . ': ' . self::element_title( $trace['name'] ) . ' · ' . Rule_Tree::short( $trace['tree'] );
 
 			$bar->add_node(
 				[
 					'parent' => 'stax-vl',
 					'id'     => $node,
 					'title'  => esc_html( $label ),
-					'meta'   => [ 'title' => $described['sentence'] ],
+					'meta'   => [ 'title' => ( '' !== $trace['id'] ? '#' . $trace['id'] . ': ' : '' ) . $described['sentence'] ],
 				]
 			);
 

@@ -2490,6 +2490,7 @@
                         "key": "query_string_conditions",
                         "type": "repeater",
                         "label": "Parameters",
+                        "row_summary": "{param_source} {param_name}[ {param_condition|lower}][ {param_value}]",
                         "builders": [
                             "rules"
                         ],
@@ -2577,6 +2578,11 @@
                                         "label": "Matches regex"
                                     }
                                 ],
+                                "summary_options": {
+                                    "exists": "is set",
+                                    "not_exists": "is not set",
+                                    "regex": "matches"
+                                },
                                 "default": "exists"
                             },
                             {
@@ -2606,7 +2612,13 @@
                     "consent",
                     "form"
                 ],
-                "summary": "Request values[ ({query_string_conditions}, {query_string_logic})]",
+                "summary": {
+                    "field": "query_string_logic",
+                    "cases": {
+                        "or": "[{query_string_conditions|or}]",
+                        "*": "[{query_string_conditions}]"
+                    }
+                },
                 "short": "Request",
                 "locked": true,
                 "builders": [
@@ -2618,7 +2630,7 @@
                     "actions": [
                         {
                             "label": "Activate",
-                            "url": "http://vl3.test/wp-admin/options-general.php?page=stax-visibility-license"
+                            "url": "http://vle-test.test/wp-admin/options-general.php?page=stax-visibility-license"
                         },
                         {
                             "label": "Get a license",

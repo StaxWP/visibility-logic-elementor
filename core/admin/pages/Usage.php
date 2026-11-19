@@ -18,6 +18,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Usage extends Base {
 
 	/**
+	 * Rows per page of the Rules tab.
+	 */
+	const PER_PAGE = 50;
+
+	/**
 	 * Usage constructor.
 	 */
 	public function __construct() {
@@ -59,14 +64,27 @@ class Usage extends Base {
 			'editor'    => isset( $_GET['editor'] ) ? sanitize_key( wp_unslash( $_GET['editor'] ) ) : '',
 			'condition' => isset( $_GET['condition'] ) ? sanitize_key( wp_unslash( $_GET['condition'] ) ) : '',
 			'status'    => isset( $_GET['status'] ) ? sanitize_key( wp_unslash( $_GET['status'] ) ) : '',
+			'q'         => isset( $_GET['q'] ) ? sanitize_text_field( wp_unslash( $_GET['q'] ) ) : '',
 		];
+		$page    = isset( $_GET['paged'] ) ? max( 1, absint( $_GET['paged'] ) ) : 1;
 		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
+		$index = Rules::index();
+		$rows  = Rules::overview_rows( $index, $filters );
+		$pages = max( 1, (int) ceil( count( $rows ) / self::PER_PAGE ) );
+		$page  = min( $page, $pages );
 
 		Resources::load_template(
 			'core/admin/pages/templates/usage',
 			[
-				'index'   => Rules::index(),
-				'rows'    => Rules::overview_rows( Rules::index(), $filters ),
+				'index'   => $index,
+				'rows'    => array_slice( $rows, ( $page - 1 ) * self::PER_PAGE, self::PER_PAGE ),
+				'matched' => count( $rows ),
+				'paging'  => [
+					'page'     => $page,
+					'pages'    => $pages,
+					'per_page' => self::PER_PAGE,
+				],
 				'filters' => $filters,
 				'caches'  => Cache_Check::detect(),
 			]
