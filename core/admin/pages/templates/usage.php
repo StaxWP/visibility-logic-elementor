@@ -54,6 +54,8 @@ $stax_vl_editors = [
 	'elementor' => __( 'Elementor', 'visibility-logic-elementor' ),
 	'blocks'    => __( 'Blocks', 'visibility-logic-elementor' ),
 	'page'      => __( 'Pages', 'visibility-logic-elementor' ),
+	'menus'     => __( 'Menus', 'visibility-logic-elementor' ),
+	'widgets'   => __( 'Widgets', 'visibility-logic-elementor' ),
 ];
 
 // Tag style and icon of each warning code.
@@ -220,14 +222,18 @@ $stax_vl_stats = [
 					$stax_vl_doc   = $stax_vl_row['doc'];
 					$stax_vl_el    = $stax_vl_row['element'];
 					$stax_vl_title = '' !== $stax_vl_doc['title'] ? $stax_vl_doc['title'] : __( '(no title)', 'visibility-logic-elementor' );
-					$stax_vl_type  = get_post_type_object( $stax_vl_doc['post_type'] );
-					$stax_vl_ptype = $stax_vl_type ? $stax_vl_type->labels->singular_name : $stax_vl_doc['post_type'];
+					$stax_vl_area  = ! empty( $stax_vl_doc['area'] ); // Menu item or classic widget (Area_Rules).
+					$stax_vl_type  = $stax_vl_area ? null : get_post_type_object( $stax_vl_doc['post_type'] );
+					$stax_vl_ptype = $stax_vl_area ? $stax_vl_doc['kind_label'] : ( $stax_vl_type ? $stax_vl_type->labels->singular_name : $stax_vl_doc['post_type'] );
 					$stax_vl_page  = 'page' === $stax_vl_el['type'];
 					$stax_vl_block = 'blocks' === $stax_vl_row['builder'];
-					$stax_vl_can   = current_user_can( 'edit_post', $stax_vl_doc['id'] );
-					$stax_vl_view  = 'publish' === $stax_vl_doc['status'] ? get_permalink( $stax_vl_doc['id'] ) : '';
+					$stax_vl_can   = $stax_vl_area ? current_user_can( 'edit_theme_options' ) : current_user_can( 'edit_post', $stax_vl_doc['id'] );
+					$stax_vl_view  = ! $stax_vl_area && 'publish' === $stax_vl_doc['status'] ? get_permalink( $stax_vl_doc['id'] ) : '';
 
-					if ( $stax_vl_page ) {
+					if ( $stax_vl_area ) {
+						$stax_vl_name = $stax_vl_el['name'];
+						$stax_vl_icon = 'menus' === $stax_vl_row['builder'] ? 'list' : 'box';
+					} elseif ( $stax_vl_page ) {
 						/* translators: %s: post type name, such as Page. */
 						$stax_vl_name = sprintf( __( 'Whole %s', 'visibility-logic-elementor' ), strtolower( $stax_vl_ptype ) );
 						$stax_vl_icon = 'file';
@@ -243,7 +249,7 @@ $stax_vl_stats = [
 								<div>
 									<div class="stax-vl-el__name">
 										<?php echo esc_html( $stax_vl_name ); ?>
-										<?php if ( ! $stax_vl_page ) : ?>
+										<?php if ( ! $stax_vl_page && ! $stax_vl_area ) : ?>
 											<span class="stax-vl-muted">#<?php echo esc_html( $stax_vl_el['id'] ); ?></span>
 										<?php endif; ?>
 									</div>
@@ -253,7 +259,7 @@ $stax_vl_stats = [
 										<?php else : ?>
 											<?php echo esc_html( $stax_vl_title ); ?>
 										<?php endif; ?>
-										&middot; <?php echo esc_html( $stax_vl_ptype . ' · ' . ( $stax_vl_block ? __( 'Block editor', 'visibility-logic-elementor' ) : __( 'Elementor', 'visibility-logic-elementor' ) ) ); ?>
+										&middot; <?php echo esc_html( $stax_vl_area ? $stax_vl_ptype : $stax_vl_ptype . ' · ' . ( $stax_vl_block ? __( 'Block editor', 'visibility-logic-elementor' ) : __( 'Elementor', 'visibility-logic-elementor' ) ) ); ?>
 									</div>
 								</div>
 							</div>
@@ -270,7 +276,7 @@ $stax_vl_stats = [
 									<?php endforeach; ?>
 								</ul>
 							<?php endif; ?>
-							<?php if ( $stax_vl_row['stored'] && ! $stax_vl_page ) : ?>
+							<?php if ( $stax_vl_row['stored'] && ! $stax_vl_page && ! $stax_vl_area ) : ?>
 								<br><span class="stax-vl-muted"><?php esc_html_e( 'Saved in the 3.0 format (groups or 3.0 options)', 'visibility-logic-elementor' ); ?></span>
 							<?php endif; ?>
 						</td>

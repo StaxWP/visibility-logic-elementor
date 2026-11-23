@@ -69,6 +69,8 @@ class Page_Rules {
 		add_filter( 'the_content', [ __CLASS__, 'filter_content' ], PHP_INT_MAX - 10 );
 		add_filter( 'get_the_excerpt', [ __CLASS__, 'filter_excerpt' ], PHP_INT_MAX - 10, 2 );
 		add_filter( 'wp_robots', [ __CLASS__, 'robots' ] );
+		add_filter( 'the_posts', [ __CLASS__, 'filter_lists' ], 10, 2 );
+		add_filter( 'get_pages', [ __CLASS__, 'filter_pages' ] );
 		add_action( 'wp_body_open', [ __CLASS__, 'editor_notice' ] );
 		add_action( 'enqueue_block_editor_assets', [ __CLASS__, 'block_editor_assets' ], 20 );
 		add_action( 'elementor/documents/register_controls', [ __CLASS__, 'register_elementor_controls' ] );
@@ -125,6 +127,7 @@ class Page_Rules {
 			'message'  => '',
 			'redirect' => '',
 			'template' => '',
+			'lists'    => true,
 		];
 	}
 
@@ -147,6 +150,8 @@ class Page_Rules {
 		$out['message']  = isset( $value['message'] ) ? wp_kses_post( (string) $value['message'] ) : '';
 		$out['redirect'] = isset( $value['redirect'] ) ? esc_url_raw( (string) $value['redirect'] ) : '';
 		$out['template'] = isset( $value['template'] ) && absint( $value['template'] ) ? (string) absint( $value['template'] ) : '';
+		// On unless switched off (absent in values saved before the option existed).
+		$out['lists'] = ! array_key_exists( 'lists', $value ) || ( ! empty( $value['lists'] ) && 'no' !== $value['lists'] );
 
 		return $out;
 	}
@@ -227,6 +232,13 @@ class Page_Rules {
 				'type'    => 'select',
 				'label'   => __( 'When hidden, visitors get', 'visibility-logic-elementor' ),
 				'options' => Conditions::option_list( $actions, $locked ),
+				'show_if' => [ 'active' => [ 'yes' ] ],
+			],
+			[
+				'key'     => 'lists',
+				'type'    => 'switch',
+				'label'   => __( 'Also hide it from lists', 'visibility-logic-elementor' ),
+				'help'    => __( 'Blog, archives, search, widgets and post lists. Turn off to keep the title listed (a teaser).', 'visibility-logic-elementor' ),
 				'show_if' => [ 'active' => [ 'yes' ] ],
 			],
 			[
@@ -421,6 +433,76 @@ class Page_Rules {
 	}
 
 	/**
+	 * Whether a post leaves lists for the current visitor: its rule hides it, "Also hide it from lists" is on and
+	 * the visitor cannot edit it.
+	 *
+	 * @param int $post_id Post id.
+	 *
+	 * @return bool
+	 */
+	public static function hidden_from_lists( $post_id ) {
+		return self::is_hidden( $post_id ) && ! empty( self::get( $post_id )['lists'] );
+	}
+
+	/**
+	 * `the_posts`: hidden posts leave front-end lists (blog, archives, search, widgets, Elementor and block post
+	 * lists). Single views keep their own handling (message, redirect). Counts and pagination of the query are not
+	 * changed.
+	 *
+	 * @param \WP_Post[] $posts Posts.
+	 * @param \WP_Query  $query Query.
+	 *
+	 * @return \WP_Post[]
+	 */
+	public static function filter_lists( $posts, $query = null ) {
+		if ( empty( $posts ) || ! is_array( $posts ) || ( is_admin() && ! wp_doing_ajax() ) || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
+			return $posts;
+		}
+
+		// A query for one post (by id or slug) is a single view, not a list: the page handling applies there.
+		if ( $query instanceof \WP_Query && $query->is_singular() ) {
+			return $posts;
+		}
+
+		return self::without_hidden( $posts );
+	}
+
+	/**
+	 * `get_pages` (page lists, page menus): same as filter_lists().
+	 *
+	 * @param \WP_Post[] $pages Pages.
+	 *
+	 * @return \WP_Post[]
+	 */
+	public static function filter_pages( $pages ) {
+		if ( empty( $pages ) || ! is_array( $pages ) || is_admin() ) {
+			return $pages;
+		}
+
+		return self::without_hidden( $pages );
+	}
+
+	/**
+	 * Posts without the ones hidden from lists (only posts with a page rule are evaluated).
+	 *
+	 * @param array $posts Posts (objects or ids).
+	 *
+	 * @return array
+	 */
+	private static function without_hidden( array $posts ) {
+		return array_values(
+			array_filter(
+				$posts,
+				static function ( $post ) {
+					$id = is_object( $post ) ? (int) $post->ID : (int) $post;
+
+					return ! $id || ! get_post_meta( $id, self::META, true ) || ! self::hidden_from_lists( $id );
+				}
+			)
+		);
+	}
+
+	/**
 	 * `wp_robots`: hidden single views are not indexed.
 	 *
 	 * @param array $robots Directives.
@@ -479,6 +561,7 @@ class Page_Rules {
 			'message'  => $settings['message'],
 			'redirect' => $settings['redirect'],
 			'template' => $settings['template'],
+			'lists'    => ! empty( $settings['lists'] ),
 		];
 	}
 
@@ -547,7 +630,8 @@ class Page_Rules {
 	 * @return void
 	 */
 	private static function enqueue_panel( array $deps, $in_footer = true ) {
-		wp_enqueue_script( 'stax-visibility-page-rules', STAX_VISIBILITY_ASSETS_URL . 'js/page-rules.js', $deps, STAX_VISIBILITY_VERSION, $in_footer );
+		wp_register_script( 'stax-visibility-rule-search', STAX_VISIBILITY_ASSETS_URL . 'js/rule-search.js', [], STAX_VISIBILITY_VERSION, $in_footer );
+		wp_enqueue_script( 'stax-visibility-page-rules', STAX_VISIBILITY_ASSETS_URL . 'js/page-rules.js', array_merge( $deps, [ 'stax-visibility-rule-search' ] ), STAX_VISIBILITY_VERSION, $in_footer );
 		wp_enqueue_style( 'stax-visibility-page-rules', STAX_VISIBILITY_ASSETS_URL . 'css/page-rules.css', [], STAX_VISIBILITY_VERSION );
 		wp_localize_script( 'stax-visibility-page-rules', 'staxVisibilityPage', self::editor_data() );
 	}

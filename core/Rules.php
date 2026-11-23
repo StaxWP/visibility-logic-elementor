@@ -369,6 +369,7 @@ class Rules {
 
 		// Page-level rules (Page_Rules: Elementor page settings and the block editor document panel).
 		$documents = array_merge( $documents, Page_Rules::overview_documents( self::MAX_DOCUMENTS ) );
+		$documents = array_merge( $documents, Area_Rules::overview_documents() );
 
 		$index = [
 			'generated' => time(),
@@ -464,13 +465,22 @@ class Rules {
 	}
 
 	/**
-	 * Elementor editor URL of a post.
+	 * Where an overview row is edited: Elementor, the block editor, Appearance > Menus (menu id) or Widgets.
 	 *
-	 * @param int $post_id Post id.
+	 * @param int    $post_id Post id (menu id for menus).
+	 * @param string $builder elementor|blocks|menus|widgets.
 	 *
 	 * @return string
 	 */
 	public static function edit_url( $post_id, $builder = 'elementor' ) {
+		if ( 'menus' === $builder ) {
+			return add_query_arg( [ 'action' => 'edit', 'menu' => (int) $post_id ], admin_url( 'nav-menus.php' ) );
+		}
+
+		if ( 'widgets' === $builder ) {
+			return admin_url( 'widgets.php' );
+		}
+
 		if ( 'blocks' === $builder ) {
 			return (string) get_edit_post_link( (int) $post_id, 'raw' );
 		}

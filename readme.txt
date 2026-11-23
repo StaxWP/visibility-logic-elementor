@@ -160,7 +160,7 @@ Visibility Logic Pro:
 
 = 3.0.0 =
 * Renamed to Visibility Logic for Elementor and the Block Editor (same plugin, same slug and settings).
-Updating keeps your site working exactly as before: every saved rule renders the same, and each newer behaviour below is an option in Settings > Visibility Logic (on by default only for new installs). The 2.5.2 fixes (Date FROM/TO in the site time zone, Hide when empty on Flexbox containers) stay on and can be turned off there.
+Updating keeps your site working exactly as before: every saved rule renders the same. A site that still uses a behaviour from before 2.5.2 (dates in UTC, Hide when empty on containers) keeps it and gets a one-time "Switch to the current behavior" button in Settings > Visibility Logic > Settings.
 
 * NEW: Block editor (Gutenberg): a Visibility panel on every block (core and third-party) with the same conditions, evaluated on the server; no front-end script.
 * NEW: Elementor 4 atomic elements: a Visibility section with the same conditions in the V4 editor.
@@ -180,6 +180,10 @@ Updating keeps your site working exactly as before: every saved rule renders the
 * NEW: "Hide from everyone" for any element, page or popup: a third choice next to Show and Hide that ignores the conditions and keeps them for later.
 * NEW: Page condition (free): page type (front page, blog, single post, page, archive, search results, 404), post type and specific pages or posts; inside a loop the loop item is checked. Taxonomies, meta and archive details stay in Pro.
 * NEW: Page visibility (free): one rule for a whole page or post, in Elementor's page settings (Page visibility) and in the block editor's document sidebar, built with the same rule builder. When the rule hides the page, visitors get a message instead of the content (theme header and footer kept); REST responses, feeds and excerpts get the message too, and search engines get noindex. People who can edit the page always see it, with a notice bar. Redirect, login page, 404 and an Elementor template need Visibility Logic Pro.
+* NEW: Page visibility: "Also hide it from lists" (on by default): a post or page the rule hides also leaves the blog, archives, search, widgets, page lists and Elementor or block post lists for those visitors. Turn it off to keep the title listed as a teaser. People who can edit the post still see it listed.
+* NEW: Menus: visibility rules on menu items in Appearance > Menus, with the same rule builder and the same free and Pro conditions. A hidden menu item hides its submenu items too. Works with every theme menu and with Elementor's Nav Menu widget.
+* NEW: Classic widgets: visibility rules on widgets in Appearance > Widgets, the Customizer and the Legacy Widget block, with the same rule builder and conditions. Block widgets use the block's own Visibility rules panel.
+* NEW: Menu items and widgets with rules are listed in Rules (filters Menus and Widgets), with a link to edit them.
 * NEW: Text fallback (free): "When hidden: show a message instead" for Elementor elements and blocks (basic HTML, sanitized). The Elementor template fallback stays in Pro and is chosen in the same place.
 * NEW: Summaries say "(next day)" for time ranges over midnight, and every date and time field shows the site time zone and the current site time.
 * NEW: Works with Visibility Logic Pro 2.4 and 3.0 in any update order: your rules keep working while one plugin is newer. With Pro older than 3.0, a notice on the Dashboard and Plugins screens asks to update it.
@@ -190,9 +194,8 @@ Updating keeps your site working exactly as before: every saved rule renders the
 * Improved: Settings > Visibility Logic > Conditions uses the same names as the rule builder; with Visibility Logic Pro 3.0, "Advanced ACF" and "Advanced User Meta" are listed as "ACF Field: Pro extras" and "User Meta: Pro extras" next to the condition they extend (same switches, saved settings unchanged).
 * NEW: Read-only WordPress Abilities `visibility-logic/list-rules` and `visibility-logic/list-conditions` (WordPress 6.9+, MCP Adapter).
 * NEW: WP-CLI commands `wp visibility-logic rules` and `wp visibility-logic conditions`.
-* NEW: Option "Keep Elementor's element cache on for pages with rules": only elements with rules are rendered per request (a 300-widget test page went from about 177 ms to 60 ms per render, and Elementor no longer rewrites its cache on every view). On for new installs, opt-in for updated sites.
-* NEW: Option "Hide when empty: count widgets placed directly in a container" (on since 2.5.2): unchecking it restores the pre-2.5.2 behaviour.
-* NEW: Option to read Date FROM/TO in the site time zone (on since 2.5.2): unchecking it reads them as UTC, as before 2.5.2.
+* NEW: Setting "Faster pages with visibility rules" (Elementor's element cache stays on): only elements with rules are rendered per request (a 300-widget test page went from about 177 ms to 60 ms per render, and Elementor no longer rewrites its cache on every view). On for new installs, opt-in for updated sites.
+* NEW: Sites updated from before 2.5.2 that still read Date FROM/TO in UTC or hide containers holding widgets directly ("Hide when empty") see a one-time "Switch to the current behavior" button in Settings; nothing changes until it is clicked.
 * NEW: Filter `stax/visibility/device_type` to override the detected device (for example from a CDN header).
 * NEW: One section per subject in the Elementor panel: with Visibility Logic Pro 3.0+, "Advanced ACF" and "Advanced User Meta" are part of the ACF Field and User Meta sections (more field sources and operators in the same rule, plus an AND/OR rule group). Saved rules keep working exactly as before and move into the merged section the next time the page is saved in Elementor.
 * NEW: Pro conditions in the rule builder's picker are listed greyed out with a Pro mark (never hidden, never usable without Pro); clicking one says what it does, with one link to the Pro page. One dismissible notice after the site's 5th saved visibility rule (Dashboard, Plugins and Visibility Logic screens, administrators only); once dismissed it never comes back. Nothing is tracked or sent: the rule count stays in the site's database. Nothing shows while Visibility Logic Pro is active.

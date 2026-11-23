@@ -1,0 +1,78 @@
+/* Visibility rules on menu items and classic widgets: the field in the form and the builder dialog. */
+
+.stax-vl-area {
+	clear: both;
+	margin: 10px 0;
+	padding: 10px 12px;
+	border: 1px solid #dcdcde;
+	border-left: 3px solid #6e49cb;
+	border-radius: 4px;
+	background: #fbfaff;
+}
+
+.menu-item-settings .stax-vl-area {
+	margin: 12px 10px 12px 0;
+}
+
+.stax-vl-area__head {
+	margin: 0 0 8px;
+	line-height: 1.5;
+}
+
+.stax-vl-area__title {
+	display: block;
+	font-weight: 600;
+}
+
+.stax-vl-area__summary {
+	color: #646970;
+	font-size: 12px;
+}
+
+.stax-vl-area__summary.is-on {
+	color: #4b2f9e;
+}
+
+.stax-vl-area-dialog {
+	width: min(720px, calc(100vw - 32px));
+	max-height: calc(100vh - 64px);
+	padding: 0;
+	border: 0;
+	border-radius: 12px;
+	box-shadow: 0 12px 32px rgba(16, 24, 40, 0.24);
+	overflow: hidden;
+}
+
+.stax-vl-area-dialog::backdrop {
+	background: rgba(16, 24, 40, 0.45);
+}
+
+.stax-vl-area-dialog[open] {
+	display: flex;
+	flex-direction: column;
+}
+
+.stax-vl-area-dialog__head {
+	padding: 16px 20px;
+	border-bottom: 1px solid #e2e4e7;
+}
+
+.stax-vl-area-dialog__head h2 {
+	margin: 0;
+	font-size: 16px;
+}
+
+.stax-vl-area-dialog__body {
+	flex: 1;
+	padding: 16px 20px;
+	overflow: auto;
+}
+
+.stax-vl-area-dialog__foot {
+	display: flex;
+	justify-content: flex-end;
+	gap: 8px;
+	padding: 12px 20px;
+	border-top: 1px solid #e2e4e7;
+	background: #f6f7f7;
+}

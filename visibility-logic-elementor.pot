@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-19T20:06:49+00:00\n"
+"POT-Creation-Date: 2026-11-20T20:49:36+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: visibility-logic-elementor\n"
@@ -331,7 +331,7 @@ msgid "Any status"
 msgstr ""
 
 #: core/admin/pages/templates/usage.php:46
-#: core/admin/pages/templates/usage.php:88
+#: core/admin/pages/templates/usage.php:90
 msgid "Needs attention"
 msgid_plural "Need attention"
 msgstr[0] ""
@@ -349,7 +349,7 @@ msgid "All"
 msgstr ""
 
 #: core/admin/pages/templates/usage.php:54
-#: core/admin/pages/templates/usage.php:256
+#: core/admin/pages/templates/usage.php:262
 #: core/helpers/Notices.php:69
 msgid "Elementor"
 msgstr ""
@@ -362,13 +362,22 @@ msgstr ""
 msgid "Pages"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:86
+#: core/admin/pages/templates/usage.php:57
+msgid "Menus"
+msgstr ""
+
+#: core/admin/pages/templates/usage.php:58
+#: core/Area_Rules.php:337
+msgid "Widgets"
+msgstr ""
+
+#: core/admin/pages/templates/usage.php:88
 msgid "Element with rules"
 msgid_plural "Elements with rules"
 msgstr[0] ""
 msgstr[1] ""
 
-#: core/admin/pages/templates/usage.php:87
+#: core/admin/pages/templates/usage.php:89
 #: core/helpers/Resources.php:273
 #: core/settings/PageVisibility.php:44
 #: core/settings/PageVisibility.php:77
@@ -377,36 +386,36 @@ msgid_plural "Pages"
 msgstr[0] ""
 msgstr[1] ""
 
-#: core/admin/pages/templates/usage.php:89
+#: core/admin/pages/templates/usage.php:91
 #: core/Rule_Tree.php:989
 msgid "Cache risk"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:94
+#: core/admin/pages/templates/usage.php:96
 #: core/admin/pages/Usage.php:103
 msgid "Rules"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:95
+#: core/admin/pages/templates/usage.php:97
 msgid "Every element, block and page with a visibility rule, in plain words. Open one to change its rule."
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:123
+#: core/admin/pages/templates/usage.php:125
 msgid "No page cache detected"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:124
+#: core/admin/pages/templates/usage.php:126
 msgid "Rules are checked on every page view."
 msgstr ""
 
 #. translators: %s: cache plugin or host names.
-#: core/admin/pages/templates/usage.php:134
+#: core/admin/pages/templates/usage.php:136
 #, php-format
 msgid "Page cache detected: %s"
 msgstr ""
 
 #. translators: %s: number of elements.
-#: core/admin/pages/templates/usage.php:140
+#: core/admin/pages/templates/usage.php:142
 #, php-format
 msgid "A page cache serves one copy of a page to many visitors. %s element has a rule that depends on the visitor; exclude its page from the cache or keep caching only for guests."
 msgid_plural "A page cache serves one copy of a page to many visitors. %s elements have rules that depend on the visitor; exclude their pages from the cache or keep caching only for guests."
@@ -414,142 +423,142 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s: number of elements.
-#: core/admin/pages/templates/usage.php:153
+#: core/admin/pages/templates/usage.php:155
 msgid "Show this element"
 msgid_plural "Show these %s elements"
 msgstr[0] ""
 msgstr[1] ""
 
-#: core/admin/pages/templates/usage.php:166
+#: core/admin/pages/templates/usage.php:168
 msgid "No element uses visibility rules yet. Open an element in Elementor (Visibility tab) or a block (Visibility rules panel) to add one."
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:176
+#: core/admin/pages/templates/usage.php:178
 msgid "Search the rules on this screen"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:177
+#: core/admin/pages/templates/usage.php:179
 msgid "Search elements, pages or rules"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:179
+#: core/admin/pages/templates/usage.php:181
 msgid "Editor"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:185
+#: core/admin/pages/templates/usage.php:187
 #: core/settings/AcfVisibility.php:147
 #: core/settings/AcfVisibility.php:349
 msgid "Condition"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:187
+#: core/admin/pages/templates/usage.php:189
 msgid "Any condition"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:192
-#: core/admin/pages/templates/usage.php:210
+#: core/admin/pages/templates/usage.php:194
+#: core/admin/pages/templates/usage.php:212
 msgid "Status"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:198
+#: core/admin/pages/templates/usage.php:200
 msgid "Filter"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:200
+#: core/admin/pages/templates/usage.php:202
 msgid "Clear filters"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:205
+#: core/admin/pages/templates/usage.php:207
 msgid "Elements with visibility rules"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:208
+#: core/admin/pages/templates/usage.php:210
 msgid "Element"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:209
+#: core/admin/pages/templates/usage.php:211
 msgid "Rule"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:211
+#: core/admin/pages/templates/usage.php:213
 msgid "Actions"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:216
+#: core/admin/pages/templates/usage.php:218
 msgid "No element matches these filters."
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:222
+#: core/admin/pages/templates/usage.php:224
 msgid "(no title)"
 msgstr ""
 
 #. translators: %s: post type name, such as Page.
-#: core/admin/pages/templates/usage.php:232
+#: core/admin/pages/templates/usage.php:238
 #, php-format
 msgid "Whole %s"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:256
+#: core/admin/pages/templates/usage.php:262
 msgid "Block editor"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:274
+#: core/admin/pages/templates/usage.php:280
 msgid "Saved in the 3.0 format (groups or 3.0 options)"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:280
+#: core/admin/pages/templates/usage.php:286
 msgid "OK"
 msgstr ""
 
 #. translators: %s: page title.
-#: core/admin/pages/templates/usage.php:296
+#: core/admin/pages/templates/usage.php:302
 #, php-format
 msgid "Edit %s"
 msgstr ""
 
 #. translators: %s: page title.
-#: core/admin/pages/templates/usage.php:307
+#: core/admin/pages/templates/usage.php:313
 #, php-format
 msgid "View %s (opens in a new tab)"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:329
+#: core/admin/pages/templates/usage.php:335
 msgid "Rules pages"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:331
+#: core/admin/pages/templates/usage.php:337
 msgid "Previous"
 msgstr ""
 
 #. translators: 1: current page, 2: number of pages.
-#: core/admin/pages/templates/usage.php:336
+#: core/admin/pages/templates/usage.php:342
 #, php-format
 msgid "Page %1$s of %2$s"
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:340
+#: core/admin/pages/templates/usage.php:346
 msgid "Next"
 msgstr ""
 
 #. translators: 1: first row shown, 2: last row shown, 3: number of matching rows.
-#: core/admin/pages/templates/usage.php:350
+#: core/admin/pages/templates/usage.php:356
 #, php-format
 msgid "Showing %1$s to %2$s of %3$s"
 msgstr ""
 
 #. translators: %d: number.
-#: core/admin/pages/templates/usage.php:354
+#: core/admin/pages/templates/usage.php:360
 #, php-format
 msgid "newest %d documents only"
 msgstr ""
 
 #. translators: %s: human time difference.
-#: core/admin/pages/templates/usage.php:364
+#: core/admin/pages/templates/usage.php:370
 #, php-format
 msgid "Scanned %s ago."
 msgstr ""
 
-#: core/admin/pages/templates/usage.php:367
+#: core/admin/pages/templates/usage.php:373
 msgid "Scan again"
 msgstr ""
 
@@ -622,16 +631,70 @@ msgstr ""
 msgid "Go to updates"
 msgstr ""
 
+#: core/Area_Rules.php:310
+msgid "Menu"
+msgstr ""
+
+#: core/Area_Rules.php:336
+msgid "Inactive widgets"
+msgstr ""
+
+#: core/Area_Rules.php:437
 #: core/Atomic.php:187
-#: core/Plugin.php:155
+#: core/Plugin.php:156
 msgid "Visibility"
 msgstr ""
 
+#: core/Area_Rules.php:440
+msgid "Edit visibility rules"
+msgstr ""
+
+#: core/Area_Rules.php:455
+#: core/Area_Rules.php:507
+msgid "Everyone sees it."
+msgstr ""
+
+#. translators: %s: the rule in words.
+#: core/Area_Rules.php:462
+#: core/Area_Rules.php:509
+#, php-format
+msgid "Off (rule kept): %s"
+msgstr ""
+
+#: core/Area_Rules.php:504
 #: core/Blocks.php:179
 #: core/Rule_Tree.php:1021
 #: core/settings/GeneralVisibility.php:37
 #: core/settings/GeneralVisibility.php:55
 msgid "Visibility rules"
+msgstr ""
+
+#: core/Area_Rules.php:505
+msgid "Apply"
+msgstr ""
+
+#: core/Area_Rules.php:506
+msgid "Cancel"
+msgstr ""
+
+#: core/Area_Rules.php:510
+msgid "Applied to the form. Save the menu or widget to keep it."
+msgstr ""
+
+#: core/Area_Rules.php:514
+msgid "this menu item when"
+msgstr ""
+
+#: core/Area_Rules.php:515
+msgid "Ignores the conditions and keeps them for later. Nobody sees the item or its submenu."
+msgstr ""
+
+#: core/Area_Rules.php:518
+msgid "this widget when"
+msgstr ""
+
+#: core/Area_Rules.php:519
+msgid "Ignores the conditions and keeps them for later. Nobody sees the widget."
 msgstr ""
 
 #: core/Blocks.php:180
@@ -972,7 +1035,7 @@ msgid "User Meta: Pro extras"
 msgstr ""
 
 #: core/helpers/Resources.php:389
-#: core/Rules.php:502
+#: core/Rules.php:512
 msgid "Posts & Pages"
 msgstr ""
 
@@ -1042,102 +1105,110 @@ msgstr ""
 msgid "Logged in users"
 msgstr ""
 
-#: core/Page_Rules.php:187
+#: core/Page_Rules.php:192
 msgid "Show a message instead of the content"
 msgstr ""
 
-#: core/Page_Rules.php:203
+#: core/Page_Rules.php:208
 msgid "Redirect to a page or URL (Pro)"
 msgstr ""
 
-#: core/Page_Rules.php:204
+#: core/Page_Rules.php:209
 msgid "Send to the login page, then back (Pro)"
 msgstr ""
 
-#: core/Page_Rules.php:205
+#: core/Page_Rules.php:210
 msgid "Not found (404) (Pro)"
 msgstr ""
 
-#: core/Page_Rules.php:206
+#: core/Page_Rules.php:211
 msgid "Show an Elementor template (Pro)"
 msgstr ""
 
-#: core/Page_Rules.php:223
+#: core/Page_Rules.php:228
 msgid "Limit who can see this page"
 msgstr ""
 
-#: core/Page_Rules.php:228
+#: core/Page_Rules.php:233
 msgid "When hidden, visitors get"
 msgstr ""
 
-#: core/Page_Rules.php:235
+#: core/Page_Rules.php:240
+msgid "Also hide it from lists"
+msgstr ""
+
+#: core/Page_Rules.php:241
+msgid "Blog, archives, search, widgets and post lists. Turn off to keep the title listed (a teaser)."
+msgstr ""
+
+#: core/Page_Rules.php:247
 #: core/Rule_Tree.php:1094
 #: core/settings/FallbackText.php:94
 msgid "Message"
 msgstr ""
 
-#: core/Page_Rules.php:237
+#: core/Page_Rules.php:249
 msgid "Basic HTML. The theme header and footer stay."
 msgstr ""
 
-#: core/Page_Rules.php:254
+#: core/Page_Rules.php:266
 msgid "This content is not available."
 msgstr ""
 
-#: core/Page_Rules.php:280
+#: core/Page_Rules.php:292
 msgid "This page"
 msgstr ""
 
 #. translators: %s: the rule in words.
-#: core/Page_Rules.php:458
+#: core/Page_Rules.php:540
 #, php-format
 msgid "Visibility Logic: this page is hidden for you as a visitor (%s). You see it because you can edit it."
 msgstr ""
 
 #. translators: %s: the rule in words.
-#: core/Page_Rules.php:460
+#: core/Page_Rules.php:542
 #, php-format
 msgid "Visibility Logic: this page has a rule (%s)."
 msgstr ""
 
-#: core/Page_Rules.php:497
-#: core/Page_Rules.php:587
+#: core/Page_Rules.php:580
+#: core/Page_Rules.php:671
 msgid "Page visibility"
 msgstr ""
 
-#: core/Page_Rules.php:498
+#: core/Page_Rules.php:581
 msgid "Set who can see this whole page. You and other editors always see it, with a notice."
 msgstr ""
 
-#: core/Page_Rules.php:499
+#: core/Page_Rules.php:582
 msgid "Show this popup only when the rule allows it. A hidden popup is not added to the page, so its triggers do nothing. Elementor Pro's own display conditions and triggers still apply first."
 msgstr ""
 
-#: core/Page_Rules.php:500
+#: core/Page_Rules.php:583
 msgid "Limit when this popup shows"
 msgstr ""
 
-#: core/Page_Rules.php:501
+#: core/Page_Rules.php:584
 msgid "Rules that depend on the visitor need the page to be excluded from page caching."
 msgstr ""
 
-#: core/Page_Rules.php:506
+#: core/Page_Rules.php:589
 msgid "this page when"
 msgstr ""
 
-#: core/Page_Rules.php:507
+#: core/Page_Rules.php:590
 msgid "Ignores the conditions and keeps them for later. Visitors get the \"When hidden\" option; you and other editors still see the page."
 msgstr ""
 
-#: core/Page_Rules.php:510
+#: core/Page_Rules.php:593
 msgid "this popup when"
 msgstr ""
 
-#: core/Page_Rules.php:511
+#: core/Page_Rules.php:594
 msgid "Ignores the conditions and keeps them for later. The popup is not added for visitors; you still see it in the editor."
 msgstr ""
 
-#: core/Page_Rules.php:587
+#: core/Page_Rules.php:671
 msgid "Popup visibility"
 msgstr ""
 
@@ -1342,11 +1413,11 @@ msgstr ""
 msgid "Visibility Logic 1.x settings (user roles)"
 msgstr ""
 
-#: core/Rules.php:505
+#: core/Rules.php:515
 msgid "ACF Field (rule group)"
 msgstr ""
 
-#: core/Rules.php:506
+#: core/Rules.php:516
 msgid "User Meta (rule group)"
 msgstr ""
 

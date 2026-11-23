@@ -31,30 +31,8 @@
 			message: value.message || '',
 			redirect: value.redirect || '',
 			template: value.template || '',
+			lists: value.lists !== false,
 		};
-	}
-
-	function search( data ) {
-		var users = data.usersUrl ? function ( q ) {
-			return win.fetch( data.usersUrl + '?search=' + encodeURIComponent( q ), { credentials: 'same-origin', headers: { 'X-WP-Nonce': data.restNonce } } ).then( function ( r ) {
-				return r.ok ? r.json() : [];
-			} ).catch( function () {
-				return [];
-			} );
-		} : null;
-		var posts = data.postsUrl ? function ( q ) {
-			var url = data.postsUrl + ( data.postsUrl.indexOf( '?' ) === -1 ? '?' : '&' ) + 'type=post&per_page=20&search=' + encodeURIComponent( q );
-			return win.fetch( url, { credentials: 'same-origin', headers: { 'X-WP-Nonce': data.restNonce } } ).then( function ( r ) {
-				return r.ok ? r.json() : [];
-			} ).then( function ( list ) {
-				return ( list || [] ).map( function ( p ) {
-					return { value: String( p.id ), label: p.title + ' (#' + p.id + ')' };
-				} );
-			} ).catch( function () {
-				return [];
-			} );
-		} : null;
-		return { users: users, posts: posts };
 	}
 
 	/**
@@ -118,7 +96,7 @@
 			labels: Object.assign( {}, data.labels, page.builder && page.builder[ popup ? 'popup' : 'page' ] ),
 			context: data.context,
 			proUrl: data.proUrl,
-			search: search( data ),
+			search: win.staxVisibilitySearch( data ),
 			settings: fields.length ? {
 				fields: fields,
 				values: panelValues( value ),

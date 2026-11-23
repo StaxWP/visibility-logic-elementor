@@ -95,6 +95,7 @@ class Plugin extends Singleton {
 		require_once STAX_VISIBILITY_CORE_PATH . 'Blocks.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'Atomic.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'Page_Rules.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'Area_Rules.php';
 
 		add_action( 'init', [ $this, 'load_settings' ], 0 );
 		add_action( 'init', [ $this, 'maybe_upgrade' ], 1 );
