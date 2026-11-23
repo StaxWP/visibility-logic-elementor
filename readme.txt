@@ -4,7 +4,7 @@ Tags: elementor, visibility, display conditions, conditional visibility, dynamic
 Requires at least: 5.0
 Requires PHP: 7.4
 Tested up to: 7.1.4
-Stable tag: 2.5.3
+Stable tag: 2.5.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -132,6 +132,9 @@ Visibility Logic Pro:
 6. **Admin Panel**: Global plugin settings and configuration
 
 == Changelog ==
+
+= 2.5.4 =
+* Security fix: the text of an element hidden by Visibility Logic (for example shown to logged-in users only) could be read by anyone in the post excerpt: REST API, RSS and Atom feeds, search results. Elementor keeps a plain-text copy of every widget in the post content and WordPress builds the excerpt from that copy. Elements with visibility rules are now left out of the copy when the page is saved, and left out of automatic excerpts for every visitor, also on pages saved before this update. Hand-written excerpts and the pages themselves are not changed. To also take the hidden words out of the WordPress search of older pages, update those pages once in Elementor. Please update.
 
 = 2.5.3 =
 * Security fix: with Fallback turned on (Visibility Logic Pro), a hidden section or container was shown in full to the visitors the rule should hide it from, and the fallback was not shown. Now the fallback replaces the whole element. Widgets were not affected. Please update.
@@ -288,6 +291,9 @@ Visibility Logic Pro:
 * Initial release
 
 == Upgrade Notice ==
+
+= 2.5.4 =
+Security fix: the text of hidden elements could be read in post excerpts (REST API, feeds, search). Please update.
 
 = 2.5.3 =
 Security fix: a hidden section or container with Fallback on was shown in full. Please update. Also keeps the Visibility tab scroll position.
