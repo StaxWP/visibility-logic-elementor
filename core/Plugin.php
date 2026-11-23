@@ -96,6 +96,7 @@ class Plugin extends Singleton {
 		require_once STAX_VISIBILITY_CORE_PATH . 'Atomic.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'Page_Rules.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'Area_Rules.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'Plain_Text.php';
 
 		add_action( 'init', [ $this, 'load_settings' ], 0 );
 		add_action( 'init', [ $this, 'maybe_upgrade' ], 1 );
@@ -300,6 +301,10 @@ class Plugin extends Singleton {
 	 * @return string
 	 */
 	public function content_change( $content, $widget ) {
+		if ( $this->left_out_of_plain_text( $this->item_settings( $widget ) ) ) {
+			return '';
+		}
+
 		$visible = $this->should_render( $widget );
 
 		if ( ! $visible ) {
@@ -363,6 +368,10 @@ class Plugin extends Singleton {
 	public function item_should_render( $should_render, $widget ) {
 		$settings = $this->item_settings( $widget );
 
+		if ( $this->left_out_of_plain_text( $settings ) ) {
+			return false;
+		}
+
 		if ( ! $this->should_render( $widget, $should_render ) ) {
 			$fallback = self::flag( $settings, 'fallback_enabled' );
 
@@ -389,6 +398,18 @@ class Plugin extends Singleton {
 		}
 
 		return $should_render;
+	}
+
+	/**
+	 * Whether Elementor is printing the plain-text copy of a document (`post_content`, excerpts) and the element has
+	 * rules: it is left out for every visitor, whoever saves or reads the post (Keep HTML and Fallback included).
+	 *
+	 * @param array $settings Element visibility settings.
+	 *
+	 * @return bool
+	 */
+	private function left_out_of_plain_text( array $settings ) {
+		return Rules::has_rules( $settings ) && Plain_Text::is_building();
 	}
 
 	/**

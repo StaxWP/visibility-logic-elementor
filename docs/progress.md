@@ -43,6 +43,7 @@ Plan: second-brain `Projects/staxwp/docs/2026-11-13-majors-ux-rethink.md` (V-M1 
 - `tests/rule-tree-test.php`: equivalence suite (370 rules x 24 visitor contexts = 26,568 old-vs-new checks: tree, stored tree, default true/false, round trip, downgrade), storage decisions, B1/B2/B4/B6, groups, explain, overview, rendering (blocks, Elementor, columns); writes the golden file for the JS twin.
 - `tests/js/rule-map.test.cjs` (node): JS mapping = PHP mapping on the golden file.
 - `tests/visibility-test.php`, `tests/blocks-test.php`: 2.x suites still green (with and without Pro, and with Pro 2.4.3).
+- `tests/excerpt-test.php`: Patchstack report (2.5.3 and earlier): no text of an element or block with rules in `post_content` (Elementor saves) or in any excerpt channel (`get_the_excerpt`, REST, search `_embed`, RSS/Atom), also for posts saved before the fix; documents without rules saved exactly as Elementor saves them. Same file on `2.x` (Elementor part only).
 - Summaries and warnings of the real registry are written to the golden file and checked by the JS test with the bundled package (PHP and JS identical).
 - E2E (`tests/e2e/`, Playwright + axe-core on a scratch site): `rule-builder.mjs` (Elementor), `blocks-builder.mjs`, `admin-screens.mjs`, `setup.php` (fixtures). `section-scroll.mjs` is from 3.0 RC.
 

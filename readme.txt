@@ -200,6 +200,7 @@ Updating keeps your site working exactly as before: every saved rule renders the
 * NEW: One section per subject in the Elementor panel: with Visibility Logic Pro 3.0+, "Advanced ACF" and "Advanced User Meta" are part of the ACF Field and User Meta sections (more field sources and operators in the same rule, plus an AND/OR rule group). Saved rules keep working exactly as before and move into the merged section the next time the page is saved in Elementor.
 * NEW: Pro conditions in the rule builder's picker are listed greyed out with a Pro mark (never hidden, never usable without Pro); clicking one says what it does, with one link to the Pro page. One dismissible notice after the site's 5th saved visibility rule (Dashboard, Plugins and Visibility Logic screens, administrators only); once dismissed it never comes back. Nothing is tracked or sent: the rule count stays in the site's database. Nothing shows while Visibility Logic Pro is active.
 * Improved: Pro options are shown quietly: Pro sources and operators are listed disabled with "(Pro)" in their label, and a single "More conditions in Pro" line with one link replaces the empty Pro sections at the end of the Visibility tab (and the link in the block editor). Nothing Pro is shown when Pro is active.
+* Fix (security): the text of elements and blocks with visibility rules no longer reaches the post excerpt (REST API, RSS and Atom feeds, search results) or the plain-text copy Elementor saves in the post content. Before, a hidden widget's text (or a hidden group or column of blocks) could be read there by anyone. Automatic excerpts leave these elements out for every visitor; hand-written excerpts are not changed.
 * Fix (security): Fallback on a section, column or container now replaces the element. Before, a hidden section or container with Fallback on was printed in full (for example members-only content shown to guests) and the fallback was not shown.
 * Fix: Opening a section in the Visibility tab no longer scrolls the panel back to the top; the opened section stays where you clicked it.
 * Fix: Notices inside the Visibility tab (for example "Advanced Custom Fields plugin is not active") were white on a light panel; they now use the panel's muted text color.
@@ -210,6 +211,9 @@ Updating keeps your site working exactly as before: every saved rule renders the
 * Fix: Saving the options with an expired form no longer causes a fatal error.
 * Fix: User Meta: meta keys that start with an underscore (for example `_my_key`) are offered and saved exactly as stored. Before, the field list removed the underscore and the rule never matched. Rules saved before keep working as they did; pick the key again to use the underscore version.
 * Security: Stricter checks on the editor search requests, prepared SQL, escaped admin output; the password hash and activation key are no longer offered in the User Meta field list (rules saved with them keep working).
+
+= 2.5.4 =
+* Security fix: the text of an element hidden by Visibility Logic (for example shown to logged-in users only) could be read by anyone in the post excerpt: REST API, RSS and Atom feeds, search results. Elementor keeps a plain-text copy of every widget in the post content and WordPress builds the excerpt from that copy. Elements with visibility rules are now left out of the copy when the page is saved, and left out of automatic excerpts for every visitor, also on pages saved before this update. Hand-written excerpts and the pages themselves are not changed. To also take the hidden words out of the WordPress search of older pages, update those pages once in Elementor. Please update.
 
 = 2.5.3 =
 * Security fix: with Fallback turned on (Visibility Logic Pro), a hidden section or container was shown in full to the visitors the rule should hide it from, and the fallback was not shown. Now the fallback replaces the whole element. Widgets were not affected. Please update.
@@ -369,6 +373,9 @@ Updating keeps your site working exactly as before: every saved rule renders the
 
 = 3.0.0 =
 New rule builder, Preview as and a Rules overview in Elementor and the block editor. Your saved rules keep working exactly as before; nothing is migrated.
+
+= 2.5.4 =
+Security fix: the text of hidden elements could be read in post excerpts (REST API, feeds, search). Please update.
 
 = 2.5.3 =
 Security fix: a hidden section or container with Fallback on was shown in full. Please update. Also keeps the Visibility tab scroll position.
