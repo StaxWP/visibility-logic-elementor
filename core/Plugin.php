@@ -60,6 +60,7 @@ class Plugin extends Singleton {
 		require_once STAX_VISIBILITY_CORE_PATH . 'admin/pages/Base.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'admin/pages/Options.php';
 		require_once STAX_VISIBILITY_CORE_PATH . 'admin/Settings.php';
+		require_once STAX_VISIBILITY_CORE_PATH . 'Plain_Text.php';
 
 		add_action( 'elementor/init', [ $this, 'load_elementor_modules' ] );
 		add_action( 'elementor/init', [ $this, 'register_visibility_tab' ] );
@@ -176,6 +177,10 @@ class Plugin extends Singleton {
 	 * @return string
 	 */
 	public function content_change( $content, $widget ) {
+		if ( $this->left_out_of_plain_text( $widget->get_settings() ) ) {
+			return '';
+		}
+
 		if ( ! $this->should_render( $widget ) ) {
 			if ( 'section' === $widget->get_name() || 'container' === $widget->get_name() ) {
 				$not_rendered_widgets = $this->get_section_widgets_recursively( $widget );
@@ -311,6 +316,10 @@ class Plugin extends Singleton {
 	public function item_should_render( $should_render, $widget ) {
 		$settings = $widget->get_settings();
 
+		if ( $this->left_out_of_plain_text( $settings ) ) {
+			return false;
+		}
+
 		if ( ! $this->should_render( $widget, $should_render ) ) {
 			$fallback = $this->has_fallback( $settings );
 
@@ -338,6 +347,18 @@ class Plugin extends Singleton {
 		}
 
 		return $should_render;
+	}
+
+	/**
+	 * Whether Elementor is printing the plain-text copy of a document (`post_content`, excerpts) and the element has
+	 * rules: it is left out for every visitor, whoever saves or reads the post (Keep HTML and Fallback included).
+	 *
+	 * @param array $settings Element settings.
+	 *
+	 * @return bool
+	 */
+	private function left_out_of_plain_text( $settings ) {
+		return Plain_Text::has_rules( $settings ) && Plain_Text::is_building();
 	}
 
 	/**
