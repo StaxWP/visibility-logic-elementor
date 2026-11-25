@@ -88,8 +88,8 @@ class Abilities {
 				'category'            => self::CATEGORY,
 				'input_schema'        => [
 					'type'                 => 'object',
-					'properties'           => new \stdClass(),
 					'additionalProperties' => false,
+					'default'              => [],
 				],
 				'output_schema'       => [
 					'type'       => 'object',
@@ -148,6 +148,7 @@ class Abilities {
 						],
 					],
 					'additionalProperties' => false,
+					'default'              => [],
 				],
 				'output_schema'       => [
 					'type'       => 'object',

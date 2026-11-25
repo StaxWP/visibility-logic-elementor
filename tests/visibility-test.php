@@ -1312,6 +1312,16 @@ if ( class_exists( '\\Stax\\VisibilityLogic\\Abilities' ) ) {
 		wp_set_current_user( 0 );
 		$ability = wp_get_ability( 'visibility-logic/list-rules' );
 		vle_is( 'list-rules refused for guests', true, is_wp_error( $ability->execute( [] ) ) );
+
+		// Called with no input (MCP clients, REST GET without "input"), and with an unknown property.
+		wp_set_current_user( 1 );
+		foreach ( [ 'visibility-logic/list-rules', 'visibility-logic/list-conditions' ] as $vle_ability_name ) {
+			$ability = wp_get_ability( $vle_ability_name );
+			vle_is( $vle_ability_name . ' runs without input', false, is_wp_error( $ability->execute() ) );
+			$vle_result = $ability->execute( [ 'unknown_property' => 1 ] );
+			vle_is( $vle_ability_name . ' rejects an unknown property', 'ability_invalid_input', is_wp_error( $vle_result ) ? $vle_result->get_error_code() : '' );
+		}
+		wp_set_current_user( 0 );
 	}
 }
 
