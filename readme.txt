@@ -4,7 +4,7 @@ Tags: elementor, visibility, display conditions, conditional visibility, dynamic
 Requires at least: 5.0
 Requires PHP: 7.4
 Tested up to: 7.2
-Stable tag: 2.5.4
+Stable tag: 2.5.5
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -132,6 +132,9 @@ Visibility Logic Pro:
 6. **Admin Panel**: Global plugin settings and configuration
 
 == Changelog ==
+
+= 2.5.5 =
+* Security fix: with Elementor's Agent Ready feature on (Markdown pages, llms-full.txt, the WebMCP read_page_content tool), the text of elements hidden by Visibility Logic, including everything inside a hidden section or container, could be read by anyone in those Markdown outputs. Elements with visibility rules are now left out of Elementor's Markdown for every visitor, and Markdown that Elementor cached before this update is cleared once. The pages themselves are not changed. Please update.
 
 = 2.5.4 =
 * Security fix: the text of an element hidden by Visibility Logic (for example shown to logged-in users only) could be read by anyone in the post excerpt: REST API, RSS and Atom feeds, search results. Elementor keeps a plain-text copy of every widget in the post content and WordPress builds the excerpt from that copy. Elements with visibility rules are now left out of the copy when the page is saved, and left out of automatic excerpts for every visitor, also on pages saved before this update. Hand-written excerpts and the pages themselves are not changed. To also take the hidden words out of the WordPress search of older pages, update those pages once in Elementor. Please update.
@@ -291,6 +294,9 @@ Visibility Logic Pro:
 * Initial release
 
 == Upgrade Notice ==
+
+= 2.5.5 =
+Security fix: the text of hidden elements could be read in Elementor's Markdown outputs (.md pages, llms-full.txt, WebMCP). Please update.
 
 = 2.5.4 =
 Security fix: the text of hidden elements could be read in post excerpts (REST API, feeds, search). Please update.
