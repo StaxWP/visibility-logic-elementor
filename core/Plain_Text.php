@@ -22,6 +22,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Hand-written excerpts are not changed. The page itself renders as before.
  *
+ * Since 2.5.5, Elementor's Markdown output (`/<slug>.md`, `/llms-full.txt`, the WebMCP `read_page_content` tool,
+ * Elementor Pro's Template widget) leaves them out too: Elementor builds it with each element's `render_markdown()`,
+ * which skips the filters the rules run on. Left out for every visitor (those outputs are cached for everyone).
+ * Elementor's copies cached before 2.5.5 are cleared once.
+ *
  * @since 2.5.4
  */
 class Plain_Text {
@@ -48,6 +53,11 @@ class Plain_Text {
 	private static $cache = [];
 
 	/**
+	 * Option: plugin version whose update cleared Elementor's cached Markdown and llms.txt.
+	 */
+	const MARKDOWN_CACHE_OPTION = 'stax_visibility_markdown_cleared';
+
+	/**
 	 * Hooks.
 	 *
 	 * @return void
@@ -57,6 +67,61 @@ class Plain_Text {
 		add_filter( 'get_the_excerpt', [ __CLASS__, 'excerpt_end' ], 11 );
 		add_filter( 'content_pagination', [ __CLASS__, 'excerpt_source' ], 10, 2 );
 		add_filter( 'wp_insert_post_data', [ __CLASS__, 'saved_plain_text' ], 10, 2 );
+		add_filter( 'elementor/markdown/element_output', [ __CLASS__, 'markdown_element' ], 10, 3 );
+		add_action( 'init', [ __CLASS__, 'clear_markdown_cache' ], 20 );
+	}
+
+	/**
+	 * `elementor/markdown/element_output`: a top-level element printed without the elements that have rules. Elementor
+	 * filters only the top-level elements (their children come from `render_markdown()`), so the element is rendered
+	 * again from its data without them, by Elementor itself.
+	 *
+	 * @param string $markdown     Markdown of the element.
+	 * @param object $element      Element instance.
+	 * @param array  $element_data Element data.
+	 *
+	 * @return string
+	 */
+	public static function markdown_element( $markdown, $element = null, $element_data = null ) {
+		if ( ! is_array( $element_data ) ) {
+			return $markdown;
+		}
+
+		$dropped = false;
+		$kept    = self::without_elements_with_rules( [ $element_data ], $dropped );
+
+		if ( ! $dropped ) {
+			return $markdown;
+		}
+
+		if ( ! $kept || ! isset( \Elementor\Plugin::$instance->elements_manager ) ) {
+			return '';
+		}
+
+		$instance = \Elementor\Plugin::$instance->elements_manager->create_element_instance( $kept[0] );
+
+		return $instance && method_exists( $instance, 'render_markdown' ) ? (string) $instance->render_markdown() : '';
+	}
+
+	/**
+	 * Once per plugin version: clear Elementor's cached Markdown (per post, llms.txt, llms-full.txt), so copies made
+	 * before this version (with the text of hidden elements) are built again.
+	 *
+	 * @return void
+	 */
+	public static function clear_markdown_cache() {
+		if ( STAX_VISIBILITY_VERSION === get_option( self::MARKDOWN_CACHE_OPTION ) ) {
+			return;
+		}
+
+		delete_post_meta_by_key( '_elementor_markdown_cache' );
+		delete_post_meta_by_key( '_elementor_agents_inline_cache' );
+
+		foreach ( [ 'elementor_agents_llms_txt', 'elementor_agents_llms_full_txt', 'elementor_agents_llms_modified' ] as $transient ) {
+			delete_transient( $transient );
+		}
+
+		update_option( self::MARKDOWN_CACHE_OPTION, STAX_VISIBILITY_VERSION, true );
 	}
 
 	/**
