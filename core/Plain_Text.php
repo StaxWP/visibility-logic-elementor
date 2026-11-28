@@ -16,6 +16,11 @@
  *
  * Hand-written excerpts are not changed. The page itself renders as before.
  *
+ * Elementor's Markdown output (`/<slug>.md`, `/llms-full.txt`, the WebMCP `read_page_content` tool, Elementor Pro's
+ * Template widget) is built with each element's `render_markdown()`, which skips the filters the rules run on. Elements
+ * with rules are left out of it the same way, for every visitor (those outputs are cached for everyone), and a page with
+ * a page rule gives no content there. Elementor's copies cached before the fix are cleared once.
+ *
  * @package Stax\VisibilityLogic
  * @since 3.0.0
  */
@@ -53,6 +58,11 @@ class Plain_Text {
 	private static $cache = [];
 
 	/**
+	 * Option: plugin version whose update cleared Elementor's cached Markdown and llms.txt.
+	 */
+	const MARKDOWN_CACHE_OPTION = 'stax_visibility_markdown_cleared';
+
+	/**
 	 * Hooks.
 	 *
 	 * @return void
@@ -62,6 +72,119 @@ class Plain_Text {
 		add_filter( 'get_the_excerpt', [ __CLASS__, 'excerpt_end' ], 11 );
 		add_filter( 'content_pagination', [ __CLASS__, 'excerpt_source' ], 10, 2 );
 		add_filter( 'wp_insert_post_data', [ __CLASS__, 'saved_plain_text' ], 10, 2 );
+		add_filter( 'elementor/markdown/element_output', [ __CLASS__, 'markdown_element' ], 10, 3 );
+		add_filter( 'get_post_metadata', [ __CLASS__, 'markdown_page_data' ], 10, 4 );
+		add_filter( 'get_the_excerpt', [ __CLASS__, 'markdown_page_excerpt' ], PHP_INT_MAX, 2 );
+		add_action( 'init', [ __CLASS__, 'clear_markdown_cache' ], 20 );
+	}
+
+	/**
+	 * Whether Elementor is building Markdown (`.md`, llms-full.txt, WebMCP).
+	 *
+	 * @return bool
+	 */
+	public static function rendering_markdown() {
+		$module = '\\Elementor\\Modules\\MarkdownRender\\Module';
+
+		return class_exists( $module ) && method_exists( $module, 'is_rendering_markdown' ) && $module::is_rendering_markdown();
+	}
+
+	/**
+	 * `elementor/markdown/element_output`: a top-level element printed without the elements that have rules. Elementor
+	 * filters only the top-level elements (their children come from `render_markdown()`), so the element is rendered
+	 * again from its data without them, by Elementor itself.
+	 *
+	 * @param string $markdown     Markdown of the element.
+	 * @param object $element      Element instance.
+	 * @param array  $element_data Element data.
+	 *
+	 * @return string
+	 */
+	public static function markdown_element( $markdown, $element = null, $element_data = null ) {
+		if ( ! is_array( $element_data ) ) {
+			return $markdown;
+		}
+
+		$dropped = false;
+		$kept    = self::without_elements_with_rules( [ $element_data ], $dropped );
+
+		if ( ! $dropped ) {
+			return $markdown;
+		}
+
+		if ( ! $kept || ! isset( \Elementor\Plugin::$instance->elements_manager ) ) {
+			return '';
+		}
+
+		$instance = \Elementor\Plugin::$instance->elements_manager->create_element_instance( $kept[0] );
+
+		return $instance && method_exists( $instance, 'render_markdown' ) ? (string) $instance->render_markdown() : '';
+	}
+
+	/**
+	 * `get_post_metadata`: while Elementor builds Markdown, a page with a page rule has no elements (every Markdown path
+	 * reads the page's `_elementor_data` there).
+	 *
+	 * @param mixed  $value    Value (null: not short-circuited).
+	 * @param int    $post_id  Post id.
+	 * @param string $meta_key Meta key.
+	 * @param bool   $single   Single value.
+	 *
+	 * @return mixed
+	 */
+	public static function markdown_page_data( $value, $post_id, $meta_key, $single ) {
+		if ( null !== $value || '_elementor_data' !== $meta_key || ! self::markdown_page_hidden( $post_id ) ) {
+			return $value;
+		}
+
+		return $single ? '[]' : [ '[]' ];
+	}
+
+	/**
+	 * `get_the_excerpt`: no excerpt for a page with a page rule in Elementor's Markdown (its `description:` line).
+	 *
+	 * @param string            $excerpt Excerpt.
+	 * @param \WP_Post|int|null $post    Post.
+	 *
+	 * @return string
+	 */
+	public static function markdown_page_excerpt( $excerpt, $post = null ) {
+		$post = get_post( $post );
+
+		return $post && self::markdown_page_hidden( $post->ID ) ? '' : $excerpt;
+	}
+
+	/**
+	 * Whether a post has a page rule while Elementor builds Markdown (left out for every visitor, as the output is cached
+	 * for everyone).
+	 *
+	 * @param int $post_id Post id.
+	 *
+	 * @return bool
+	 */
+	private static function markdown_page_hidden( $post_id ) {
+		return $post_id && self::rendering_markdown() && Page_Rules::active( Page_Rules::get( $post_id ) );
+	}
+
+	/**
+	 * Once per plugin version: clear Elementor's cached Markdown (per post, llms.txt, llms-full.txt), so copies made
+	 * before this version (with the text of hidden elements) are built again.
+	 *
+	 * @return void
+	 */
+	public static function clear_markdown_cache() {
+		if ( STAX_VISIBILITY_VERSION === get_option( self::MARKDOWN_CACHE_OPTION ) ) {
+			return;
+		}
+
+		delete_post_meta_by_key( '_elementor_markdown_cache' );
+		delete_post_meta_by_key( '_elementor_agents_inline_cache' );
+
+		foreach ( [ 'elementor_agents_llms_txt', 'elementor_agents_llms_full_txt', 'elementor_agents_llms_modified' ] as $transient ) {
+			delete_transient( $transient );
+		}
+
+		update_option( self::MARKDOWN_CACHE_OPTION, STAX_VISIBILITY_VERSION, true );
 	}
 
 	/**
